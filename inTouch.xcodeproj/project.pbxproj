@@ -21,6 +21,9 @@
 		4C340D8318C16FF8009A96D8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6518C16FF7009A96D8 /* UIKit.framework */; };
 		4C340D8B18C16FF8009A96D8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D8918C16FF8009A96D8 /* InfoPlist.strings */; };
 		4C340D8D18C16FF8009A96D8 /* inTouchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340D8C18C16FF8009A96D8 /* inTouchTests.m */; };
+		4C340D9718C1746F009A96D8 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D9618C1746F009A96D8 /* libsqlite3.dylib */; };
+		4C340D9B18C175D3009A96D8 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D9918C175D3009A96D8 /* AddressBookUI.framework */; };
+		4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340DA018C17ACF009A96D8 /* DebugLogger.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +56,11 @@
 		4C340D8818C16FF8009A96D8 /* inTouchTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "inTouchTests-Info.plist"; sourceTree = "<group>"; };
 		4C340D8A18C16FF8009A96D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4C340D8C18C16FF8009A96D8 /* inTouchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = inTouchTests.m; sourceTree = "<group>"; };
+		4C340D9618C1746F009A96D8 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		4C340D9818C175D3009A96D8 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		4C340D9918C175D3009A96D8 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		4C340D9F18C17ACF009A96D8 /* DebugLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugLogger.h; sourceTree = "<group>"; };
+		4C340DA018C17ACF009A96D8 /* DebugLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugLogger.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +68,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C340D9B18C175D3009A96D8 /* AddressBookUI.framework in Frameworks */,
+				4C340D9718C1746F009A96D8 /* libsqlite3.dylib in Frameworks */,
 				4C340D6418C16FF7009A96D8 /* CoreGraphics.framework in Frameworks */,
 				4C340D6618C16FF7009A96D8 /* UIKit.framework in Frameworks */,
 				4C340D6218C16FF7009A96D8 /* Foundation.framework in Frameworks */,
@@ -101,6 +111,9 @@
 		4C340D6018C16FF7009A96D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C340D9818C175D3009A96D8 /* AddressBook.framework */,
+				4C340D9918C175D3009A96D8 /* AddressBookUI.framework */,
+				4C340D9618C1746F009A96D8 /* libsqlite3.dylib */,
 				4C340D6118C16FF7009A96D8 /* Foundation.framework */,
 				4C340D6318C16FF7009A96D8 /* CoreGraphics.framework */,
 				4C340D6518C16FF7009A96D8 /* UIKit.framework */,
@@ -114,6 +127,8 @@
 			children = (
 				4C340D7018C16FF7009A96D8 /* AppDelegate.h */,
 				4C340D7118C16FF7009A96D8 /* AppDelegate.m */,
+				4C340D9F18C17ACF009A96D8 /* DebugLogger.h */,
+				4C340DA018C17ACF009A96D8 /* DebugLogger.m */,
 				4C340D7318C16FF7009A96D8 /* Main.storyboard */,
 				4C340D7618C16FF7009A96D8 /* ViewController.h */,
 				4C340D7718C16FF7009A96D8 /* ViewController.m */,
@@ -252,6 +267,7 @@
 				4C340D7818C16FF7009A96D8 /* ViewController.m in Sources */,
 				4C340D7218C16FF7009A96D8 /* AppDelegate.m in Sources */,
 				4C340D6E18C16FF7009A96D8 /* main.m in Sources */,
+				4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
