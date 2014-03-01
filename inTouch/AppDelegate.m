@@ -8,14 +8,32 @@
 
 #import <AddressBookUI/AddressBookUI.h>
 #import "AppDelegate.h"
+#import "DebugLogger.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    // Setting debug level to 1 (everything will be printed)
+    [DebugLogger setDebugLevel:1];
+    
     ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
     if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
         ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error) {
-            
+            if (granted) {
+                // Import contacts
+                
+            } else {
+                // Display message - access denied
+                UIAlertView *accessDeniedMessage = [[UIAlertView alloc]
+                                                    initWithTitle:nil
+                                                    message:@"Contacts were not\
+                                                            automatically\
+                                                            imported"
+                                                    delegate:self
+                                                    cancelButtonTitle:@"OK"
+                                                    otherButtonTitles:nil];
+                [accessDeniedMessage show];
+            }
         });
     }
     return YES;
