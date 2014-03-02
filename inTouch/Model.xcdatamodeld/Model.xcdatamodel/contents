@@ -33,6 +33,7 @@
     <entity name="GlobalData" syncable="YES">
         <attribute name="lastHelpTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="numContacts" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="numLogins" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="numNotInterested" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="Postpones" syncable="YES">

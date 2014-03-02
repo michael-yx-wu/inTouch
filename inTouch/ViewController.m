@@ -23,6 +23,10 @@
 
 // Button for "manually contacted" someone, that's not a swipe action.
 - (IBAction)manuallyContacted:(id)sender {
+    // Testing how NS Log works
+    NSLog(@"Manually finished one contact");
+    
+    // Update the global count, time, and other values in the core model.
 }
 
 // Slider to adjust the frequency of desired contact
