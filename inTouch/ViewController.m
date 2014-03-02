@@ -64,7 +64,10 @@
     
 - (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+	// After loading the view, have an alert that tells the user what he/she needs to do to use the app. For now, just dialogue box.
+    
+    UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"Quick How-to Guide" message:@"Swipe up to email \n Swipe left to text message \n Swipe right to postpone \n Swipe down to remove from future reminders\n" delegate:nil cancelButtonTitle:@"Got it" otherButtonTitles:nil, nil];
+    [myAlert show];
 }
 
 - (void)didReceiveMemoryWarning {
