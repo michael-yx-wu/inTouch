@@ -20,8 +20,8 @@
         <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contacts" inverseName="metadata" inverseEntity="Contacts" syncable="YES"/>
     </entity>
     <entity name="Contacts" syncable="YES">
-        <attribute name="category" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="contactPhoto" optional="YES" syncable="YES"/>
+        <attribute name="category" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="contactPhoto" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="email1" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="email2" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="email3" optional="YES" attributeType="String" syncable="YES"/>
