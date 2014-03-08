@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "DebugLogger.h"
 
 @interface ViewController ()
 
@@ -23,9 +24,7 @@
 
 // Button for "manually contacted" someone, that's not a swipe action.
 - (IBAction)manuallyContacted:(id)sender {
-    // Testing how NS Log works
-    NSLog(@"Manually finished one contact");
-    
+    [DebugLogger log:@"Manually contacted current contact" withPriority:1];
     // Update the global count, time, and other values in the core model.
 }
 
@@ -34,43 +33,45 @@
     UISlider *freqSlider = (UISlider *)sender;
     
     // Default value or a pre-existing value needs to be determined
-
-    freqSlider.continuous = YES;
+    [freqSlider setContinuous:YES];
+    [freqSlider setMinimumValue:0];
+    [freqSlider setMaximumValue:650];
     
-    // Select the value of the slider
-    int SliderValue;
-    
-    // Max option is just to set as 365 days, or annually
-    if (freqSlider.value > 359){
-        SliderValue = (int)365;
+    // Map slider value to remind frequency (in days because of eventual CoreData entry)
+    NSInteger frequency;
+    NSInteger sliderValue = freqSlider.value;
+    if (sliderValue <= 300) {
+        frequency = sliderValue/10;
+    } else if (sliderValue <= 625) {
+        frequency = ((sliderValue-300)/60+1)*30;
+    } else {
+        frequency = 365;
     }
-    // If frequency is greater than quarterly
-    if (freqSlider.value > 120) {
-        SliderValue = 30.0 * floor(((int)roundf(freqSlider.value)/30.0)+0.5);
-    // If greater than monthly
-    }else if (freqSlider.value > 30){
-        SliderValue = 10.0 * floor(((int)roundf(freqSlider.value)/10.0)+0.5);
-    // If less often than monthly
-    }else{
-        SliderValue= (int)roundf(freqSlider.value);
-    }
-
     
-    // Base case of days selected is 1
-    if(SliderValue == 1){
-        NSString *message = [NSString stringWithFormat:@"Remind me every day"];
-        [self.viewFrequency setText:message];
-    } else{
-    NSString *message = [NSString stringWithFormat:@"Remind every %d days", SliderValue];
+    // Map frequency to user friendly display text
+    NSString *message;
+    if (frequency == 1) {
+        message = @"Remind me every day";
+    } else if (frequency <= 30) {
+        message = [NSString stringWithFormat:@"Remind me every %ld days", frequency];
+    } else if (frequency < 365) {
+        NSInteger months = frequency/30;
+        message = [NSString stringWithFormat:@"Remind me every %ld months", months];
+    } else {
+        message = @"Remind me every year";
+    }
+    
     [self.viewFrequency setText:message];
-    }
 }
-    
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-	// After loading the view, have an alert that tells the user what he/she needs to do to use the app. For now, just dialogue box.
-    
-    UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"Quick How-to Guide" message:@"Swipe up to email \n Swipe left to text message \n Swipe right to postpone \n Swipe down to remove from future reminders\n" delegate:nil cancelButtonTitle:@"Got it" otherButtonTitles:nil, nil];
+	// Alertview with basic instructions.
+    UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"Quick How-to Guide"
+                                                      message:@"Swipe up to email \n Swipe left to text message \n Swipe right to postpone \n Swipe down to remove from future reminders\n"
+                                                     delegate:self
+                                            cancelButtonTitle:@"Got it"
+                                            otherButtonTitles:nil, nil];
     [myAlert show];
 }
 
