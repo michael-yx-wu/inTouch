@@ -14,7 +14,7 @@
 		4C340D6E18C16FF7009A96D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340D6D18C16FF7009A96D8 /* main.m */; };
 		4C340D7218C16FF7009A96D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340D7118C16FF7009A96D8 /* AppDelegate.m */; };
 		4C340D7518C16FF7009A96D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D7318C16FF7009A96D8 /* Main.storyboard */; };
-		4C340D7818C16FF7009A96D8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340D7718C16FF7009A96D8 /* ViewController.m */; };
+		4C340D7818C16FF7009A96D8 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340D7718C16FF7009A96D8 /* MainViewController.m */; };
 		4C340D7A18C16FF7009A96D8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D7918C16FF7009A96D8 /* Images.xcassets */; };
 		4C340D8118C16FF8009A96D8 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D8018C16FF8009A96D8 /* XCTest.framework */; };
 		4C340D8218C16FF8009A96D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6118C16FF7009A96D8 /* Foundation.framework */; };
@@ -25,6 +25,7 @@
 		4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340DA018C17ACF009A96D8 /* DebugLogger.m */; };
 		4C340DA318C18D91009A96D8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340DA218C18D91009A96D8 /* CoreData.framework */; };
 		4C340DA618C18DBD009A96D8 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C340DA418C18DBD009A96D8 /* Model.xcdatamodeld */; };
+		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,8 +50,8 @@
 		4C340D7018C16FF7009A96D8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4C340D7118C16FF7009A96D8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4C340D7418C16FF7009A96D8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		4C340D7618C16FF7009A96D8 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		4C340D7718C16FF7009A96D8 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		4C340D7618C16FF7009A96D8 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		4C340D7718C16FF7009A96D8 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		4C340D7918C16FF7009A96D8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4C340D7F18C16FF8009A96D8 /* inTouchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = inTouchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C340D8018C16FF8009A96D8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -62,6 +63,8 @@
 		4C340DA018C17ACF009A96D8 /* DebugLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugLogger.m; sourceTree = "<group>"; };
 		4C340DA218C18D91009A96D8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		4C340DA518C18DBD009A96D8 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		4C96311418CB71CB002D05A6 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
+		4C96311518CB71CB002D05A6 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,8 +134,10 @@
 				4C340D9F18C17ACF009A96D8 /* DebugLogger.h */,
 				4C340DA018C17ACF009A96D8 /* DebugLogger.m */,
 				4C340D7318C16FF7009A96D8 /* Main.storyboard */,
-				4C340D7618C16FF7009A96D8 /* ViewController.h */,
-				4C340D7718C16FF7009A96D8 /* ViewController.m */,
+				4C340D7618C16FF7009A96D8 /* MainViewController.h */,
+				4C340D7718C16FF7009A96D8 /* MainViewController.m */,
+				4C96311418CB71CB002D05A6 /* HelpViewController.h */,
+				4C96311518CB71CB002D05A6 /* HelpViewController.m */,
 				4C340D7918C16FF7009A96D8 /* Images.xcassets */,
 				4C340D6818C16FF7009A96D8 /* Supporting Files */,
 			);
@@ -265,7 +270,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C340D7818C16FF7009A96D8 /* ViewController.m in Sources */,
+				4C340D7818C16FF7009A96D8 /* MainViewController.m in Sources */,
+				4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */,
 				4C340D7218C16FF7009A96D8 /* AppDelegate.m in Sources */,
 				4C340DA618C18DBD009A96D8 /* Model.xcdatamodeld in Sources */,
 				4C340D6E18C16FF7009A96D8 /* main.m in Sources */,
@@ -478,6 +484,7 @@
 				4C340D9218C16FF8009A96D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4C340D9318C16FF8009A96D8 /* Build configuration list for PBXNativeTarget "inTouchTests" */ = {
 			isa = XCConfigurationList;
@@ -486,6 +493,7 @@
 				4C340D9518C16FF8009A96D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 Naicheng Wangyu. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "MainViewController.h"
 #import "DebugLogger.h"
 
-@interface ViewController ()
+@interface MainViewController ()
 
 // Display the name of the current contact
 @property (weak, nonatomic) IBOutlet UILabel *displayName;
@@ -20,7 +20,7 @@
 
 @end
 
-@implementation ViewController
+@implementation MainViewController
 
 // Button for "manually contacted" someone, that's not a swipe action.
 - (IBAction)manuallyContacted:(id)sender {
