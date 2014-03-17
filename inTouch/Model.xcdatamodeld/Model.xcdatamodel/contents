@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5063" systemVersion="13C64" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Contact" syncable="YES">
+        <attribute name="category" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="contactPhoto" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="emailHome" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="emailOther" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="emailWork" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="nameFirst" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nameLast" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="phoneHome" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="phoneMobile" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="phoneWork" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="relationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ContactMetadata" inverseName="relationship" inverseEntity="ContactMetadata" syncable="YES"/>
+    </entity>
     <entity name="ContactMetadata" syncable="YES">
         <attribute name="freqLower" optional="YES" attributeType="Integer 16" defaultValueString="1" syncable="YES"/>
         <attribute name="freqUpper" optional="YES" attributeType="Integer 16" defaultValueString="30" syncable="YES"/>
@@ -17,21 +31,7 @@
         <attribute name="numTimesPostponed" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="timezone" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="urgency" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <relationship name="relationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contacts" inverseName="relationship" inverseEntity="Contacts" syncable="YES"/>
-    </entity>
-    <entity name="Contacts" syncable="YES">
-        <attribute name="category" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="contactPhoto" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="emailHome" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="emailOther" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="emailWork" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="nameFirst" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="nameLast" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="phoneHome" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="phoneMobile" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="phoneWork" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="relationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ContactMetadata" inverseName="relationship" inverseEntity="ContactMetadata" syncable="YES"/>
+        <relationship name="relationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="relationship" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <entity name="GlobalData" syncable="YES">
         <attribute name="lastHelpTime" optional="YES" attributeType="Date" syncable="YES"/>
@@ -56,7 +56,7 @@
     </entity>
     <elements>
         <element name="ContactMetadata" positionX="-38" positionY="-117" width="128" height="298"/>
-        <element name="Contacts" positionX="117" positionY="-117" width="128" height="223"/>
+        <element name="Contact" positionX="117" positionY="-117" width="128" height="225"/>
         <element name="GlobalData" positionX="-198" positionY="192" width="128" height="105"/>
         <element name="Postpones" positionX="-198" positionY="90" width="128" height="75"/>
         <element name="Session" positionX="-198" positionY="-117" width="128" height="178"/>
