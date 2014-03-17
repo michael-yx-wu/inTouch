@@ -12,34 +12,26 @@
 
 @implementation AppDelegate
 
-@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
-@synthesize managedObjectModel = _managedObjectModel;
-@synthesize managedObjectContext = _managedObjectContext;
+@synthesize persistentStoreCoordinator;
+@synthesize managedObjectModel;
+@synthesize managedObjectContext;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Setting debug level to 1 (everything will be printed)
     [DebugLogger setDebugLevel:1];
-    
     return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types
-    // of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application
-    // and it begins the transition to the background state. Use this method to pause ongoing tasks, disable timers, and
-    // throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state
-    // information to restore your application to its current state in case it is terminated later. If your application
-    // supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    
 }
 
+// Upon becoming active application, check for new contacts to add/update
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
     
@@ -64,9 +56,12 @@
     }
 }
 
+// Save changes to contacts before termination
 - (void)applicationWillTerminate:(UIApplication *)application {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    [self saveContext];
 }
+
+#pragma mark - Update Contacts
 
 // Iterate through contacts list and add new contacts to CoreData
 - (void)updateContacts {
@@ -76,7 +71,7 @@
     NSArray *allContacts = (__bridge NSArray*)ABAddressBookCopyArrayOfAllPeople(addressBookRef);
     
     // Loop through contacts
-    NSManagedObjectModel *contact;
+    NSManagedObject *contact;
     for (int i = 0; i < [allContacts count]; i++) {
         ABRecordRef currentContact = (__bridge ABRecordRef)[allContacts objectAtIndex:i];
         
@@ -95,32 +90,11 @@
             [DebugLogger log:@"No contact photo" withPriority:1];
         }
         
-        // Get home, mobile, and work phone numbers
-        // May need modify core data later to allow more phone number types
-        ABMultiValueRef phoneNumbers = ABRecordCopyValue(currentContact, kABPersonPhoneProperty);
-        NSString *phoneHome, *phoneMobile, *phoneWork, *phoneLabel;
-        CFStringRef label;
-        for (int j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
-            // Get label for current phone number
-            label = ABMultiValueCopyLabelAtIndex(phoneNumbers, j);
-            phoneLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
-            
-            if ([phoneLabel isEqualToString:@"home"]) {
-                phoneHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-                [DebugLogger log:[NSString stringWithFormat:@"Home Phone: %@", phoneHome] withPriority:1];
-            } else if ([phoneLabel isEqualToString:@"mobile"] || [phoneLabel isEqualToString:@"iPhone"]) {
-                phoneMobile = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-                [DebugLogger log:[NSString stringWithFormat:@"Mobile Phone: %@", phoneMobile] withPriority:1];
-            } else if ([phoneLabel isEqualToString:@"work"]) {
-                phoneWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-                [DebugLogger log:[NSString stringWithFormat:@"Work Phone: %@", phoneWork] withPriority:1];
-            }
-        }
-        
         // Get home, other, and work emails
         // May need modify core data later to allow more email types
         ABMultiValueRef emails = ABRecordCopyValue(currentContact, kABPersonEmailProperty);
         NSString *emailHome, *emailOther, *emailWork, *emailLabel;
+        CFStringRef label;
         for (int j = 0; j < ABMultiValueGetCount(emails); j++) {
             // Get label for current email
             label = ABMultiValueCopyLabelAtIndex(emails, j);
@@ -138,21 +112,150 @@
             }
         }
         
-        // Create ManageObject and populate with data
-        // Note: some fields may be set to null
-        contact = [NSEntityDescription
-                   insertNewObjectForEntityForName:@"Contact"
-                   inManagedObjectContext:[self managedObjectContext]];
-        [contact setValue:firstName forKey:@"nameFirst"];
-        [contact setValue:lastName forKey:@"nameLast"];
-        [contact setValue:contactPhoto forKey:@"contactPhoto"];
-        [contact setValue:emailHome forKey:@"emailHome"];
-        [contact setValue:emailOther forKey:@"emailOther"];
-        [contact setValue:emailWork forKey:@"emailWork"];
-        [contact setValue:phoneHome forKey:@"phoneHome"];
-        [contact setValue:phoneMobile forKey:@"phoneMobile"];
-        [contact setValue:phoneWork forKey:@"phoneWork"];
+        // Get home, mobile, and work phone numbers
+        // May need modify core data later to allow more phone number types
+        ABMultiValueRef phoneNumbers = ABRecordCopyValue(currentContact, kABPersonPhoneProperty);
+        NSString *phoneHome, *phoneMobile, *phoneWork, *phoneLabel;
+        for (int j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
+            // Get label for current phone number
+            label = ABMultiValueCopyLabelAtIndex(phoneNumbers, j);
+            phoneLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
+            
+            if ([phoneLabel isEqualToString:@"home"]) {
+                phoneHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+                [DebugLogger log:[NSString stringWithFormat:@"Home Phone: %@", phoneHome] withPriority:1];
+            } else if ([phoneLabel isEqualToString:@"mobile"] || [phoneLabel isEqualToString:@"iPhone"]) {
+                phoneMobile = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+                [DebugLogger log:[NSString stringWithFormat:@"Mobile Phone: %@", phoneMobile] withPriority:1];
+            } else if ([phoneLabel isEqualToString:@"work"]) {
+                phoneWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+                [DebugLogger log:[NSString stringWithFormat:@"Work Phone: %@", phoneWork] withPriority:1];
+            }
+        }
+        
+        // Check if contact already exists
+        if ([[self fetchRequestWithFirstName:firstName LastName:lastName] count] == 0) {
+            // Create ManageObject and populate with data
+            // Note: some fields may be set to null
+            contact = [NSEntityDescription
+                       insertNewObjectForEntityForName:@"Contact"
+                       inManagedObjectContext:[self managedObjectContext]];
+            [contact setValue:firstName forKey:@"nameFirst"];
+            [contact setValue:lastName forKey:@"nameLast"];
+            [contact setValue:contactPhoto forKey:@"contactPhoto"];
+            [contact setValue:emailHome forKey:@"emailHome"];
+            [contact setValue:emailOther forKey:@"emailOther"];
+            [contact setValue:emailWork forKey:@"emailWork"];
+            [contact setValue:phoneHome forKey:@"phoneHome"];
+            [contact setValue:phoneMobile forKey:@"phoneMobile"];
+            [contact setValue:phoneWork forKey:@"phoneWork"];
+            [DebugLogger log:@"Created entity for contact" withPriority:1];
+        } else {
+            [DebugLogger log:@"Contact already exists" withPriority:1];
+        }
     }
 }
 
+// Returns an array of all entities with matching first and last names
+// Will need to implement more sophisticated method of determing contact identity in the future
+- (NSArray*)fetchRequestWithFirstName:(NSString*)fname LastName:(NSString*)lname {
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"Contact"
+                                                         inManagedObjectContext:moc];
+
+    // Formulate the request
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(nameFirst == %@) AND (nameLast == %@)",
+                              fname, lname];
+    [request setPredicate:predicate];
+    
+    NSError *error;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (results == nil) {
+        [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
+                          error, [error userInfo]] withPriority:1];
+        abort();
+    }
+    return results;
+}
+
+// Return number of contacts in the current managed object context
+- (NSUInteger)numContacts {
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"Contact"
+                                                         inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    NSError *error;
+    NSUInteger count = [moc countForFetchRequest:request error:&error];
+    if (count == NSNotFound) {
+        [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
+                          error, [error userInfo]] withPriority:1];
+    }
+    return count;    
+}
+
+// Save managed object context state if it has changed
+- (void)saveContext {
+    NSError *error;
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    if (moc != nil) {
+        if ([moc hasChanges] && ![moc save:&error]) {
+            [DebugLogger log:[NSString stringWithFormat:@"Save error: %@, %@", error, [error userInfo]] withPriority:1];
+            abort();
+        }
+        [DebugLogger log:[NSString stringWithFormat:@"Total contacts: %lu", [self numContacts]] withPriority:1];
+    }
+}
+
+#pragma mark - Core Data
+
+// Creates if necessary and returns the managed object context
+- (NSManagedObjectContext *)managedObjectContext {
+    if (managedObjectContext != nil) {
+        return managedObjectContext;
+    }
+    
+    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+    if (coordinator != nil) {
+        managedObjectContext = [[NSManagedObjectContext alloc] init];
+        [managedObjectContext setPersistentStoreCoordinator:coordinator];
+    }
+    return managedObjectContext;
+}
+
+// Creates if necessary and returns the managed object model
+- (NSManagedObjectModel *)managedObjectModel {
+    if (managedObjectModel) {
+        return managedObjectModel;
+    }
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Model" withExtension:@"momd"];
+    managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    return managedObjectModel;
+}
+
+// Creaes if necessary and returns the persistent store coordinator
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
+    if (persistentStoreCoordinator != nil) {
+        return persistentStoreCoordinator;
+    }
+    
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Model.sqlite"];
+
+    NSError *error = nil;
+    persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
+        [DebugLogger log:[NSString stringWithFormat:@"Error: %@, %@", error, [error userInfo]] withPriority:1];
+        abort();
+    }
+    
+    return persistentStoreCoordinator;
+}
+
+// Returns the URL to the application's Documents directory
+- (NSURL *)applicationDocumentsDirectory {
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
 @end

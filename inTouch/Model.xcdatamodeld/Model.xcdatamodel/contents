@@ -6,7 +6,7 @@
         <attribute name="emailHome" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="emailOther" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="emailWork" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="identity" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="nameFirst" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="nameLast" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phoneHome" optional="YES" attributeType="String" syncable="YES"/>
@@ -17,7 +17,7 @@
     <entity name="ContactMetadata" syncable="YES">
         <attribute name="freqLower" optional="YES" attributeType="Integer 16" defaultValueString="1" syncable="YES"/>
         <attribute name="freqUpper" optional="YES" attributeType="Integer 16" defaultValueString="30" syncable="YES"/>
-        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="identity" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="interest" optional="YES" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
         <attribute name="lastContactedDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastPostponedDate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -55,8 +55,8 @@
         <attribute name="numPostpones" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ContactMetadata" positionX="-38" positionY="-117" width="128" height="298"/>
         <element name="Contact" positionX="117" positionY="-117" width="128" height="225"/>
+        <element name="ContactMetadata" positionX="-38" positionY="-117" width="128" height="298"/>
         <element name="GlobalData" positionX="-198" positionY="192" width="128" height="105"/>
         <element name="Postpones" positionX="-198" positionY="90" width="128" height="75"/>
         <element name="Session" positionX="-198" positionY="-117" width="128" height="178"/>
