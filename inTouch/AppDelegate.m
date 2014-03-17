@@ -16,49 +16,111 @@
     // Setting debug level to 1 (everything will be printed)
     [DebugLogger setDebugLevel:1];
     
-    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
-        ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error) {
-            if (granted) {
-                // Import contacts
-                
-            } else {
-                // Display message - access denied
-                UIAlertView *accessDeniedMessage = [[UIAlertView alloc]
-                                                    initWithTitle:nil
-                                                    message:@"Contacts were not\
-                                                            automatically\
-                                                            imported"
-                                                    delegate:self
-                                                    cancelButtonTitle:@"OK"
-                                                    otherButtonTitles:nil];
-                [accessDeniedMessage show];
-            }
-        });
-    }
     return YES;
 }
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+    
+    // Add new contacts from AddressBook to CoreData
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error) {
+            if (granted) {
+                [self updateContacts];
+            } else {
+                // Display message - access denied
+                UIAlertView *accessDeniedMessage = [[UIAlertView alloc]
+                                                    initWithTitle:nil
+                                                    message:@"Contacts were not automatically imported"
+                                                    delegate:self
+                                                    cancelButtonTitle:@"OK"
+                                                    otherButtonTitles:nil];
+                [accessDeniedMessage show];
+            }
+        });
+    } else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
+        [self updateContacts];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+// Iterate through contacts list and add new contacts to CoreData
+- (void)updateContacts {
+    [DebugLogger log:@"Updating Contacts..." withPriority:1];
+    // Open contacts
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+    NSArray *allContacts = (__bridge NSArray*)ABAddressBookCopyArrayOfAllPeople(addressBookRef);
+    
+    // Loop through contacts
+    for (int i = 0; i < [allContacts count]; i++) {
+        ABRecordRef currentContact = (__bridge ABRecordRef)[allContacts objectAtIndex:i];
+        
+        // Extract contact information
+        NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonFirstNameProperty);
+        NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonLastNameProperty);
+        [DebugLogger log:[NSString stringWithFormat:@"First Name: %@", firstName] withPriority:1];
+        [DebugLogger log:[NSString stringWithFormat:@"Last Name: %@", lastName] withPriority:1];
+        
+        // Get home, mobile, and work phone numbers
+        // May need modify core data later to allow more phone number types
+        ABMultiValueRef phoneNumbers = ABRecordCopyValue(currentContact, kABPersonPhoneProperty);
+        NSString *phoneHome, *phoneMobile, *phoneWork, *phoneLabel;
+        CFStringRef label;
+        for (int j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
+            // Get label for current phone number
+            label = ABMultiValueCopyLabelAtIndex(phoneNumbers, j);
+            phoneLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
+            
+            if ([phoneLabel isEqualToString:@"home"]) {
+                phoneHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+                [DebugLogger log:[NSString stringWithFormat:@"Home Phone: %@", phoneHome] withPriority:1];
+            } else if ([phoneLabel isEqualToString:@"mobile"] || [phoneLabel isEqualToString:@"iPhone"]) {
+                phoneMobile = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+                [DebugLogger log:[NSString stringWithFormat:@"Mobile Phone: %@", phoneMobile] withPriority:1];
+            } else if ([phoneLabel isEqualToString:@"work"]) {
+                phoneWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+                [DebugLogger log:[NSString stringWithFormat:@"Work Phone: %@", phoneWork] withPriority:1];
+            }
+        }
+        
+        // Get home, other, and work emails
+        // May need modify core data later to allow more email types
+        ABMultiValueRef emails = ABRecordCopyValue(currentContact, kABPersonEmailProperty);
+        NSString *emailHome, *emailOther, *emailWork, *emailLabel;
+        for (int j = 0; j < ABMultiValueGetCount(emails); j++) {
+            // Get label for current email
+            label = ABMultiValueCopyLabelAtIndex(emails, j);
+            emailLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
+            
+            if ([emailLabel isEqualToString:@"home"]) {
+                emailHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+                [DebugLogger log:[NSString stringWithFormat:@"Home Email: %@", emailHome] withPriority:1];
+            } else if ([emailLabel isEqualToString:@"other"]) {
+                emailOther = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+                [DebugLogger log:[NSString stringWithFormat:@"Other Email: %@", emailOther] withPriority:1];
+            } else if ([emailLabel isEqualToString:@"work"]) {
+                emailWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+                [DebugLogger log:[NSString stringWithFormat:@"Work Email: %@", emailWork] withPriority:1];
+            }
+        }
+    }
 }
 
 @end

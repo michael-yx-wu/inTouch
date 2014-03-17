@@ -17,11 +17,10 @@ static NSInteger debugLevel;
  priority. Otherwise message is ignored.
  */
 + (void)log:(NSString*)message withPriority:(NSInteger)priority {
-    if (priority > debugLevel) {
+    if (priority >= debugLevel) {
         NSLog(@"%@", message);
     }
 }
-
 
 + (void)setDebugLevel:(NSInteger)debugFilter {
     debugLevel = debugFilter;

@@ -34,7 +34,7 @@
     
     // Default value or a pre-existing value needs to be determined
     [freqSlider setContinuous:YES];
-    [freqSlider setMinimumValue:0];
+    [freqSlider setMinimumValue:10];
     [freqSlider setMaximumValue:650];
     
     // Map slider value to remind frequency (in days because of eventual CoreData entry)

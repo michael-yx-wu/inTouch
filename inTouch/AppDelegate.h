@@ -11,6 +11,7 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-// Use this space to be able to create different managed object context modifications
+
+- (void)updateContacts;
 
 @end
