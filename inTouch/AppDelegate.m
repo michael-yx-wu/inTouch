@@ -160,15 +160,13 @@
 // Will need to implement more sophisticated method of determing contact identity in the future
 - (NSArray*)fetchRequestWithFirstName:(NSString*)fname LastName:(NSString*)lname {
     NSManagedObjectContext *moc = [self managedObjectContext];
-    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"Contact"
-                                                         inManagedObjectContext:moc];
-
-    // Formulate the request
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDescription];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(nameFirst == %@) AND (nameLast == %@)",
-                              fname, lname];
-    [request setPredicate:predicate];
+    NSManagedObjectModel *model = [self managedObjectModel];
+    
+    // ContactNameMatch - return all contacts that match first name AND last name fields
+    NSDictionary *subVars = [[NSDictionary alloc] initWithObjectsAndKeys:@"NAMEFIRST", fname,
+                             @"NAMELAST", lname, nil];
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactNameMatch"
+                                                substitutionVariables:subVars];
     
     NSError *error;
     NSArray *results = [moc executeFetchRequest:request error:&error];

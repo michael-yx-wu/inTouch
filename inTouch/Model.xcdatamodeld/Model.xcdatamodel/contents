@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5063" systemVersion="13C64" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5063" systemVersion="13C64" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Contact" syncable="YES">
         <attribute name="category" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="contactPhoto" optional="YES" attributeType="Binary" syncable="YES"/>
@@ -54,8 +54,9 @@
         <attribute name="numNotInterested" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="numPostpones" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
+    <fetchRequest name="ContactNameMatch" entity="Contact" predicateString="nameFirst == &quot;$NAMEFIRST&quot; AND nameLast == &quot;$NAMELAST&quot;"/>
     <elements>
-        <element name="Contact" positionX="117" positionY="-117" width="128" height="225"/>
+        <element name="Contact" positionX="117" positionY="-117" width="128" height="223"/>
         <element name="ContactMetadata" positionX="-38" positionY="-117" width="128" height="298"/>
         <element name="GlobalData" positionX="-198" positionY="192" width="128" height="105"/>
         <element name="Postpones" positionX="-198" positionY="90" width="128" height="75"/>
