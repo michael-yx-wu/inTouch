@@ -25,6 +25,7 @@
 		4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340DA018C17ACF009A96D8 /* DebugLogger.m */; };
 		4C340DA318C18D91009A96D8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340DA218C18D91009A96D8 /* CoreData.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		4C340DA618C18DBD009A96D8 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C340DA418C18DBD009A96D8 /* Model.xcdatamodeld */; };
+		4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C47934C18E0EB2900A408AB /* ContactViewController.m */; };
 		4C6DEEF018D771E000117834 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6DEEEF18D771E000117834 /* Contact.m */; };
 		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
 /* End PBXBuildFile section */
@@ -64,6 +65,8 @@
 		4C340DA018C17ACF009A96D8 /* DebugLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugLogger.m; sourceTree = "<group>"; };
 		4C340DA218C18D91009A96D8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		4C340DA518C18DBD009A96D8 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		4C47934B18E0EB2900A408AB /* ContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactViewController.h; sourceTree = "<group>"; };
+		4C47934C18E0EB2900A408AB /* ContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactViewController.m; sourceTree = "<group>"; };
 		4C6DEEEE18D771E000117834 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
 		4C6DEEEF18D771E000117834 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
 		4C96311418CB71CB002D05A6 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
@@ -139,6 +142,8 @@
 				4C340DA018C17ACF009A96D8 /* DebugLogger.m */,
 				4C340D7618C16FF7009A96D8 /* MainViewController.h */,
 				4C340D7718C16FF7009A96D8 /* MainViewController.m */,
+				4C47934B18E0EB2900A408AB /* ContactViewController.h */,
+				4C47934C18E0EB2900A408AB /* ContactViewController.m */,
 				4C96311418CB71CB002D05A6 /* HelpViewController.h */,
 				4C96311518CB71CB002D05A6 /* HelpViewController.m */,
 				4C340D7318C16FF7009A96D8 /* Main.storyboard */,
@@ -280,6 +285,7 @@
 				4C340D7218C16FF7009A96D8 /* AppDelegate.m in Sources */,
 				4C340DA618C18DBD009A96D8 /* Model.xcdatamodeld in Sources */,
 				4C6DEEF018D771E000117834 /* Contact.m in Sources */,
+				4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */,
 				4C340D6E18C16FF7009A96D8 /* main.m in Sources */,
 				4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */,
 			);

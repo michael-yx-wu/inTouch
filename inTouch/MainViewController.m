@@ -7,16 +7,11 @@
 //
 
 #import "MainViewController.h"
+#import "ContactViewController.h"
+
 #import "DebugLogger.h"
 
 @interface MainViewController ()
-
-// Display the name of the current contact
-@property (weak, nonatomic) IBOutlet UILabel *displayName;
-// Display the frequency as user uses the slider
-@property (weak, nonatomic) IBOutlet UILabel *viewFrequency;
-// Display the contact picture
-@property (weak, nonatomic) IBOutlet UIImageView *contactPicture;
 
 @end
 
@@ -79,4 +74,20 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+    if ([[segue identifier] isEqualToString:@"contact"]) {
+        ContactViewController *destViewController = [segue destinationViewController];
+        [destViewController setName:@"Johnny"];
+    }
+    
+}
+
+
+
 @end

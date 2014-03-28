@@ -22,7 +22,9 @@
     return YES;
 }
 
+// Save changes to contacts before entering background
 - (void)applicationWillResignActive:(UIApplication *)application {
+    [self saveContext];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
@@ -54,6 +56,8 @@
     } else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
         [self updateContacts];
     }
+    
+    // Retrieve next contact
 }
 
 // Save changes to contacts before termination
@@ -71,7 +75,6 @@
     NSArray *allContacts = (__bridge NSArray*)ABAddressBookCopyArrayOfAllPeople(addressBookRef);
     
     // Loop through contacts
-    NSManagedObject *contact;
     for (int i = 0; i < [allContacts count]; i++) {
         ABRecordRef currentContact = (__bridge ABRecordRef)[allContacts objectAtIndex:i];
         
@@ -135,11 +138,11 @@
         
         // Check if contact already exists
         if ([[self fetchRequestWithFirstName:firstName LastName:lastName] count] == 0) {
-            // Create ManageObject and populate with data
-            // Note: some fields may be set to null
-            contact = [NSEntityDescription
-                       insertNewObjectForEntityForName:@"Contact"
-                       inManagedObjectContext:[self managedObjectContext]];
+            
+            // Create Contact
+            NSManagedObject *contact = [NSEntityDescription
+                                        insertNewObjectForEntityForName:@"Contact"
+                                        inManagedObjectContext:[self managedObjectContext]];
             [contact setValue:firstName forKey:@"nameFirst"];
             [contact setValue:lastName forKey:@"nameLast"];
             [contact setValue:contactPhoto forKey:@"contactPhoto"];
@@ -149,6 +152,31 @@
             [contact setValue:phoneHome forKey:@"phoneHome"];
             [contact setValue:phoneMobile forKey:@"phoneMobile"];
             [contact setValue:phoneWork forKey:@"phoneWork"];
+            
+            // Create ContactMetadata
+            NSManagedObject *metaData = [NSEntityDescription
+                                         insertNewObjectForEntityForName:@"ContactMetadata"
+                                         inManagedObjectContext:[self managedObjectContext]];
+            [metaData setValue:[NSNumber numberWithInt:14] forKeyPath:@"freq"];
+            [metaData setValue:[NSNumber numberWithBool:YES] forKey:@"interest"];
+            [metaData setValue:nil forKey:@"lastContactedDate"];
+            [metaData setValue:nil forKey:@"lastPostponedDate"];
+            [metaData setValue:nil forKey:@"noInterestDate"];
+            [metaData setValue:nil forKey:@"notes"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesAppeared"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesCalled"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesContacted"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesEmailed"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesMessaged"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesPostponed"];
+            [metaData setValue:[[NSTimeZone localTimeZone] name] forKeyPath:@"timezone"];
+            [metaData setValue:nil forKeyPath:@"urgency"];
+            
+            // Relate contact and metadata
+            [contact setValue:metaData forKeyPath:@"metadata"];
+            [metaData setValue:contact forKey:@"contact"];
+            
+            
             [DebugLogger log:@"Created entity for contact" withPriority:1];
         } else {
             [DebugLogger log:@"Contact already exists" withPriority:1];
@@ -163,8 +191,10 @@
     NSManagedObjectModel *model = [self managedObjectModel];
     
     // ContactNameMatch - return all contacts that match first name AND last name fields
-    NSDictionary *subVars = [[NSDictionary alloc] initWithObjectsAndKeys:@"NAMEFIRST", fname,
-                             @"NAMELAST", lname, nil];
+    NSDictionary *subVars = @{
+                              @"NAMEFIRST": fname,
+                              @"NAMELAST": lname
+                              };
     NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactNameMatch"
                                                 substitutionVariables:subVars];
     

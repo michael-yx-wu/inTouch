@@ -6,18 +6,15 @@
         <attribute name="emailHome" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="emailOther" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="emailWork" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="identity" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="nameFirst" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="nameLast" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phoneHome" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phoneMobile" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phoneWork" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="relationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ContactMetadata" inverseName="relationship" inverseEntity="ContactMetadata" syncable="YES"/>
+        <relationship name="metadata" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ContactMetadata" inverseName="contact" inverseEntity="ContactMetadata" syncable="YES"/>
     </entity>
     <entity name="ContactMetadata" syncable="YES">
-        <attribute name="freqLower" optional="YES" attributeType="Integer 16" defaultValueString="1" syncable="YES"/>
-        <attribute name="freqUpper" optional="YES" attributeType="Integer 16" defaultValueString="30" syncable="YES"/>
-        <attribute name="identity" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="freq" optional="YES" attributeType="Integer 16" defaultValueString="30" syncable="YES"/>
         <attribute name="interest" optional="YES" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
         <attribute name="lastContactedDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastPostponedDate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -29,9 +26,9 @@
         <attribute name="numTimesEmailed" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="numTimesMessaged" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="numTimesPostponed" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="timezone" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="timezone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="urgency" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <relationship name="relationship" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="relationship" inverseEntity="Contact" syncable="YES"/>
+        <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="metadata" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <entity name="GlobalData" syncable="YES">
         <attribute name="lastHelpTime" optional="YES" attributeType="Date" syncable="YES"/>
@@ -54,10 +51,10 @@
         <attribute name="numNotInterested" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="numPostpones" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
-    <fetchRequest name="ContactNameMatch" entity="Contact" predicateString="nameFirst == &quot;$NAMEFIRST&quot; AND nameLast == &quot;$NAMELAST&quot;"/>
+    <fetchRequest name="ContactNameMatch" entity="Contact" predicateString="nameFirst == $NAMEFIRST AND nameLast == $NAMELAST"/>
     <elements>
-        <element name="Contact" positionX="117" positionY="-117" width="128" height="223"/>
-        <element name="ContactMetadata" positionX="-38" positionY="-117" width="128" height="298"/>
+        <element name="Contact" positionX="117" positionY="-115" width="128" height="208"/>
+        <element name="ContactMetadata" positionX="-45" positionY="-117" width="128" height="270"/>
         <element name="GlobalData" positionX="-198" positionY="192" width="128" height="105"/>
         <element name="Postpones" positionX="-198" positionY="90" width="128" height="75"/>
         <element name="Session" positionX="-198" positionY="-117" width="128" height="178"/>

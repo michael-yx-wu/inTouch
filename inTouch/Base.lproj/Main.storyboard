@@ -125,6 +125,7 @@
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="BfR-T4-VaM" appends="YES" id="ih4-Rk-VJp"/>
                             <outletCollection property="gestureRecognizers" destination="Y7f-Af-2qE" appends="YES" id="5Vh-72-QZT"/>
+                            <outletCollection property="gestureRecognizers" destination="96F-cS-sE5" appends="YES" id="v9w-8E-JQM"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="3fk-ON-6g7"/>
@@ -135,12 +136,89 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="left" id="BfR-T4-VaM"/>
+                <swipeGestureRecognizer direction="left" id="BfR-T4-VaM">
+                    <connections>
+                        <segue destination="ost-IX-nwv" kind="modal" identifier="contact" modalTransitionStyle="flipHorizontal" id="wqu-lI-LlA"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="jVJ-aU-z4h"/>
                 <swipeGestureRecognizer direction="right" id="Y7f-Af-2qE"/>
                 <swipeGestureRecognizer direction="up" id="6uu-8a-74z"/>
                 <swipeGestureRecognizer direction="down" id="R7Z-Kv-qsZ"/>
+                <tapGestureRecognizer id="96F-cS-sE5"/>
             </objects>
-            <point key="canvasLocation" x="341" y="25"/>
+            <point key="canvasLocation" x="11" y="-253"/>
+        </scene>
+        <!--Contact View Controller-->
+        <scene sceneID="Vbk-hK-mq7">
+            <objects>
+                <viewController id="ost-IX-nwv" customClass="ContactViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="cGg-LT-Q9Q"/>
+                        <viewControllerLayoutGuide type="bottom" id="bjt-lR-3iW"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="r1N-5g-ugV">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gME-B4-ELc">
+                                <rect key="frame" x="0.0" y="28" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Contact" id="ziu-wr-kTa">
+                                        <barButtonItem key="leftBarButtonItem" style="plain" id="2KQ-FN-Tzi">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="rku-6Q-IRD">
+                                                <rect key="frame" x="16" y="7" width="48" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Cancel">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="dismiss:" destination="ost-IX-nwv" eventType="touchUpInside" id="HF8-tU-Oia"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nai-cd-v4s">
+                                <rect key="frame" x="20" y="269" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Call">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2kq-BB-3yx">
+                                <rect key="frame" x="145" y="269" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Text">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o">
+                                <rect key="frame" x="262" y="269" width="38" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Email">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name Placeholder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCc-mg-fOb">
+                                <rect key="frame" x="49" y="187" width="223" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="nameLabel" destination="eCc-mg-fOb" id="QGo-7u-aoo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="j6a-IU-vq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="380" y="-903"/>
         </scene>
         <!--Help View Controller-->
         <scene sceneID="fqF-Lc-Yln">
@@ -198,7 +276,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vXu-LN-LnE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="748" y="25"/>
+            <point key="canvasLocation" x="6" y="-903"/>
         </scene>
     </scenes>
     <resources>
