@@ -57,7 +57,8 @@
         [self updateContacts];
     }
     
-    // Retrieve next contact
+    // Update contact urgency
+    [self updateContactsUrgency];
 }
 
 // Save changes to contacts before termination
@@ -65,7 +66,7 @@
     [self saveContext];
 }
 
-#pragma mark - Update Contacts
+#pragma mark - Updating Contacts and ContactsMetadata
 
 // Iterate through contacts list and add new contacts to CoreData
 - (void)updateContacts {
@@ -176,12 +177,13 @@
             [contact setValue:metaData forKeyPath:@"metadata"];
             [metaData setValue:contact forKey:@"contact"];
             
-            
             [DebugLogger log:@"Created entity for contact" withPriority:1];
         } else {
             [DebugLogger log:@"Contact already exists" withPriority:1];
         }
     }
+    
+    [self saveContext];
 }
 
 // Returns an array of all entities with matching first and last names
@@ -231,11 +233,71 @@
     NSManagedObjectContext *moc = [self managedObjectContext];
     if (moc != nil) {
         if ([moc hasChanges] && ![moc save:&error]) {
-            [DebugLogger log:[NSString stringWithFormat:@"Save error: %@, %@", error, [error userInfo]] withPriority:1];
+            [DebugLogger log:[NSString stringWithFormat:@"Save error: %@, %@",
+                              error, [error userInfo]] withPriority:1];
             abort();
         }
-        [DebugLogger log:[NSString stringWithFormat:@"Total contacts: %lu", [self numContacts]] withPriority:1];
+        [DebugLogger log:[NSString stringWithFormat:@"Total contacts: %lu",
+                          [self numContacts]] withPriority:1];
     }
+}
+
+// Update the urgency for all contacts in core data
+- (void)updateContactsUrgency {
+    // Set up fetch request using template
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSManagedObjectModel *model = [self managedObjectModel];
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactMetadataAll"
+                                                substitutionVariables:nil];
+    
+    // Execute request
+    NSError *error;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (results == nil){
+        [DebugLogger log:[NSString stringWithFormat:@"Urgency update error: %@, %@",
+                          error, [error userInfo]] withPriority:1];
+        abort();
+    }
+    
+    [DebugLogger log:[NSString stringWithFormat:@"Updating urgency for %lu contacts",
+                      [results count]] withPriority:1];
+    
+    // #### The following will need to be adjusted for best UX ####
+    for (int i = 0; i < [results count]; i++) {
+        NSManagedObject *metaData = [results objectAtIndex:i];
+        NSDate *lastContactedDate = [metaData valueForKey:@"lastContactedDate"];
+        NSDate *currentDate = [NSDate date];
+        NSDateComponents *diff;
+        double daysSinceLastContact;
+        double freq = [[metaData valueForKey:@"freq"] doubleValue];
+
+        
+        // Update urgency based on frequencies and last date contacted
+        // For now, urg = (currentdate - lastdate)/freq or 0 if
+        // the expression < 1
+        NSNumber *urgency;
+        
+        // If never contacted, default urgency is 1
+        if (lastContactedDate == nil) {
+            urgency = [NSNumber numberWithDouble:1];
+        }
+        // Calculate urg using formula above
+        else {
+            diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit
+                                                   fromDate:lastContactedDate toDate:currentDate options:0];
+            daysSinceLastContact = [diff day];
+            urgency = [NSNumber numberWithDouble:daysSinceLastContact/freq];
+            if ([urgency doubleValue] < 1) {
+                urgency = [NSNumber numberWithDouble:0];
+            }
+        }
+        
+        // Save the new urgency value
+        [metaData setValue:urgency forKey:@"urgency"];
+        [DebugLogger log:[NSString stringWithFormat:@"New urgency: %f", [urgency doubleValue]] withPriority:1];
+    }
+    
+    [self saveContext];
 }
 
 #pragma mark - Core Data

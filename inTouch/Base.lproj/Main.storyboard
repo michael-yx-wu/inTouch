@@ -130,8 +130,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="3fk-ON-6g7"/>
                     <connections>
-                        <outlet property="contactPicture" destination="5DP-PC-WdX" id="ous-TX-tOJ"/>
-                        <outlet property="displayName" destination="xM2-iI-mT0" id="XMI-Z5-hLJ"/>
+                        <outlet property="contactName" destination="xM2-iI-mT0" id="NJu-9l-J8W"/>
+                        <outlet property="contactPhoto" destination="5DP-PC-WdX" id="QkY-ga-4Gb"/>
                         <outlet property="viewFrequency" destination="WY6-K2-IHX" id="RV5-g3-45w"/>
                     </connections>
                 </viewController>

@@ -8,13 +8,11 @@
 
 @interface MainViewController : UIViewController
 
-// Display the name of the current contact
-@property (weak, nonatomic) IBOutlet UILabel *displayName;
-// Display the frequency as user uses the slider
+// Current contact name and photo
+@property (weak, nonatomic) IBOutlet UILabel *contactName;
+@property (weak, nonatomic) IBOutlet UIImageView *contactPhoto;
+
+// Current contact remind frequency
 @property (weak, nonatomic) IBOutlet UILabel *viewFrequency;
-// Display the contact picture
-@property (weak, nonatomic) IBOutlet UIImageView *contactPicture;
-
-
 
 @end
