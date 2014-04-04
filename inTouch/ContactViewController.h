@@ -11,12 +11,13 @@
 @interface ContactViewController : UIViewController
 
 // Display
-@property (nonatomic, strong) IBOutlet UILabel *nameLabel;
-@property (nonatomic, strong) IBOutlet UIImageView *photoView;
+@property (nonatomic, strong) IBOutlet UILabel *contactName;
+@property (nonatomic, strong) IBOutlet UIImageView *contactPhoto;
 
 // Contact Data
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) UIImage *photo;
+@property (nonatomic, strong) NSString *firstName;
+@property (nonatomic, strong) NSString *lastName;
+@property (nonatomic, strong) UIImage *photoData;
 @property (nonatomic, strong) NSString *emailHome;
 @property (nonatomic, strong) NSString *emailWork;
 @property (nonatomic, strong) NSString *emailOther;

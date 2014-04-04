@@ -13,18 +13,19 @@
 #import "DebugLogger.h"
 
 @interface MainViewController ()
-
 @end
 
 @implementation MainViewController
 
+// Contact display variables
 @synthesize contactName;
 @synthesize contactPhoto;
 @synthesize viewFrequency;
 
+// Contact data variables
 @synthesize firstName;
 @synthesize lastName;
-@synthesize contactPhotoData;
+@synthesize photoData;
 @synthesize emailHome;
 @synthesize emailOther;
 @synthesize emailWork;
@@ -34,6 +35,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
 	// Alertview with basic instructions.
     UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"Quick How-to Guide"
                                                       message:@"Swipe up to email \n Swipe left to text message \n Swipe right to postpone \n Swipe down to remove from future reminders\n"
@@ -41,9 +43,19 @@
                                             cancelButtonTitle:@"Got it"
                                             otherButtonTitles:nil, nil];
     [myAlert show];
-    
-    // Get the most urgent contact
+    [self performSelector:@selector(getNextContact) withObject:nil afterDelay:2];
+}
+
+// Get most urgent contact upon regaining control
+- (void)viewWillAppear:(BOOL)animated {
     [self getNextContact];
+}
+
+- (void)fetchNextContactOnEmpty {
+    if ([[contactName text] isEqualToString:@"No Urgent Contacts"]) {
+        [self getNextContact];
+        [DebugLogger log:@"fetching on empty" withPriority:2];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -88,7 +100,7 @@
         NSManagedObject *contact = [[results objectAtIndex:0] valueForKey:@"Contact"];
         firstName = [contact valueForKey:@"nameFirst"];
         lastName = [contact valueForKey:@"nameLast"];
-        contactPhotoData = [contact valueForKey:@"contactPhoto"];
+        photoData = [contact valueForKey:@"contactPhoto"];
         emailHome = [contact valueForKey:@"emailHome"];
         emailOther = [contact valueForKey:@"emailOther"];
         emailWork = [contact valueForKey:@"emailWork"];
@@ -101,7 +113,7 @@
         [contactName setText:name];
         
         // Set contact photo
-        UIImage *img = [[UIImage alloc] initWithData:contactPhotoData];
+        UIImage *img = [[UIImage alloc] initWithData:photoData];
         [contactPhoto setImage:img];
     }
 }
@@ -145,15 +157,23 @@
 
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
+// Passing information to ContactViewController before segueing 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:2];
+    
+    // Pass contact information to the new view controller.
     if ([[segue identifier] isEqualToString:@"contact"]) {
         ContactViewController *destViewController = [segue destinationViewController];
-        [destViewController setName:@"Johnny"];
+        [destViewController setFirstName:firstName];
+        [destViewController setLastName:lastName];
+        [destViewController setPhotoData:[contactPhoto image]];
+        [destViewController setEmailHome:emailHome];
+        [destViewController setEmailOther:emailOther];
+        [destViewController setEmailWork:emailWork];
+        [destViewController setPhoneHome:phoneHome];
+        [destViewController setPhoneMobile:phoneMobile];
+        [destViewController setPhoneWork:phoneWork];
     }
-    
 }
 
 #pragma mark - Core Data Accessor Methods

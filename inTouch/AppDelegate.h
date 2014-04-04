@@ -14,5 +14,6 @@
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 - (void)updateContacts;
+- (void)updateContactsUrgency;
 
 @end

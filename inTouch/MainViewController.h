@@ -15,14 +15,15 @@
 // Current contact remind frequency
 @property (weak, nonatomic) IBOutlet UILabel *viewFrequency;
 
-@property (weak, nonatomic) NSString *firstName;
-@property (weak, nonatomic) NSString *lastName;
-@property (weak, nonatomic) NSData *contactPhotoData;
-@property (weak, nonatomic) NSString *emailHome;
-@property (weak, nonatomic) NSString *emailOther;
-@property (weak, nonatomic) NSString *emailWork;
-@property (weak, nonatomic) NSString *phoneHome;
-@property (weak, nonatomic) NSString *phoneMobile;
-@property (weak, nonatomic) NSString *phoneWork;
+// Current contact attributes in core data
+@property (strong, nonatomic) NSString *firstName;
+@property (strong, nonatomic) NSString *lastName;
+@property (strong, nonatomic) NSData *photoData;
+@property (strong, nonatomic) NSString *emailHome;
+@property (strong, nonatomic) NSString *emailOther;
+@property (strong, nonatomic) NSString *emailWork;
+@property (strong, nonatomic) NSString *phoneHome;
+@property (strong, nonatomic) NSString *phoneMobile;
+@property (strong, nonatomic) NSString *phoneWork;
 
 @end
