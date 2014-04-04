@@ -144,6 +144,7 @@
             NSManagedObject *contact = [NSEntityDescription
                                         insertNewObjectForEntityForName:@"Contact"
                                         inManagedObjectContext:[self managedObjectContext]];
+            [contact setValue:nil forKey:@"category"];
             [contact setValue:firstName forKey:@"nameFirst"];
             [contact setValue:lastName forKey:@"nameLast"];
             [contact setValue:contactPhoto forKey:@"contactPhoto"];
@@ -229,6 +230,7 @@
 
 // Save managed object context state if it has changed
 - (void)saveContext {
+    [DebugLogger log:@"Attempting Save..." withPriority:1];
     NSError *error;
     NSManagedObjectContext *moc = [self managedObjectContext];
     if (moc != nil) {
@@ -348,4 +350,5 @@
 - (NSURL *)applicationDocumentsDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
+
 @end

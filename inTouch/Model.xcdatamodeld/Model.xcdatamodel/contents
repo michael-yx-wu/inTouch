@@ -52,6 +52,7 @@
         <attribute name="numPostpones" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
     <fetchRequest name="ContactMetadataAll" entity="ContactMetadata"/>
+    <fetchRequest name="ContactMetadataUrgent" entity="ContactMetadata" predicateString="urgency >= 1"/>
     <fetchRequest name="ContactNameMatch" entity="Contact" predicateString="nameFirst == $NAMEFIRST AND nameLast == $NAMELAST"/>
     <elements>
         <element name="Contact" positionX="117" positionY="-115" width="128" height="208"/>

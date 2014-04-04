@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Naicheng Wangyu. All rights reserved.
 //
 
+#import "AppDelegate.h"
 #import "MainViewController.h"
 #import "ContactViewController.h"
 
@@ -17,11 +18,94 @@
 
 @implementation MainViewController
 
+@synthesize contactName;
+@synthesize contactPhoto;
+@synthesize viewFrequency;
+
+@synthesize firstName;
+@synthesize lastName;
+@synthesize contactPhotoData;
+@synthesize emailHome;
+@synthesize emailOther;
+@synthesize emailWork;
+@synthesize phoneHome;
+@synthesize phoneMobile;
+@synthesize phoneWork;
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+	// Alertview with basic instructions.
+    UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"Quick How-to Guide"
+                                                      message:@"Swipe up to email \n Swipe left to text message \n Swipe right to postpone \n Swipe down to remove from future reminders\n"
+                                                     delegate:self
+                                            cancelButtonTitle:@"Got it"
+                                            otherButtonTitles:nil, nil];
+    [myAlert show];
+    
+    // Get the most urgent contact
+    [self getNextContact];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
 // Button for "manually contacted" someone, that's not a swipe action.
 - (IBAction)manuallyContacted:(id)sender {
     [DebugLogger log:@"Manually contacted current contact" withPriority:1];
     // Update the global count, time, and other values in the core model.
+    
+    
 }
+
+// Get the most urgent contact in the database
+- (void)getNextContact {
+    // Set up the request
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSManagedObjectModel *model = [self managedObjectModel];
+    NSDictionary *substitionVariables = [[NSDictionary alloc] init];
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactMetadataUrgent" substitutionVariables:substitionVariables];
+    
+    // Sort by descending urgency and limit to 1 result
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"urgency" ascending:false];
+    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+    [request setSortDescriptors:sortDescriptors];
+    [request setFetchLimit:1];
+    
+    // Fetch
+    NSError *error;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (results == nil) {
+        [DebugLogger log:[NSString stringWithFormat:@"Error getting next contact: %@, %@", error, [error userInfo]] withPriority:2];
+    }
+    
+    // Get next urgent contact information if exists
+    if ([results count] == 0) {
+        [[self contactName] setText:@"No Urgent Contacts"];
+    }
+    else {
+        NSManagedObject *contact = [[results objectAtIndex:0] valueForKey:@"Contact"];
+        firstName = [contact valueForKey:@"nameFirst"];
+        lastName = [contact valueForKey:@"nameLast"];
+        contactPhotoData = [contact valueForKey:@"contactPhoto"];
+        emailHome = [contact valueForKey:@"emailHome"];
+        emailOther = [contact valueForKey:@"emailOther"];
+        emailWork = [contact valueForKey:@"emailWork"];
+        phoneHome = [contact valueForKey:@"phoneHome"];
+        phoneMobile = [contact valueForKey:@"phoneMobile"];
+        phoneWork = [contact valueForKey:@"phoneWork"];
+        
+        // Set display name
+        NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+        [contactName setText:name];
+        
+        // Set contact photo
+        UIImage *img = [[UIImage alloc] initWithData:contactPhotoData];
+        [contactPhoto setImage:img];
+    }
+}
+
 
 // Slider to adjust the frequency of desired contact
 - (IBAction)changeFrequency:(id)sender {
@@ -59,22 +143,6 @@
     [self.viewFrequency setText:message];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-	// Alertview with basic instructions.
-    UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"Quick How-to Guide"
-                                                      message:@"Swipe up to email \n Swipe left to text message \n Swipe right to postpone \n Swipe down to remove from future reminders\n"
-                                                     delegate:self
-                                            cancelButtonTitle:@"Got it"
-                                            otherButtonTitles:nil, nil];
-    [myAlert show];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -88,6 +156,16 @@
     
 }
 
+#pragma mark - Core Data Accessor Methods
 
+- (NSManagedObjectContext *)managedObjectContext {
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    return [appDelegate managedObjectContext];
+}
+
+- (NSManagedObjectModel *)managedObjectModel {
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    return [appDelegate managedObjectModel];
+}
 
 @end
