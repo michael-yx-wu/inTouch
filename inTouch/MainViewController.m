@@ -156,6 +156,12 @@
 }
 
 #pragma mark - Navigation
+- (IBAction)swipeLeft:(id)sender {
+    [DebugLogger log:@"Swiped Left" withPriority:2];
+    if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
+        [self performSegueWithIdentifier:@"contact" sender:sender];
+    }
+}
 
 // Passing information to ContactViewController before segueing 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

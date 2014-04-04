@@ -133,12 +133,13 @@
                         <outlet property="contactName" destination="xM2-iI-mT0" id="NJu-9l-J8W"/>
                         <outlet property="contactPhoto" destination="5DP-PC-WdX" id="QkY-ga-4Gb"/>
                         <outlet property="viewFrequency" destination="WY6-K2-IHX" id="RV5-g3-45w"/>
+                        <segue destination="ost-IX-nwv" kind="modal" identifier="contact" modalTransitionStyle="flipHorizontal" id="gZA-OX-qSe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
                 <swipeGestureRecognizer direction="left" id="BfR-T4-VaM">
                     <connections>
-                        <segue destination="ost-IX-nwv" kind="modal" identifier="contact" modalTransitionStyle="flipHorizontal" id="wqu-lI-LlA"/>
+                        <action selector="swipeLeft:" destination="vXZ-lx-hvc" id="Q0v-mr-1Gb"/>
                     </connections>
                 </swipeGestureRecognizer>
                 <swipeGestureRecognizer direction="left" id="jVJ-aU-z4h"/>
@@ -147,7 +148,7 @@
                 <swipeGestureRecognizer direction="down" id="R7Z-Kv-qsZ"/>
                 <tapGestureRecognizer id="96F-cS-sE5"/>
             </objects>
-            <point key="canvasLocation" x="11" y="-253"/>
+            <point key="canvasLocation" x="6" y="-240"/>
         </scene>
         <!--Contact View Controller-->
         <scene sceneID="Vbk-hK-mq7">

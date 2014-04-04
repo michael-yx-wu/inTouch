@@ -28,6 +28,7 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
+    [self saveContext];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
