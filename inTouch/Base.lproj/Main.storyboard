@@ -162,28 +162,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gME-B4-ELc">
-                                <rect key="frame" x="0.0" y="28" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <items>
-                                    <navigationItem title="Contact" id="ziu-wr-kTa">
-                                        <barButtonItem key="leftBarButtonItem" style="plain" id="2KQ-FN-Tzi">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="rku-6Q-IRD">
-                                                <rect key="frame" x="16" y="7" width="48" height="30"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Cancel">
-                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="dismiss:" destination="ost-IX-nwv" eventType="touchUpInside" id="HF8-tU-Oia"/>
-                                                </connections>
-                                            </button>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nai-cd-v4s">
-                                <rect key="frame" x="20" y="269" width="30" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nai-cd-v4s">
+                                <rect key="frame" x="50" y="269" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Call">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -192,7 +172,7 @@
                                     <action selector="dismissCall:" destination="ost-IX-nwv" eventType="touchUpInside" id="0P0-aM-msY"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2kq-BB-3yx">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2kq-BB-3yx">
                                 <rect key="frame" x="145" y="269" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Text">
@@ -202,8 +182,8 @@
                                     <action selector="dismissMessage:" destination="ost-IX-nwv" eventType="touchUpInside" id="qTk-le-PZt"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o">
-                                <rect key="frame" x="262" y="269" width="38" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o">
+                                <rect key="frame" x="232" y="269" width="38" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Email">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -212,28 +192,31 @@
                                     <action selector="dismissEmail:" destination="ost-IX-nwv" eventType="touchUpInside" id="UNU-S8-Cs2"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name Placeholder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCc-mg-fOb">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name Placeholder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCc-mg-fOb">
                                 <rect key="frame" x="49" y="187" width="222" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UZH-3S-qt7">
+                                <rect key="frame" x="0.0" y="28" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Contact" id="Cv1-Cm-tVy">
+                                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="8yk-Uf-Iub">
+                                            <connections>
+                                                <action selector="dismiss:" destination="ost-IX-nwv" id="S1Z-Cp-4vS"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="2kq-BB-3yx" firstAttribute="baseline" secondItem="nai-cd-v4s" secondAttribute="baseline" id="1h4-7B-6so"/>
-                            <constraint firstItem="2kq-BB-3yx" firstAttribute="top" secondItem="eCc-mg-fOb" secondAttribute="bottom" constant="61" id="2bK-FW-th8"/>
-                            <constraint firstItem="gME-B4-ELc" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" id="5oo-PA-o1o"/>
-                            <constraint firstItem="I8L-OF-d3o" firstAttribute="centerY" secondItem="r1N-5g-ugV" secondAttribute="centerY" id="7uj-2A-opd"/>
-                            <constraint firstItem="nai-cd-v4s" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="20" symbolic="YES" id="DsO-E4-AiV"/>
-                            <constraint firstItem="eCc-mg-fOb" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="49" id="Fxl-23-sbO"/>
-                            <constraint firstItem="gME-B4-ELc" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" constant="8" id="JuR-rb-rMc"/>
-                            <constraint firstItem="eCc-mg-fOb" firstAttribute="centerX" secondItem="gME-B4-ELc" secondAttribute="centerX" id="LRn-7m-NSs"/>
-                            <constraint firstItem="I8L-OF-d3o" firstAttribute="baseline" secondItem="2kq-BB-3yx" secondAttribute="baseline" id="TOo-FJ-n3A"/>
-                            <constraint firstAttribute="trailing" secondItem="gME-B4-ELc" secondAttribute="trailing" id="XL2-wC-Dul"/>
-                            <constraint firstAttribute="trailing" secondItem="I8L-OF-d3o" secondAttribute="trailing" constant="20" symbolic="YES" id="Xic-ad-n5y"/>
-                            <constraint firstItem="2kq-BB-3yx" firstAttribute="centerX" secondItem="eCc-mg-fOb" secondAttribute="centerX" id="yLR-Wu-wJ2"/>
+                            <constraint firstAttribute="trailing" secondItem="I8L-OF-d3o" secondAttribute="trailing" constant="50" id="NCk-00-6fi"/>
+                            <constraint firstItem="nai-cd-v4s" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="50" id="gdD-eU-R25"/>
                         </constraints>
                     </view>
                     <connections>
@@ -270,30 +253,19 @@
                                 </attributedString>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AtO-l0-QlR">
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MPK-wW-qNX">
                                 <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
-                                    <navigationItem title="Help" id="p8r-b3-zlf"/>
+                                    <navigationItem title="Help" id="WRB-Uc-5JS">
+                                        <barButtonItem key="leftBarButtonItem" title="Back" id="726-yb-Mrk">
+                                            <connections>
+                                                <action selector="dismiss:" destination="5sW-QD-Z4q" id="Ge6-zW-2ZX"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
                                 </items>
                             </navigationBar>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VkU-K0-lST">
-                                <rect key="frame" x="20" y="35" width="35" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Back">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kwx-ew-Tva">
-                                <rect key="frame" x="20" y="35" width="35" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Back">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="dismiss:" destination="5sW-QD-Z4q" eventType="touchUpInside" id="hGx-qQ-l0y"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>

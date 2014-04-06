@@ -144,10 +144,10 @@
     if (frequency == 1) {
         message = @"Remind me every day";
     } else if (frequency <= 30) {
-        message = [NSString stringWithFormat:@"Remind me every %ld days", frequency];
+        message = [NSString stringWithFormat:@"Remind me every %ld days", (long)frequency];
     } else if (frequency < 365) {
         NSInteger months = frequency/30;
-        message = [NSString stringWithFormat:@"Remind me every %ld months", months];
+        message = [NSString stringWithFormat:@"Remind me every %ld months", (long)months];
     } else {
         message = @"Remind me every year";
     }

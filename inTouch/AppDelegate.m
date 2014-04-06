@@ -83,9 +83,11 @@
         // Get name
         NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonFirstNameProperty);
         NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonLastNameProperty);
+        if (firstName == nil) firstName = @"";
+        if (lastName == nil) lastName = @"";
         [DebugLogger log:[NSString stringWithFormat:@"First Name: %@", firstName] withPriority:1];
         [DebugLogger log:[NSString stringWithFormat:@"Last Name: %@", lastName] withPriority:1];
-        
+            
         // Get contact photo
         NSData *contactPhoto;
         if (ABPersonHasImageData(currentContact)) {
@@ -241,7 +243,7 @@
             abort();
         }
         [DebugLogger log:[NSString stringWithFormat:@"Total contacts: %lu",
-                          [self numContacts]] withPriority:1];
+                          (unsigned long)[self numContacts]] withPriority:1];
     }
 }
 
@@ -263,7 +265,7 @@
     }
     
     [DebugLogger log:[NSString stringWithFormat:@"Updating urgency for %lu contacts",
-                      [results count]] withPriority:1];
+                      (unsigned long)[results count]] withPriority:1];
     
     // #### The following will need to be adjusted for best UX ####
     for (int i = 0; i < [results count]; i++) {

@@ -79,6 +79,7 @@
     // If this error message appears, it's time to rethink contact identity
     if ([results count] != 1) {
         [DebugLogger log:@"Multiple contacts with same name!" withPriority:3];
+        NSLog(@"%@ %@", firstName, lastName);
         abort();
     }
     
