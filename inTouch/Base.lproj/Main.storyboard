@@ -162,7 +162,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nai-cd-v4s">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nai-cd-v4s">
                                 <rect key="frame" x="50" y="269" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Call">
@@ -182,7 +182,7 @@
                                     <action selector="dismissMessage:" destination="ost-IX-nwv" eventType="touchUpInside" id="qTk-le-PZt"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o">
                                 <rect key="frame" x="232" y="269" width="38" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Email">
@@ -215,7 +215,11 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="I8L-OF-d3o" secondAttribute="bottom" constant="269" id="0PN-Er-RAJ"/>
                             <constraint firstAttribute="trailing" secondItem="I8L-OF-d3o" secondAttribute="trailing" constant="50" id="NCk-00-6fi"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="I8L-OF-d3o" secondAttribute="trailing" constant="50" id="Si9-w3-7BE"/>
+                            <constraint firstItem="nai-cd-v4s" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="50" id="Sjz-nc-ihs"/>
+                            <constraint firstAttribute="bottom" secondItem="nai-cd-v4s" secondAttribute="bottom" constant="269" id="YM8-H8-sU8"/>
                             <constraint firstItem="nai-cd-v4s" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="50" id="gdD-eU-R25"/>
                         </constraints>
                     </view>

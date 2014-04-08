@@ -43,16 +43,19 @@
 }
 
 - (IBAction)dismissCall:(id)sender {
+    // Record call click before dismissal
     [self incrementNumberTimesContacted:@"call"];
     [self dismiss:sender];
 }
 
 - (IBAction)dismissMessage:(id)sender {
+    // Record message click before dismissal
     [self incrementNumberTimesContacted:@"message"];
     [self dismiss:sender];
 }
 
 - (IBAction)dismissEmail:(id)sender {
+    // Record email click before dismissal 
     [self incrementNumberTimesContacted:@"email"];
     [self dismiss:sender];
 }
