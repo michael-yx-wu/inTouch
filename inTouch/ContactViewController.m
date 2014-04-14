@@ -53,6 +53,22 @@
     [contactPhoto setImage:photoData];
 }
 
+#pragma mark - Button Actions
+
+- (IBAction)messageButton:(id)sender {
+    [DebugLogger log:@"Message button press" withPriority:3];
+    if (![phoneMobile isEqualToString:@""]) {
+        [self performSegueWithIdentifier:@"message" sender:sender];
+    } else {
+        // Dispay no mobile number
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    [DebugLogger log:@"Preparing for segue to MessageViewController" withPriority:3];
+    // pass some information
+}
+
 #pragma mark - Coredata updating
 
 // Update ContactMetadata before dismissing
