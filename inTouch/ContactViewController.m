@@ -29,6 +29,11 @@
 @synthesize phoneMobile;
 @synthesize phoneWork;
 
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -37,28 +42,17 @@
     return self;
 }
 
-- (IBAction)dismiss:(id)sender {
-    // InTouch canceled - no logging
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [DebugLogger log:@"Setting up ContactViewController" withPriority:3];
+    
+    // Display contact information
+    NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+    [contactName setText:name];
+    [contactPhoto setImage:photoData];
 }
 
-- (IBAction)dismissCall:(id)sender {
-    // Record call click before dismissal
-    [self incrementNumberTimesContacted:@"call"];
-    [self dismiss:sender];
-}
-
-- (IBAction)dismissMessage:(id)sender {
-    // Record message click before dismissal
-    [self incrementNumberTimesContacted:@"message"];
-    [self dismiss:sender];
-}
-
-- (IBAction)dismissEmail:(id)sender {
-    // Record email click before dismissal 
-    [self incrementNumberTimesContacted:@"email"];
-    [self dismiss:sender];
-}
+#pragma mark - Coredata updating
 
 // Update ContactMetadata before dismissing
 - (void)incrementNumberTimesContacted:(NSString *)medium {
@@ -125,20 +119,93 @@
     [appDelegate updateContactsUrgency];
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [DebugLogger log:@"Setting up ContactViewController" withPriority:3];
+-(void)updateUrgency {
+    NSArray *results = [self fetchContact];
+    if ([results count] != 1) {
+        [DebugLogger log:[NSString stringWithFormat:@"Aborting! Multiple contacts with same name: %@ %@", firstName, lastName] withPriority:3];
+        abort();
+    }
+    NSManagedObject *contact = [results objectAtIndex:0];
+    NSManagedObject *metadata = [contact valueForKey:@"metadata"];
     
-    // Display contact information
-    NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-    [contactName setText:name];
-    [contactPhoto setImage:photoData];
+    NSDate *lastContactedDate = [metadata valueForKey:@"lastContactedDate"];
+    NSDate *currentDate = [NSDate date];
+    NSDateComponents *diff;
+    double daysSinceLastContact;
+    double freq = [[metadata valueForKey:@"freq"] doubleValue];
+    
+    // Update urgency based on frequencies and last date contacted
+    // For now, urg = (currentdate - lastdate)/freq or 0 if
+    // the expression < 1
+    NSNumber *urgency;
+    
+    // If never contacted, default urgency is 1
+    if (lastContactedDate == nil) {
+        urgency = [NSNumber numberWithDouble:1];
+    }
+    // Calculate urg using formula above
+    else {
+        diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:lastContactedDate toDate:currentDate options:0];
+        daysSinceLastContact = [diff day];
+        urgency = [NSNumber numberWithDouble:daysSinceLastContact/freq];
+        if ([urgency doubleValue] < 1) {
+            urgency = [NSNumber numberWithDouble:0];
+        }
+    }
+    
+    // Save the new urgency value
+    [metadata setValue:urgency forKey:@"urgency"];
+    [DebugLogger log:[NSString stringWithFormat:@"New urgency for %@ %@: %f", firstName, lastName, [urgency doubleValue]] withPriority:1];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark - Dismiss methods
+
+- (IBAction)dismiss:(id)sender {
+    // InTouch canceled - no logging
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+- (IBAction)dismissCall:(id)sender {
+    // Record call click before dismissal
+    [self incrementNumberTimesContacted:@"call"];
+    [self dismiss:sender];
+}
+
+- (IBAction)dismissMessage:(id)sender {
+    // Record message click before dismissal
+    [self incrementNumberTimesContacted:@"message"];
+    [self dismiss:sender];
+}
+
+- (IBAction)dismissEmail:(id)sender {
+    // Record email click before dismissal
+    [self incrementNumberTimesContacted:@"email"];
+    [self dismiss:sender];
+}
+
+#pragma mark - Helper methods
+
+// Fetch Contact entity from coredata based on nanme
+- (NSArray *)fetchContact {
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSManagedObjectModel *model = [self managedObjectModel];
+    NSDictionary *subVars = @{
+                              @"NAMEFIRST": firstName,
+                              @"NAMELAST": lastName
+                              };
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactNameMatch"
+                                                substitutionVariables:subVars];
+    
+    NSError *error;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (results == nil) {
+        [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
+                          error, [error userInfo]] withPriority:1];
+        abort();
+    }
+    return results;
+}
+
 
 #pragma mark - Core Data Accessor Methods
 
