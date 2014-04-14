@@ -140,51 +140,60 @@
             }
         }
         
-        // Check if contact already exists
+        NSManagedObject *contact;
+        NSManagedObject *metaData;
+        
+        // Create new contact if does not exist
         if ([[self fetchRequestWithFirstName:firstName LastName:lastName] count] == 0) {
-            
-            // Create Contact
-            NSManagedObject *contact = [NSEntityDescription
-                                        insertNewObjectForEntityForName:@"Contact"
-                                        inManagedObjectContext:[self managedObjectContext]];
-            [contact setValue:nil forKey:@"category"];
-            [contact setValue:firstName forKey:@"nameFirst"];
-            [contact setValue:lastName forKey:@"nameLast"];
-            [contact setValue:contactPhoto forKey:@"contactPhoto"];
-            [contact setValue:emailHome forKey:@"emailHome"];
-            [contact setValue:emailOther forKey:@"emailOther"];
-            [contact setValue:emailWork forKey:@"emailWork"];
-            [contact setValue:phoneHome forKey:@"phoneHome"];
-            [contact setValue:phoneMobile forKey:@"phoneMobile"];
-            [contact setValue:phoneWork forKey:@"phoneWork"];
-            
-            // Create ContactMetadata
-            NSManagedObject *metaData = [NSEntityDescription
-                                         insertNewObjectForEntityForName:@"ContactMetadata"
-                                         inManagedObjectContext:[self managedObjectContext]];
-            [metaData setValue:[NSNumber numberWithInt:14] forKeyPath:@"freq"];
-            [metaData setValue:[NSNumber numberWithBool:YES] forKey:@"interest"];
-            [metaData setValue:nil forKey:@"lastContactedDate"];
-            [metaData setValue:nil forKey:@"lastPostponedDate"];
-            [metaData setValue:nil forKey:@"noInterestDate"];
-            [metaData setValue:nil forKey:@"notes"];
-            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesAppeared"];
-            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesCalled"];
-            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesContacted"];
-            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesEmailed"];
-            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesMessaged"];
-            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesPostponed"];
-            [metaData setValue:[[NSTimeZone localTimeZone] name] forKeyPath:@"timezone"];
-            [metaData setValue:nil forKeyPath:@"urgency"];
+            // Create Contact and ContactMetadata
+            contact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:[self managedObjectContext]];
+            metaData = [NSEntityDescription insertNewObjectForEntityForName:@"ContactMetadata" inManagedObjectContext:[self managedObjectContext]];
             
             // Relate contact and metadata
             [contact setValue:metaData forKeyPath:@"metadata"];
             [metaData setValue:contact forKey:@"contact"];
             
-            [DebugLogger log:@"Created entity for contact" withPriority:1];
-        } else {
-            [DebugLogger log:@"Contact already exists" withPriority:1];
+            [DebugLogger log:[NSString stringWithFormat:@"Created Contact: %@ %@", firstName, lastName] withPriority:1];
         }
+        // Update contact with current information
+        else {
+            // Fetch Contact and corresponding ContactMetadata
+            NSArray *fetchResults = [self fetchRequestWithFirstName:firstName LastName:lastName];
+            if ([fetchResults count] > 1) {
+                [DebugLogger log:@"Did not update - multiple contacts with same name" withPriority:1];
+            } else {
+                contact = [fetchResults objectAtIndex:0];
+                metaData = [contact valueForKey:@"metadata"];
+                [DebugLogger log:[NSString stringWithFormat:@"Updating contact: %@ %@", firstName, lastName] withPriority:1];
+
+            }
+        }
+        
+        // Fill in Contact and ContactMetadata fields
+        [contact setValue:nil forKey:@"category"];
+        [contact setValue:firstName forKey:@"nameFirst"];
+        [contact setValue:lastName forKey:@"nameLast"];
+        [contact setValue:contactPhoto forKey:@"contactPhoto"];
+        [contact setValue:emailHome forKey:@"emailHome"];
+        [contact setValue:emailOther forKey:@"emailOther"];
+        [contact setValue:emailWork forKey:@"emailWork"];
+        [contact setValue:phoneHome forKey:@"phoneHome"];
+        [contact setValue:phoneMobile forKey:@"phoneMobile"];
+        [contact setValue:phoneWork forKey:@"phoneWork"];
+        [metaData setValue:[NSNumber numberWithInt:14] forKeyPath:@"freq"];
+        [metaData setValue:[NSNumber numberWithBool:YES] forKey:@"interest"];
+        [metaData setValue:nil forKey:@"lastContactedDate"];
+        [metaData setValue:nil forKey:@"lastPostponedDate"];
+        [metaData setValue:nil forKey:@"noInterestDate"];
+        [metaData setValue:nil forKey:@"notes"];
+        [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesAppeared"];
+        [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesCalled"];
+        [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesContacted"];
+        [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesEmailed"];
+        [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesMessaged"];
+        [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesPostponed"];
+        [metaData setValue:[[NSTimeZone localTimeZone] name] forKeyPath:@"timezone"];
+        [metaData setValue:nil forKeyPath:@"urgency"];
     }
     
     [self saveContext];
