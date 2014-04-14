@@ -26,6 +26,7 @@
 		4C340DA318C18D91009A96D8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340DA218C18D91009A96D8 /* CoreData.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		4C340DA618C18DBD009A96D8 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C340DA418C18DBD009A96D8 /* Model.xcdatamodeld */; };
 		4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C47934C18E0EB2900A408AB /* ContactViewController.m */; };
+		4C7CBA1F18FC810400A9E4FF /* UrgencyCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7CBA1E18FC810400A9E4FF /* UrgencyCalculator.m */; };
 		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +67,8 @@
 		4C340DA518C18DBD009A96D8 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		4C47934B18E0EB2900A408AB /* ContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactViewController.h; sourceTree = "<group>"; };
 		4C47934C18E0EB2900A408AB /* ContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactViewController.m; sourceTree = "<group>"; };
+		4C7CBA1D18FC810400A9E4FF /* UrgencyCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UrgencyCalculator.h; sourceTree = "<group>"; };
+		4C7CBA1E18FC810400A9E4FF /* UrgencyCalculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UrgencyCalculator.m; sourceTree = "<group>"; };
 		4C96311418CB71CB002D05A6 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
 		4C96311518CB71CB002D05A6 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -141,6 +144,8 @@
 				4C47934C18E0EB2900A408AB /* ContactViewController.m */,
 				4C96311418CB71CB002D05A6 /* HelpViewController.h */,
 				4C96311518CB71CB002D05A6 /* HelpViewController.m */,
+				4C7CBA1D18FC810400A9E4FF /* UrgencyCalculator.h */,
+				4C7CBA1E18FC810400A9E4FF /* UrgencyCalculator.m */,
 				4C340D7318C16FF7009A96D8 /* Main.storyboard */,
 				4C340DA418C18DBD009A96D8 /* Model.xcdatamodeld */,
 				4C340D7918C16FF7009A96D8 /* Images.xcassets */,
@@ -280,6 +285,7 @@
 				4C340D7218C16FF7009A96D8 /* AppDelegate.m in Sources */,
 				4C340DA618C18DBD009A96D8 /* Model.xcdatamodeld in Sources */,
 				4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */,
+				4C7CBA1F18FC810400A9E4FF /* UrgencyCalculator.m in Sources */,
 				4C340D6E18C16FF7009A96D8 /* main.m in Sources */,
 				4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */,
 			);

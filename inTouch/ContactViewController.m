@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "ContactViewController.h"
+#import "UrgencyCalculator.h"
 
 #import "DebugLogger.h"
 
@@ -114,9 +115,9 @@
     // Set last contact date
     [contactMetaData setValue:[NSDate date] forKeyPath:@"lastContactedDate"];
     
-    // Update urgency for contact -- this part is overkill (too lazy to rewrite code)
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    [appDelegate updateContactsUrgency];
+    // Update urgency for this contact only
+//    [self updateUrgency];
+    [UrgencyCalculator updateUrgencyFirstName:firstName lastName:lastName];
 }
 
 -(void)updateUrgency {

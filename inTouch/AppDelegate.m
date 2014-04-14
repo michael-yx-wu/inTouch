@@ -7,7 +7,10 @@
 //
 
 #import <AddressBookUI/AddressBookUI.h>
+
 #import "AppDelegate.h"
+#import "UrgencyCalculator.h"
+
 #import "DebugLogger.h"
 
 @implementation AppDelegate
@@ -59,7 +62,8 @@
     }
     
     // Update contact urgency
-    [self updateContactsUrgency];
+//    [self updateContactsUrgency];
+    [UrgencyCalculator updateAll];
 }
 
 // Save changes to contacts before termination
@@ -153,6 +157,23 @@
             [contact setValue:metaData forKeyPath:@"metadata"];
             [metaData setValue:contact forKey:@"contact"];
             
+            // Instantiate contact/metadata fields
+            [contact setValue:nil forKey:@"category"];
+            [metaData setValue:[NSNumber numberWithInt:14] forKeyPath:@"freq"];
+            [metaData setValue:[NSNumber numberWithBool:YES] forKey:@"interest"];
+            [metaData setValue:nil forKey:@"lastContactedDate"];
+            [metaData setValue:nil forKey:@"lastPostponedDate"];
+            [metaData setValue:nil forKey:@"noInterestDate"];
+            [metaData setValue:nil forKey:@"notes"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesAppeared"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesCalled"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesContacted"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesEmailed"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesMessaged"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesPostponed"];
+            [metaData setValue:[[NSTimeZone localTimeZone] name] forKeyPath:@"timezone"];
+            [metaData setValue:nil forKeyPath:@"urgency"];
+
             [DebugLogger log:[NSString stringWithFormat:@"Created Contact: %@ %@", firstName, lastName] withPriority:1];
         }
         // Update contact with current information
@@ -165,12 +186,10 @@
                 contact = [fetchResults objectAtIndex:0];
                 metaData = [contact valueForKey:@"metadata"];
                 [DebugLogger log:[NSString stringWithFormat:@"Updating contact: %@ %@", firstName, lastName] withPriority:1];
-
             }
         }
         
-        // Fill in Contact and ContactMetadata fields
-        [contact setValue:nil forKey:@"category"];
+        // Enter/update contact information
         [contact setValue:firstName forKey:@"nameFirst"];
         [contact setValue:lastName forKey:@"nameLast"];
         [contact setValue:contactPhoto forKey:@"contactPhoto"];
@@ -180,20 +199,6 @@
         [contact setValue:phoneHome forKey:@"phoneHome"];
         [contact setValue:phoneMobile forKey:@"phoneMobile"];
         [contact setValue:phoneWork forKey:@"phoneWork"];
-        [metaData setValue:[NSNumber numberWithInt:14] forKeyPath:@"freq"];
-        [metaData setValue:[NSNumber numberWithBool:YES] forKey:@"interest"];
-        [metaData setValue:nil forKey:@"lastContactedDate"];
-        [metaData setValue:nil forKey:@"lastPostponedDate"];
-        [metaData setValue:nil forKey:@"noInterestDate"];
-        [metaData setValue:nil forKey:@"notes"];
-        [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesAppeared"];
-        [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesCalled"];
-        [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesContacted"];
-        [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesEmailed"];
-        [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesMessaged"];
-        [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesPostponed"];
-        [metaData setValue:[[NSTimeZone localTimeZone] name] forKeyPath:@"timezone"];
-        [metaData setValue:nil forKeyPath:@"urgency"];
     }
     
     [self saveContext];
