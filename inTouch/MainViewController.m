@@ -20,6 +20,7 @@
 // Contact display variables
 @synthesize contactName;
 @synthesize contactPhoto;
+@synthesize frequencySlider;
 @synthesize viewFrequency;
 
 // Contact data variables
@@ -125,6 +126,7 @@
         }
         
         NSManagedObject *contact = [contactMetadata valueForKey:@"Contact"];
+        NSInteger freq = [[contactMetadata valueForKey:@"freq"] integerValue];
         firstName = [contact valueForKey:@"nameFirst"];
         lastName = [contact valueForKey:@"nameLast"];
         photoData = [contact valueForKey:@"contactPhoto"];
@@ -142,6 +144,24 @@
         // Set contact photo
         UIImage *img = [[UIImage alloc] initWithData:photoData];
         [contactPhoto setImage:img];
+        
+        // Set frequency slider value and text
+        NSString *message;
+        if (freq == 1) {
+            frequencySlider.value = frequencySlider.minimumValue;
+            message = @"Remind me every day";
+        }
+        else if (freq < 30) {
+            frequencySlider.value = freq*10;
+            message = [NSString stringWithFormat:@"Remind me every %lu days", freq];
+        } else if (freq < 365) {
+            frequencySlider.value = (freq*30-1)*60+300;
+            message = [NSString stringWithFormat:@"Remind me every %ld months", freq/30];
+        } else {
+            frequencySlider.value = frequencySlider.maximumValue;
+            message = @"Remind me every year";
+        }
+        [self.viewFrequency setText:message];
     }
 }
 
@@ -178,11 +198,31 @@
     } else {
         message = @"Remind me every year";
     }
-    
     [self.viewFrequency setText:message];
 }
 
-#pragma mark - Navigation
+// Save frequency on touch up on slider
+- (IBAction)doneChangingFrequency:(id)sender {
+    UISlider *freqSlider = (UISlider *)sender;
+    NSInteger frequency;
+    NSInteger sliderValue = freqSlider.value;
+    if (sliderValue <= 300) {
+        frequency = sliderValue/10;
+    } else if (sliderValue <= 625) {
+        frequency = ((sliderValue-300)/60+1)*30;
+    } else {
+        frequency = 365;
+    }
+    
+    NSManagedObject *contact = [self fetchContact];
+    NSManagedObject *metadata = [contact valueForKey:@"metadata"];
+    [metadata setValue:[NSNumber numberWithInteger:frequency] forKey:@"freq"];
+    [DebugLogger log:[NSString stringWithFormat:@"New frequency saved: %lu", frequency] withPriority:2];
+}
+
+
+#pragma mark - Swipe Gestures
+
 - (IBAction)swipeLeft:(id)sender {
     [DebugLogger log:@"Swiped Left" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
@@ -190,7 +230,7 @@
     }
 }
 
-- (IBAction)swipeDown:(id)sender {
+- (IBAction)swipeRight:(id)sender {
     [DebugLogger log:@"Swiped Down" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName] withPriority:2];
@@ -201,6 +241,18 @@
         
         [metadata setValue:today forKey:@"lastPostponedDate"];
         [metadata setValue:timesPostponed forKey:@"numTimesPostponed"];
+        [self getNextContact];
+    }
+}
+
+- (IBAction)swipeDown:(id)sender {
+    [DebugLogger log:@"Swiped Down" withPriority:2];
+    if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
+        NSManagedObject *contact = [self fetchContact];
+        NSManagedObject *metadata = [contact valueForKey:@"metadata"];
+        NSDate *today = [NSDate date];
+        [metadata setValue:[NSNumber numberWithBool:NO] forKey:@"interest"];
+        [metadata setValue:today forKey:@"noInterestDate"];
         [self getNextContact];
     }
 }
@@ -229,6 +281,8 @@
     }
     return [results objectAtIndex:0];
 }
+
+#pragma mark - Navigation
 
 // Passing information to ContactViewController before segueing 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

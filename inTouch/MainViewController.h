@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhoto;
 
 // Current contact remind frequency
+@property (weak, nonatomic) IBOutlet UISlider *frequencySlider;
 @property (weak, nonatomic) IBOutlet UILabel *viewFrequency;
 
 // Current contact attributes in core data
