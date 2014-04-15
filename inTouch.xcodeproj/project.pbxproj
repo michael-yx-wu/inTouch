@@ -25,6 +25,7 @@
 		4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340DA018C17ACF009A96D8 /* DebugLogger.m */; };
 		4C340DA318C18D91009A96D8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340DA218C18D91009A96D8 /* CoreData.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		4C340DA618C18DBD009A96D8 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C340DA418C18DBD009A96D8 /* Model.xcdatamodeld */; };
+		4C367C9718FC96AE00FABB5C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C367C9618FC96AE00FABB5C /* MessageUI.framework */; };
 		4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C47934C18E0EB2900A408AB /* ContactViewController.m */; };
 		4C7CBA1F18FC810400A9E4FF /* UrgencyCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7CBA1E18FC810400A9E4FF /* UrgencyCalculator.m */; };
 		4C7CBA2218FC8BAA00A9E4FF /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7CBA2118FC8BAA00A9E4FF /* MessageViewController.m */; };
@@ -66,6 +67,7 @@
 		4C340DA018C17ACF009A96D8 /* DebugLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugLogger.m; sourceTree = "<group>"; };
 		4C340DA218C18D91009A96D8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		4C340DA518C18DBD009A96D8 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		4C367C9618FC96AE00FABB5C /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		4C47934B18E0EB2900A408AB /* ContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactViewController.h; sourceTree = "<group>"; };
 		4C47934C18E0EB2900A408AB /* ContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactViewController.m; sourceTree = "<group>"; };
 		4C7CBA1D18FC810400A9E4FF /* UrgencyCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UrgencyCalculator.h; sourceTree = "<group>"; };
@@ -84,8 +86,9 @@
 				4C340D9B18C175D3009A96D8 /* AddressBookUI.framework in Frameworks */,
 				4C340DA318C18D91009A96D8 /* CoreData.framework in Frameworks */,
 				4C340D6418C16FF7009A96D8 /* CoreGraphics.framework in Frameworks */,
-				4C340D6618C16FF7009A96D8 /* UIKit.framework in Frameworks */,
 				4C340D6218C16FF7009A96D8 /* Foundation.framework in Frameworks */,
+				4C367C9718FC96AE00FABB5C /* MessageUI.framework in Frameworks */,
+				4C340D6618C16FF7009A96D8 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,6 +131,7 @@
 				4C340DA218C18D91009A96D8 /* CoreData.framework */,
 				4C340D6318C16FF7009A96D8 /* CoreGraphics.framework */,
 				4C340D6118C16FF7009A96D8 /* Foundation.framework */,
+				4C367C9618FC96AE00FABB5C /* MessageUI.framework */,
 				4C340D6518C16FF7009A96D8 /* UIKit.framework */,
 				4C340D8018C16FF8009A96D8 /* XCTest.framework */,
 			);

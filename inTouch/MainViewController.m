@@ -73,23 +73,24 @@
 
 // Get the most urgent contact in the database
 - (void)getNextContact {
+    [DebugLogger log:@"Fetching next contact" withPriority:2];
     // Set up the request
     NSManagedObjectContext *moc = [self managedObjectContext];
     NSManagedObjectModel *model = [self managedObjectModel];
     NSDictionary *substitionVariables = [[NSDictionary alloc] init];
     NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactMetadataUrgent" substitutionVariables:substitionVariables];
     
-    // Sort by descending urgency and limit to 1 result
+    // Sort by descending urgency
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"urgency" ascending:false];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
     [request setSortDescriptors:sortDescriptors];
-    [request setFetchLimit:1];
     
     // Fetch
     NSError *error;
     NSArray *results = [moc executeFetchRequest:request error:&error];
     if (results == nil) {
         [DebugLogger log:[NSString stringWithFormat:@"Error getting next contact: %@, %@", error, [error userInfo]] withPriority:2];
+        abort();
     }
     
     // Get next urgent contact information if exists
@@ -97,7 +98,33 @@
         [[self contactName] setText:@"No Urgent Contacts"];
     }
     else {
-        NSManagedObject *contact = [[results objectAtIndex:0] valueForKey:@"Contact"];
+        // Find the most urgent contact that was not postponed today
+        NSUInteger index = 0;
+        NSManagedObject *contactMetadata;
+        NSDate *lastPostponedDate;
+        NSDate *today = [NSDate date];
+        NSDateComponents *diff;
+        NSInteger daysSinceLastPostponed;
+        do {
+            contactMetadata = [results objectAtIndex:index++];
+            lastPostponedDate = [contactMetadata valueForKey:@"lastPostponedDate"];
+
+            // Break if never postponed
+            if (lastPostponedDate == nil) {
+                break;
+            }
+            
+            diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:lastPostponedDate toDate:today options:0];
+            daysSinceLastPostponed = [diff day];
+        } while (daysSinceLastPostponed == 0 && index < [results count]);
+        
+        // No urgent contacts that were not postponed today
+        if (index == [results count] && daysSinceLastPostponed == 0) {
+            [[self contactName] setText:@"No Urgent Contacts"];
+            return;
+        }
+        
+        NSManagedObject *contact = [contactMetadata valueForKey:@"Contact"];
         firstName = [contact valueForKey:@"nameFirst"];
         lastName = [contact valueForKey:@"nameLast"];
         photoData = [contact valueForKey:@"contactPhoto"];
@@ -161,6 +188,46 @@
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         [self performSegueWithIdentifier:@"contact" sender:sender];
     }
+}
+
+- (IBAction)swipeDown:(id)sender {
+    [DebugLogger log:@"Swiped Down" withPriority:2];
+    if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
+        [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName] withPriority:2];
+        NSManagedObject *contact = [self fetchContact];
+        NSManagedObject *metadata = [contact valueForKey:@"metadata"];
+        NSDate *today = [NSDate date];
+        NSNumber *timesPostponed = [NSNumber numberWithInteger:[[metadata valueForKey:@"numTimesPostponed"] integerValue]+1];
+        
+        [metadata setValue:today forKey:@"lastPostponedDate"];
+        [metadata setValue:timesPostponed forKey:@"numTimesPostponed"];
+        [self getNextContact];
+    }
+}
+
+// Fetch Contact entity from coredata based on nanme
+- (NSManagedObject *)fetchContact {
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSManagedObjectModel *model = [self managedObjectModel];
+    NSDictionary *subVars = @{
+                              @"NAMEFIRST": firstName,
+                              @"NAMELAST": lastName
+                              };
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactNameMatch"
+                                                substitutionVariables:subVars];
+    
+    NSError *error;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (results == nil) {
+        [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
+                          error, [error userInfo]] withPriority:1];
+        abort();
+    }
+    if ([results count] != 1) {
+        [DebugLogger log:@"Abort! Multiple contacts with same name" withPriority:2];
+        abort();
+    }
+    return [results objectAtIndex:0];
 }
 
 // Passing information to ContactViewController before segueing 

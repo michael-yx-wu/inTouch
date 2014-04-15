@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Michael Wu. All rights reserved.
 //
 
+#import <MessageUI/MessageUI.h>
+
 #import "AppDelegate.h"
 #import "ContactViewController.h"
 #import "UrgencyCalculator.h"
@@ -58,16 +60,29 @@
 - (IBAction)messageButton:(id)sender {
     [DebugLogger log:@"Message button press" withPriority:3];
     if (![phoneMobile isEqualToString:@""]) {
-        [self performSegueWithIdentifier:@"message" sender:sender];
+//        [self performSegueWithIdentifier:@"message" sender:sender];
+        if ([MFMessageComposeViewController canSendText]) {
+            NSArray *recipient = @[[NSString stringWithString:phoneMobile]];
+            MFMessageComposeViewController *messageViewControler = [[MFMessageComposeViewController alloc] init];
+            [messageViewControler setRecipients:recipient];
+//            [messageViewControler setDelegate:self];
+            
+        }
+        
+
+//        messageViewControler.messageComposeDelegate = self;
+        
+        
     } else {
         // Dispay no mobile number
     }
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    [DebugLogger log:@"Preparing for segue to MessageViewController" withPriority:3];
-    // pass some information
-}
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+//    [DebugLogger log:@"Preparing for segue to MessageViewController" withPriority:3];
+//    // pass some information
+//    
+//}
 
 #pragma mark - Coredata updating
 
