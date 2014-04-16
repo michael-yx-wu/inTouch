@@ -239,6 +239,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Michael Wu";
 				TargetAttributes = {
+					4C340D5D18C16FF7009A96D8 = {
+						DevelopmentTeam = QUF4M7QXQP;
+					};
 					4C340D7E18C16FF8009A96D8 = {
 						TestTargetID = 4C340D5D18C16FF7009A96D8;
 					};
@@ -422,11 +425,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "inTouch/inTouch-Prefix.pch";
 				INFOPLIST_FILE = "inTouch/inTouch-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "75A69E71-E0F3-42EE-9CC1-3907CB47A9C7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -436,11 +442,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "inTouch/inTouch-Prefix.pch";
 				INFOPLIST_FILE = "inTouch/inTouch-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "D7482E0D-189F-413F-A0AA-8DEED8B35E10";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

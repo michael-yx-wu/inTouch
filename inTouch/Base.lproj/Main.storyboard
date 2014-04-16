@@ -13,10 +13,10 @@
                         <viewControllerLayoutGuide type="bottom" id="hKI-x5-1Ez"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fhK-9c-Xcw" userLabel="Frequency Slider View">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fhK-9c-Xcw" userLabel="Frequency Slider View">
                                 <rect key="frame" x="20" y="366" width="280" height="116"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -54,6 +54,7 @@
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="itG-BL-9J2" secondAttribute="trailing" constant="76" id="0PS-eO-HNy"/>
                                     <constraint firstItem="WY6-K2-IHX" firstAttribute="leading" secondItem="fhK-9c-Xcw" secondAttribute="leading" constant="40" id="I1v-bC-QSW"/>
+                                    <constraint firstAttribute="height" constant="116" id="M6J-lL-rk8"/>
                                     <constraint firstAttribute="trailing" secondItem="BlD-Zq-szb" secondAttribute="trailing" constant="40" id="QNz-aN-MjZ"/>
                                     <constraint firstItem="WY6-K2-IHX" firstAttribute="top" secondItem="BlD-Zq-szb" secondAttribute="bottom" constant="8" id="RSS-FX-wHl"/>
                                     <constraint firstItem="itG-BL-9J2" firstAttribute="top" secondItem="WY6-K2-IHX" secondAttribute="bottom" constant="8" id="ULf-O1-oQz"/>
@@ -64,13 +65,16 @@
                                     <constraint firstAttribute="trailing" secondItem="WY6-K2-IHX" secondAttribute="trailing" constant="40" id="hGH-U5-r21"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XX4-yL-Gwm" userLabel="Contact Profile View">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XX4-yL-Gwm" userLabel="Contact Profile View">
                                 <rect key="frame" x="20" y="41" width="280" height="322"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NVr-Ax-Dzg" userLabel="Last Contacted Label">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NVr-Ax-Dzg" userLabel="Last Contacted Label">
                                         <rect key="frame" x="40" y="281" width="200" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="21" id="f0e-9Q-pr0"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -92,6 +96,11 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="RhY-i0-qen">
+                                        <rect key="frame" x="130" y="156" width="20" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="color" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                    </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
@@ -99,12 +108,19 @@
                                     <constraint firstItem="5DP-PC-WdX" firstAttribute="leading" secondItem="XX4-yL-Gwm" secondAttribute="leading" constant="40" id="DyE-ve-eDd"/>
                                     <constraint firstItem="xM2-iI-mT0" firstAttribute="top" secondItem="XX4-yL-Gwm" secondAttribute="top" constant="6" id="EkZ-Cv-RCf"/>
                                     <constraint firstAttribute="trailing" secondItem="5DP-PC-WdX" secondAttribute="trailing" constant="40" id="X8u-zq-hIz"/>
+                                    <constraint firstAttribute="trailing" secondItem="NVr-Ax-Dzg" secondAttribute="trailing" constant="40" id="cHt-RD-meO"/>
+                                    <constraint firstItem="RhY-i0-qen" firstAttribute="top" secondItem="xM2-iI-mT0" secondAttribute="bottom" constant="98" id="dzD-iR-SO4"/>
+                                    <constraint firstItem="NVr-Ax-Dzg" firstAttribute="top" secondItem="RhY-i0-qen" secondAttribute="bottom" constant="105" id="gOJ-DQ-BDx"/>
                                     <constraint firstAttribute="trailing" secondItem="xM2-iI-mT0" secondAttribute="trailing" constant="28" id="geo-c6-OOn"/>
                                     <constraint firstItem="5DP-PC-WdX" firstAttribute="top" secondItem="xM2-iI-mT0" secondAttribute="bottom" constant="8" id="jXT-KB-rx8"/>
+                                    <constraint firstAttribute="height" constant="322" id="mfZ-jn-Xsg"/>
+                                    <constraint firstItem="RhY-i0-qen" firstAttribute="leading" secondItem="XX4-yL-Gwm" secondAttribute="leading" constant="130" id="mwZ-jl-XUp"/>
+                                    <constraint firstAttribute="trailing" secondItem="RhY-i0-qen" secondAttribute="trailing" constant="130" id="vGG-C3-3A8"/>
+                                    <constraint firstItem="NVr-Ax-Dzg" firstAttribute="leading" secondItem="XX4-yL-Gwm" secondAttribute="leading" constant="40" id="z1g-Ng-24z"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KeL-z2-ACQ">
-                                <rect key="frame" x="278" y="438" width="22" height="22"/>
+                                <rect key="frame" x="278" y="526" width="22" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <connections>
@@ -138,6 +154,8 @@
                         <outlet property="contactName" destination="xM2-iI-mT0" id="NJu-9l-J8W"/>
                         <outlet property="contactPhoto" destination="5DP-PC-WdX" id="QkY-ga-4Gb"/>
                         <outlet property="frequencySlider" destination="BlD-Zq-szb" id="xfz-9n-BYf"/>
+                        <outlet property="lastContactedLabel" destination="NVr-Ax-Dzg" id="DXE-TT-8wP"/>
+                        <outlet property="updatingIndicator" destination="RhY-i0-qen" id="RS1-Fx-zTJ"/>
                         <outlet property="viewFrequency" destination="WY6-K2-IHX" id="RV5-g3-45w"/>
                         <segue destination="ost-IX-nwv" kind="modal" identifier="contact" modalTransitionStyle="flipHorizontal" id="gZA-OX-qSe"/>
                     </connections>
@@ -172,7 +190,7 @@
                         <viewControllerLayoutGuide type="bottom" id="bjt-lR-3iW"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="r1N-5g-ugV">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nai-cd-v4s">
@@ -263,7 +281,7 @@
                         <viewControllerLayoutGuide type="bottom" id="JLX-AU-0B5"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="qVS-UL-HQ3">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="wordWrap" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="ned-bT-k6e">
@@ -308,6 +326,6 @@
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
 </document>

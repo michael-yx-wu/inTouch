@@ -11,6 +11,10 @@
 // Current contact name and photo
 @property (weak, nonatomic) IBOutlet UILabel *contactName;
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhoto;
+@property (weak, nonatomic) IBOutlet UILabel *lastContactedLabel;
+
+// Updating indicator
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *updatingIndicator;
 
 // Current contact remind frequency
 @property (weak, nonatomic) IBOutlet UISlider *frequencySlider;

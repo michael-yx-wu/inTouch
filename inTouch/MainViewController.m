@@ -23,6 +23,8 @@
 @synthesize frequencySlider;
 @synthesize viewFrequency;
 
+@synthesize updatingIndicator;
+
 // Contact data variables
 @synthesize firstName;
 @synthesize lastName;
@@ -36,7 +38,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
 	// Alertview with basic instructions.
     UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"Quick How-to Guide"
                                                       message:@"Swipe up to email \n Swipe left to text message \n Swipe right to postpone \n Swipe down to remove from future reminders\n"
@@ -44,7 +45,9 @@
                                             cancelButtonTitle:@"Got it"
                                             otherButtonTitles:nil, nil];
     [myAlert show];
-    [self performSelector:@selector(getNextContact) withObject:nil afterDelay:2];
+    [updatingIndicator setHidesWhenStopped:YES];
+    [updatingIndicator stopAnimating];
+    [self performSelector:@selector(getNextContact) withObject:nil afterDelay:1.5];
 }
 
 // Get most urgent contact upon regaining control
@@ -153,10 +156,10 @@
         }
         else if (freq < 30) {
             frequencySlider.value = freq*10;
-            message = [NSString stringWithFormat:@"Remind me every %lu days", freq];
+            message = [NSString stringWithFormat:@"Remind me every %ld days", (long)freq];
         } else if (freq < 365) {
-            frequencySlider.value = (freq*30-1)*60+300;
-            message = [NSString stringWithFormat:@"Remind me every %ld months", freq/30];
+            frequencySlider.value = (freq/30-1)*60+300;
+            message = [NSString stringWithFormat:@"Remind me every %ld months", (long)freq/30];
         } else {
             frequencySlider.value = frequencySlider.maximumValue;
             message = @"Remind me every year";
@@ -164,7 +167,6 @@
         [self.viewFrequency setText:message];
     }
 }
-
 
 // Slider to adjust the frequency of desired contact
 - (IBAction)changeFrequency:(id)sender {
@@ -217,9 +219,18 @@
     NSManagedObject *contact = [self fetchContact];
     NSManagedObject *metadata = [contact valueForKey:@"metadata"];
     [metadata setValue:[NSNumber numberWithInteger:frequency] forKey:@"freq"];
-    [DebugLogger log:[NSString stringWithFormat:@"New frequency saved: %lu", frequency] withPriority:2];
+    [DebugLogger log:[NSString stringWithFormat:@"New frequency saved: %ld", (long)frequency] withPriority:2];
 }
 
+#pragma mark - Updating Contacts
+
+- (void)updatingToggle {
+    if ([updatingIndicator isAnimating]) {
+        [updatingIndicator stopAnimating];
+    } else {
+        [updatingIndicator startAnimating];
+    }
+}
 
 #pragma mark - Swipe Gestures
 
