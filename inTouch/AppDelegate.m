@@ -75,6 +75,7 @@
 
 // Iterate through contacts list and add new contacts to CoreData
 - (void)updateContacts {
+//    UIActivityIndicatorView *activityView
     [DebugLogger log:@"Updating Contacts..." withPriority:1];
     // Open contacts
     ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
