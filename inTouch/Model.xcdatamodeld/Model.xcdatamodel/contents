@@ -51,7 +51,7 @@
         <attribute name="numNotInterested" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="numPostpones" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
-    <fetchRequest name="ContactMetadataAll" entity="ContactMetadata"/>
+    <fetchRequest name="ContactMetadataAllNonDeleted" entity="ContactMetadata" predicateString="interest == 1"/>
     <fetchRequest name="ContactMetadataUrgent" entity="ContactMetadata" predicateString="urgency >= 1 AND interest == 1"/>
     <fetchRequest name="ContactNameMatch" entity="Contact" predicateString="nameFirst == $NAMEFIRST AND nameLast == $NAMELAST"/>
     <elements>

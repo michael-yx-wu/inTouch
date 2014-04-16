@@ -20,12 +20,13 @@
 
 @implementation UrgencyCalculator
 
-+ (void)updateAll {
++ (void)updateAll {    
     // Set up request
     NSManagedObjectContext *moc = [self managedObjectContext];
     NSManagedObjectModel *model = [self managedObjectModel];
-    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactMetadataAll"
-                                                substitutionVariables:nil];
+    NSDictionary *placeholder = @{};
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactMetadataAllNonDeleted"
+                                                substitutionVariables:placeholder];
     
     // Get all ContactMetadata entities
     NSError *error;
@@ -74,6 +75,7 @@
 
 // Get the Contact entity from core data
 + (NSArray *)fetchContact:(NSString *)firstName lastName:(NSString *)lastName {
+    [DebugLogger log:[NSString stringWithFormat:@"Updating urgency for %@ %@", firstName, lastName] withPriority:1];
     NSManagedObjectContext *moc = [self managedObjectContext];
     NSManagedObjectModel *model = [self managedObjectModel];
     
