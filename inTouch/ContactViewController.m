@@ -14,7 +14,7 @@
 
 #import "DebugLogger.h"
 
-@interface ContactViewController ()
+@interface ContactViewController () <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
 @end
 
@@ -59,30 +59,48 @@
 
 - (IBAction)messageButton:(id)sender {
     [DebugLogger log:@"Message button press" withPriority:3];
-    if (![phoneMobile isEqualToString:@""]) {
-//        [self performSegueWithIdentifier:@"message" sender:sender];
+    if (phoneMobile != nil) {
+        [DebugLogger log:@"Has mobile" withPriority:3];
         if ([MFMessageComposeViewController canSendText]) {
+            [DebugLogger log:@"Can send text" withPriority:3];
+            [DebugLogger log:phoneMobile withPriority:3];
             NSArray *recipient = @[[NSString stringWithString:phoneMobile]];
             MFMessageComposeViewController *messageViewControler = [[MFMessageComposeViewController alloc] init];
             [messageViewControler setRecipients:recipient];
-//            [messageViewControler setDelegate:self];
-            
+            messageViewControler.messageComposeDelegate = self;
+            [self presentViewController:messageViewControler animated:YES completion:nil];
         }
-        
-
-//        messageViewControler.messageComposeDelegate = self;
-        
-        
     } else {
         // Dispay no mobile number
     }
 }
 
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    [DebugLogger log:@"Preparing for segue to MessageViewController" withPriority:3];
-//    // pass some information
-//    
-//}
+// Handle message sent/cancelled events
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result {
+    switch (result) {
+        case MessageComposeResultCancelled: {
+            [DebugLogger log:@"Message compose cancelled" withPriority:3];
+            [self dismissViewControllerAnimated:YES completion:nil];
+            break;
+        }
+        case MessageComposeResultFailed: {
+            [DebugLogger log:@"Message failed to send" withPriority:3];
+            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Messaged failed to send!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [warningAlert show];
+            [self dismissViewControllerAnimated:YES completion:nil];
+            break;
+        }
+        case MessageComposeResultSent: {
+            [DebugLogger log:@"Message sent!" withPriority:3];
+            [self dismissViewControllerAnimated:YES completion:nil];
+            [self performSelector:@selector(dismissMessage) withObject:nil afterDelay:1];
+        }
+        default: {
+            break;
+        }
+    }
+}
+
 
 #pragma mark - Coredata updating
 
@@ -147,47 +165,7 @@
     [contactMetaData setValue:[NSDate date] forKeyPath:@"lastContactedDate"];
     
     // Update urgency for this contact only
-//    [self updateUrgency];
     [UrgencyCalculator updateUrgencyFirstName:firstName lastName:lastName];
-}
-
--(void)updateUrgency {
-    NSArray *results = [self fetchContact];
-    if ([results count] != 1) {
-        [DebugLogger log:[NSString stringWithFormat:@"Aborting! Multiple contacts with same name: %@ %@", firstName, lastName] withPriority:3];
-        abort();
-    }
-    NSManagedObject *contact = [results objectAtIndex:0];
-    NSManagedObject *metadata = [contact valueForKey:@"metadata"];
-    
-    NSDate *lastContactedDate = [metadata valueForKey:@"lastContactedDate"];
-    NSDate *currentDate = [NSDate date];
-    NSDateComponents *diff;
-    double daysSinceLastContact;
-    double freq = [[metadata valueForKey:@"freq"] doubleValue];
-    
-    // Update urgency based on frequencies and last date contacted
-    // For now, urg = (currentdate - lastdate)/freq or 0 if
-    // the expression < 1
-    NSNumber *urgency;
-    
-    // If never contacted, default urgency is 1
-    if (lastContactedDate == nil) {
-        urgency = [NSNumber numberWithDouble:1];
-    }
-    // Calculate urg using formula above
-    else {
-        diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:lastContactedDate toDate:currentDate options:0];
-        daysSinceLastContact = [diff day];
-        urgency = [NSNumber numberWithDouble:daysSinceLastContact/freq];
-        if ([urgency doubleValue] < 1) {
-            urgency = [NSNumber numberWithDouble:0];
-        }
-    }
-    
-    // Save the new urgency value
-    [metadata setValue:urgency forKey:@"urgency"];
-    [DebugLogger log:[NSString stringWithFormat:@"New urgency for %@ %@: %f", firstName, lastName, [urgency doubleValue]] withPriority:1];
 }
 
 #pragma mark - Dismiss methods
@@ -203,10 +181,10 @@
     [self dismiss:sender];
 }
 
-- (IBAction)dismissMessage:(id)sender {
+- (void)dismissMessage {
     // Record message click before dismissal
     [self incrementNumberTimesContacted:@"message"];
-    [self dismiss:sender];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)dismissEmail:(id)sender {
