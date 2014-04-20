@@ -134,18 +134,18 @@
             // Variable number of buttons
             UIAlertView *selectEmail;
             if ([recipient count] == 1) {
-                // go straight to mail composer
+                // Go straight to mail composer
+                MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
+                [mailViewController setToRecipients:recipient];
+                [mailViewController setMailComposeDelegate:self];
+                [self presentViewController:mailViewController animated:YES completion:nil];
             } else if ([recipient count]) {
                 selectEmail = [[UIAlertView alloc] initWithTitle:@"Which Email?" message:emails delegate:self cancelButtonTitle:@"1" otherButtonTitles:@"2", nil];
+                [selectEmail show];
             } else {
                 selectEmail = [[UIAlertView alloc] initWithTitle:@"Which Email" message:emails delegate:self cancelButtonTitle:@"1" otherButtonTitles:@"2", @"3", nil];
+                [selectEmail show];
             }
-            
-            
-            MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
-            [mailViewController setToRecipients:recipient];
-            [mailViewController setMailComposeDelegate:self];
-            [self presentViewController:mailViewController animated:YES completion:nil];
         }
     } else {
         // Dispay no email
