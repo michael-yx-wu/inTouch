@@ -232,17 +232,17 @@
     }
 }
 
-#pragma mark - Swipe Gestures
+#pragma mark - Swipe/Tap Gestures
 
-- (IBAction)swipeLeft:(id)sender {
-    [DebugLogger log:@"Swiped Left" withPriority:2];
+- (IBAction)swipeLeftOrTap:(id)sender {
+    [DebugLogger log:@"Contact Flip" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         [self performSegueWithIdentifier:@"contact" sender:sender];
     }
 }
 
-- (IBAction)swipeRight:(id)sender {
-    [DebugLogger log:@"Swiped Down" withPriority:2];
+- (IBAction)swipeRightOrTap:(id)sender {
+    [DebugLogger log:@"Postpone" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName] withPriority:2];
         NSManagedObject *contact = [self fetchContact];
@@ -256,8 +256,8 @@
     }
 }
 
-- (IBAction)swipeDown:(id)sender {
-    [DebugLogger log:@"Swiped Down" withPriority:2];
+- (IBAction)swipeDownOrTap:(id)sender {
+    [DebugLogger log:@"Delete" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         NSManagedObject *contact = [self fetchContact];
         NSManagedObject *metadata = [contact valueForKey:@"metadata"];

@@ -38,25 +38,32 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jyx-J0-zs9">
-                                        <rect key="frame" x="80" y="73" width="119" height="64"/>
+                                        <rect key="frame" x="108" y="69" width="64" height="64"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" image="x_icon">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="swipeDownOrTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Ho0-Hh-iCP"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2rb-EC-qdd">
-                                        <rect key="frame" x="185" y="69" width="64" height="64"/>
+                                        <rect key="frame" x="196" y="69" width="64" height="64"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" image="postpone_icon">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="swipeRightOrTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="IoR-Th-8AR"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="285-Im-Tzn">
-                                        <rect key="frame" x="0.0" y="73" width="119" height="64"/>
+                                        <rect key="frame" x="20" y="69" width="64" height="64"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" image="check_icon">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
+                                        <state key="normal" image="check_icon"/>
+                                        <connections>
+                                            <action selector="swipeLeftOrTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="B9Q-Tj-fi4"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -130,17 +137,17 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
                 <swipeGestureRecognizer direction="left" id="BfR-T4-VaM">
                     <connections>
-                        <action selector="swipeLeft:" destination="vXZ-lx-hvc" id="Q0v-mr-1Gb"/>
+                        <action selector="swipeLeftOrTap:" destination="vXZ-lx-hvc" id="xYv-66-TUW"/>
                     </connections>
                 </swipeGestureRecognizer>
                 <swipeGestureRecognizer direction="right" id="R7Z-Kv-qsZ">
                     <connections>
-                        <action selector="swipeRight:" destination="vXZ-lx-hvc" id="SrK-64-EeN"/>
+                        <action selector="swipeRightOrTap:" destination="vXZ-lx-hvc" id="XEX-Zp-Ajq"/>
                     </connections>
                 </swipeGestureRecognizer>
                 <swipeGestureRecognizer direction="down" id="Y7f-Af-2qE">
                     <connections>
-                        <action selector="swipeDown:" destination="vXZ-lx-hvc" id="EkL-sO-hxF"/>
+                        <action selector="swipeDownOrTap:" destination="vXZ-lx-hvc" id="x3O-d1-kzo"/>
                     </connections>
                 </swipeGestureRecognizer>
                 <swipeGestureRecognizer direction="up" id="6uu-8a-74z"/>
@@ -198,7 +205,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UZH-3S-qt7">
-                                <rect key="frame" x="0.0" y="16" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="10" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Contact" id="Cv1-Cm-tVy">
@@ -282,8 +289,8 @@
                                 </attributedString>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <navigationBar contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MPK-wW-qNX">
-                                <rect key="frame" x="0.0" y="28" width="320" height="44"/>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MPK-wW-qNX">
+                                <rect key="frame" x="0.0" y="10" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Help" id="WRB-Uc-5JS">
@@ -332,9 +339,6 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="MPK-wW-qNX" firstAttribute="top" secondItem="uZE-Aq-DTB" secondAttribute="bottom" id="hsc-gA-g31"/>
-                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vXu-LN-LnE" userLabel="First Responder" sceneMemberID="firstResponder"/>
