@@ -25,6 +25,9 @@
     return YES;
 }
 
+// Make background image
+
+
 // Save changes to contacts before entering background
 - (void)applicationWillResignActive:(UIApplication *)application {
     [self saveContext];
