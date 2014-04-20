@@ -17,110 +17,80 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fhK-9c-Xcw" userLabel="Frequency Slider View">
-                                <rect key="frame" x="20" y="366" width="280" height="116"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fhK-9c-Xcw" userLabel="Frequency Slider View">
+                                <rect key="frame" x="20" y="366" width="280" height="152"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="10" minValue="10" maxValue="650" translatesAutoresizingMaskIntoConstraints="NO" id="BlD-Zq-szb">
-                                        <rect key="frame" x="38" y="8" width="204" height="31"/>
+                                    <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="10" minValue="10" maxValue="650" translatesAutoresizingMaskIntoConstraints="NO" id="BlD-Zq-szb">
+                                        <rect key="frame" x="38" y="33" width="204" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="200" id="6oi-7a-Vik"/>
-                                        </constraints>
                                         <connections>
                                             <action selector="changeFrequency:" destination="vXZ-lx-hvc" eventType="valueChanged" id="LQu-9z-UbO"/>
                                             <action selector="doneChangingFrequency:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="PzY-yj-BVu"/>
                                             <action selector="doneChangingFrequency:" destination="vXZ-lx-hvc" eventType="touchUpOutside" id="gQA-VP-EUR"/>
                                         </connections>
                                     </slider>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Frequency Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WY6-K2-IHX" userLabel="Chosen Frequency Label">
-                                        <rect key="frame" x="40" y="46" width="200" height="27"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Frequency Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WY6-K2-IHX" userLabel="Chosen Frequency Label">
+                                        <rect key="frame" x="40" y="5" width="200" height="27"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="27" id="yGB-ue-Oxl"/>
-                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="itG-BL-9J2">
-                                        <rect key="frame" x="76" y="81" width="128" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jyx-J0-zs9">
+                                        <rect key="frame" x="80" y="87" width="119" height="64"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Already Contacted">
+                                        <state key="normal" image="x_icon">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2rb-EC-qdd">
+                                        <rect key="frame" x="185" y="83" width="64" height="64"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="postpone_icon">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="285-Im-Tzn">
+                                        <rect key="frame" x="0.0" y="87" width="119" height="64"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="check_icon">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="itG-BL-9J2" secondAttribute="trailing" constant="76" id="0PS-eO-HNy"/>
-                                    <constraint firstItem="WY6-K2-IHX" firstAttribute="leading" secondItem="fhK-9c-Xcw" secondAttribute="leading" constant="40" id="I1v-bC-QSW"/>
-                                    <constraint firstAttribute="height" constant="116" id="M6J-lL-rk8"/>
-                                    <constraint firstAttribute="trailing" secondItem="BlD-Zq-szb" secondAttribute="trailing" constant="40" id="QNz-aN-MjZ"/>
-                                    <constraint firstItem="WY6-K2-IHX" firstAttribute="top" secondItem="BlD-Zq-szb" secondAttribute="bottom" constant="8" id="RSS-FX-wHl"/>
-                                    <constraint firstItem="itG-BL-9J2" firstAttribute="top" secondItem="WY6-K2-IHX" secondAttribute="bottom" constant="8" id="ULf-O1-oQz"/>
-                                    <constraint firstItem="itG-BL-9J2" firstAttribute="leading" secondItem="fhK-9c-Xcw" secondAttribute="leading" constant="76" id="Wny-Ea-nRV"/>
-                                    <constraint firstItem="BlD-Zq-szb" firstAttribute="top" secondItem="fhK-9c-Xcw" secondAttribute="top" constant="8" id="Y6w-g2-gNl"/>
-                                    <constraint firstItem="BlD-Zq-szb" firstAttribute="leading" secondItem="fhK-9c-Xcw" secondAttribute="leading" constant="40" id="egb-0X-HIF"/>
-                                    <constraint firstItem="itG-BL-9J2" firstAttribute="top" secondItem="WY6-K2-IHX" secondAttribute="bottom" constant="8" id="fbM-cU-MEi"/>
-                                    <constraint firstAttribute="trailing" secondItem="WY6-K2-IHX" secondAttribute="trailing" constant="40" id="hGH-U5-r21"/>
-                                </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XX4-yL-Gwm" userLabel="Contact Profile View">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XX4-yL-Gwm" userLabel="Contact Profile View">
                                 <rect key="frame" x="20" y="41" width="280" height="322"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NVr-Ax-Dzg" userLabel="Last Contacted Label">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NVr-Ax-Dzg" userLabel="Last Contacted Label">
                                         <rect key="frame" x="40" y="281" width="200" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="21" id="f0e-9Q-pr0"/>
-                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="johnny_photo" translatesAutoresizingMaskIntoConstraints="NO" id="5DP-PC-WdX" userLabel="Contact Photo">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="johnny_photo" translatesAutoresizingMaskIntoConstraints="NO" id="5DP-PC-WdX" userLabel="Contact Photo">
                                         <rect key="frame" x="40" y="66" width="200" height="200"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="200" id="7xC-fC-imw"/>
-                                            <constraint firstAttribute="width" constant="200" id="UOz-vp-XSu"/>
-                                        </constraints>
                                     </imageView>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Johnny Appleseed" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="224" translatesAutoresizingMaskIntoConstraints="NO" id="xM2-iI-mT0" userLabel="Contact Name">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Johnny Appleseed" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="224" translatesAutoresizingMaskIntoConstraints="NO" id="xM2-iI-mT0" userLabel="Contact Name">
                                         <rect key="frame" x="28" y="6" width="224" height="52"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="52" id="evB-KT-6WF"/>
-                                        </constraints>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="21"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="RhY-i0-qen">
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="RhY-i0-qen">
                                         <rect key="frame" x="130" y="156" width="20" height="20"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="color" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstItem="xM2-iI-mT0" firstAttribute="leading" secondItem="XX4-yL-Gwm" secondAttribute="leading" constant="28" id="ARS-jY-WlJ"/>
-                                    <constraint firstItem="5DP-PC-WdX" firstAttribute="leading" secondItem="XX4-yL-Gwm" secondAttribute="leading" constant="40" id="DyE-ve-eDd"/>
-                                    <constraint firstItem="xM2-iI-mT0" firstAttribute="top" secondItem="XX4-yL-Gwm" secondAttribute="top" constant="6" id="EkZ-Cv-RCf"/>
-                                    <constraint firstAttribute="trailing" secondItem="5DP-PC-WdX" secondAttribute="trailing" constant="40" id="X8u-zq-hIz"/>
-                                    <constraint firstAttribute="trailing" secondItem="NVr-Ax-Dzg" secondAttribute="trailing" constant="40" id="cHt-RD-meO"/>
-                                    <constraint firstItem="RhY-i0-qen" firstAttribute="top" secondItem="xM2-iI-mT0" secondAttribute="bottom" constant="98" id="dzD-iR-SO4"/>
-                                    <constraint firstItem="NVr-Ax-Dzg" firstAttribute="top" secondItem="RhY-i0-qen" secondAttribute="bottom" constant="105" id="gOJ-DQ-BDx"/>
-                                    <constraint firstAttribute="trailing" secondItem="xM2-iI-mT0" secondAttribute="trailing" constant="28" id="geo-c6-OOn"/>
-                                    <constraint firstItem="5DP-PC-WdX" firstAttribute="top" secondItem="xM2-iI-mT0" secondAttribute="bottom" constant="8" id="jXT-KB-rx8"/>
-                                    <constraint firstAttribute="height" constant="322" id="mfZ-jn-Xsg"/>
-                                    <constraint firstItem="RhY-i0-qen" firstAttribute="leading" secondItem="XX4-yL-Gwm" secondAttribute="leading" constant="130" id="mwZ-jl-XUp"/>
-                                    <constraint firstAttribute="trailing" secondItem="RhY-i0-qen" secondAttribute="trailing" constant="130" id="vGG-C3-3A8"/>
-                                    <constraint firstItem="NVr-Ax-Dzg" firstAttribute="leading" secondItem="XX4-yL-Gwm" secondAttribute="leading" constant="40" id="z1g-Ng-24z"/>
-                                </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KeL-z2-ACQ">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KeL-z2-ACQ">
                                 <rect key="frame" x="278" y="526" width="22" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -131,18 +101,6 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
-                        <constraints>
-                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="KeL-z2-ACQ" secondAttribute="bottom" constant="20" id="06h-6v-LFC"/>
-                            <constraint firstItem="fhK-9c-Xcw" firstAttribute="top" secondItem="XX4-yL-Gwm" secondAttribute="bottom" constant="3" id="8Mh-1f-qMf"/>
-                            <constraint firstItem="XX4-yL-Gwm" firstAttribute="top" secondItem="VEZ-gE-Y26" secondAttribute="bottom" constant="21" id="8vS-52-YoW"/>
-                            <constraint firstItem="XX4-yL-Gwm" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="Gfi-HS-SX1"/>
-                            <constraint firstAttribute="trailing" secondItem="XX4-yL-Gwm" secondAttribute="trailing" constant="20" id="Gmg-q3-L7e"/>
-                            <constraint firstAttribute="trailing" secondItem="fhK-9c-Xcw" secondAttribute="trailing" constant="20" id="VOx-Zs-7D4"/>
-                            <constraint firstAttribute="trailing" secondItem="KeL-z2-ACQ" secondAttribute="trailing" constant="20" id="bV6-de-os3"/>
-                            <constraint firstItem="fhK-9c-Xcw" firstAttribute="top" secondItem="XX4-yL-Gwm" secondAttribute="bottom" constant="3" id="mKD-lV-6kY"/>
-                            <constraint firstItem="fhK-9c-Xcw" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="pCD-OD-NAb"/>
-                            <constraint firstItem="fhK-9c-Xcw" firstAttribute="top" secondItem="XX4-yL-Gwm" secondAttribute="bottom" constant="3" id="t5s-9v-y6a"/>
-                        </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="BfR-T4-VaM" appends="YES" id="ih4-Rk-VJp"/>
                             <outletCollection property="gestureRecognizers" destination="Y7f-Af-2qE" appends="YES" id="5Vh-72-QZT"/>
@@ -194,8 +152,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nai-cd-v4s">
-                                <rect key="frame" x="64" y="243" width="30" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nai-cd-v4s">
+                                <rect key="frame" x="64" y="243" width="1" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Call">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -204,40 +162,36 @@
                                     <action selector="dismissCall:" destination="ost-IX-nwv" eventType="touchUpInside" id="0P0-aM-msY"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2kq-BB-3yx">
-                                <rect key="frame" x="144" y="243" width="30" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2kq-BB-3yx" userLabel="Button - Message">
+                                <rect key="frame" x="112" y="332" width="97" height="64"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Text">
+                                <state key="normal" image="message_icon">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="messageButton:" destination="ost-IX-nwv" eventType="touchUpInside" id="c5K-Q4-65e"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o">
-                                <rect key="frame" x="224" y="243" width="38" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o">
+                                <rect key="frame" x="195" y="334" width="105" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Email">
+                                <state key="normal" image="mail_icon">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="email:" destination="ost-IX-nwv" eventType="touchUpInside" id="Gfq-Jg-DDb"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name Placeholder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCc-mg-fOb">
-                                <rect key="frame" x="48" y="172" width="222" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name Placeholder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCc-mg-fOb">
+                                <rect key="frame" x="49" y="110" width="222" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UZH-3S-qt7">
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UZH-3S-qt7">
                                 <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="NaJ-ud-rYY"/>
-                                    <constraint firstAttribute="width" constant="320" id="OPe-q1-FpM"/>
-                                </constraints>
                                 <items>
                                     <navigationItem title="Contact" id="Cv1-Cm-tVy">
                                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="8yk-Uf-Iub">
@@ -248,22 +202,29 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lqK-Eh-GiI">
+                                <rect key="frame" x="29" y="332" width="95" height="64"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="phone_icon">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="dismissCall:" destination="ost-IX-nwv" eventType="touchUpInside" id="3a3-LN-1b5"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OgZ-yo-xmy">
+                                <rect key="frame" x="128" y="415" width="64" height="64"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="check_icon_fill">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="johnny_photo" translatesAutoresizingMaskIntoConstraints="NO" id="kXU-Bc-NRp" userLabel="Contact Photo">
+                                <rect key="frame" x="77" y="152" width="167" height="167"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="eCc-mg-fOb" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="48" id="0dc-4y-Ccv"/>
-                            <constraint firstItem="UZH-3S-qt7" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" constant="8" id="3eW-1j-yin"/>
-                            <constraint firstAttribute="trailing" secondItem="I8L-OF-d3o" secondAttribute="trailing" constant="58" id="9cj-HD-Aer"/>
-                            <constraint firstItem="eCc-mg-fOb" firstAttribute="top" secondItem="UZH-3S-qt7" secondAttribute="bottom" constant="100" id="S5e-gC-ld7"/>
-                            <constraint firstAttribute="trailing" secondItem="eCc-mg-fOb" secondAttribute="trailing" constant="50" id="UK5-HR-Vch"/>
-                            <constraint firstItem="I8L-OF-d3o" firstAttribute="leading" secondItem="2kq-BB-3yx" secondAttribute="trailing" constant="50" id="Vsq-DK-APN"/>
-                            <constraint firstItem="nai-cd-v4s" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="64" id="aT4-eB-eKU"/>
-                            <constraint firstItem="nai-cd-v4s" firstAttribute="top" secondItem="eCc-mg-fOb" secondAttribute="bottom" constant="50" id="af5-oj-R0s"/>
-                            <constraint firstItem="2kq-BB-3yx" firstAttribute="top" secondItem="eCc-mg-fOb" secondAttribute="bottom" constant="50" id="cgD-f6-amc"/>
-                            <constraint firstItem="I8L-OF-d3o" firstAttribute="top" secondItem="eCc-mg-fOb" secondAttribute="bottom" constant="50" id="hph-8l-icE"/>
-                            <constraint firstItem="UZH-3S-qt7" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="20" symbolic="YES" id="oSy-ff-Lrz"/>
-                            <constraint firstItem="2kq-BB-3yx" firstAttribute="leading" secondItem="nai-cd-v4s" secondAttribute="trailing" constant="50" id="tVO-fC-4aR"/>
-                        </constraints>
                     </view>
                     <connections>
                         <outlet property="contactName" destination="eCc-mg-fOb" id="ywW-eZ-mNZ"/>
@@ -285,11 +246,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="wordWrap" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="ned-bT-k6e">
-                                <rect key="frame" x="20" y="106" width="280" height="156"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="wordWrap" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="197" translatesAutoresizingMaskIntoConstraints="NO" id="ned-bT-k6e">
+                                <rect key="frame" x="93" y="106" width="197" height="156"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <attributedString key="attributedText">
-                                    <fragment content="Swipe left to email, text, or call      Swipe right to postpone            Swipe down to remove from future reminders">
+                                    <fragment content="Swipe left to call, text, or email current contact">
+                                        <attributes>
+                                            <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <font key="NSFont" size="17" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="wordWrap" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="197" translatesAutoresizingMaskIntoConstraints="NO" id="Rxj-6u-BtQ">
+                                <rect key="frame" x="93" y="193" width="197" height="156"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="Swipe down to remove current contact from future reminders">
                                         <attributes>
                                             <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                             <font key="NSFont" size="17" name="HelveticaNeue"/>
@@ -312,6 +287,41 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="wordWrap" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="197" translatesAutoresizingMaskIntoConstraints="NO" id="Fod-Ou-3TU">
+                                <rect key="frame" x="93" y="278" width="197" height="156"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="Swipe right to postpone reminders for current contact to later date">
+                                        <attributes>
+                                            <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            <font key="NSFont" size="17" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GvT-kM-5Hx">
+                                <rect key="frame" x="-10" y="152" width="119" height="64"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="check_icon">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lA0-G3-6JK">
+                                <rect key="frame" x="-10" y="239" width="119" height="64"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="x_icon">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V1F-CZ-m3i">
+                                <rect key="frame" x="17" y="324" width="64" height="64"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="postpone_icon">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -322,7 +332,14 @@
         </scene>
     </scenes>
     <resources>
+        <image name="check_icon" width="64" height="64"/>
+        <image name="check_icon_fill" width="64" height="64"/>
         <image name="johnny_photo" width="602" height="600"/>
+        <image name="mail_icon" width="60" height="60"/>
+        <image name="message_icon" width="64" height="64"/>
+        <image name="phone_icon" width="64" height="64"/>
+        <image name="postpone_icon" width="64" height="64"/>
+        <image name="x_icon" width="64" height="64"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
