@@ -191,7 +191,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UZH-3S-qt7">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="-1" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Contact" id="Cv1-Cm-tVy">
@@ -276,7 +276,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MPK-wW-qNX">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="-1" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Help" id="WRB-Uc-5JS">
