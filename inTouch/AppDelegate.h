@@ -16,5 +16,6 @@
 
 - (void)updateContacts;
 - (void)updateContactsUrgency;
+- (void)saveContext;
 
 @end

@@ -14,7 +14,7 @@
 
 #import "DebugLogger.h"
 
-@interface ContactViewController () <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate>
+@interface ContactViewController () <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
 
 @end
 
@@ -52,12 +52,65 @@
     // Display contact information
     NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
     [contactName setText:name];
-    [contactPhoto setImage:photoData];
+    if (photoData) {
+        [contactPhoto setImage:photoData];
+    }
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
 }
 
 #pragma mark - Button Actions
+
+- (IBAction)callButton:(id)sender {
+    [DebugLogger log:@"Call button press" withPriority:3];
+    if (phoneHome || phoneMobile || phoneWork) {
+        [DebugLogger log:@"Has phone number" withPriority:3];
+        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tel://"]]) {
+            [DebugLogger log:@"Can make call" withPriority:3];
+
+            // Get all numbers
+            NSMutableArray *phoneNumbers = [[NSMutableArray alloc] initWithCapacity:3];
+            if (emailHome) {
+                [phoneNumbers addObject:phoneHome];
+            }
+            if (emailWork) {
+                [phoneNumbers addObject:phoneMobile];
+            }
+            if (emailOther) {
+                [phoneNumbers addObject:phoneWork];
+            }
+            
+            // Creat the message string
+            NSMutableString *selectString = [[NSMutableString alloc] init];
+            for (int i = 0; i < [phoneNumbers count]; i++) {
+                [selectString appendString:[NSString stringWithFormat:@"%d. %@ ", i+1, [phoneNumbers objectAtIndex:i]]];
+                if (i != [phoneNumbers count]-1) {
+                    [selectString appendString:@"\n"];
+                }
+            }
+            
+            // Variable number of buttons
+            if ([phoneNumbers count] == 1) {
+                // Go straight to call
+                NSString *number = [phoneNumbers objectAtIndex:0];
+                [self performSelector:@selector(dismissCall) withObject:nil afterDelay:1];
+                NSString *url = [NSString stringWithFormat:@"telprompt://%@", number];
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+            } else {
+                UIActionSheet *selectNumber = [[UIActionSheet alloc] initWithTitle:phoneActionSheetTitle delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+                int i;
+                for (i = 0; i < [phoneNumbers count]; i++) {
+                    [selectNumber addButtonWithTitle:[phoneNumbers objectAtIndex:i]];
+                }
+                [selectNumber addButtonWithTitle:@"Cancel"];
+                [selectNumber setCancelButtonIndex:i];
+                [selectNumber showInView:[self view]];
+            }
+        } else {
+            [DebugLogger log:@"Cannot make call" withPriority:3];
+        }
+    }
+}
 
 - (IBAction)messageButton:(id)sender {
     [DebugLogger log:@"Message button press" withPriority:3];
@@ -72,8 +125,6 @@
             messageViewControler.messageComposeDelegate = self;
             [self presentViewController:messageViewControler animated:YES completion:nil];
         }
-    } else {
-        // Dispay no mobile number
     }
 }
 
@@ -105,14 +156,11 @@
 
 - (IBAction)email:(id)sender {
     [DebugLogger log:@"Email button press" withPriority:3];
-    [DebugLogger log:emailHome withPriority:3];
-    [DebugLogger log:emailOther withPriority:3];
-    [DebugLogger log:emailWork withPriority:3];
     if (emailHome || emailOther || emailWork) {
         [DebugLogger log:@"Has email" withPriority:3];
         if ([MFMailComposeViewController canSendMail]) {
+            // Gather emails
             [DebugLogger log:@"Can send email" withPriority:3];
-            [DebugLogger log:phoneMobile withPriority:3];
             NSMutableArray *recipient = [[NSMutableArray alloc] initWithCapacity:3];
             if (emailHome) {
                 [recipient addObject:emailHome];
@@ -127,59 +175,32 @@
             // Create the message string
             NSMutableString *emails = [[NSMutableString alloc] init];
             for (int i = 0; i < [recipient count]; i++) {
-                [emails appendString:[NSString stringWithFormat:@"%d. %@", i+1, [recipient objectAtIndex:i]]];
+                [emails appendString:[NSString stringWithFormat:@"%d. %@ ", i+1, [recipient objectAtIndex:i]]];
                 if (i != [recipient count]-1) {
                     [emails appendString:@"\n"];
                 }
             }
             
             // Variable number of buttons
-            UIAlertView *selectEmail;
+            UIActionSheet *selectEmail;
             if ([recipient count] == 1) {
                 // Go straight to mail composer
                 MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
                 [mailViewController setToRecipients:recipient];
                 [mailViewController setMailComposeDelegate:self];
                 [self presentViewController:mailViewController animated:YES completion:nil];
-            } else if ([recipient count]) {
-                selectEmail = [[UIAlertView alloc] initWithTitle:@"Which Email?" message:emails delegate:self cancelButtonTitle:@"1" otherButtonTitles:@"2", nil];
-                [selectEmail show];
             } else {
-                selectEmail = [[UIAlertView alloc] initWithTitle:@"Which Email" message:emails delegate:self cancelButtonTitle:@"1" otherButtonTitles:@"2", @"3", nil];
-                [selectEmail show];
+                selectEmail = [[UIActionSheet alloc] initWithTitle:emailActionSheetTitle delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+                int i;
+                for (i = 0; i < [recipient count]; i++) {
+                    [selectEmail addButtonWithTitle:[recipient objectAtIndex:i]];
+                }
+                [selectEmail addButtonWithTitle:@"Cancel"];
+                [selectEmail setCancelButtonIndex:i];
+                [selectEmail showInView:[self view]];
             }
         }
-    } else {
-        // Dispay no email
     }
-}
-
-// Handle email/call select for multiple emails/phone numbers
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSString *message = [alertView message];
-    NSMutableArray *recipients = (NSMutableArray *)[message componentsSeparatedByString:@". "];
-    
-    // Gather and delete unnecessary components
-    NSMutableArray *toDelete = [[NSMutableArray alloc] initWithCapacity:3];
-    for (int i = 0; i < [recipients count]; i++) {
-        if ([((NSString *)[recipients objectAtIndex:i]) length] == 2) {
-            [toDelete addObject:[recipients objectAtIndex:i]];
-        }
-    }
-    for (int i = 0; i < [toDelete count]; i++) {
-        [recipients delete:[toDelete objectAtIndex:i]];
-    }
-    
-    // Emails AlertView
-    if ([[alertView title] isEqualToString:@"Which Email?"]) {
-        NSArray *recipient = @[[recipients objectAtIndex:buttonIndex]];
-        MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
-        [mailViewController setToRecipients:recipient];
-        [mailViewController setMailComposeDelegate:self];
-        [self presentViewController:mailViewController animated:YES completion:nil];
-    }
-    
-    // Phones AlertView
 }
 
 // Handle email sent/cancelled events
@@ -205,35 +226,75 @@
             [self performSelector:@selector(dismissEmail) withObject:nil afterDelay:1];
             break;
         }
-            
         default:
             break;
     }
-//    switch (result) {
-//        case MessageComposeResultCancelled: {
-//            [DebugLogger log:@"Message compose cancelled" withPriority:3];
-//            [self dismissViewControllerAnimated:YES completion:nil];
-//            break;
-//        }
-//        case MessageComposeResultFailed: {
-//            [DebugLogger log:@"Message failed to send" withPriority:3];
-//            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Messaged failed to send!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//            [warningAlert show];
-//            [self dismissViewControllerAnimated:YES completion:nil];
-//            break;
-//        }
-//        case MessageComposeResultSent: {
-//            [DebugLogger log:@"Message sent!" withPriority:3];
-//            [self dismissViewControllerAnimated:YES completion:nil];
-//            [self performSelector:@selector(dismissMessage) withObject:nil afterDelay:1];
-//        }
-//        default: {
-//            break;
-//        }
-//    }
 }
 
-//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+// Handle email/call select for multiple emails/phone numbers
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *message = [alertView message];
+    NSMutableArray *recipients = (NSMutableArray *)[message componentsSeparatedByString:@" "];
+    [DebugLogger log:[NSString stringWithFormat:@"%@", recipients] withPriority:3];
+
+    // Gather and delete unnecessary components
+    NSMutableArray *toDelete = [[NSMutableArray alloc] initWithCapacity:3];
+    for (int i = 0; i < [recipients count]; i++) {
+        if ([((NSString *)[recipients objectAtIndex:i]) length] < 5) {
+            [toDelete addObject:[recipients objectAtIndex:i]];
+        }
+    }
+    for (int i = 0; i < [toDelete count]; i++) {
+        [recipients removeObject:[toDelete objectAtIndex:i]];
+    }
+    
+    [DebugLogger log:[NSString stringWithFormat:@"%@", recipients] withPriority:3];
+    
+    [DebugLogger log:[NSString stringWithFormat:@"Recipients: %lu", (unsigned long)[recipients count]] withPriority:3];
+    
+    // Emails AlertView
+    if ([[alertView title] isEqualToString:@"Which email?"]) {
+        NSArray *recipient = @[[recipients objectAtIndex:buttonIndex]];
+        MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
+        [mailViewController setToRecipients:recipient];
+        [mailViewController setMailComposeDelegate:self];
+        [self presentViewController:mailViewController animated:YES completion:nil];
+    }
+    
+    // Phone Numbers AlertView
+    else if ([[alertView title] isEqualToString:@"Which number?"]) {
+        NSString *number = [recipients objectAtIndex:buttonIndex];
+        [self performSelector:@selector(dismissCall) withObject:nil afterDelay:1];
+        NSString *url = [NSString stringWithFormat:@"telprompt://%@", number];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+    }
+    
+    // Phones AlertView
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    // Cancel
+    if (buttonIndex == [actionSheet cancelButtonIndex]) {
+        return;
+    }
+    
+    // Phone Select
+    if ([[actionSheet title] isEqualToString:phoneActionSheetTitle]) {
+        NSString *number = [actionSheet buttonTitleAtIndex:buttonIndex];
+        [self performSelector:@selector(dismissCall) withObject:nil afterDelay:1];
+        NSString *url = [NSString stringWithFormat:@"telprompt://%@", number];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+    }
+    
+    // Email select
+    else if ([[actionSheet title] isEqualToString:emailActionSheetTitle]) {
+        NSArray *recipient = @[[actionSheet buttonTitleAtIndex:buttonIndex]];
+        MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
+        [mailViewController setToRecipients:recipient];
+        [mailViewController setMailComposeDelegate:self];
+        [self presentViewController:mailViewController animated:YES completion:nil];
+    }
+}
 
 #pragma mark - Coredata updating
 
@@ -308,10 +369,10 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)dismissCall:(id)sender {
+- (IBAction)dismissCall {
     // Record call click before dismissal
     [self incrementNumberTimesContacted:@"call"];
-    [self dismiss:sender];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)dismissMessage {
