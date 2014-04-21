@@ -268,6 +268,7 @@
         NSDate *today = [NSDate date];
         [metadata setValue:[NSNumber numberWithBool:NO] forKey:@"interest"];
         [metadata setValue:today forKey:@"noInterestDate"];
+        [self save];
         [self getNextContact];
     }
 }
@@ -328,6 +329,11 @@
 - (NSManagedObjectModel *)managedObjectModel {
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     return [appDelegate managedObjectModel];
+}
+
+- (void)save {
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    [appDelegate saveContext];
 }
 
 @end

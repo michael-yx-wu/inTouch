@@ -58,7 +58,7 @@
             }
         });
     } else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
-//        [self updateContacts];
+        [self updateContacts];
     }
     
     // Update contact urgency

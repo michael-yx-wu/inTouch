@@ -26,3 +26,6 @@
 @property (nonatomic, strong) NSString *phoneWork;
 
 @end
+
+static NSString *phoneActionSheetTitle = @"Which number?";
+static NSString *emailActionSheetTitle = @"Which email?";
