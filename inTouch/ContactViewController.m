@@ -53,6 +53,8 @@
     NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
     [contactName setText:name];
     [contactPhoto setImage:photoData];
+    
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
 }
 
 #pragma mark - Button Actions
