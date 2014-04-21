@@ -39,11 +39,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Alertview with basic instructions.
-    UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"Quick How-to Guide"
-                                                      message:@"Swipe up to email \n Swipe left to text message \n Swipe right to postpone \n Swipe down to remove from future reminders\n"
+    UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"How to Get Started"
+                                                      message:@"Swipe left to call, text, or email\n Swipe right to postpone reminder\n Swipe down to remove current contact from future reminders\n"
                                                      delegate:self
                                             cancelButtonTitle:@"Got it"
                                             otherButtonTitles:nil, nil];
+    // Load in background image
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
+    // ========================
+
     [myAlert show];
     [updatingIndicator setHidesWhenStopped:YES];
     [updatingIndicator stopAnimating];

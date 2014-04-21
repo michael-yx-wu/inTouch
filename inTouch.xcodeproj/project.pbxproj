@@ -237,7 +237,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0510;
-				ORGANIZATIONNAME = "Michael Wu";
+				ORGANIZATIONNAME = "inTouch Team";
 				TargetAttributes = {
 					4C340D5D18C16FF7009A96D8 = {
 						DevelopmentTeam = QUF4M7QXQP;
@@ -432,7 +432,7 @@
 				INFOPLIST_FILE = "inTouch/inTouch-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "75A69E71-E0F3-42EE-9CC1-3907CB47A9C7";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
