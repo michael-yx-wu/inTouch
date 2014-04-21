@@ -29,3 +29,7 @@
 
 static NSString *phoneActionSheetTitle = @"Which number?";
 static NSString *emailActionSheetTitle = @"Which email?";
+static NSString *contactedCall = @"called";
+static NSString *contactedMessage = @"messaged";
+static NSString *contactedEmail = @"emailed";
+static NSString *contactedGeneric = @"generic";

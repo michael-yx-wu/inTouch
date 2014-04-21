@@ -203,7 +203,7 @@
                                     <navigationItem title="Contact" id="Cv1-Cm-tVy">
                                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="8yk-Uf-Iub">
                                             <connections>
-                                                <action selector="dismiss:" destination="ost-IX-nwv" id="S1Z-Cp-4vS"/>
+                                                <action selector="dismissCancel:" destination="ost-IX-nwv" id="dN1-Cm-Har"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -226,6 +226,10 @@
                                 <state key="normal" image="check_icon_fill">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="dismissContacted:" destination="ost-IX-nwv" eventType="touchUpInside" id="04H-y4-sLW"/>
+                                    <action selector="manuallyContacted:" destination="ost-IX-nwv" eventType="touchUpInside" id="rJP-yd-foj"/>
+                                </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="stack_icon" translatesAutoresizingMaskIntoConstraints="NO" id="kXU-Bc-NRp" userLabel="Contact Photo">
                                 <rect key="frame" x="60" y="108" width="200" height="200"/>

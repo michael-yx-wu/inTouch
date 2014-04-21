@@ -231,47 +231,11 @@
     }
 }
 
-// Handle email/call select for multiple emails/phone numbers
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSString *message = [alertView message];
-    NSMutableArray *recipients = (NSMutableArray *)[message componentsSeparatedByString:@" "];
-    [DebugLogger log:[NSString stringWithFormat:@"%@", recipients] withPriority:3];
-
-    // Gather and delete unnecessary components
-    NSMutableArray *toDelete = [[NSMutableArray alloc] initWithCapacity:3];
-    for (int i = 0; i < [recipients count]; i++) {
-        if ([((NSString *)[recipients objectAtIndex:i]) length] < 5) {
-            [toDelete addObject:[recipients objectAtIndex:i]];
-        }
-    }
-    for (int i = 0; i < [toDelete count]; i++) {
-        [recipients removeObject:[toDelete objectAtIndex:i]];
-    }
+- (IBAction)manuallyContacted:(id)sender {
     
-    [DebugLogger log:[NSString stringWithFormat:@"%@", recipients] withPriority:3];
-    
-    [DebugLogger log:[NSString stringWithFormat:@"Recipients: %lu", (unsigned long)[recipients count]] withPriority:3];
-    
-    // Emails AlertView
-    if ([[alertView title] isEqualToString:@"Which email?"]) {
-        NSArray *recipient = @[[recipients objectAtIndex:buttonIndex]];
-        MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
-        [mailViewController setToRecipients:recipient];
-        [mailViewController setMailComposeDelegate:self];
-        [self presentViewController:mailViewController animated:YES completion:nil];
-    }
-    
-    // Phone Numbers AlertView
-    else if ([[alertView title] isEqualToString:@"Which number?"]) {
-        NSString *number = [recipients objectAtIndex:buttonIndex];
-        [self performSelector:@selector(dismissCall) withObject:nil afterDelay:1];
-        NSString *url = [NSString stringWithFormat:@"telprompt://%@", number];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
-    }
-    
-    // Phones AlertView
 }
 
+// Handle phone number/email selection
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     // Cancel
     if (buttonIndex == [actionSheet cancelButtonIndex]) {
@@ -337,21 +301,22 @@
     // Increment times contacted
     timesContacted = [NSNumber numberWithInt:[numTimesContacted intValue]+1];
     [contactMetaData setValue:timesContacted forKey:@"numTimesContacted"];
+    [DebugLogger log:[NSString stringWithFormat:@"Times contacted: %d", [timesContacted intValue]] withPriority:3];
     
     // Increment times contacted based on medium
-    if ([medium isEqualToString:@"call"]) {
+    if ([medium isEqualToString:contactedCall]) {
         timesContacted = [NSNumber numberWithInt:[numTimesCalled intValue] +1];
         [contactMetaData setValue:timesContacted forKeyPath:@"numTimesCalled"];
         [DebugLogger log:[NSString stringWithFormat:@"Times called: %d", [timesContacted intValue]] withPriority:3];
-    } else if ([medium isEqualToString:@"message"]) {
+    } else if ([medium isEqualToString:contactedMessage]) {
         timesContacted = [NSNumber numberWithInt:[numTimesMessaged intValue]+1];
         [contactMetaData setValue:timesContacted forKeyPath:@"numTimesMessaged"];
         [DebugLogger log:[NSString stringWithFormat:@"Times messaged: %d", [timesContacted intValue]] withPriority:3];
-    } else if ([medium isEqualToString:@"email"]) {
+    } else if ([medium isEqualToString:contactedEmail]) {
         timesContacted = [NSNumber numberWithInt:[numTimesEmailed intValue]+1];
         [contactMetaData setValue:timesContacted forKeyPath:@"numTimesEmailed"];
         [DebugLogger log:[NSString stringWithFormat:@"Times emailed: %d", [timesContacted intValue]] withPriority:3];
-    } else {
+    } else if (![medium isEqualToString:contactedGeneric]){
         [DebugLogger log:@"Error updating contact method frequency... please check spelling!" withPriority:3];
     }
     
@@ -364,12 +329,18 @@
 
 #pragma mark - Dismiss methods
 
-- (IBAction)dismiss:(id)sender {
+- (IBAction)dismissCancel:(id)sender {
     // InTouch canceled - no logging
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)dismissCall {
+- (IBAction)dismissContacted:(id)sender {
+    // Generic contacted method
+    [self incrementNumberTimesContacted:contactedGeneric];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)dismissCall {
     // Record call click before dismissal
     [self incrementNumberTimesContacted:@"call"];
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -381,7 +352,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)dismissEmail {
+- (void)dismissEmail {
     // Record email click before dismissal
     [self incrementNumberTimesContacted:@"email"];
     [self dismissViewControllerAnimated:YES completion:nil];
