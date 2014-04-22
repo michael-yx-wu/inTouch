@@ -57,6 +57,7 @@
                                             otherButtonTitles:nil, nil];
     [myAlert show];
     [ContactManager updateInformation];
+    [ContactManager updateUrgency];
     [self performSelector:@selector(getNextContact) withObject:nil afterDelay:1.5];
 }
 
