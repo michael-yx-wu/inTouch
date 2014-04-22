@@ -24,6 +24,7 @@
 @property (strong, nonatomic) NSString *firstName;
 @property (strong, nonatomic) NSString *lastName;
 @property (strong, nonatomic) NSData *photoData;
+@property int abrecordid;
 @property (strong, nonatomic) NSString *emailHome;
 @property (strong, nonatomic) NSString *emailOther;
 @property (strong, nonatomic) NSString *emailWork;

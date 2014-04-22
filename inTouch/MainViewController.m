@@ -34,6 +34,7 @@
 @synthesize firstName;
 @synthesize lastName;
 @synthesize photoData;
+@synthesize abrecordid;
 @synthesize emailHome;
 @synthesize emailOther;
 @synthesize emailWork;
@@ -47,32 +48,6 @@
 	// Load in background image
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
     
-    [updatingIndicator setHidesWhenStopped:YES];
-    [updatingIndicator startAnimating];
-    // Add new/update contacts from AddressBook to CoreData
-    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
-        ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error) {
-            if (granted) {
-                [ContactManager updateInformation];
-            } else {
-                // Display message - access denied
-                UIAlertView *accessDeniedMessage = [[UIAlertView alloc]
-                                                    initWithTitle:nil
-                                                    message:@"Contacts were not automatically imported"
-                                                    delegate:self
-                                                    cancelButtonTitle:@"OK"
-                                                    otherButtonTitles:nil];
-                [accessDeniedMessage show];
-            }
-        });
-    } else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
-        [ContactManager updateInformation];
-    }
-    
-    // Update all urgency values
-    [ContactManager updateUrgency];
-    [updatingIndicator stopAnimating];
     
     // Alertview with basic instructions.
     UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"How to Get Started"
@@ -81,7 +56,8 @@
                                             cancelButtonTitle:@"Got it"
                                             otherButtonTitles:nil, nil];
     [myAlert show];
-    
+    [ContactManager updateInformation];
+    [self performSelector:@selector(getNextContact) withObject:nil afterDelay:1.5];
 }
 
 // Get most urgent contact upon regaining control
@@ -154,18 +130,11 @@
             return;
         }
         
+        // Get contact information for the current contact
         NSManagedObject *contact = [contactMetadata valueForKey:@"Contact"];
+        [self updateContactInformation:contact];
+        
         NSInteger freq = [[contactMetadata valueForKey:@"freq"] integerValue];
-        firstName = [contact valueForKey:@"nameFirst"];
-        lastName = [contact valueForKey:@"nameLast"];
-        photoData = [contact valueForKey:@"contactPhoto"];
-        emailHome = [contact valueForKey:@"emailHome"];
-        emailOther = [contact valueForKey:@"emailOther"];
-        emailWork = [contact valueForKey:@"emailWork"];
-        phoneHome = [contact valueForKey:@"phoneHome"];
-        phoneMobile = [contact valueForKey:@"phoneMobile"];
-        phoneWork = [contact valueForKey:@"phoneWork"];
-        lastContactedDate = [contactMetadata valueForKey:@"lastContactedDate"];
         
         // Set display name
         NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
@@ -204,6 +173,68 @@
         }
         [self.viewFrequency setText:message];
     }
+}
+
+// Update information about the current contact
+- (void)updateContactInformation:(NSManagedObject*)contact {
+    firstName = [contact valueForKey:@"nameFirst"];
+    lastName = [contact valueForKey:@"nameLast"];
+    photoData = [contact valueForKey:@"contactPhoto"];
+    abrecordid = [[contact valueForKey:@"abrecordid"] intValue];
+    
+    // Verify contact ID
+    abrecordid = [ContactManager verifyABRecordID:abrecordid forContact:contact];
+    
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+    ABRecordRef currentContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
+    
+    // Get home, other, and work emails
+    ABMultiValueRef emails = ABRecordCopyValue(currentContact, kABPersonEmailProperty);
+    NSString *emailLabel;
+    CFStringRef label;
+    for (int j = 0; j < ABMultiValueGetCount(emails); j++) {
+        // Get label for current email
+        label = ABMultiValueCopyLabelAtIndex(emails, j);
+        emailLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
+        
+        if ([emailLabel isEqualToString:@"home"]) {
+            emailHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Home Email: %@", emailHome] withPriority:1];
+        } else if ([emailLabel isEqualToString:@"other"]) {
+            emailOther = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Other Email: %@", emailOther] withPriority:1];
+        } else if ([emailLabel isEqualToString:@"work"]) {
+            emailWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Work Email: %@", emailWork] withPriority:1];
+        }
+    }
+
+    // Get home, mobile, and work phone numbers
+    ABMultiValueRef phoneNumbers = ABRecordCopyValue(currentContact, kABPersonPhoneProperty);
+    NSString *phoneLabel;
+    for (int j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
+        // Get label for current phone number
+        label = ABMultiValueCopyLabelAtIndex(phoneNumbers, j);
+        phoneLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
+        
+        if ([phoneLabel isEqualToString:@"home"]) {
+            phoneHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Home Phone: %@", phoneHome] withPriority:1];
+        } else if ([phoneLabel isEqualToString:@"mobile"] || [phoneLabel isEqualToString:@"iPhone"]) {
+            phoneMobile = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Mobile Phone: %@", phoneMobile] withPriority:1];
+        } else if ([phoneLabel isEqualToString:@"work"]) {
+            phoneWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Work Phone: %@", phoneWork] withPriority:1];
+        }
+    }
+
+    NSManagedObject *contactMetadata = [contact valueForKey:@"metadata"];
+    lastContactedDate = [contactMetadata valueForKey:@"lastContactedDate"];
+}
+
+- (void)updateUI {
+    
 }
 
 // Slider to adjust the frequency of desired contact

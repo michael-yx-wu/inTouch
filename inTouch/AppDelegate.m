@@ -9,6 +9,7 @@
 #import <AddressBookUI/AddressBookUI.h>
 
 #import "AppDelegate.h"
+#import "ContactManager.h"
 #import "UrgencyCalculator.h"
 
 #import "DebugLogger.h"
