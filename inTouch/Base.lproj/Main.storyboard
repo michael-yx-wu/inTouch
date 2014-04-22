@@ -17,8 +17,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fhK-9c-Xcw" userLabel="Frequency Slider View">
-                                <rect key="frame" x="20" y="304" width="280" height="138"/>
+                            <view opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fhK-9c-Xcw" userLabel="Frequency Slider View">
+                                <rect key="frame" x="20" y="344" width="280" height="138"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="10" minValue="10" maxValue="650" translatesAutoresizingMaskIntoConstraints="NO" id="BlD-Zq-szb">
@@ -67,13 +67,14 @@
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <rect key="contentStretch" x="0.0" y="1" width="1" height="1"/>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XX4-yL-Gwm" userLabel="Contact Profile View">
-                                <rect key="frame" x="20" y="31" width="280" height="268"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XX4-yL-Gwm" userLabel="Contact Profile View">
+                                <rect key="frame" x="20" y="25" width="280" height="268"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="stack_icon" translatesAutoresizingMaskIntoConstraints="NO" id="YYP-1P-LgN">
-                                        <rect key="frame" x="30" y="44" width="223" height="222"/>
+                                        <rect key="frame" x="30" y="39" width="223" height="222"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NVr-Ax-Dzg" userLabel="Last Contacted Label">
@@ -83,7 +84,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="johnny_photo" translatesAutoresizingMaskIntoConstraints="NO" id="5DP-PC-WdX" userLabel="Contact Photo">
-                                        <rect key="frame" x="58" y="60" width="164" height="164"/>
+                                        <rect key="frame" x="58" y="56" width="164" height="164"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="RhY-i0-qen">
@@ -92,7 +93,7 @@
                                         <color key="color" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     </activityIndicatorView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Johnny Appleseed" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xM2-iI-mT0" userLabel="Contact Name">
-                                        <rect key="frame" x="20" y="3" width="240" height="48"/>
+                                        <rect key="frame" x="20" y="0.0" width="240" height="48"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="21"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -112,8 +113,16 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="KeL-z2-ACQ" secondAttribute="bottom" constant="10" id="4Xt-QT-l6y"/>
-                            <constraint firstAttribute="trailing" secondItem="KeL-z2-ACQ" secondAttribute="trailing" constant="10" id="80L-eu-JiV"/>
+                            <constraint firstAttribute="trailing" secondItem="XX4-yL-Gwm" secondAttribute="trailing" constant="20" id="3ZU-yc-uEy"/>
+                            <constraint firstItem="XX4-yL-Gwm" firstAttribute="top" relation="greaterThanOrEqual" secondItem="VEZ-gE-Y26" secondAttribute="bottom" priority="250" id="DWU-dc-X0O"/>
+                            <constraint firstItem="XX4-yL-Gwm" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="Gil-f9-7Tw"/>
+                            <constraint firstItem="fhK-9c-Xcw" firstAttribute="top" relation="greaterThanOrEqual" secondItem="XX4-yL-Gwm" secondAttribute="bottom" constant="5" id="Wyd-Uu-t34"/>
+                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="KeL-z2-ACQ" secondAttribute="bottom" constant="10" id="YXH-qy-Kor"/>
+                            <constraint firstItem="fhK-9c-Xcw" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="eLa-Re-qX6"/>
+                            <constraint firstItem="fhK-9c-Xcw" firstAttribute="top" relation="lessThanOrEqual" secondItem="XX4-yL-Gwm" secondAttribute="bottom" constant="30" id="gF6-Sz-kux"/>
+                            <constraint firstAttribute="trailing" secondItem="fhK-9c-Xcw" secondAttribute="trailing" constant="20" id="oXB-A2-9Pz"/>
+                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" relation="greaterThanOrEqual" secondItem="fhK-9c-Xcw" secondAttribute="bottom" constant="45" id="t3E-9H-NF0"/>
+                            <constraint firstAttribute="trailing" secondItem="KeL-z2-ACQ" secondAttribute="trailing" constant="10" id="w6s-uq-b7U"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="BfR-T4-VaM" appends="YES" id="ih4-Rk-VJp"/>
@@ -166,41 +175,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2kq-BB-3yx" userLabel="Button - Message">
-                                <rect key="frame" x="128" y="316" width="64" height="64"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="message_icon_ok">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="disabled" image="message_icon"/>
-                                <connections>
-                                    <action selector="messageButton:" destination="ost-IX-nwv" eventType="touchUpInside" id="c5K-Q4-65e"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o">
-                                <rect key="frame" x="207" y="316" width="64" height="64"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="mail_icon_ok">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="disabled" image="mail_icon"/>
-                                <connections>
-                                    <action selector="email:" destination="ost-IX-nwv" eventType="touchUpInside" id="Gfq-Jg-DDb"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name Placeholder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCc-mg-fOb">
-                                <rect key="frame" x="49" y="85" width="222" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="21"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <navigationBar contentMode="scaleToFill" placeholderIntrinsicWidth="320" placeholderIntrinsicHeight="44" translatesAutoresizingMaskIntoConstraints="NO" id="UZH-3S-qt7">
+                            <navigationBar contentMode="scaleToFill" ambiguous="YES" misplaced="YES" placeholderIntrinsicWidth="320" placeholderIntrinsicHeight="44" translatesAutoresizingMaskIntoConstraints="NO" id="UZH-3S-qt7">
                                 <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="320" id="Xpt-dJ-Yuo"/>
-                                </constraints>
                                 <items>
                                     <navigationItem title="Contact" id="Cv1-Cm-tVy">
                                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="8yk-Uf-Iub">
@@ -211,54 +188,106 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lqK-Eh-GiI">
-                                <rect key="frame" x="49" y="316" width="64" height="64"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="phone_icon_ok">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="disabled" image="phone_icon"/>
-                                <connections>
-                                    <action selector="callButton:" destination="ost-IX-nwv" eventType="touchUpInside" id="b4E-1c-fcc"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OgZ-yo-xmy">
-                                <rect key="frame" x="128" y="387" width="64" height="64"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="check_icon_fill">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="dismissContacted:" destination="ost-IX-nwv" eventType="touchUpInside" id="04H-y4-sLW"/>
-                                    <action selector="manuallyContacted:" destination="ost-IX-nwv" eventType="touchUpInside" id="rJP-yd-foj"/>
-                                </connections>
-                            </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="stack_icon" translatesAutoresizingMaskIntoConstraints="NO" id="kXU-Bc-NRp" userLabel="Contact Photo">
-                                <rect key="frame" x="60" y="108" width="200" height="200"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H3s-3e-84P" userLabel="Last Contacted Label">
                                 <rect key="frame" x="60" y="273" width="200" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="13"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoDark" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tlD-Yy-IKa">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoDark" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tlD-Yy-IKa">
                                 <rect key="frame" x="288" y="536" width="22" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <segue destination="5sW-QD-Z4q" kind="modal" id="Ocd-D0-w4e"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fl0-1a-44Q" userLabel="Contact Methods View">
+                                <rect key="frame" x="35" y="312" width="250" height="65"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o" userLabel="Button - Email">
+                                        <rect key="frame" x="166" y="-1" width="64" height="64"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="mail_icon_ok">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="disabled" image="mail_icon"/>
+                                        <connections>
+                                            <action selector="email:" destination="ost-IX-nwv" eventType="touchUpInside" id="Gfq-Jg-DDb"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2kq-BB-3yx" userLabel="Button - Message">
+                                        <rect key="frame" x="93" y="-1" width="64" height="64"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="message_icon_ok">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="disabled" image="message_icon"/>
+                                        <connections>
+                                            <action selector="messageButton:" destination="ost-IX-nwv" eventType="touchUpInside" id="c5K-Q4-65e"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lqK-Eh-GiI" userLabel="Button - Call">
+                                        <rect key="frame" x="20" y="-1" width="64" height="64"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="phone_icon_ok">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="disabled" image="phone_icon"/>
+                                        <connections>
+                                            <action selector="callButton:" destination="ost-IX-nwv" eventType="touchUpInside" id="b4E-1c-fcc"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9hV-Rp-sqO" userLabel="Contact Info View">
+                                <rect key="frame" x="35" y="85" width="250" height="223"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name Placeholder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCc-mg-fOb">
+                                        <rect key="frame" x="14" y="0.0" width="222" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="21"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="stack_icon" translatesAutoresizingMaskIntoConstraints="NO" id="kXU-Bc-NRp" userLabel="Contact Photo">
+                                        <rect key="frame" x="25" y="23" width="200" height="200"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7I9-He-U9a">
+                                <rect key="frame" x="123" y="421" width="75" height="75"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cPN-Kg-Njz">
+                                        <rect key="frame" x="5" y="6" width="64" height="64"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="check_icon_fill">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="tlD-Yy-IKa" secondAttribute="trailing" constant="10" id="3SW-yX-ml2"/>
-                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="tlD-Yy-IKa" secondAttribute="bottom" constant="10" id="47h-Qr-7l5"/>
-                            <constraint firstItem="UZH-3S-qt7" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" id="5AJ-hE-kcP"/>
-                            <constraint firstItem="UZH-3S-qt7" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" id="qtO-WS-a2Z"/>
-                            <constraint firstAttribute="trailing" secondItem="UZH-3S-qt7" secondAttribute="trailing" id="tCb-rn-ZBN"/>
+                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="7I9-He-U9a" secondAttribute="bottom" constant="20" id="6AR-aL-v2P"/>
+                            <constraint firstAttribute="trailing" secondItem="9hV-Rp-sqO" secondAttribute="trailing" constant="35" id="6et-xT-lYs"/>
+                            <constraint firstItem="9hV-Rp-sqO" firstAttribute="top" relation="greaterThanOrEqual" secondItem="UZH-3S-qt7" secondAttribute="bottom" priority="250" constant="8" symbolic="YES" id="AYr-3n-tff"/>
+                            <constraint firstItem="9hV-Rp-sqO" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="35" id="Box-fG-HKl"/>
+                            <constraint firstItem="Fl0-1a-44Q" firstAttribute="top" relation="lessThanOrEqual" secondItem="9hV-Rp-sqO" secondAttribute="bottom" priority="750" constant="30" id="PrU-16-I9s"/>
+                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" relation="lessThanOrEqual" secondItem="7I9-He-U9a" secondAttribute="bottom" constant="80" id="Tq6-yM-GW3"/>
+                            <constraint firstItem="Fl0-1a-44Q" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="35" id="UFX-Th-D0R"/>
+                            <constraint firstAttribute="trailing" secondItem="Fl0-1a-44Q" secondAttribute="trailing" constant="35" id="eoH-5X-22h"/>
+                            <constraint firstItem="7I9-He-U9a" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="123" id="iBS-0h-pcX"/>
+                            <constraint firstAttribute="trailing" secondItem="7I9-He-U9a" secondAttribute="trailing" constant="122" id="nPn-rj-w5g"/>
+                            <constraint firstItem="7I9-He-U9a" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Fl0-1a-44Q" secondAttribute="bottom" constant="5" id="nrA-nq-HXp"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Vd1-9b-8cl" appends="YES" id="hWg-z3-u4q"/>
