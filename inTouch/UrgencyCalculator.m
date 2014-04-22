@@ -52,6 +52,7 @@
         urgency = [self calculateUrgencyCurrentDate:currentDate lastContactedDate:lastContactedDate frequency:freq];
         [metadata setValue:urgency forKey:@"urgency"];
     }
+    [self save];
 }
 
 + (void)updateUrgencyFirstName:(NSString *)firstName lastName:(NSString *)lastName {
@@ -71,6 +72,7 @@
     // Save the new urgency value
     [metadata setValue:urgency forKey:@"urgency"];
     [DebugLogger log:[NSString stringWithFormat:@"New urgency for %@ %@: %f", firstName, lastName, [urgency doubleValue]] withPriority:1];
+    [self save];
 }
 
 // Get the Contact entity from core data
@@ -133,6 +135,11 @@
 + (NSManagedObjectModel *)managedObjectModel {
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     return [appDelegate managedObjectModel];
+}
+
++ (void)save {
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    [appDelegate saveContext];
 }
 
 @end

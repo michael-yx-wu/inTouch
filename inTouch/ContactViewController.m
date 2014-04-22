@@ -319,7 +319,7 @@
     } else if (![medium isEqualToString:contactedGeneric]){
         [DebugLogger log:@"Error updating contact method frequency... please check spelling!" withPriority:3];
     }
-    
+
     // Set last contact date
     [contactMetaData setValue:[NSDate date] forKeyPath:@"lastContactedDate"];
     
@@ -342,19 +342,19 @@
 
 - (void)dismissCall {
     // Record call click before dismissal
-    [self incrementNumberTimesContacted:@"call"];
+    [self incrementNumberTimesContacted:contactedCall];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)dismissMessage {
     // Record message click before dismissal
-    [self incrementNumberTimesContacted:@"message"];
+    [self incrementNumberTimesContacted:contactedMessage];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)dismissEmail {
     // Record email click before dismissal
-    [self incrementNumberTimesContacted:@"email"];
+    [self incrementNumberTimesContacted:contactedEmail];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

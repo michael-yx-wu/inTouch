@@ -30,5 +30,6 @@
 @property (strong, nonatomic) NSString *phoneHome;
 @property (strong, nonatomic) NSString *phoneMobile;
 @property (strong, nonatomic) NSString *phoneWork;
+@property (strong, nonatomic) NSDate *lastContactedDate;
 
 @end

@@ -235,11 +235,25 @@
                                 <rect key="frame" x="60" y="108" width="200" height="200"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tlD-Yy-IKa">
+                                <rect key="frame" x="288" y="536" width="22" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <connections>
+                                    <segue destination="5sW-QD-Z4q" kind="modal" id="Ocd-D0-w4e"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="tlD-Yy-IKa" secondAttribute="trailing" constant="10" id="3SW-yX-ml2"/>
+                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="tlD-Yy-IKa" secondAttribute="bottom" constant="10" id="47h-Qr-7l5"/>
                             <constraint firstItem="UZH-3S-qt7" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" id="5AJ-hE-kcP"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="Vd1-9b-8cl" appends="YES" id="hWg-z3-u4q"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="contactName" destination="eCc-mg-fOb" id="ywW-eZ-mNZ"/>
@@ -247,6 +261,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j6a-IU-vq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="Vd1-9b-8cl">
+                    <connections>
+                        <action selector="dismissCancel:" destination="ost-IX-nwv" id="7z3-4A-gHF"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="380" y="-903"/>
         </scene>
@@ -390,4 +409,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="Ocd-D0-w4e"/>
+    </inferredMetricsTieBreakers>
 </document>

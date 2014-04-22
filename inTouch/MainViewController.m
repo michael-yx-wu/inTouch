@@ -6,7 +6,10 @@
 //  Copyright (c) 2014 Naicheng Wangyu. All rights reserved.
 //
 
+#import <AddressBookUI/AddressBookUI.h>
+
 #import "AppDelegate.h"
+#import "ContactManager.h"
 #import "MainViewController.h"
 #import "ContactViewController.h"
 
@@ -20,6 +23,8 @@
 // Contact display variables
 @synthesize contactName;
 @synthesize contactPhoto;
+@synthesize lastContactedLabel;
+
 @synthesize frequencySlider;
 @synthesize viewFrequency;
 
@@ -35,23 +40,48 @@
 @synthesize phoneHome;
 @synthesize phoneMobile;
 @synthesize phoneWork;
+@synthesize lastContactedDate;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	// Alertview with basic instructions.
+	// Load in background image
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
+    
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+    
+    // Add new/update contacts from AddressBook to CoreData
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error) {
+            if (granted) {
+                [ContactManager updateInformation];
+            } else {
+                // Display message - access denied
+                UIAlertView *accessDeniedMessage = [[UIAlertView alloc]
+                                                    initWithTitle:nil
+                                                    message:@"Contacts were not automatically imported"
+                                                    delegate:self
+                                                    cancelButtonTitle:@"OK"
+                                                    otherButtonTitles:nil];
+                [accessDeniedMessage show];
+            }
+        });
+    } else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
+        [ContactManager updateInformation];
+    }
+    
+    // Update all urgency values
+    [ContactManager updateUrgency];
+    
+    // Alertview with basic instructions.
     UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"How to Get Started"
                                                       message:@"Swipe left to call, text, or email\n Swipe right to postpone reminder\n Swipe down to remove current contact from future reminders\n"
                                                      delegate:self
                                             cancelButtonTitle:@"Got it"
                                             otherButtonTitles:nil, nil];
-    // Load in background image
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
-    // ========================
-
     [myAlert show];
+    
     [updatingIndicator setHidesWhenStopped:YES];
     [updatingIndicator stopAnimating];
-    [self performSelector:@selector(getNextContact) withObject:nil afterDelay:1.5];
 }
 
 // Get most urgent contact upon regaining control
@@ -143,6 +173,7 @@
         phoneHome = [contact valueForKey:@"phoneHome"];
         phoneMobile = [contact valueForKey:@"phoneMobile"];
         phoneWork = [contact valueForKey:@"phoneWork"];
+        lastContactedDate = [contactMetadata valueForKey:@"lastContactedDate"];
         
         // Set display name
         NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
@@ -151,6 +182,17 @@
         // Set contact photo
         UIImage *img = [[UIImage alloc] initWithData:photoData];
         [contactPhoto setImage:img];
+        
+        // Set last contacted label
+        if (lastContactedDate) {
+            diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:lastContactedDate toDate:today options:0];
+            NSInteger daysSinceLastContacted = [diff day];
+            if (daysSinceLastContacted == 1) {
+                [lastContactedLabel setText:@"Last contacted yesterday"];
+            }
+        } else {
+            [lastContactedLabel setText:@""];
+        }
         
         // Set frequency slider value and text
         NSString *message;
@@ -224,6 +266,7 @@
     NSManagedObject *metadata = [contact valueForKey:@"metadata"];
     [metadata setValue:[NSNumber numberWithInteger:frequency] forKey:@"freq"];
     [DebugLogger log:[NSString stringWithFormat:@"New frequency saved: %ld", (long)frequency] withPriority:2];
+    [self save];
 }
 
 #pragma mark - Updating Contacts
