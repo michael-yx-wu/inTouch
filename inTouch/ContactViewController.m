@@ -74,13 +74,13 @@
 
             // Get all numbers
             NSMutableArray *phoneNumbers = [[NSMutableArray alloc] initWithCapacity:3];
-            if (emailHome) {
+            if (phoneHome) {
                 [phoneNumbers addObject:phoneHome];
             }
-            if (emailWork) {
+            if (phoneMobile) {
                 [phoneNumbers addObject:phoneMobile];
             }
-            if (emailOther) {
+            if (phoneWork) {
                 [phoneNumbers addObject:phoneWork];
             }
             
