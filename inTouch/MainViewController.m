@@ -47,36 +47,51 @@
     [super viewDidLoad];
 	// Load in background image
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    // Determine last time we update contact info
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSManagedObjectModel *model = [self managedObjectModel];
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"GlobalData" substitutionVariables:NULL];
     
+    NSError *error;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (results == nil) {
+        [DebugLogger log:@"Error getting globals" withPriority:2];
+        abort();
+    }
+    NSManagedObject *globals = [results objectAtIndex:0];
+    NSInteger interval = [[[NSCalendar currentCalendar] components:NSDayCalendarUnit
+                                                          fromDate:[globals valueForKey:@"lastUpdatedInfo"]
+                                                            toDate:[NSDate date]
+                                                           options:0] day];
     
-    // Alertview with basic instructions.
-    UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"How to Get Started"
-                                                      message:@"Swipe left to call, text, or email\n Swipe right to postpone reminder\n Swipe down to remove current contact from future reminders\n"
-                                                     delegate:self
-                                            cancelButtonTitle:@"Got it"
-                                            otherButtonTitles:nil, nil];
-    [myAlert show];
-    [ContactManager updateInformation];
+    // Update contact info once a day
+    if (interval != 0) {
+        [ContactManager updateInformation];
+    }
+    
+    // This part is a little inefficient
     [ContactManager updateUrgency];
-    [self performSelector:@selector(getNextContact) withObject:nil afterDelay:1.5];
+    [self getNextContact];
 }
 
 // Get most urgent contact upon regaining control
 - (void)viewWillAppear:(BOOL)animated {
-    [self getNextContact];
-}
-
-- (void)fetchNextContactOnEmpty {
-    if ([[contactName text] isEqualToString:@"No Urgent Contacts"]) {
-        [self getNextContact];
-        [DebugLogger log:@"fetching on empty" withPriority:2];
-    }
+//    [self getNextContact];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)updateGlobalData {
+    
+}
+
+#pragma mark - Contact updating
 
 // Get the most urgent contact in the database
 - (void)getNextContact {
@@ -135,44 +150,9 @@
         NSManagedObject *contact = [contactMetadata valueForKey:@"Contact"];
         [self updateContactInformation:contact];
         
+        // Update pertinent UI components
         NSInteger freq = [[contactMetadata valueForKey:@"freq"] integerValue];
-        
-        // Set display name
-        NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-        [contactName setText:name];
-        
-        // Set contact photo
-        UIImage *img = [[UIImage alloc] initWithData:photoData];
-        [contactPhoto setImage:img];
-        
-        // Set last contacted label
-        if (lastContactedDate) {
-            diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:lastContactedDate toDate:today options:0];
-            NSInteger daysSinceLastContacted = [diff day];
-            if (daysSinceLastContacted == 1) {
-                [lastContactedLabel setText:@"Last contacted yesterday"];
-            }
-        } else {
-            [lastContactedLabel setText:@""];
-        }
-        
-        // Set frequency slider value and text
-        NSString *message;
-        if (freq == 1) {
-            frequencySlider.value = frequencySlider.minimumValue;
-            message = @"Remind me every day";
-        }
-        else if (freq < 30) {
-            frequencySlider.value = freq*10;
-            message = [NSString stringWithFormat:@"Remind me every %ld days", (long)freq];
-        } else if (freq < 365) {
-            frequencySlider.value = (freq/30-1)*60+300;
-            message = [NSString stringWithFormat:@"Remind me every %ld months", (long)freq/30];
-        } else {
-            frequencySlider.value = frequencySlider.maximumValue;
-            message = @"Remind me every year";
-        }
-        [self.viewFrequency setText:message];
+        [self updateUI:freq];
     }
 }
 
@@ -234,8 +214,45 @@
     lastContactedDate = [contactMetadata valueForKey:@"lastContactedDate"];
 }
 
-- (void)updateUI {
+- (void)updateUI:(NSInteger)freq {
+    // Set display name
+    NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+    [contactName setText:name];
     
+    // Set contact photo
+    UIImage *img = [[UIImage alloc] initWithData:photoData];
+    [contactPhoto setImage:img];
+    
+    // Set last contacted label
+    NSDateComponents *diff;
+    NSDate *today = [NSDate date];
+    if (lastContactedDate) {
+        diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:lastContactedDate toDate:today options:0];
+        NSInteger daysSinceLastContacted = [diff day];
+        if (daysSinceLastContacted == 1) {
+            [lastContactedLabel setText:@"Last contacted yesterday"];
+        }
+    } else {
+        [lastContactedLabel setText:@""];
+    }
+    
+    // Set frequency slider value and text
+    NSString *message;
+    if (freq == 1) {
+        frequencySlider.value = frequencySlider.minimumValue;
+        message = @"Remind me every day";
+    }
+    else if (freq < 30) {
+        frequencySlider.value = freq*10;
+        message = [NSString stringWithFormat:@"Remind me every %ld days", (long)freq];
+    } else if (freq < 365) {
+        frequencySlider.value = (freq/30-1)*60+300;
+        message = [NSString stringWithFormat:@"Remind me every %ld months", (long)freq/30];
+    } else {
+        frequencySlider.value = frequencySlider.maximumValue;
+        message = @"Remind me every year";
+    }
+    [self.viewFrequency setText:message];
 }
 
 // Slider to adjust the frequency of desired contact

@@ -23,6 +23,9 @@
 @synthesize contactName;
 @synthesize contactPhoto;
 @synthesize lastContactedLabel;
+@synthesize callButton;
+@synthesize messageButton;
+@synthesize emailButton;
 
 @synthesize firstName;
 @synthesize lastName;
@@ -59,6 +62,17 @@
         [contactPhoto setImage:photoData];
     }
     [lastContactedLabel setText:lastContactedString];
+    
+    // Disable buttons if needed
+    if ((!phoneHome && !phoneMobile && !phoneWork) || ![MFMessageComposeViewController canSendText]) {
+        [callButton setEnabled:NO];
+    }
+    if (!phoneMobile || ![MFMessageComposeViewController canSendText]) {
+        [messageButton setEnabled:NO];
+    }
+    if (!emailHome && !emailOther && !emailWork) {
+        [emailButton setEnabled:NO];
+    }
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
 }

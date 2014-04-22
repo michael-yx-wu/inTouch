@@ -23,6 +23,28 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Setting debug level to 1 (everything will be printed)
     [DebugLogger setDebugLevel:1];
+    
+    // Create the GlobalData entity if it does not exist
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSManagedObjectModel *model = [self managedObjectModel];
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"GlobalData" substitutionVariables:NULL];
+    
+    NSError *error;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (results == nil) {
+        [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
+                          error, [error userInfo]] withPriority:1];
+        abort();
+    }
+    if ([results count] == 0) {
+        NSManagedObject *globals = [NSEntityDescription insertNewObjectForEntityForName:@"GlobalData" inManagedObjectContext:moc];
+        [globals setValue:nil forKey:@"lastUpdatedInfo"];
+        [globals setValue:nil forKey:@"lastUpdatedUrgency"];
+        [globals setValue:0 forKey:@"numContacts"];
+        [globals setValue:0 forKey:@"numLogins"];
+        [globals setValue:0 forKey:@"numNotInterested"];
+    }
+    
     return YES;
 }
 

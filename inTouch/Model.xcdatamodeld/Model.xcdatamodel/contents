@@ -26,7 +26,8 @@
         <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="metadata" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <entity name="GlobalData" syncable="YES">
-        <attribute name="lastHelpTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastUpdatedInfo" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastUpdatedUrgency" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="numContacts" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="numLogins" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="numNotInterested" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -50,10 +51,11 @@
     <fetchRequest name="ContactMetadataUrgent" entity="ContactMetadata" predicateString="urgency >= 1 AND interest == 1"/>
     <fetchRequest name="ContactNameMatch" entity="Contact" predicateString="nameFirst == $NAMEFIRST AND nameLast == $NAMELAST"/>
     <fetchRequest name="ContactWithID" entity="Contact" predicateString="abrecordid == $ABRECORDID"/>
+    <fetchRequest name="GlobalData" entity="GlobalData"/>
     <elements>
         <element name="Contact" positionX="117" positionY="-115" width="128" height="135"/>
         <element name="ContactMetadata" positionX="-45" positionY="-117" width="128" height="270"/>
-        <element name="GlobalData" positionX="-198" positionY="192" width="128" height="105"/>
+        <element name="GlobalData" positionX="-198" positionY="192" width="128" height="118"/>
         <element name="Postpones" positionX="-198" positionY="90" width="128" height="75"/>
         <element name="Session" positionX="-198" positionY="-117" width="128" height="178"/>
     </elements>

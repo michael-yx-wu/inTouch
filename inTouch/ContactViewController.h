@@ -14,6 +14,9 @@
 @property (nonatomic, strong) IBOutlet UILabel *contactName;
 @property (nonatomic, strong) IBOutlet UIImageView *contactPhoto;
 @property (nonatomic, strong) IBOutlet UILabel *lastContactedLabel;
+@property (nonatomic, strong) IBOutlet UIButton *callButton;
+@property (nonatomic, strong) IBOutlet UIButton *messageButton;
+@property (nonatomic, strong) IBOutlet UIButton *emailButton;
 
 // Contact Data
 @property (nonatomic, strong) NSString *firstName;

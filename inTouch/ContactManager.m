@@ -97,7 +97,6 @@
         // Update contact photo and id
         [contact setValue:contactPhoto forKey:@"contactPhoto"];
         [contact setValue:abrecordid forKey:@"abrecordid"];
-
     }
     [self save];
 }
@@ -161,7 +160,6 @@
         return abrecordid;
     }
 }
-
 
 + (void)updateUrgency {
     [UrgencyCalculator updateAll];

@@ -206,7 +206,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o" userLabel="Button - Email">
-                                        <rect key="frame" x="166" y="-1" width="64" height="64"/>
+                                        <rect key="frame" x="165" y="-1" width="64" height="64"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" image="mail_icon_ok">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -228,7 +228,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lqK-Eh-GiI" userLabel="Button - Call">
-                                        <rect key="frame" x="20" y="-1" width="64" height="64"/>
+                                        <rect key="frame" x="21" y="-1" width="64" height="64"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" image="phone_icon_ok">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -269,6 +269,9 @@
                                         <state key="normal" image="check_icon_fill">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="dismissContacted:" destination="ost-IX-nwv" eventType="touchUpInside" id="3fa-Mc-LUx"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -294,9 +297,12 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="callButton" destination="lqK-Eh-GiI" id="ruv-Ba-pnf"/>
                         <outlet property="contactName" destination="eCc-mg-fOb" id="ywW-eZ-mNZ"/>
                         <outlet property="contactPhoto" destination="kXU-Bc-NRp" id="dqb-un-eWG"/>
+                        <outlet property="emailButton" destination="I8L-OF-d3o" id="lag-go-0ZZ"/>
                         <outlet property="lastContactedLabel" destination="H3s-3e-84P" id="AqI-GL-zRC"/>
+                        <outlet property="messageButton" destination="2kq-BB-3yx" id="9ln-YT-Fr2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j6a-IU-vq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
