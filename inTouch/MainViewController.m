@@ -47,9 +47,10 @@
 	// Load in background image
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
     
-    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-    
+    [updatingIndicator setHidesWhenStopped:YES];
+    [updatingIndicator startAnimating];
     // Add new/update contacts from AddressBook to CoreData
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
     if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
         ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error) {
             if (granted) {
@@ -71,6 +72,7 @@
     
     // Update all urgency values
     [ContactManager updateUrgency];
+    [updatingIndicator stopAnimating];
     
     // Alertview with basic instructions.
     UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"How to Get Started"
@@ -80,8 +82,6 @@
                                             otherButtonTitles:nil, nil];
     [myAlert show];
     
-    [updatingIndicator setHidesWhenStopped:YES];
-    [updatingIndicator stopAnimating];
 }
 
 // Get most urgent contact upon regaining control
@@ -259,16 +259,6 @@
     [metadata setValue:[NSNumber numberWithInteger:frequency] forKey:@"freq"];
     [DebugLogger log:[NSString stringWithFormat:@"New frequency saved: %ld", (long)frequency] withPriority:2];
     [self save];
-}
-
-#pragma mark - Updating Contacts
-
-- (void)updatingToggle {
-    if ([updatingIndicator isAnimating]) {
-        [updatingIndicator stopAnimating];
-    } else {
-        [updatingIndicator startAnimating];
-    }
 }
 
 #pragma mark - Swipe/Tap Gestures
