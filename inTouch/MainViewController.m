@@ -101,14 +101,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-// Button for "manually contacted" someone, that's not a swipe action.
-- (IBAction)manuallyContacted:(id)sender {
-    [DebugLogger log:@"Manually contacted current contact" withPriority:1];
-    // Update the global count, time, and other values in the core model.
-    
-    
-}
-
 // Get the most urgent contact in the database
 - (void)getNextContact {
     [DebugLogger log:@"Fetching next contact" withPriority:2];
@@ -359,6 +351,7 @@
         [destViewController setPhoneHome:phoneHome];
         [destViewController setPhoneMobile:phoneMobile];
         [destViewController setPhoneWork:phoneWork];
+        [destViewController setLastContactedString:[lastContactedLabel text]];
     }
 }
 

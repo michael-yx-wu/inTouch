@@ -13,11 +13,13 @@
 // Display
 @property (nonatomic, strong) IBOutlet UILabel *contactName;
 @property (nonatomic, strong) IBOutlet UIImageView *contactPhoto;
+@property (nonatomic, strong) IBOutlet UILabel *lastContactedLabel;
 
 // Contact Data
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) UIImage *photoData;
+@property (nonatomic, strong) NSString *lastContactedString;
 @property (nonatomic, strong) NSString *emailHome;
 @property (nonatomic, strong) NSString *emailWork;
 @property (nonatomic, strong) NSString *emailOther;

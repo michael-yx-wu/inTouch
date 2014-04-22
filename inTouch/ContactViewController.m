@@ -22,9 +22,12 @@
 
 @synthesize contactName;
 @synthesize contactPhoto;
+@synthesize lastContactedLabel;
+
 @synthesize firstName;
 @synthesize lastName;
 @synthesize photoData;
+@synthesize lastContactedString;
 @synthesize emailHome;
 @synthesize emailWork;
 @synthesize emailOther;
@@ -55,6 +58,7 @@
     if (photoData) {
         [contactPhoto setImage:photoData];
     }
+    [lastContactedLabel setText:lastContactedString];
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
 }
