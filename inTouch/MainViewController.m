@@ -178,6 +178,9 @@
     ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
     ABRecordRef currentContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
     
+    // Reset email and phone number fields
+    emailHome = emailOther = emailWork = phoneHome = phoneMobile = phoneWork = nil;
+    
     // Get home, other, and work emails
     ABMultiValueRef emails = ABRecordCopyValue(currentContact, kABPersonEmailProperty);
     NSString *emailLabel;
