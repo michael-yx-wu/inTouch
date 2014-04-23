@@ -130,8 +130,11 @@
     // Get next urgent contact information if exists
     if ([results count] == 0) {
         [[self contactName] setText:@"No Urgent Contacts"];
+        [frequencySlider setValue:[frequencySlider minimumValue]];
+        [frequencySlider setEnabled:NO];
     }
     else {
+        [frequencySlider setEnabled:YES];
         // Find the most urgent contact that was not postponed today
         NSUInteger index = 0;
         NSManagedObject *contactMetadata;
