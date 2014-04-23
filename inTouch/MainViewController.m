@@ -29,6 +29,7 @@
 @synthesize viewFrequency;
 
 // User interaction
+@synthesize contactedView;
 @synthesize deletedView;
 @synthesize postponedView;
 
@@ -335,7 +336,6 @@
 
 - (IBAction)swipeRightOrTap:(id)sender {
     [DebugLogger log:@"Postpone" withPriority:2];
-    [self displayPostponedView];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName] withPriority:2];
         NSManagedObject *contact = [self fetchContact];
@@ -345,13 +345,13 @@
         
         [metadata setValue:today forKey:@"lastPostponedDate"];
         [metadata setValue:timesPostponed forKey:@"numTimesPostponed"];
-        [self getNextContact];
+        [self save];
+        [self displayPostponedView];
     }
 }
 
 - (IBAction)swipeDownOrTap:(id)sender {
     [DebugLogger log:@"Delete" withPriority:2];
-    [self displayDeletedView];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         NSManagedObject *contact = [self fetchContact];
         NSManagedObject *metadata = [contact valueForKey:@"metadata"];
@@ -359,7 +359,7 @@
         [metadata setValue:[NSNumber numberWithBool:NO] forKey:@"interest"];
         [metadata setValue:today forKey:@"noInterestDate"];
         [self save];
-        [self getNextContact];
+        [self displayDeletedView];
     }
 }
 
@@ -390,23 +390,37 @@
 
 #pragma mark - Custom Animation
 
-- (void)displayDeletedView {
-    [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+- (void)displayContactedView {
+    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [deletedView setAlpha:1];
     }completion:^(BOOL finished) {
-       [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView animateWithDuration:1 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [deletedView setAlpha:0];
+        } completion:nil];
+    }];
+}
+
+- (void)displayDeletedView {
+    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [deletedView setAlpha:1];
+    }completion:^(BOOL finished) {
+       [UIView animateWithDuration:1 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
            [deletedView setAlpha:0];
-       } completion:nil];
+       } completion:^(BOOL finished) {
+           [self getNextContact];
+       }];
     }];
 }
 
 - (void)displayPostponedView {
-    [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [postponedView setAlpha:1];
     }completion:^(BOOL finished) {
-        [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView animateWithDuration:1 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [postponedView setAlpha:0];
-        } completion:nil];
+        } completion:^(BOOL finished) {
+            [self getNextContact];
+        }];
     }];
 }
 
