@@ -225,7 +225,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fl0-1a-44Q" userLabel="Contact Methods View">
-                                <rect key="frame" x="35" y="316" width="250" height="65"/>
+                                <rect key="frame" x="35" y="309" width="250" height="65"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o" userLabel="Button - Email">
@@ -265,7 +265,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9hV-Rp-sqO" userLabel="Contact Info View">
-                                <rect key="frame" x="35" y="76" width="250" height="232"/>
+                                <rect key="frame" x="35" y="69" width="250" height="232"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name Placeholder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCc-mg-fOb">
@@ -304,7 +304,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7I9-He-U9a" userLabel="Check Button">
-                                <rect key="frame" x="123" y="408" width="75" height="75"/>
+                                <rect key="frame" x="123" y="378" width="75" height="75"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cPN-Kg-Njz">
@@ -337,7 +337,7 @@
                             <constraint firstAttribute="trailing" secondItem="Fl0-1a-44Q" secondAttribute="trailing" constant="35" id="eoH-5X-22h"/>
                             <constraint firstItem="7I9-He-U9a" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="123" id="iBS-0h-pcX"/>
                             <constraint firstAttribute="trailing" secondItem="7I9-He-U9a" secondAttribute="trailing" constant="122" id="nPn-rj-w5g"/>
-                            <constraint firstItem="7I9-He-U9a" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Fl0-1a-44Q" secondAttribute="bottom" constant="5" id="nrA-nq-HXp"/>
+                            <constraint firstItem="7I9-He-U9a" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Fl0-1a-44Q" secondAttribute="bottom" priority="750" constant="5" id="nrA-nq-HXp"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Vd1-9b-8cl" appends="YES" id="hWg-z3-u4q"/>
