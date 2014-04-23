@@ -392,10 +392,10 @@
 
 - (void)displayDeletedView {
     [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        [postponedView setAlpha:1];
+        [deletedView setAlpha:1];
     }completion:^(BOOL finished) {
        [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-           [postponedView setAlpha:0];
+           [deletedView setAlpha:0];
        } completion:nil];
     }];
 }

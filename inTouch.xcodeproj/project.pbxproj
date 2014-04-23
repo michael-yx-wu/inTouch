@@ -30,6 +30,7 @@
 		4C7CBA1F18FC810400A9E4FF /* UrgencyCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7CBA1E18FC810400A9E4FF /* UrgencyCalculator.m */; };
 		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
 		4CC73FD21906330900B932A7 /* ContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC73FD11906330900B932A7 /* ContactManager.m */; };
+		4CE2435019080BCE00028430 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE2434F19080BCE00028430 /* CoreTelephony.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 		4C96311518CB71CB002D05A6 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
 		4CC73FD01906330900B932A7 /* ContactManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactManager.h; sourceTree = "<group>"; };
 		4CC73FD11906330900B932A7 /* ContactManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactManager.m; sourceTree = "<group>"; };
+		4CE2434F19080BCE00028430 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 				4C03B9531906C70D003221EC /* AddressBookUI.framework in Frameworks */,
 				4C340DA318C18D91009A96D8 /* CoreData.framework in Frameworks */,
 				4C340D6418C16FF7009A96D8 /* CoreGraphics.framework in Frameworks */,
+				4CE2435019080BCE00028430 /* CoreTelephony.framework in Frameworks */,
 				4C340D6218C16FF7009A96D8 /* Foundation.framework in Frameworks */,
 				4C367C9718FC96AE00FABB5C /* MessageUI.framework in Frameworks */,
 				4C340D6618C16FF7009A96D8 /* UIKit.framework in Frameworks */,
@@ -130,6 +133,7 @@
 				4C340D9918C175D3009A96D8 /* AddressBookUI.framework */,
 				4C340DA218C18D91009A96D8 /* CoreData.framework */,
 				4C340D6318C16FF7009A96D8 /* CoreGraphics.framework */,
+				4CE2434F19080BCE00028430 /* CoreTelephony.framework */,
 				4C340D6118C16FF7009A96D8 /* Foundation.framework */,
 				4C367C9618FC96AE00FABB5C /* MessageUI.framework */,
 				4C340D6518C16FF7009A96D8 /* UIKit.framework */,
