@@ -28,7 +28,9 @@
 @synthesize frequencySlider;
 @synthesize viewFrequency;
 
-@synthesize updatingIndicator;
+// User interaction
+@synthesize deletedView;
+@synthesize postponedView;
 
 // Contact data variables
 @synthesize firstName;
@@ -333,6 +335,7 @@
 
 - (IBAction)swipeRightOrTap:(id)sender {
     [DebugLogger log:@"Postpone" withPriority:2];
+    [self displayPostponedView];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName] withPriority:2];
         NSManagedObject *contact = [self fetchContact];
@@ -348,6 +351,7 @@
 
 - (IBAction)swipeDownOrTap:(id)sender {
     [DebugLogger log:@"Delete" withPriority:2];
+    [self displayDeletedView];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         NSManagedObject *contact = [self fetchContact];
         NSManagedObject *metadata = [contact valueForKey:@"metadata"];
@@ -382,6 +386,28 @@
         abort();
     }
     return [results objectAtIndex:0];
+}
+
+#pragma mark - Custom Animation
+
+- (void)displayDeletedView {
+    [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [postponedView setAlpha:1];
+    }completion:^(BOOL finished) {
+       [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+           [postponedView setAlpha:0];
+       } completion:nil];
+    }];
+}
+
+- (void)displayPostponedView {
+    [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [postponedView setAlpha:1];
+    }completion:^(BOOL finished) {
+        [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [postponedView setAlpha:0];
+        } completion:nil];
+    }];
 }
 
 #pragma mark - Navigation
