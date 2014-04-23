@@ -34,6 +34,7 @@
 @synthesize firstName;
 @synthesize lastName;
 @synthesize photoData;
+@synthesize abrecordid;
 @synthesize emailHome;
 @synthesize emailOther;
 @synthesize emailWork;
@@ -46,60 +47,60 @@
     [super viewDidLoad];
 	// Load in background image
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    // Determine last time we update contact info
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSManagedObjectModel *model = [self managedObjectModel];
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"GlobalData" substitutionVariables:NULL];
     
-    [updatingIndicator setHidesWhenStopped:YES];
-    [updatingIndicator startAnimating];
-    // Add new/update contacts from AddressBook to CoreData
-    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
-        ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error) {
-            if (granted) {
-                [ContactManager updateInformation];
-            } else {
-                // Display message - access denied
-                UIAlertView *accessDeniedMessage = [[UIAlertView alloc]
-                                                    initWithTitle:nil
-                                                    message:@"Contacts were not automatically imported"
-                                                    delegate:self
-                                                    cancelButtonTitle:@"OK"
-                                                    otherButtonTitles:nil];
-                [accessDeniedMessage show];
-            }
-        });
-    } else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
-        [ContactManager updateInformation];
+    NSError *error;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (results == nil) {
+        [DebugLogger log:@"Error getting globals" withPriority:2];
+        abort();
+    }
+    NSManagedObject *globals = [results objectAtIndex:0];
+    NSDate *lastUpdatedInfo = [globals valueForKey:@"lastUpdatedInfo"];
+    NSInteger interval;
+    if (lastUpdatedInfo == nil) {
+        interval = 1;
+    } else {
+        interval = [[[NSCalendar currentCalendar] components:NSDayCalendarUnit
+                                                    fromDate:lastUpdatedInfo
+                                                      toDate:[NSDate date]
+                                                     options:0] day];
     }
     
-    // Update all urgency values
+    // Update contact info once a day
+    if (interval != 0) {
+        [DebugLogger log:@"Updating contacts" withPriority:2];
+        [ContactManager updateInformation];
+        [globals setValue:[NSDate date] forKey:@"lastUpdatedInfo"];
+    }
+    
+    // This part is a little inefficient
     [ContactManager updateUrgency];
-    [updatingIndicator stopAnimating];
-    
-    // Alertview with basic instructions.
-    UIAlertView *myAlert = [[UIAlertView alloc] initWithTitle:@"How to Get Started"
-                                                      message:@"Swipe left to call, text, or email\n Swipe right to postpone reminder\n Swipe down to remove current contact from future reminders\n"
-                                                     delegate:self
-                                            cancelButtonTitle:@"Got it"
-                                            otherButtonTitles:nil, nil];
-    [myAlert show];
-    
+    [globals setValue:[NSDate date] forKey:@"lastUpdatedUrgency"];
+    [self getNextContact];
 }
 
 // Get most urgent contact upon regaining control
 - (void)viewWillAppear:(BOOL)animated {
-    [self getNextContact];
-}
-
-- (void)fetchNextContactOnEmpty {
-    if ([[contactName text] isEqualToString:@"No Urgent Contacts"]) {
-        [self getNextContact];
-        [DebugLogger log:@"fetching on empty" withPriority:2];
-    }
+//    [self getNextContact];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)updateGlobalData {
+    
+}
+
+#pragma mark - Contact updating
 
 // Get the most urgent contact in the database
 - (void)getNextContact {
@@ -154,56 +155,116 @@
             return;
         }
         
+        // Get contact information for the current contact
         NSManagedObject *contact = [contactMetadata valueForKey:@"Contact"];
+        [self updateContactInformation:contact];
+        
+        // Update pertinent UI components
         NSInteger freq = [[contactMetadata valueForKey:@"freq"] integerValue];
-        firstName = [contact valueForKey:@"nameFirst"];
-        lastName = [contact valueForKey:@"nameLast"];
-        photoData = [contact valueForKey:@"contactPhoto"];
-        emailHome = [contact valueForKey:@"emailHome"];
-        emailOther = [contact valueForKey:@"emailOther"];
-        emailWork = [contact valueForKey:@"emailWork"];
-        phoneHome = [contact valueForKey:@"phoneHome"];
-        phoneMobile = [contact valueForKey:@"phoneMobile"];
-        phoneWork = [contact valueForKey:@"phoneWork"];
-        lastContactedDate = [contactMetadata valueForKey:@"lastContactedDate"];
-        
-        // Set display name
-        NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-        [contactName setText:name];
-        
-        // Set contact photo
-        UIImage *img = [[UIImage alloc] initWithData:photoData];
-        [contactPhoto setImage:img];
-        
-        // Set last contacted label
-        if (lastContactedDate) {
-            diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:lastContactedDate toDate:today options:0];
-            NSInteger daysSinceLastContacted = [diff day];
-            if (daysSinceLastContacted == 1) {
-                [lastContactedLabel setText:@"Last contacted yesterday"];
-            }
-        } else {
-            [lastContactedLabel setText:@""];
-        }
-        
-        // Set frequency slider value and text
-        NSString *message;
-        if (freq == 1) {
-            frequencySlider.value = frequencySlider.minimumValue;
-            message = @"Remind me every day";
-        }
-        else if (freq < 30) {
-            frequencySlider.value = freq*10;
-            message = [NSString stringWithFormat:@"Remind me every %ld days", (long)freq];
-        } else if (freq < 365) {
-            frequencySlider.value = (freq/30-1)*60+300;
-            message = [NSString stringWithFormat:@"Remind me every %ld months", (long)freq/30];
-        } else {
-            frequencySlider.value = frequencySlider.maximumValue;
-            message = @"Remind me every year";
-        }
-        [self.viewFrequency setText:message];
+        [self updateUI:freq];
     }
+}
+
+// Update information about the current contact
+- (void)updateContactInformation:(NSManagedObject*)contact {
+    firstName = [contact valueForKey:@"nameFirst"];
+    lastName = [contact valueForKey:@"nameLast"];
+    photoData = [contact valueForKey:@"contactPhoto"];
+    abrecordid = [[contact valueForKey:@"abrecordid"] intValue];
+    
+    // Verify contact ID
+    abrecordid = [ContactManager verifyABRecordID:abrecordid forContact:contact];
+    
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+    ABRecordRef currentContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
+    
+    // Reset email and phone number fields
+    emailHome = emailOther = emailWork = phoneHome = phoneMobile = phoneWork = nil;
+    
+    // Get home, other, and work emails
+    ABMultiValueRef emails = ABRecordCopyValue(currentContact, kABPersonEmailProperty);
+    NSString *emailLabel;
+    CFStringRef label;
+    for (int j = 0; j < ABMultiValueGetCount(emails); j++) {
+        // Get label for current email
+        label = ABMultiValueCopyLabelAtIndex(emails, j);
+        emailLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
+        
+        if ([emailLabel isEqualToString:@"home"]) {
+            emailHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Home Email: %@", emailHome] withPriority:1];
+        } else if ([emailLabel isEqualToString:@"other"]) {
+            emailOther = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Other Email: %@", emailOther] withPriority:1];
+        } else if ([emailLabel isEqualToString:@"work"]) {
+            emailWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Work Email: %@", emailWork] withPriority:1];
+        }
+    }
+
+    // Get home, mobile, and work phone numbers
+    ABMultiValueRef phoneNumbers = ABRecordCopyValue(currentContact, kABPersonPhoneProperty);
+    NSString *phoneLabel;
+    for (int j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
+        // Get label for current phone number
+        label = ABMultiValueCopyLabelAtIndex(phoneNumbers, j);
+        phoneLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
+        
+        if ([phoneLabel isEqualToString:@"home"]) {
+            phoneHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Home Phone: %@", phoneHome] withPriority:1];
+        } else if ([phoneLabel isEqualToString:@"mobile"] || [phoneLabel isEqualToString:@"iPhone"]) {
+            phoneMobile = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Mobile Phone: %@", phoneMobile] withPriority:1];
+        } else if ([phoneLabel isEqualToString:@"work"]) {
+            phoneWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Work Phone: %@", phoneWork] withPriority:1];
+        }
+    }
+
+    NSManagedObject *contactMetadata = [contact valueForKey:@"metadata"];
+    lastContactedDate = [contactMetadata valueForKey:@"lastContactedDate"];
+}
+
+- (void)updateUI:(NSInteger)freq {
+    // Set display name
+    NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+    [contactName setText:name];
+    
+    // Set contact photo
+    UIImage *img = [[UIImage alloc] initWithData:photoData];
+    [contactPhoto setImage:img];
+    
+    // Set last contacted label
+    NSDateComponents *diff;
+    NSDate *today = [NSDate date];
+    if (lastContactedDate) {
+        diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:lastContactedDate toDate:today options:0];
+        NSInteger daysSinceLastContacted = [diff day];
+        if (daysSinceLastContacted == 1) {
+            [lastContactedLabel setText:@"Last contacted yesterday"];
+        }
+    } else {
+        [lastContactedLabel setText:@""];
+    }
+    
+    // Set frequency slider value and text
+    NSString *message;
+    if (freq == 1) {
+        frequencySlider.value = frequencySlider.minimumValue;
+        message = @"Remind me every day";
+    }
+    else if (freq < 30) {
+        frequencySlider.value = freq*10;
+        message = [NSString stringWithFormat:@"Remind me every %ld days", (long)freq];
+    } else if (freq < 365) {
+        frequencySlider.value = (freq/30-1)*60+300;
+        message = [NSString stringWithFormat:@"Remind me every %ld months", (long)freq/30];
+    } else {
+        frequencySlider.value = frequencySlider.maximumValue;
+        message = @"Remind me every year";
+    }
+    [self.viewFrequency setText:message];
 }
 
 // Slider to adjust the frequency of desired contact

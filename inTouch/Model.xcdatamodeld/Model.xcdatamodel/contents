@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13C64" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Contact" syncable="YES">
+        <attribute name="abrecordid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="contactPhoto" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="emailHome" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="emailOther" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="emailWork" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="nameFirst" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="nameLast" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="phoneHome" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="phoneMobile" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="phoneWork" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="metadata" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ContactMetadata" inverseName="contact" inverseEntity="ContactMetadata" syncable="YES"/>
     </entity>
     <entity name="ContactMetadata" syncable="YES">
@@ -31,7 +26,8 @@
         <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="metadata" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <entity name="GlobalData" syncable="YES">
-        <attribute name="lastHelpTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastUpdatedInfo" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastUpdatedUrgency" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="numContacts" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="numLogins" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="numNotInterested" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -54,10 +50,12 @@
     <fetchRequest name="ContactMetadataAllNonDeleted" entity="ContactMetadata" predicateString="interest == 1"/>
     <fetchRequest name="ContactMetadataUrgent" entity="ContactMetadata" predicateString="urgency >= 1 AND interest == 1"/>
     <fetchRequest name="ContactNameMatch" entity="Contact" predicateString="nameFirst == $NAMEFIRST AND nameLast == $NAMELAST"/>
+    <fetchRequest name="ContactWithID" entity="Contact" predicateString="abrecordid == $ABRECORDID"/>
+    <fetchRequest name="GlobalData" entity="GlobalData"/>
     <elements>
-        <element name="Contact" positionX="117" positionY="-115" width="128" height="208"/>
+        <element name="Contact" positionX="117" positionY="-115" width="128" height="135"/>
         <element name="ContactMetadata" positionX="-45" positionY="-117" width="128" height="270"/>
-        <element name="GlobalData" positionX="-198" positionY="192" width="128" height="105"/>
+        <element name="GlobalData" positionX="-198" positionY="192" width="128" height="118"/>
         <element name="Postpones" positionX="-198" positionY="90" width="128" height="75"/>
         <element name="Session" positionX="-198" positionY="-117" width="128" height="178"/>
     </elements>

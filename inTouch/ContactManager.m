@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 inTouch Team. All rights reserved.
 //
 
+#import <AddressBook/AddressBook.h>
 #import <AddressBookUI/AddressBookUI.h>
 
 #import "AppDelegate.h"
@@ -43,48 +44,8 @@
             [DebugLogger log:@"No contact photo" withPriority:1];
         }
         
-        // Get home, other, and work emails
-        // May need modify core data later to allow more email types
-        ABMultiValueRef emails = ABRecordCopyValue(currentContact, kABPersonEmailProperty);
-        NSString *emailHome, *emailOther, *emailWork, *emailLabel;
-        CFStringRef label;
-        for (int j = 0; j < ABMultiValueGetCount(emails); j++) {
-            // Get label for current email
-            label = ABMultiValueCopyLabelAtIndex(emails, j);
-            emailLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
-            
-            if ([emailLabel isEqualToString:@"home"]) {
-                emailHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-                [DebugLogger log:[NSString stringWithFormat:@"Home Email: %@", emailHome] withPriority:1];
-            } else if ([emailLabel isEqualToString:@"other"]) {
-                emailOther = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-                [DebugLogger log:[NSString stringWithFormat:@"Other Email: %@", emailOther] withPriority:1];
-            } else if ([emailLabel isEqualToString:@"work"]) {
-                emailWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-                [DebugLogger log:[NSString stringWithFormat:@"Work Email: %@", emailWork] withPriority:1];
-            }
-        }
-        
-        // Get home, mobile, and work phone numbers
-        // May need modify core data later to allow more phone number types
-        ABMultiValueRef phoneNumbers = ABRecordCopyValue(currentContact, kABPersonPhoneProperty);
-        NSString *phoneHome, *phoneMobile, *phoneWork, *phoneLabel;
-        for (int j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
-            // Get label for current phone number
-            label = ABMultiValueCopyLabelAtIndex(phoneNumbers, j);
-            phoneLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
-            
-            if ([phoneLabel isEqualToString:@"home"]) {
-                phoneHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-                [DebugLogger log:[NSString stringWithFormat:@"Home Phone: %@", phoneHome] withPriority:1];
-            } else if ([phoneLabel isEqualToString:@"mobile"] || [phoneLabel isEqualToString:@"iPhone"]) {
-                phoneMobile = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-                [DebugLogger log:[NSString stringWithFormat:@"Mobile Phone: %@", phoneMobile] withPriority:1];
-            } else if ([phoneLabel isEqualToString:@"work"]) {
-                phoneWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-                [DebugLogger log:[NSString stringWithFormat:@"Work Phone: %@", phoneWork] withPriority:1];
-            }
-        }
+        // Get contact identifier
+        NSNumber *abrecordid = [NSNumber numberWithInt:ABRecordGetRecordID(currentContact)];
         
         NSManagedObject *contact;
         NSManagedObject *metaData;
@@ -100,6 +61,8 @@
             [metaData setValue:contact forKey:@"contact"];
             
             // Instantiate contact/metadata fields
+            [contact setValue:firstName forKey:@"nameFirst"];
+            [contact setValue:lastName forKey:@"nameLast"];
             [contact setValue:nil forKey:@"category"];
             [metaData setValue:[NSNumber numberWithInt:14] forKeyPath:@"freq"];
             [metaData setValue:[NSNumber numberWithBool:YES] forKey:@"interest"];
@@ -118,29 +81,22 @@
             
             [DebugLogger log:[NSString stringWithFormat:@"Created Contact: %@ %@", firstName, lastName] withPriority:1];
         }
+        
         // Update contact with current information
         else {
-            // Fetch Contact and corresponding ContactMetadata
+            // Fetch contact
             NSArray *fetchResults = [self fetchRequestWithFirstName:firstName LastName:lastName];
             if ([fetchResults count] > 1) {
                 [DebugLogger log:@"Did not update - multiple contacts with same name" withPriority:1];
             } else {
                 contact = [fetchResults objectAtIndex:0];
-                metaData = [contact valueForKey:@"metadata"];
                 [DebugLogger log:[NSString stringWithFormat:@"Updating contact: %@ %@", firstName, lastName] withPriority:1];
             }
         }
         
-        // Enter/update contact information
-        [contact setValue:firstName forKey:@"nameFirst"];
-        [contact setValue:lastName forKey:@"nameLast"];
+        // Update contact photo and id
         [contact setValue:contactPhoto forKey:@"contactPhoto"];
-        [contact setValue:emailHome forKey:@"emailHome"];
-        [contact setValue:emailOther forKey:@"emailOther"];
-        [contact setValue:emailWork forKey:@"emailWork"];
-        [contact setValue:phoneHome forKey:@"phoneHome"];
-        [contact setValue:phoneMobile forKey:@"phoneMobile"];
-        [contact setValue:phoneWork forKey:@"phoneWork"];
+        [contact setValue:abrecordid forKey:@"abrecordid"];
     }
     [self save];
 }
@@ -167,6 +123,42 @@
         abort();
     }
     return results;
+}
+
+// Return the correct ABRecordID for the contact
++ (int)verifyABRecordID:(int)abrecordid forContact:(NSManagedObject*)contact {
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+    
+    // Get name
+    ABRecordRef currentContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
+    NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonFirstNameProperty);
+    NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonLastNameProperty);
+    if (firstName == nil) firstName = @"";
+    if (lastName == nil) lastName = @"";
+
+    NSString *fname = [contact valueForKey:@"nameFirst"];
+    NSString *lname = [contact valueForKey:@"nameLast"];
+    
+    // Verify name match
+    if (![firstName isEqualToString:fname] || ![lastName isEqualToString:lname]) {
+        CFStringRef name = (__bridge CFStringRef)lname;
+        NSNumber *newID;
+        NSArray *matches = (__bridge_transfer NSArray*)ABAddressBookCopyPeopleWithName(addressBookRef, name);
+        for (int i = 0; i < [matches count]; i++) {
+            ABRecordRef potentialMatch = (__bridge ABRecordRef)[matches objectAtIndex:i];
+            NSString *someFirstName = (__bridge NSString*)ABRecordCopyValue(potentialMatch, kABPersonFirstNameProperty);
+            NSString *someLastName = (__bridge NSString*)ABRecordCopyValue(potentialMatch, kABPersonLastNameProperty);
+            if ([someFirstName isEqualToString:fname] && [someLastName isEqualToString:lname]) {
+                newID = [NSNumber numberWithInt:ABRecordGetRecordID(potentialMatch)];
+                [contact setValue:newID forKey:@"abrecorid"];
+            }
+            return [newID intValue];
+        }
+        [DebugLogger log:@"Error finding ID for contact" withPriority:1];
+        abort();
+    } else {
+        return abrecordid;
+    }
 }
 
 + (void)updateUrgency {
