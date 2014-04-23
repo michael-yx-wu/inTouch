@@ -394,20 +394,20 @@
 #pragma mark - Custom Animation
 
 - (void)displayContactedView {
-    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [deletedView setAlpha:1];
     }completion:^(BOOL finished) {
-        [UIView animateWithDuration:1 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView animateWithDuration:0.5 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [deletedView setAlpha:0];
         } completion:nil];
     }];
 }
 
 - (void)displayDeletedView {
-    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [deletedView setAlpha:1];
     }completion:^(BOOL finished) {
-       [UIView animateWithDuration:1 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+       [UIView animateWithDuration:0.5 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
            [deletedView setAlpha:0];
        } completion:^(BOOL finished) {
            [self getNextContact];
@@ -416,10 +416,10 @@
 }
 
 - (void)displayPostponedView {
-    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [postponedView setAlpha:1];
     }completion:^(BOOL finished) {
-        [UIView animateWithDuration:1 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView animateWithDuration:0.5 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [postponedView setAlpha:0];
         } completion:^(BOOL finished) {
             [self getNextContact];
