@@ -286,10 +286,6 @@
                                         <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="13"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8po-0x-Tgn">
-                                        <rect key="frame" x="49" y="38" width="149" height="147"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
@@ -336,7 +332,7 @@
                     <connections>
                         <outlet property="callButton" destination="lqK-Eh-GiI" id="ruv-Ba-pnf"/>
                         <outlet property="contactName" destination="eCc-mg-fOb" id="ywW-eZ-mNZ"/>
-                        <outlet property="contactPhoto" destination="8po-0x-Tgn" id="IxD-vH-gfj"/>
+                        <outlet property="contactPhoto" destination="3C0-f2-7OB" id="tHM-iw-wlh"/>
                         <outlet property="emailButton" destination="I8L-OF-d3o" id="lag-go-0ZZ"/>
                         <outlet property="lastContactedLabel" destination="H3s-3e-84P" id="AqI-GL-zRC"/>
                         <outlet property="messageButton" destination="2kq-BB-3yx" id="9ln-YT-Fr2"/>
@@ -497,6 +493,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="hcP-XY-zoA"/>
+        <segue reference="Ocd-D0-w4e"/>
     </inferredMetricsTieBreakers>
 </document>
