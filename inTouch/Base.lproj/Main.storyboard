@@ -83,7 +83,7 @@
                                         <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="13"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="johnny_photo" translatesAutoresizingMaskIntoConstraints="NO" id="5DP-PC-WdX" userLabel="Contact Photo">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5DP-PC-WdX" userLabel="Contact Photo">
                                         <rect key="frame" x="58" y="56" width="164" height="164"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
@@ -94,17 +94,6 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UeY-4j-wj1" userLabel="Postponed View">
-                                        <rect key="frame" x="95" y="89" width="90" height="90"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="postpone_icon" translatesAutoresizingMaskIntoConstraints="NO" id="D4G-Bg-iRl" userLabel="Postponed label">
-                                                <rect key="frame" x="5" y="5" width="80" height="80"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            </imageView>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.87680451766304346" green="0.87680451766304346" blue="0.87680451766304346" alpha="1" colorSpace="calibratedRGB"/>
-                                    </view>
                                     <view opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Fn-GC-OVX" userLabel="Deleted View">
                                         <rect key="frame" x="95" y="89" width="90" height="90"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -114,7 +103,7 @@
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             </imageView>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.87680451770000001" green="0.87680451770000001" blue="0.87680451770000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.87680451770000001" green="0.87680451770000001" blue="0.87680451770000001" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                                     </view>
                                     <view opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="klc-cv-dcz" userLabel="HasContacted View">
                                         <rect key="frame" x="95" y="89" width="90" height="90"/>
@@ -125,7 +114,18 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.87680451770000001" green="0.87680451770000001" blue="0.87680451770000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.87680451770000001" green="0.87680451770000001" blue="0.87680451770000001" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
+                                    </view>
+                                    <view opaque="NO" alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UeY-4j-wj1" userLabel="Postponed View">
+                                        <rect key="frame" x="95" y="89" width="90" height="90"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="postpone_icon" translatesAutoresizingMaskIntoConstraints="NO" id="D4G-Bg-iRl" userLabel="Postponed label">
+                                                <rect key="frame" x="5" y="5" width="80" height="80"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.87680451770000001" green="0.87680451770000001" blue="0.87680451770000001" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -279,7 +279,7 @@
                                         <rect key="frame" x="21" y="29" width="209" height="208"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="johnny_photo" translatesAutoresizingMaskIntoConstraints="NO" id="3C0-f2-7OB" userLabel="Contact Photo">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3C0-f2-7OB" userLabel="Contact Photo">
                                         <rect key="frame" x="48" y="45" width="153" height="153"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
@@ -298,7 +298,7 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             </imageView>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.87680451770000001" green="0.87680451770000001" blue="0.87680451770000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.87680451770000001" green="0.87680451770000001" blue="0.87680451770000001" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -489,7 +489,6 @@
     <resources>
         <image name="check_icon" width="200" height="200"/>
         <image name="check_icon_fill" width="200" height="200"/>
-        <image name="johnny_photo" width="602" height="600"/>
         <image name="mail_icon" width="200" height="200"/>
         <image name="mail_icon_ok" width="200" height="200"/>
         <image name="message_icon" width="200" height="200"/>
