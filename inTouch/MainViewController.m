@@ -62,18 +62,27 @@
         abort();
     }
     NSManagedObject *globals = [results objectAtIndex:0];
-    NSInteger interval = [[[NSCalendar currentCalendar] components:NSDayCalendarUnit
-                                                          fromDate:[globals valueForKey:@"lastUpdatedInfo"]
-                                                            toDate:[NSDate date]
-                                                           options:0] day];
+    NSDate *lastUpdatedInfo = [globals valueForKey:@"lastUpdatedInfo"];
+    NSInteger interval;
+    if (lastUpdatedInfo == nil) {
+        interval = 1;
+    } else {
+        interval = [[[NSCalendar currentCalendar] components:NSDayCalendarUnit
+                                                    fromDate:lastUpdatedInfo
+                                                      toDate:[NSDate date]
+                                                     options:0] day];
+    }
     
     // Update contact info once a day
     if (interval != 0) {
+        [DebugLogger log:@"Updating contacts" withPriority:2];
         [ContactManager updateInformation];
+        [globals setValue:[NSDate date] forKey:@"lastUpdatedInfo"];
     }
     
     // This part is a little inefficient
     [ContactManager updateUrgency];
+    [globals setValue:[NSDate date] forKey:@"lastUpdatedUrgency"];
     [self getNextContact];
 }
 
