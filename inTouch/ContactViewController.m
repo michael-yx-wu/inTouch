@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Michael Wu. All rights reserved.
 //
 
+#import <CoreTelephony/CTCall.h>
 #import <MessageUI/MessageUI.h>
 
 #import "AppDelegate.h"
@@ -37,6 +38,8 @@
 @synthesize phoneHome;
 @synthesize phoneMobile;
 @synthesize phoneWork;
+
+@synthesize callCenter;
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -75,6 +78,9 @@
     }
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
+    
+    // Set a listener for end calls
+    [self listenForCallEnds];
 }
 
 #pragma mark - Button Actions
@@ -111,7 +117,6 @@
             if ([phoneNumbers count] == 1) {
                 // Go straight to call
                 NSString *number = [phoneNumbers objectAtIndex:0];
-                [self performSelector:@selector(dismissCall) withObject:nil afterDelay:1];
                 NSString *url = [NSString stringWithFormat:@"telprompt://%@", number];
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
             } else {
@@ -263,7 +268,6 @@
     // Phone Select
     if ([[actionSheet title] isEqualToString:phoneActionSheetTitle]) {
         NSString *number = [actionSheet buttonTitleAtIndex:buttonIndex];
-        [self performSelector:@selector(dismissCall) withObject:nil afterDelay:1];
         NSString *url = [NSString stringWithFormat:@"telprompt://%@", number];
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
     }
@@ -399,6 +403,16 @@
     return results;
 }
 
+- (void)listenForCallEnds {
+    __weak typeof(self) weakSelf = self;
+    callCenter = [[CTCallCenter alloc] init];
+    [callCenter setCallEventHandler:^(CTCall *call) {
+        NSString *callState = [call callState];
+        if ([callState isEqualToString:CTCallStateDisconnected]) {
+            [weakSelf dismissCall];
+        }
+    }];
+}
 
 #pragma mark - Core Data Accessor Methods
 

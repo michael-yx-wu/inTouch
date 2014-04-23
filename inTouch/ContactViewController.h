@@ -6,17 +6,17 @@
 //  Copyright (c) 2014 Michael Wu. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <CoreTelephony/CTCallCenter.h>
 
 @interface ContactViewController : UIViewController
 
 // Display
-@property (nonatomic, strong) IBOutlet UILabel *contactName;
-@property (nonatomic, strong) IBOutlet UIImageView *contactPhoto;
-@property (nonatomic, strong) IBOutlet UILabel *lastContactedLabel;
-@property (nonatomic, strong) IBOutlet UIButton *callButton;
-@property (nonatomic, strong) IBOutlet UIButton *messageButton;
-@property (nonatomic, strong) IBOutlet UIButton *emailButton;
+@property (nonatomic, weak) IBOutlet UILabel *contactName;
+@property (nonatomic, weak) IBOutlet UIImageView *contactPhoto;
+@property (nonatomic, weak) IBOutlet UILabel *lastContactedLabel;
+@property (nonatomic, weak) IBOutlet UIButton *callButton;
+@property (nonatomic, weak) IBOutlet UIButton *messageButton;
+@property (nonatomic, weak) IBOutlet UIButton *emailButton;
 
 // Contact Data
 @property (nonatomic, strong) NSString *firstName;
@@ -29,6 +29,9 @@
 @property (nonatomic, strong) NSString *phoneHome;
 @property (nonatomic, strong) NSString *phoneMobile;
 @property (nonatomic, strong) NSString *phoneWork;
+
+// Call center
+@property (nonatomic, strong) CTCallCenter *callCenter;
 
 @end
 
