@@ -13,8 +13,9 @@
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhoto;
 @property (weak, nonatomic) IBOutlet UILabel *lastContactedLabel;
 
-// Updating indicator
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *updatingIndicator;
+// User interaction
+@property (weak, nonatomic) IBOutlet UIView *deletedView;
+@property (weak, nonatomic) IBOutlet UIView *postponedView;
 
 // Current contact remind frequency
 @property (weak, nonatomic) IBOutlet UISlider *frequencySlider;
