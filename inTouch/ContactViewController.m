@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Michael Wu. All rights reserved.
 //
 
-#import <CoreTelephony/CTCall.h>
 #import <MessageUI/MessageUI.h>
 
 #import "AppDelegate.h"
@@ -38,8 +37,6 @@
 @synthesize phoneHome;
 @synthesize phoneMobile;
 @synthesize phoneWork;
-
-@synthesize callCenter;
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -78,9 +75,6 @@
     }
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
-    
-    // Set a listener for end calls
-    [self listenForCallEnds];
 }
 
 #pragma mark - Button Actions
@@ -104,21 +98,17 @@
                 [phoneNumbers addObject:phoneWork];
             }
             
-            // Creat the message string
-            NSMutableString *selectString = [[NSMutableString alloc] init];
-            for (int i = 0; i < [phoneNumbers count]; i++) {
-                [selectString appendString:[NSString stringWithFormat:@"%d. %@ ", i+1, [phoneNumbers objectAtIndex:i]]];
-                if (i != [phoneNumbers count]-1) {
-                    [selectString appendString:@"\n"];
-                }
-            }
-            
             // Variable number of buttons
             if ([phoneNumbers count] == 1) {
                 // Go straight to call
                 NSString *number = [phoneNumbers objectAtIndex:0];
-                NSString *url = [NSString stringWithFormat:@"telprompt://%@", number];
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+                [DebugLogger log:number withPriority:3];
+                
+                NSString *cleanedString = [[number componentsSeparatedByCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"0123456789-+()"] invertedSet]] componentsJoinedByString:@""];
+                NSString *escapedPhoneNumber = [cleanedString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                NSString *phoneURLString = [NSString stringWithFormat:@"telprompt:%@", escapedPhoneNumber];
+                NSURL *phoneURL = [NSURL URLWithString:phoneURLString];
+                [[UIApplication sharedApplication] openURL:phoneURL];
             } else {
                 UIActionSheet *selectNumber = [[UIActionSheet alloc] initWithTitle:phoneActionSheetTitle delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
                 int i;
@@ -195,15 +185,6 @@
                 [recipient addObject:emailOther];
             }
             
-            // Create the message string
-            NSMutableString *emails = [[NSMutableString alloc] init];
-            for (int i = 0; i < [recipient count]; i++) {
-                [emails appendString:[NSString stringWithFormat:@"%d. %@ ", i+1, [recipient objectAtIndex:i]]];
-                if (i != [recipient count]-1) {
-                    [emails appendString:@"\n"];
-                }
-            }
-            
             // Variable number of buttons
             UIActionSheet *selectEmail;
             if ([recipient count] == 1) {
@@ -268,8 +249,11 @@
     // Phone Select
     if ([[actionSheet title] isEqualToString:phoneActionSheetTitle]) {
         NSString *number = [actionSheet buttonTitleAtIndex:buttonIndex];
-        NSString *url = [NSString stringWithFormat:@"telprompt://%@", number];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+        NSString *cleanedString = [[number componentsSeparatedByCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"0123456789-+()"] invertedSet]] componentsJoinedByString:@""];
+        NSString *escapedPhoneNumber = [cleanedString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *phoneURLString = [NSString stringWithFormat:@"telprompt:%@", escapedPhoneNumber];
+        NSURL *phoneURL = [NSURL URLWithString:phoneURLString];
+        [[UIApplication sharedApplication] openURL:phoneURL];
     }
     
     // Email select
@@ -401,17 +385,6 @@
         abort();
     }
     return results;
-}
-
-- (void)listenForCallEnds {
-    __weak typeof(self) weakSelf = self;
-    callCenter = [[CTCallCenter alloc] init];
-    [callCenter setCallEventHandler:^(CTCall *call) {
-        NSString *callState = [call callState];
-        if ([callState isEqualToString:CTCallStateDisconnected]) {
-            [weakSelf dismissCall];
-        }
-    }];
 }
 
 #pragma mark - Core Data Accessor Methods

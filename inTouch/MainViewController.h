@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *lastContactedLabel;
 
 // User interaction
+@property (weak, nonatomic) IBOutlet UIView *contactedView; 
 @property (weak, nonatomic) IBOutlet UIView *deletedView;
 @property (weak, nonatomic) IBOutlet UIView *postponedView;
 
