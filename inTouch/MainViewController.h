@@ -17,6 +17,12 @@
 @property (weak, nonatomic) IBOutlet UIView *contactedView; 
 @property (weak, nonatomic) IBOutlet UIView *deletedView;
 @property (weak, nonatomic) IBOutlet UIView *postponedView;
+@property (weak, nonatomic) IBOutlet UISwipeGestureRecognizer *leftSwipeRecognizer;
+@property (weak, nonatomic) IBOutlet UISwipeGestureRecognizer *rightSwipeRecognizer;
+@property (weak, nonatomic) IBOutlet UISwipeGestureRecognizer *downSwipeRecognizer;
+@property (strong, nonatomic) IBOutlet UISwipeGestureRecognizer *upSwipeRecognizer;
+@property (weak, nonatomic) IBOutlet UITapGestureRecognizer *tapRecognizer;
+
 
 // Current contact remind frequency
 @property (weak, nonatomic) IBOutlet UISlider *frequencySlider;
