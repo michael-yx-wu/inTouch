@@ -73,28 +73,20 @@
         abort();
     }
     NSManagedObject *globals = [results objectAtIndex:0];
-    NSDate *lastUpdatedInfo = [globals valueForKey:@"lastUpdatedInfo"];
-    NSInteger interval;
-    if (lastUpdatedInfo == nil) {
-        interval = 1;
-    } else {
-        interval = [[[NSCalendar currentCalendar] components:NSDayCalendarUnit
-                                                    fromDate:lastUpdatedInfo
-                                                      toDate:[NSDate date]
-                                                     options:0] day];
-    }
+    bool firstRun = [[globals valueForKeyPath:@"firstRun"] boolValue];
+    NSDate *today = [NSDate date];
     
-    // Update contact info once a day
-    if (interval != 0) {
+    // Update contact info on first run only
+    if (firstRun) {
         [DebugLogger log:@"Updating contacts" withPriority:2];
-//        [ContactManager updateInformation];
-        [self displayBusyViewAndSync];
-        [globals setValue:[NSDate date] forKey:@"lastUpdatedInfo"];
+        [self displayBusyViewAndSyncContacts];
+        [globals setValue:today forKeyPath:@"lastUpdatedInfo"];
+        [globals setValue:today forKey:@"lastUpdatedUrgency"];
+    } else {
+        [ContactManager updateUrgency];
+        [globals setValue:today forKey:@"lastUpdatedUrgency"];
     }
     
-    // This part is a little inefficient
-    [ContactManager updateUrgency];
-    [globals setValue:[NSDate date] forKey:@"lastUpdatedUrgency"];
     [self getNextContact];
 }
 
@@ -460,7 +452,7 @@
 }
 
 // Display the "syncing contacts" message and sync contacts
-- (void)displayBusyViewAndSync {
+- (void)displayBusyViewAndSyncContacts {
     // Show the busy view
     [self disableInteraction];
     [DebugLogger log:@"Showing busy view" withPriority:2];
