@@ -112,6 +112,7 @@
     // If never contacted, default urgency is 1
     if (lastContactedDate == nil) {
         urgency = [NSNumber numberWithDouble:1];
+        
     }
     // Calculate urg using formula above
     else {

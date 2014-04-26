@@ -34,7 +34,7 @@
         if (lastName == nil) lastName = @"";
         [DebugLogger log:[NSString stringWithFormat:@"First Name: %@", firstName] withPriority:1];
         [DebugLogger log:[NSString stringWithFormat:@"Last Name: %@", lastName] withPriority:1];
-        
+
         // Get contact identifier
         NSNumber *abrecordid = [NSNumber numberWithInt:ABRecordGetRecordID(currentContact)];
         

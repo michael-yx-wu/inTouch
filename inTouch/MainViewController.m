@@ -57,7 +57,6 @@
     [super viewDidLoad];
 	// Load in background image
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
-    [busyView setAlpha:0];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
