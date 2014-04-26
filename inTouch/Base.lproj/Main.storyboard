@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <deployment defaultVersion="1552" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -78,7 +78,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="NVr-Ax-Dzg" userLabel="Last Contacted Label">
-                                        <rect key="frame" x="49" y="209" width="180" height="21"/>
+                                        <rect key="frame" x="49" y="208" width="180" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="13"/>
                                         <nil key="highlightedColor"/>
@@ -261,17 +261,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s7y-uC-wgJ">
-                                <rect key="frame" x="20" y="22" width="51" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s7y-uC-wgJ">
+                                <rect key="frame" x="20" y="20" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="15"/>
-                                <state key="normal" title="Cancel"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="25" id="3vs-2B-gSf"/>
+                                    <constraint firstAttribute="height" constant="25" id="a5s-Um-dVT"/>
+                                </constraints>
+                                <state key="normal" image="back_icon"/>
                                 <connections>
                                     <action selector="dismissCancel:" destination="ost-IX-nwv" eventType="touchUpInside" id="7WL-B7-h21"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fl0-1a-44Q" userLabel="Contact Methods View">
-                                <rect key="frame" x="35" y="280" width="250" height="64"/>
+                                <rect key="frame" x="35" y="294" width="250" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o" userLabel="Button - Email">
@@ -311,7 +314,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9hV-Rp-sqO" userLabel="Contact Info View">
-                                <rect key="frame" x="35" y="40" width="250" height="239"/>
+                                <rect key="frame" x="35" y="50" width="250" height="239"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name Placeholder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCc-mg-fOb">
@@ -330,7 +333,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="H3s-3e-84P" userLabel="Last Contacted Label">
-                                        <rect key="frame" x="39" y="198" width="172" height="21"/>
+                                        <rect key="frame" x="39" y="199" width="172" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="13"/>
                                         <nil key="highlightedColor"/>
@@ -388,21 +391,23 @@
                             <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="7I9-He-U9a" secondAttribute="bottom" priority="750" constant="115" id="46f-eG-aQK"/>
                             <constraint firstItem="7I9-He-U9a" firstAttribute="centerX" secondItem="Fl0-1a-44Q" secondAttribute="centerX" id="52w-sS-IV8"/>
                             <constraint firstAttribute="trailing" secondItem="9hV-Rp-sqO" secondAttribute="trailing" constant="35" id="6et-xT-lYs"/>
-                            <constraint firstAttribute="bottom" secondItem="9hV-Rp-sqO" secondAttribute="bottom" constant="289" id="878-LW-cbw"/>
+                            <constraint firstAttribute="bottom" secondItem="9hV-Rp-sqO" secondAttribute="bottom" constant="279" id="878-LW-cbw"/>
                             <constraint firstItem="9hV-Rp-sqO" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="35" id="Box-fG-HKl"/>
-                            <constraint firstItem="Fl0-1a-44Q" firstAttribute="top" secondItem="9hV-Rp-sqO" secondAttribute="bottom" constant="1" id="Cw2-6F-kKf"/>
+                            <constraint firstItem="Fl0-1a-44Q" firstAttribute="top" secondItem="9hV-Rp-sqO" secondAttribute="bottom" priority="750" constant="5" id="Cw2-6F-kKf"/>
                             <constraint firstItem="Fl0-1a-44Q" firstAttribute="top" relation="lessThanOrEqual" secondItem="9hV-Rp-sqO" secondAttribute="bottom" priority="750" constant="20" id="PrU-16-I9s"/>
                             <constraint firstItem="7I9-He-U9a" firstAttribute="top" secondItem="r1N-5g-ugV" secondAttribute="top" constant="378" id="RtO-uS-ioz"/>
                             <constraint firstItem="Fl0-1a-44Q" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="35" id="UFX-Th-D0R"/>
                             <constraint firstItem="Fl0-1a-44Q" firstAttribute="top" relation="greaterThanOrEqual" secondItem="r1N-5g-ugV" secondAttribute="top" constant="280" id="UnF-ec-3cJ"/>
                             <constraint firstAttribute="trailing" secondItem="fdK-to-CAo" secondAttribute="trailing" constant="10" id="V6z-iB-JI0"/>
+                            <constraint firstItem="s7y-uC-wgJ" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="20" id="aLW-2v-xhp"/>
                             <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="fdK-to-CAo" secondAttribute="bottom" constant="10" id="dHD-q9-edw"/>
                             <constraint firstAttribute="trailing" secondItem="Fl0-1a-44Q" secondAttribute="trailing" constant="35" id="eoH-5X-22h"/>
                             <constraint firstItem="7I9-He-U9a" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="123" id="ghG-ay-K8z"/>
-                            <constraint firstItem="9hV-Rp-sqO" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" constant="20" id="i0c-nk-e3i"/>
-                            <constraint firstItem="7I9-He-U9a" firstAttribute="top" secondItem="Fl0-1a-44Q" secondAttribute="bottom" priority="750" constant="34" id="igJ-12-4gg"/>
+                            <constraint firstItem="9hV-Rp-sqO" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" constant="30" id="i0c-nk-e3i"/>
+                            <constraint firstItem="7I9-He-U9a" firstAttribute="top" secondItem="Fl0-1a-44Q" secondAttribute="bottom" priority="750" constant="24" id="igJ-12-4gg"/>
+                            <constraint firstItem="s7y-uC-wgJ" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" id="lBd-nQ-Tq5"/>
                             <constraint firstItem="bjt-lR-3iW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="7I9-He-U9a" secondAttribute="bottom" constant="40" id="poO-Hw-azu"/>
-                            <constraint firstItem="7I9-He-U9a" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Fl0-1a-44Q" secondAttribute="bottom" priority="750" constant="34" id="ylK-Rw-dHH"/>
+                            <constraint firstItem="7I9-He-U9a" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Fl0-1a-44Q" secondAttribute="bottom" priority="750" constant="24" id="ylK-Rw-dHH"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Vd1-9b-8cl" appends="YES" id="hWg-z3-u4q"/>
@@ -443,7 +448,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Settings" id="MXU-aR-CCT">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="JeW-6j-jcg">
+                                        <barButtonItem key="leftBarButtonItem" image="back_icon_40" id="JeW-6j-jcg">
                                             <connections>
                                                 <action selector="dismissCancel:" destination="zo7-f3-0Bv" id="GhQ-ol-Zl3"/>
                                             </connections>
@@ -531,7 +536,7 @@
                                 </constraints>
                                 <items>
                                     <navigationItem title="Help" id="WRB-Uc-5JS">
-                                        <barButtonItem key="leftBarButtonItem" title="Back" id="726-yb-Mrk">
+                                        <barButtonItem key="leftBarButtonItem" image="back_icon_40" id="726-yb-Mrk">
                                             <connections>
                                                 <action selector="dismiss:" destination="5sW-QD-Z4q" id="zUa-2n-Jwu"/>
                                             </connections>
@@ -650,6 +655,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="back_icon" width="200" height="200"/>
+        <image name="back_icon_40" width="32" height="32"/>
         <image name="check_icon" width="200" height="200"/>
         <image name="check_icon_fill" width="200" height="200"/>
         <image name="mail_icon" width="200" height="200"/>
@@ -669,6 +676,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Sr6-xF-J8P"/>
+        <segue reference="cG2-L0-skS"/>
     </inferredMetricsTieBreakers>
 </document>
