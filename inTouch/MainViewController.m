@@ -91,18 +91,9 @@
     [self getNextContact];
 }
 
-// Get most urgent contact upon regaining control
-- (void)viewWillAppear:(BOOL)animated {
-//    [self getNextContact];
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)updateGlobalData {
-    
 }
 
 #pragma mark - Contact updating
@@ -131,8 +122,7 @@
     
     // Get next urgent contact information if exists
     if ([results count] == 0) {
-        [[self contactName] setText:@"No Urgent Contacts"];
-        [self disableInteraction];
+        [self showNoUrgentContacts];
     }
     else {
         // Find the most urgent contact that was not postponed today
@@ -159,7 +149,7 @@
         // No urgent contacts that were not postponed today
         if (index == [results count] && daysSinceLastPostponed == 0) {
             [DebugLogger log:@"All contacts postponed today" withPriority:2];
-            [[self contactName] setText:@"No Urgent Contacts"];
+            [self showNoUrgentContacts];
             return;
         }
         
@@ -289,6 +279,11 @@
         message = @"Remind me every year";
     }
     [self.viewFrequency setText:message];
+}
+
+- (void)showNoUrgentContacts {
+    [[self contactName] setText:@"No Urgent Contacts"];
+    [self disableInteraction];
 }
 
 // Slider to adjust the frequency of desired contact
