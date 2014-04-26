@@ -82,6 +82,7 @@
         [self displayBusyViewAndSyncContacts];
         [globals setValue:today forKeyPath:@"lastUpdatedInfo"];
         [globals setValue:today forKey:@"lastUpdatedUrgency"];
+        [globals setValue:[NSNumber numberWithBool:NO] forKeyPath:@"firstRun"];
     } else {
         [ContactManager updateUrgency];
         [globals setValue:today forKey:@"lastUpdatedUrgency"];
@@ -131,11 +132,9 @@
     // Get next urgent contact information if exists
     if ([results count] == 0) {
         [[self contactName] setText:@"No Urgent Contacts"];
-        [frequencySlider setValue:[frequencySlider minimumValue]];
-        [frequencySlider setEnabled:NO];
+        [self disableInteraction];
     }
     else {
-        [frequencySlider setEnabled:YES];
         // Find the most urgent contact that was not postponed today
         NSUInteger index = 0;
         NSManagedObject *contactMetadata;
@@ -146,9 +145,10 @@
         do {
             contactMetadata = [results objectAtIndex:index++];
             lastPostponedDate = [contactMetadata valueForKey:@"lastPostponedDate"];
-
+            
             // Break if never postponed
             if (lastPostponedDate == nil) {
+                daysSinceLastPostponed = 1; // any nonzero value will do
                 break;
             }
             
@@ -158,6 +158,7 @@
         
         // No urgent contacts that were not postponed today
         if (index == [results count] && daysSinceLastPostponed == 0) {
+            [DebugLogger log:@"All contacts postponed today" withPriority:2];
             [[self contactName] setText:@"No Urgent Contacts"];
             return;
         }
@@ -169,6 +170,8 @@
         // Update pertinent UI components
         NSInteger freq = [[contactMetadata valueForKey:@"freq"] integerValue];
         [self updateUI:freq];
+        
+        [self enableInteraction];
     }
 }
 
@@ -477,16 +480,19 @@
     [rightSwipeRecognizer setEnabled:YES];
     [downSwipeRecognizer setEnabled:YES];
     [upSwipeRecognizer setEnabled:YES];
-    [tapRecognizer setEnabled:YES];
+    [frequencySlider setUserInteractionEnabled:YES];
+//    [tapRecognizer setEnabled:YES];
 }
 
 // Disable swiping/taping during animation
 - (void)disableInteraction {
+    [DebugLogger log:@"Disabling interaction" withPriority:2];
     [leftSwipeRecognizer setEnabled:NO];
     [rightSwipeRecognizer setEnabled:NO];
     [downSwipeRecognizer setEnabled:NO];
     [upSwipeRecognizer setEnabled:NO];
-    [tapRecognizer setEnabled:NO];
+    [frequencySlider setUserInteractionEnabled:NO];
+//    [tapRecognizer setEnabled:NO];
 }
 
 #pragma mark - Navigation
