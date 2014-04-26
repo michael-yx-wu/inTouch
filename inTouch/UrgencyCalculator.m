@@ -13,6 +13,8 @@
  the board.
  */
 
+#include <stdlib.h>
+
 #import "AppDelegate.h"
 #import "UrgencyCalculator.h"
 
@@ -111,8 +113,8 @@
     
     // If never contacted, default urgency is 1
     if (lastContactedDate == nil) {
-        urgency = [NSNumber numberWithDouble:1];
-        
+        double  randValue = ((double)arc4random()/UINT_MAX)*0.05;
+        urgency = [NSNumber numberWithDouble:randValue];
     }
     // Calculate urg using formula above
     else {
