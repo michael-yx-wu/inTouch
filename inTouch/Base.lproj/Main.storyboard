@@ -172,6 +172,7 @@
                             <outletCollection property="gestureRecognizers" destination="Y7f-Af-2qE" appends="YES" id="5Vh-72-QZT"/>
                             <outletCollection property="gestureRecognizers" destination="96F-cS-sE5" appends="YES" id="v9w-8E-JQM"/>
                             <outletCollection property="gestureRecognizers" destination="R7Z-Kv-qsZ" appends="YES" id="zYv-8I-jqn"/>
+                            <outletCollection property="gestureRecognizers" destination="6uu-8a-74z" appends="YES" id="60d-fv-YQ0"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="3fk-ON-6g7"/>
@@ -180,9 +181,14 @@
                         <outlet property="contactPhoto" destination="5DP-PC-WdX" id="QkY-ga-4Gb"/>
                         <outlet property="contactedView" destination="klc-cv-dcz" id="AKs-hw-weV"/>
                         <outlet property="deletedView" destination="7Fn-GC-OVX" id="ryP-M4-fxK"/>
+                        <outlet property="downSwipeRecognizer" destination="Y7f-Af-2qE" id="ct7-DO-nor"/>
                         <outlet property="frequencySlider" destination="BlD-Zq-szb" id="xfz-9n-BYf"/>
                         <outlet property="lastContactedLabel" destination="NVr-Ax-Dzg" id="DXE-TT-8wP"/>
+                        <outlet property="leftSwipeRecognizer" destination="BfR-T4-VaM" id="bSU-mQ-pft"/>
                         <outlet property="postponedView" destination="UeY-4j-wj1" id="cA3-yR-uAG"/>
+                        <outlet property="rightSwipeRecognizer" destination="R7Z-Kv-qsZ" id="Vug-rl-0jB"/>
+                        <outlet property="tapRecognizer" destination="96F-cS-sE5" id="bSW-ZP-TBW"/>
+                        <outlet property="upSwipeRecognizer" destination="6uu-8a-74z" id="ml7-2X-XcY"/>
                         <outlet property="viewFrequency" destination="WY6-K2-IHX" id="RV5-g3-45w"/>
                         <segue destination="ost-IX-nwv" kind="modal" identifier="contact" modalTransitionStyle="flipHorizontal" id="gZA-OX-qSe"/>
                     </connections>

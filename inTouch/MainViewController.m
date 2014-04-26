@@ -32,6 +32,11 @@
 @synthesize contactedView;
 @synthesize deletedView;
 @synthesize postponedView;
+@synthesize leftSwipeRecognizer;
+@synthesize rightSwipeRecognizer;
+@synthesize downSwipeRecognizer;
+@synthesize upSwipeRecognizer;
+@synthesize tapRecognizer;
 
 // Contact data variables
 @synthesize firstName;
@@ -394,16 +399,21 @@
 #pragma mark - Custom Animation
 
 - (void)displayContactedView {
+    [self disableInteraction];
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [deletedView setAlpha:1];
     }completion:^(BOOL finished) {
         [UIView animateWithDuration:0.3 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [deletedView setAlpha:0];
-        } completion:nil];
+        } completion:^(BOOL finished) {
+            [self enableInteraction];
+        }];
     }];
 }
 
+// Display "deleted" icon. Interaction disabled for duration of animation
 - (void)displayDeletedView {
+    [self disableInteraction];
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [deletedView setAlpha:1];
     }completion:^(BOOL finished) {
@@ -411,11 +421,14 @@
            [deletedView setAlpha:0];
        } completion:^(BOOL finished) {
            [self getNextContact];
+           [self enableInteraction];
        }];
     }];
 }
 
+// Display "postponed" icon. Interaction disabled for duration of animation
 - (void)displayPostponedView {
+    [self disableInteraction];
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [postponedView setAlpha:1];
     }completion:^(BOOL finished) {
@@ -423,8 +436,27 @@
             [postponedView setAlpha:0];
         } completion:^(BOOL finished) {
             [self getNextContact];
+            [self enableInteraction];
         }];
     }];
+}
+
+// Enable swiping/taping after animation ends
+- (void)enableInteraction {
+    [leftSwipeRecognizer setEnabled:YES];
+    [rightSwipeRecognizer setEnabled:YES];
+    [downSwipeRecognizer setEnabled:YES];
+    [upSwipeRecognizer setEnabled:YES];
+    [tapRecognizer setEnabled:YES];
+}
+
+// Disable swiping/taping during animation
+- (void)disableInteraction {
+    [leftSwipeRecognizer setEnabled:NO];
+    [rightSwipeRecognizer setEnabled:NO];
+    [downSwipeRecognizer setEnabled:NO];
+    [upSwipeRecognizer setEnabled:NO];
+    [tapRecognizer setEnabled:NO];
 }
 
 #pragma mark - Navigation
