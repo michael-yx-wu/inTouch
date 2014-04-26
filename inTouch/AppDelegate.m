@@ -48,9 +48,7 @@
     return YES;
 }
 
-// Save changes to contacts before entering background
 - (void)applicationWillResignActive:(UIApplication *)application {
-    [self saveContext];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
@@ -59,11 +57,10 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application {
 }
 
-// Upon becoming active application, check for new contacts to add/update
 - (void)applicationDidBecomeActive:(UIApplication *)application {
 }
 
-// Save changes to contacts before termination
+// Save changes to contacts before closing app
 - (void)applicationWillTerminate:(UIApplication *)application {
     [self saveContext];
 }
@@ -78,7 +75,9 @@
         if ([moc hasChanges] && ![moc save:&error]) {
             [DebugLogger log:[NSString stringWithFormat:@"Save error: %@, %@",
                               error, [error userInfo]] withPriority:1];
-            abort();
+            
+            // Keep trying until we successfully save -- is this safe?
+            [self saveContext];
         }
         [DebugLogger log:@"Saved!" withPriority:1];
     }
