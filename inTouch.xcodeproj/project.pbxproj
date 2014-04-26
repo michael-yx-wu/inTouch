@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C03B9531906C70D003221EC /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D9918C175D3009A96D8 /* AddressBookUI.framework */; };
+		4C16FBBF190B491D001C5A2D /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C16FBBE190B491D001C5A2D /* SettingsViewController.m */; };
 		4C340D6218C16FF7009A96D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6118C16FF7009A96D8 /* Foundation.framework */; };
 		4C340D6418C16FF7009A96D8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6318C16FF7009A96D8 /* CoreGraphics.framework */; };
 		4C340D6618C16FF7009A96D8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6518C16FF7009A96D8 /* UIKit.framework */; };
@@ -44,6 +45,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4C16FBBD190B491D001C5A2D /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		4C16FBBE190B491D001C5A2D /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		4C340D5E18C16FF7009A96D8 /* inTouch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = inTouch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C340D6118C16FF7009A96D8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4C340D6318C16FF7009A96D8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -155,6 +158,8 @@
 				4C47934C18E0EB2900A408AB /* ContactViewController.m */,
 				4C96311418CB71CB002D05A6 /* HelpViewController.h */,
 				4C96311518CB71CB002D05A6 /* HelpViewController.m */,
+				4C16FBBD190B491D001C5A2D /* SettingsViewController.h */,
+				4C16FBBE190B491D001C5A2D /* SettingsViewController.m */,
 				4CC73FD01906330900B932A7 /* ContactManager.h */,
 				4CC73FD11906330900B932A7 /* ContactManager.m */,
 				4C7CBA1D18FC810400A9E4FF /* UrgencyCalculator.h */,
@@ -303,6 +308,7 @@
 				4CC73FD21906330900B932A7 /* ContactManager.m in Sources */,
 				4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */,
 				4C7CBA1F18FC810400A9E4FF /* UrgencyCalculator.m in Sources */,
+				4C16FBBF190B491D001C5A2D /* SettingsViewController.m in Sources */,
 				4C340D6E18C16FF7009A96D8 /* main.m in Sources */,
 				4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */,
 			);
