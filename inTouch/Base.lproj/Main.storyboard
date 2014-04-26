@@ -145,9 +145,13 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rdS-Jl-iRI">
-                                <rect key="frame" x="287" y="537" width="21" height="21"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gIo-Im-uGc">
+                                <rect key="frame" x="279" y="527" width="21" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="22" id="Ehl-db-w0K"/>
+                                    <constraint firstAttribute="height" constant="22" id="JQR-dA-r3v"/>
+                                </constraints>
                                 <state key="normal" image="settings_icon">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -157,15 +161,15 @@
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="XX4-yL-Gwm" secondAttribute="trailing" constant="20" id="3ZU-yc-uEy"/>
+                            <constraint firstAttribute="trailing" secondItem="gIo-Im-uGc" secondAttribute="trailing" constant="10" id="4cz-mw-6Gw"/>
                             <constraint firstItem="XX4-yL-Gwm" firstAttribute="top" relation="greaterThanOrEqual" secondItem="VEZ-gE-Y26" secondAttribute="bottom" priority="250" id="DWU-dc-X0O"/>
                             <constraint firstItem="XX4-yL-Gwm" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="Gil-f9-7Tw"/>
                             <constraint firstItem="fhK-9c-Xcw" firstAttribute="top" relation="greaterThanOrEqual" secondItem="XX4-yL-Gwm" secondAttribute="bottom" constant="5" id="Wyd-Uu-t34"/>
                             <constraint firstItem="fhK-9c-Xcw" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="eLa-Re-qX6"/>
                             <constraint firstItem="fhK-9c-Xcw" firstAttribute="top" relation="lessThanOrEqual" secondItem="XX4-yL-Gwm" secondAttribute="bottom" constant="30" id="gF6-Sz-kux"/>
                             <constraint firstAttribute="trailing" secondItem="fhK-9c-Xcw" secondAttribute="trailing" constant="20" id="oXB-A2-9Pz"/>
-                            <constraint firstAttribute="trailing" secondItem="rdS-Jl-iRI" secondAttribute="trailing" constant="10" id="qTf-8U-6x5"/>
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" relation="greaterThanOrEqual" secondItem="fhK-9c-Xcw" secondAttribute="bottom" constant="45" id="t3E-9H-NF0"/>
-                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="rdS-Jl-iRI" secondAttribute="bottom" constant="10" id="t4I-Oe-DtH"/>
+                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="gIo-Im-uGc" secondAttribute="bottom" constant="10" id="t3Q-rT-nNT"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="BfR-T4-VaM" appends="YES" id="ih4-Rk-VJp"/>
@@ -335,9 +339,13 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GTQ-ll-Vyz">
-                                <rect key="frame" x="284" y="535" width="21" height="21"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fdK-to-CAo">
+                                <rect key="frame" x="279" y="527" width="21" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="22" id="8bY-OH-uVg"/>
+                                    <constraint firstAttribute="height" constant="22" id="H13-vp-UTc"/>
+                                </constraints>
                                 <state key="normal" image="settings_icon">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -354,6 +362,8 @@
                             <constraint firstItem="Fl0-1a-44Q" firstAttribute="top" relation="lessThanOrEqual" secondItem="9hV-Rp-sqO" secondAttribute="bottom" priority="750" constant="30" id="PrU-16-I9s"/>
                             <constraint firstItem="bjt-lR-3iW" firstAttribute="top" relation="lessThanOrEqual" secondItem="7I9-He-U9a" secondAttribute="bottom" constant="80" id="Tq6-yM-GW3"/>
                             <constraint firstItem="Fl0-1a-44Q" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="35" id="UFX-Th-D0R"/>
+                            <constraint firstAttribute="trailing" secondItem="fdK-to-CAo" secondAttribute="trailing" constant="10" id="V6z-iB-JI0"/>
+                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="fdK-to-CAo" secondAttribute="bottom" constant="10" id="dHD-q9-edw"/>
                             <constraint firstAttribute="trailing" secondItem="Fl0-1a-44Q" secondAttribute="trailing" constant="35" id="eoH-5X-22h"/>
                             <constraint firstItem="7I9-He-U9a" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="123" id="iBS-0h-pcX"/>
                             <constraint firstAttribute="trailing" secondItem="7I9-He-U9a" secondAttribute="trailing" constant="122" id="nPn-rj-w5g"/>
