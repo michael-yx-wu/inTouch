@@ -180,7 +180,6 @@
 - (void)updateContactInformation:(NSManagedObject*)contact {
     firstName = [contact valueForKey:@"nameFirst"];
     lastName = [contact valueForKey:@"nameLast"];
-    photoData = [contact valueForKey:@"contactPhoto"];
     abrecordid = [[contact valueForKey:@"abrecordid"] intValue];
     
     // Verify contact ID
@@ -189,8 +188,23 @@
     ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
     ABRecordRef currentContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
     
-    // Reset email and phone number fields
+    // Reset contact info fields
+    photoData = NULL;
     emailHome = emailOther = emailWork = phoneHome = phoneMobile = phoneWork = nil;
+    
+    // Get photo (priority: fb, linkedIn, address book)
+    if ([contact valueForKey:@"facebookPhoto"] != NULL) {
+        photoData = [contact valueForKey:@"facebookPhoto"];
+    } else if ([contact valueForKey:@"linkedinPhoto"] != NULL) {
+        photoData = [contact valueForKey:@"linkedinPhoto"];
+    } else {
+        if (ABPersonHasImageData(currentContact)) {
+            photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(currentContact);
+            [DebugLogger log:@"Got contact photo" withPriority:1];
+        } else {
+            [DebugLogger log:@"No contact photo" withPriority:1];
+        }
+    }
     
     // Get home, other, and work emails
     ABMultiValueRef emails = ABRecordCopyValue(currentContact, kABPersonEmailProperty);

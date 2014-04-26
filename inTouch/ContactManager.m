@@ -35,15 +35,6 @@
         [DebugLogger log:[NSString stringWithFormat:@"First Name: %@", firstName] withPriority:1];
         [DebugLogger log:[NSString stringWithFormat:@"Last Name: %@", lastName] withPriority:1];
         
-        // Get contact photo
-        NSData *contactPhoto;
-        if (ABPersonHasImageData(currentContact)) {
-            contactPhoto = (__bridge_transfer NSData *)ABPersonCopyImageData(currentContact);
-            [DebugLogger log:@"Got contact photo" withPriority:1];
-        } else {
-            [DebugLogger log:@"No contact photo" withPriority:1];
-        }
-        
         // Get contact identifier
         NSNumber *abrecordid = [NSNumber numberWithInt:ABRecordGetRecordID(currentContact)];
         
@@ -95,7 +86,6 @@
         }
         
         // Update contact photo and id
-        [contact setValue:contactPhoto forKey:@"contactPhoto"];
         [contact setValue:abrecordid forKey:@"abrecordid"];
     }
     [self save];
