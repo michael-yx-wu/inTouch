@@ -32,6 +32,8 @@
 @synthesize contactedView;
 @synthesize deletedView;
 @synthesize postponedView;
+@synthesize busyView;
+@synthesize activityIndicator;
 @synthesize leftSwipeRecognizer;
 @synthesize rightSwipeRecognizer;
 @synthesize downSwipeRecognizer;
@@ -55,6 +57,7 @@
     [super viewDidLoad];
 	// Load in background image
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
+    [busyView setAlpha:0];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -84,7 +87,8 @@
     // Update contact info once a day
     if (interval != 0) {
         [DebugLogger log:@"Updating contacts" withPriority:2];
-        [ContactManager updateInformation];
+//        [ContactManager updateInformation];
+        [self displayBusyViewAndSync];
         [globals setValue:[NSDate date] forKey:@"lastUpdatedInfo"];
     }
     
@@ -445,12 +449,32 @@
     [self disableInteraction];
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [postponedView setAlpha:1];
-    }completion:^(BOOL finished) {
+    } completion:^(BOOL finished) {
         [UIView animateWithDuration:0.3 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [postponedView setAlpha:0];
         } completion:^(BOOL finished) {
             [self getNextContact];
             [self enableInteraction];
+        }];
+    }];
+}
+
+// Display the "syncing contacts" message and sync contacts
+- (void)displayBusyViewAndSync {
+    // Show the busy view
+    [self disableInteraction];
+    [DebugLogger log:@"Showing busy view" withPriority:2];
+    [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [busyView setAlpha:1];
+        [activityIndicator startAnimating];
+    } completion:^(BOOL finished) {
+        [ContactManager updateInformation];
+        [ContactManager updateUrgency];
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [busyView setAlpha:0];
+        } completion:^(BOOL finished){
+            [activityIndicator stopAnimating];
+            [self getNextContact];
         }];
     }];
 }
