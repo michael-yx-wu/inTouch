@@ -14,9 +14,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *lastContactedLabel;
 
 // User interaction
-@property (weak, nonatomic) IBOutlet UIView *contactedView; 
+@property (weak, nonatomic) IBOutlet UIView *contactedView;
 @property (weak, nonatomic) IBOutlet UIView *deletedView;
 @property (weak, nonatomic) IBOutlet UIView *postponedView;
+@property (weak, nonatomic) IBOutlet UIView *busyView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UISwipeGestureRecognizer *leftSwipeRecognizer;
 @property (weak, nonatomic) IBOutlet UISwipeGestureRecognizer *rightSwipeRecognizer;
 @property (weak, nonatomic) IBOutlet UISwipeGestureRecognizer *downSwipeRecognizer;

@@ -30,6 +30,13 @@
     [super didReceiveMemoryWarning];
 }
 
+- (void)dismissCancel:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:NO];
+}
 
+- (void)dismissSave:(id)sender {
+    // save the settings
+    [self dismissViewControllerAnimated:YES completion:NO];
+}
 
 @end
