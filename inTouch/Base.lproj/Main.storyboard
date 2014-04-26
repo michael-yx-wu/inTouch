@@ -152,6 +152,16 @@
                                     <segue destination="5sW-QD-Z4q" kind="modal" id="hcP-XY-zoA"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tZa-j4-UXT">
+                                <rect key="frame" x="10" y="528" width="57" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Settings">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="zo7-f3-0Bv" kind="modal" id="hHM-IX-Ttp"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -163,8 +173,10 @@
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="KeL-z2-ACQ" secondAttribute="bottom" constant="10" id="YXH-qy-Kor"/>
                             <constraint firstItem="fhK-9c-Xcw" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="eLa-Re-qX6"/>
                             <constraint firstItem="fhK-9c-Xcw" firstAttribute="top" relation="lessThanOrEqual" secondItem="XX4-yL-Gwm" secondAttribute="bottom" constant="30" id="gF6-Sz-kux"/>
+                            <constraint firstItem="tZa-j4-UXT" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="10" id="iLO-GP-pvA"/>
                             <constraint firstAttribute="trailing" secondItem="fhK-9c-Xcw" secondAttribute="trailing" constant="20" id="oXB-A2-9Pz"/>
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" relation="greaterThanOrEqual" secondItem="fhK-9c-Xcw" secondAttribute="bottom" constant="45" id="t3E-9H-NF0"/>
+                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="tZa-j4-UXT" secondAttribute="bottom" constant="10" id="tmy-SJ-VuN"/>
                             <constraint firstAttribute="trailing" secondItem="KeL-z2-ACQ" secondAttribute="trailing" constant="10" id="w6s-uq-b7U"/>
                         </constraints>
                         <connections>
@@ -381,7 +393,34 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="380" y="-903"/>
+            <point key="canvasLocation" x="376" y="-240"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="9GX-2m-S6v">
+            <objects>
+                <viewController id="zo7-f3-0Bv" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Jio-0x-835"/>
+                        <viewControllerLayoutGuide type="bottom" id="Tpe-EP-NdP"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="aWv-oL-8hH">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iMp-gZ-e6S">
+                                <rect key="frame" x="0.0" y="26" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Title" id="MXU-aR-CCT"/>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oiC-CJ-nly" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6" y="438"/>
         </scene>
         <!--Help View Controller-->
         <scene sceneID="fqF-Lc-Yln">
@@ -528,6 +567,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="hcP-XY-zoA"/>
+        <segue reference="Ocd-D0-w4e"/>
     </inferredMetricsTieBreakers>
 </document>
