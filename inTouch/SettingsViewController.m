@@ -30,6 +30,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // Load in background image
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
 }
 
 - (void)didReceiveMemoryWarning {

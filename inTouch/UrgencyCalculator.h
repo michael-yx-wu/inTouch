@@ -16,7 +16,7 @@
 @interface UrgencyCalculator : NSObject
 
 + (void)updateAll;
-+ (void)updateUrgencyFirstName:(NSString *)firstName lastName:(NSString *)lastName;
++ (void)updateUrgencyContact:(NSManagedObject *)contact Metadata:(NSManagedObject *)metadata;
 
 @end
 

@@ -68,7 +68,7 @@
             [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesMessaged"];
             [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesPostponed"];
             [metaData setValue:[[NSTimeZone localTimeZone] name] forKeyPath:@"timezone"];
-            [metaData setValue:nil forKeyPath:@"urgency"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKeyPath:@"urgency"];
             
             [DebugLogger log:[NSString stringWithFormat:@"Created Contact: %@ %@", firstName, lastName] withPriority:1];
         }
