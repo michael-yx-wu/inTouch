@@ -330,7 +330,6 @@
     [metadata setValue:[NSDate date] forKeyPath:@"lastContactedDate"];
     
     // Update urgency for this contact only
-//    [UrgencyCalculator updateUrgencyFirstName:firstName lastName:lastName];
     [UrgencyCalculator updateUrgencyContact:contact Metadata:metadata];
 }
 
@@ -339,6 +338,11 @@
 - (IBAction)dismissCancel:(id)sender {
     // InTouch canceled - no logging
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)dismissCancelNoAnimate:(id)sender {
+    // Back button pressed
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (IBAction)dismissContacted:(id)sender {

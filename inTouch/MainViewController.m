@@ -454,9 +454,9 @@
     // Show the busy view
     [self disableInteraction];
     [DebugLogger log:@"Showing busy view" withPriority:2];
-    [activityIndicator startAnimating];
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [busyView setAlpha:1];
+        [activityIndicator startAnimating];
     } completion:^(BOOL finished) {
         [DebugLogger log:@"start updating..." withPriority:2];
         [ContactManager updateInformation];
