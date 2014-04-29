@@ -255,7 +255,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s7y-uC-wgJ">
-                                <rect key="frame" x="20" y="20" width="25" height="25"/>
+                                <rect key="frame" x="15" y="35" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="25" id="3vs-2B-gSf"/>
@@ -392,13 +392,13 @@
                             <constraint firstItem="Fl0-1a-44Q" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="35" id="UFX-Th-D0R"/>
                             <constraint firstItem="Fl0-1a-44Q" firstAttribute="top" relation="greaterThanOrEqual" secondItem="r1N-5g-ugV" secondAttribute="top" constant="280" id="UnF-ec-3cJ"/>
                             <constraint firstAttribute="trailing" secondItem="fdK-to-CAo" secondAttribute="trailing" constant="10" id="V6z-iB-JI0"/>
-                            <constraint firstItem="s7y-uC-wgJ" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="20" id="aLW-2v-xhp"/>
+                            <constraint firstItem="s7y-uC-wgJ" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="15" id="aLW-2v-xhp"/>
                             <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="fdK-to-CAo" secondAttribute="bottom" constant="10" id="dHD-q9-edw"/>
                             <constraint firstAttribute="trailing" secondItem="Fl0-1a-44Q" secondAttribute="trailing" constant="35" id="eoH-5X-22h"/>
                             <constraint firstItem="7I9-He-U9a" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="123" id="ghG-ay-K8z"/>
                             <constraint firstItem="9hV-Rp-sqO" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" constant="30" id="i0c-nk-e3i"/>
                             <constraint firstItem="7I9-He-U9a" firstAttribute="top" secondItem="Fl0-1a-44Q" secondAttribute="bottom" priority="750" constant="24" id="igJ-12-4gg"/>
-                            <constraint firstItem="s7y-uC-wgJ" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" id="lBd-nQ-Tq5"/>
+                            <constraint firstItem="s7y-uC-wgJ" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" constant="15" id="lBd-nQ-Tq5"/>
                             <constraint firstItem="bjt-lR-3iW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="7I9-He-U9a" secondAttribute="bottom" constant="40" id="poO-Hw-azu"/>
                             <constraint firstItem="7I9-He-U9a" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Fl0-1a-44Q" secondAttribute="bottom" priority="750" constant="24" id="ylK-Rw-dHH"/>
                         </constraints>
@@ -682,6 +682,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Sr6-xF-J8P"/>
+        <segue reference="cG2-L0-skS"/>
     </inferredMetricsTieBreakers>
 </document>
