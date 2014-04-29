@@ -22,7 +22,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Setting debug level to 1 (everything will be printed)
-    [DebugLogger setDebugLevel:2];
+    [DebugLogger setDebugLevel:1];
     
     // Check if global data entity exists
     NSManagedObjectContext *moc = [self managedObjectContext];
