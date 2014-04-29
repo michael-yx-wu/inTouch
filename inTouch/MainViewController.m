@@ -461,7 +461,7 @@
         [DebugLogger log:@"start updating..." withPriority:2];
         [ContactManager updateInformation];
         [ContactManager updateUrgency];
-        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView animateWithDuration:0.3 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [busyView setAlpha:0];
         } completion:^(BOOL finished){
             [activityIndicator stopAnimating];
