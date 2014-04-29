@@ -113,7 +113,7 @@
     
     // If never contacted, default urgency is 1
     if (lastContactedDate == nil) {
-        double  randValue = ((double)arc4random()/UINT_MAX)*0.05;
+        double  randValue = ((double)arc4random()/UINT_MAX)*0.05+1;
         urgency = [NSNumber numberWithDouble:randValue];
     }
     // Calculate urg using formula above

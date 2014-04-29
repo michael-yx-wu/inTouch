@@ -121,6 +121,7 @@
     
     // Get next urgent contact information if exists
     if ([results count] == 0) {
+        [DebugLogger log:@"No urgent contacts" withPriority:2];
         [self showNoUrgentContacts];
     }
     else {
@@ -448,15 +449,16 @@
     }];
 }
 
-// Display the "syncing contacts" message and sync contacts
+// Display "syncing contacts" message and sync contacts
 - (void)displayBusyViewAndSyncContacts {
     // Show the busy view
     [self disableInteraction];
     [DebugLogger log:@"Showing busy view" withPriority:2];
+    [activityIndicator startAnimating];
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [busyView setAlpha:1];
-        [activityIndicator startAnimating];
     } completion:^(BOOL finished) {
+        [DebugLogger log:@"start updating..." withPriority:2];
         [ContactManager updateInformation];
         [ContactManager updateUrgency];
         [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
