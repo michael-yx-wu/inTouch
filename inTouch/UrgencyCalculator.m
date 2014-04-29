@@ -70,39 +70,13 @@
     if (lastContactedDate != nil) {
         [metadata setValue:urgency forKey:@"urgency"];
         [DebugLogger log:[NSString stringWithFormat:@"New urgency for %@ %@: %f", firstName, lastName, [urgency doubleValue]] withPriority:1];
-    } else if ([metadata valueForKey:@"urgency"] == 0) {
+    } else if ([[metadata valueForKey:@"urgency"] intValue] == 0) {
         [metadata setValue:urgency forKey:@"urgency"];
         [DebugLogger log:[NSString stringWithFormat:@"New urgency for %@ %@: %f", firstName, lastName, [urgency doubleValue]] withPriority:1];
     }
-    
+
     [self save];
 }
-
-// Get the Contact entity from core data
-//+ (NSArray *)fetchContact:(NSString *)firstName lastName:(NSString *)lastName {
-//    [DebugLogger log:[NSString stringWithFormat:@"Updating urgency for %@ %@", firstName, lastName] withPriority:1];
-//    NSManagedObjectContext *moc = [self managedObjectContext];
-//    NSManagedObjectModel *model = [self managedObjectModel];
-//    
-//    // ContactNameMatch - return all contacts that match first name AND last name fields
-//    NSDictionary *subVars = @{
-//                              @"NAMEFIRST": firstName,
-//                              @"NAMELAST": lastName
-//                              };
-//    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactNameMatch" substitutionVariables:subVars];
-//    
-//    NSError *error;
-//    NSArray *results = [moc executeFetchRequest:request error:&error];
-//    if (results == nil) {
-//        [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
-//                          error, [error userInfo]] withPriority:5];
-//        abort();
-//    }
-//    if ([results count] != 1) {
-//        [DebugLogger log:[NSString stringWithFormat:@"Abort! Multiple contacts with same name: %@ %@", firstName, lastName] withPriority:5];
-//    }
-//    return results;
-//}
 
 + (NSNumber *)calculateUrgencyCurrentDate:(NSDate *)currentDate lastContactedDate:(NSDate *)lastContactedDate frequency:(NSNumber *)freq {
     // Update urgency based on frequencies and last date contacted
@@ -112,7 +86,7 @@
     NSDateComponents *diff;
     double daysSinceLastContact;
     
-    // If never contacted, default urgency is 1
+    // If never contacted, default urgency is 1 + small random fraction
     if (lastContactedDate == nil) {
         double  randValue = ((double)arc4random()/UINT_MAX)*0.05+1;
         urgency = [NSNumber numberWithDouble:randValue];
