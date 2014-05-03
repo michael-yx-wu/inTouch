@@ -75,7 +75,7 @@
         [DebugLogger log:@"Updating contacts" withPriority:2];
         
         [self requestContactsAccess];
-        [self displayBusyViewAndSyncContacts];
+        
         [globals setValue:today forKeyPath:@"lastUpdatedInfo"];
         [globals setValue:today forKey:@"lastUpdatedUrgency"];
         [globals setValue:[NSNumber numberWithBool:NO] forKeyPath:@"firstRun"];
@@ -533,9 +533,20 @@
     return [appDelegate managedObjectModel];
 }
 
+// Request contacts access and sync
 - (void)requestContactsAccess {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    [appDelegate requestContactsAccess];
+    // Request authorization to Address Book
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+    
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error){
+            [self displayBusyViewAndSyncContacts];
+        });
+    }
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
+        UIAlertView *deniedMessage = [[UIAlertView alloc] initWithTitle:@"Access to Contacts" message:@"Go to 'Settings > Privacy > Contacts' to change." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [deniedMessage show];
+    }
 }
 
 - (void)save {
