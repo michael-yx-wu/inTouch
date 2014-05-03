@@ -131,19 +131,20 @@
     else {
         // Find the most urgent contact that was not postponed today
         NSUInteger index = 0;
-        NSManagedObject *contactMetadata;
+        ContactMetadata *contactMetadata;
         NSDate *lastPostponedDate;
         NSInteger daysSinceLastPostponed;
         do {
             contactMetadata = [results objectAtIndex:index++];
-            lastPostponedDate = [contactMetadata valueForKey:@"lastPostponedDate"];
+            lastPostponedDate = [contactMetadata lastPostponedDate];
             
             // Break if never postponed
             if (lastPostponedDate == nil) {
                 daysSinceLastPostponed = 1; // any nonzero value will do
                 break;
+            } else {
+                daysSinceLastPostponed = [self numDaysFrom:lastPostponedDate To:[NSDate date]];
             }
-            daysSinceLastPostponed = [self numDaysFrom:lastPostponedDate To:[NSDate date]];
         } while (daysSinceLastPostponed == 0 && index < [results count]);
         
         // No urgent contacts that were not postponed today
@@ -154,11 +155,11 @@
         }
         
         // Get contact information for the current contact
-        Contact *contact = [contactMetadata valueForKey:@"Contact"];
+        Contact *contact = (Contact *)[contactMetadata contact];
         [self updateContactInformation:contact];
         
         // Update pertinent UI components
-        NSInteger freq = [[contactMetadata valueForKey:@"freq"] integerValue];
+        NSInteger freq = [[contactMetadata freq] integerValue];
         [self updateUI:freq];
         
         [self enableInteraction];
@@ -324,8 +325,8 @@
 // Save frequency on touch up on slider
 - (IBAction)doneChangingFrequency:(id)sender {
     UISlider *freqSlider = (UISlider *)sender;
-    NSInteger frequency;
-    NSInteger sliderValue = freqSlider.value;
+    int frequency;
+    double sliderValue = [freqSlider value];
     if (sliderValue <= 300) {
         frequency = sliderValue/10;
     } else if (sliderValue <= 625) {
@@ -334,10 +335,10 @@
         frequency = 365;
     }
     
-    NSManagedObject *contact = [self fetchContact];
-    NSManagedObject *metadata = [contact valueForKey:@"metadata"];
-    [metadata setValue:[NSNumber numberWithInteger:frequency] forKey:@"freq"];
-    [DebugLogger log:[NSString stringWithFormat:@"New frequency saved: %ld", (long)frequency] withPriority:2];
+    Contact *contact = [self fetchContact];
+    ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
+    [metadata setFreq:[NSNumber numberWithInt:frequency]];
+    [DebugLogger log:[NSString stringWithFormat:@"New frequency saved: %d", frequency] withPriority:2];
     [self save];
 }
 
@@ -351,6 +352,7 @@
 
 #pragma mark - Swipe/Tap Gestures
 
+// Show the contact options for current contact
 - (IBAction)swipeLeftOrTap:(id)sender {
     [DebugLogger log:@"Contact Flip" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
@@ -358,58 +360,34 @@
     }
 }
 
+// Postpone the current contact
 - (IBAction)swipeRightOrTap:(id)sender {
     [DebugLogger log:@"Postpone" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName] withPriority:2];
-        NSManagedObject *contact = [self fetchContact];
-        NSManagedObject *metadata = [contact valueForKey:@"metadata"];
+        Contact *contact = [self fetchContact];
+        ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
         NSDate *today = [NSDate date];
-        NSNumber *timesPostponed = [NSNumber numberWithInteger:[[metadata valueForKey:@"numTimesPostponed"] integerValue]+1];
-        
-        [metadata setValue:today forKey:@"lastPostponedDate"];
-        [metadata setValue:timesPostponed forKey:@"numTimesPostponed"];
+        NSNumber *timesPostponed = [NSNumber numberWithInteger:[[metadata numTimesPostponed] integerValue]+1];
+        [metadata setLastPostponedDate:today];
+        [metadata setNumTimesPostponed:timesPostponed];
         [self save];
         [self displayPostponedView];
     }
 }
 
+// Delete the current contact
 - (IBAction)swipeDownOrTap:(id)sender {
     [DebugLogger log:@"Delete" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
-        NSManagedObject *contact = [self fetchContact];
-        NSManagedObject *metadata = [contact valueForKey:@"metadata"];
+        Contact *contact = [self fetchContact];
+        ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
         NSDate *today = [NSDate date];
-        [metadata setValue:[NSNumber numberWithBool:NO] forKey:@"interest"];
-        [metadata setValue:today forKey:@"noInterestDate"];
+        [metadata setNoInterestDate:today];
+        [metadata setInterest:[NSNumber numberWithBool:NO]];
         [self save];
         [self displayDeletedView];
     }
-}
-
-// Fetch Contact entity from coredata based on nanme
-- (NSManagedObject *)fetchContact {
-    NSManagedObjectContext *moc = [self managedObjectContext];
-    NSManagedObjectModel *model = [self managedObjectModel];
-    NSDictionary *subVars = @{
-                              @"NAMEFIRST": firstName,
-                              @"NAMELAST": lastName
-                              };
-    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactNameMatch"
-                                                substitutionVariables:subVars];
-    
-    NSError *error;
-    NSArray *results = [moc executeFetchRequest:request error:&error];
-    if (results == nil) {
-        [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
-                          error, [error userInfo]] withPriority:1];
-        abort();
-    }
-    if ([results count] != 1) {
-        [DebugLogger log:@"Abort! Multiple contacts with same name" withPriority:2];
-        abort();
-    }
-    return [results objectAtIndex:0];
 }
 
 #pragma mark - Custom Animation
@@ -521,7 +499,7 @@
     }
 }
 
-#pragma mark - Core Data Accessor Methods
+#pragma mark - Core Data Methods
 
 - (NSManagedObjectContext *)managedObjectContext {
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -549,6 +527,32 @@
     }
 }
 
+// Fetch Contact entity from coredata based on nanme
+- (Contact *)fetchContact {
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSManagedObjectModel *model = [self managedObjectModel];
+    NSDictionary *subVars = @{
+                              @"NAMEFIRST": firstName,
+                              @"NAMELAST": lastName
+                              };
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactNameMatch"
+                                                substitutionVariables:subVars];
+    
+    NSError *error;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (results == nil) {
+        [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
+                          error, [error userInfo]] withPriority:1];
+        abort();
+    }
+    if ([results count] != 1) {
+        [DebugLogger log:@"Abort! Multiple contacts with same name" withPriority:2];
+        abort();
+    }
+    return [results objectAtIndex:0];
+}
+
+// Save current context
 - (void)save {
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     [appDelegate saveContext];

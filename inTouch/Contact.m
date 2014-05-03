@@ -7,6 +7,7 @@
 //
 
 #import "Contact.h"
+#import "ContactMetadata.h"
 
 @implementation Contact
 
