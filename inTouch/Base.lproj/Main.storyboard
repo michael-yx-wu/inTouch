@@ -352,7 +352,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7I9-He-U9a" userLabel="Check Button">
-                                <rect key="frame" x="123" y="405" width="75" height="75"/>
+                                <rect key="frame" x="123" y="373" width="75" height="75"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cPN-Kg-Njz">
@@ -387,13 +387,13 @@
                             <constraint firstAttribute="trailing" secondItem="9hV-Rp-sqO" secondAttribute="trailing" constant="35" id="6et-xT-lYs"/>
                             <constraint firstItem="9hV-Rp-sqO" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="35" id="Box-fG-HKl"/>
                             <constraint firstItem="hay-uN-S6J" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" constant="10" id="NZC-YW-Hyd"/>
+                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="7I9-He-U9a" secondAttribute="bottom" priority="750" constant="40" id="O50-Cj-sfz"/>
                             <constraint firstItem="Fl0-1a-44Q" firstAttribute="top" relation="lessThanOrEqual" secondItem="9hV-Rp-sqO" secondAttribute="bottom" priority="750" constant="20" id="PrU-16-I9s"/>
                             <constraint firstItem="Fl0-1a-44Q" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="35" id="UFX-Th-D0R"/>
                             <constraint firstAttribute="trailing" secondItem="fdK-to-CAo" secondAttribute="trailing" constant="10" id="V6z-iB-JI0"/>
                             <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="fdK-to-CAo" secondAttribute="bottom" constant="10" id="dHD-q9-edw"/>
                             <constraint firstItem="hay-uN-S6J" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="22" id="eNU-1p-clF"/>
                             <constraint firstAttribute="trailing" secondItem="Fl0-1a-44Q" secondAttribute="trailing" constant="35" id="eoH-5X-22h"/>
-                            <constraint firstItem="7I9-He-U9a" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="123" id="ghG-ay-K8z"/>
                             <constraint firstItem="9hV-Rp-sqO" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" constant="30" id="i0c-nk-e3i"/>
                             <constraint firstItem="bjt-lR-3iW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="7I9-He-U9a" secondAttribute="bottom" constant="40" id="poO-Hw-azu"/>
                             <constraint firstItem="7I9-He-U9a" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Fl0-1a-44Q" secondAttribute="bottom" priority="750" constant="10" id="ylK-Rw-dHH"/>
@@ -418,7 +418,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="455" y="-254"/>
+            <point key="canvasLocation" x="447" y="-240"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="9GX-2m-S6v">
@@ -675,7 +675,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vXu-LN-LnE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6" y="-903"/>
+            <point key="canvasLocation" x="6" y="-945"/>
         </scene>
     </scenes>
     <resources>
