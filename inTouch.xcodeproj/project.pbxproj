@@ -172,7 +172,7 @@
 				4C7CBA1E18FC810400A9E4FF /* UrgencyCalculator.m */,
 				4C340D7318C16FF7009A96D8 /* Main.storyboard */,
 				4C340DA418C18DBD009A96D8 /* Model.xcdatamodeld */,
-				4C42688619158C8B0014744F /* CoreEntities */,
+				4C42688619158C8B0014744F /* Core Data Entities */,
 				4C340D7918C16FF7009A96D8 /* Images.xcassets */,
 				4C340D6818C16FF7009A96D8 /* Supporting Files */,
 			);
@@ -208,7 +208,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		4C42688619158C8B0014744F /* CoreEntities */ = {
+		4C42688619158C8B0014744F /* Core Data Entities */ = {
 			isa = PBXGroup;
 			children = (
 				4C426883191580B90014744F /* Contact.h */,
@@ -216,7 +216,7 @@
 				4C42688719158D530014744F /* ContactMetadata.h */,
 				4C42688819158D530014744F /* ContactMetadata.m */,
 			);
-			name = CoreEntities;
+			name = "Core Data Entities";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

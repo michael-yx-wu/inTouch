@@ -2,6 +2,7 @@
 
 #import "AppDelegate.h"
 #import "Contact.h"
+#import "ContactMetadata.h"
 #import "ContactManager.h"
 #import "MainViewController.h"
 #import "ContactViewController.h"
@@ -72,6 +73,7 @@
     // Update contact info on first run only
     if (firstRun) {
         [DebugLogger log:@"Updating contacts" withPriority:2];
+        [self requestContactsAccess];
         [self displayBusyViewAndSyncContacts];
         [globals setValue:today forKeyPath:@"lastUpdatedInfo"];
         [globals setValue:today forKey:@"lastUpdatedUrgency"];
@@ -236,8 +238,8 @@
         }
     }
 
-    NSManagedObject *contactMetadata = [contact valueForKey:@"metadata"];
-    lastContactedDate = [contactMetadata valueForKey:@"lastContactedDate"];
+    ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
+    lastContactedDate = [contactMetadata lastContactedDate];
 }
 
 - (void)updateUI:(NSInteger)freq {
@@ -528,6 +530,11 @@
 - (NSManagedObjectModel *)managedObjectModel {
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     return [appDelegate managedObjectModel];
+}
+
+- (void)requestContactsAccess {
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    [appDelegate requestContactsAccess];
 }
 
 - (void)save {

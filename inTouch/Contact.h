@@ -1,10 +1,4 @@
-//
-//  Contact.h
-//  inTouch
-//
-//  Created by Michael Wu on 5/3/14.
-//  Copyright (c) 2014 inTouch Team. All rights reserved.
-//
+#import "ContactMetadata.h"
 
 @interface Contact : NSManagedObject
 
