@@ -25,7 +25,6 @@
 @property (strong, nonatomic) IBOutlet UISwipeGestureRecognizer *upSwipeRecognizer;
 @property (weak, nonatomic) IBOutlet UITapGestureRecognizer *tapRecognizer;
 
-
 // Current contact remind frequency
 @property (weak, nonatomic) IBOutlet UISlider *frequencySlider;
 @property (weak, nonatomic) IBOutlet UILabel *viewFrequency;
