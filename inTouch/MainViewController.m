@@ -73,6 +73,7 @@
     // Update contact info on first run only
     if (firstRun) {
         [DebugLogger log:@"Updating contacts" withPriority:2];
+        
         [self requestContactsAccess];
         [self displayBusyViewAndSyncContacts];
         [globals setValue:today forKeyPath:@"lastUpdatedInfo"];
