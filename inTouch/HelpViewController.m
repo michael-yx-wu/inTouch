@@ -1,11 +1,3 @@
-//
-//  HelpViewController.m
-//  inTouch
-//
-//  Created by Michael Wu on 3/8/14.
-//  Copyright (c) 2014 Michael Wu. All rights reserved.
-//
-
 #import "HelpViewController.h"
 
 @interface HelpViewController ()

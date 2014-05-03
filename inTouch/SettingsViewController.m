@@ -1,11 +1,3 @@
-//
-//  SettingsViewController.m
-//  inTouch
-//
-//  Created by Michael Wu on 4/25/14.
-//  Copyright (c) 2014 inTouch Team. All rights reserved.
-//
-
 #import "ContactManager.h"
 #import "SettingsViewController.h"
 

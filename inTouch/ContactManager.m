@@ -1,11 +1,3 @@
-//
-//  ContactManager.m
-//  inTouch
-//
-//  Created by Michael Wu on 4/22/14.
-//  Copyright (c) 2014 inTouch Team. All rights reserved.
-//
-
 #import <AddressBook/AddressBook.h>
 #import <AddressBookUI/AddressBookUI.h>
 

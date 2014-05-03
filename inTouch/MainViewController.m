@@ -1,14 +1,7 @@
-//
-//  ViewController.m
-//  inTouch
-//
-//  Created by Naicheng Wangyu on 03/01/14.
-//  Copyright (c) 2014 Naicheng Wangyu. All rights reserved.
-//
-
 #import <AddressBookUI/AddressBookUI.h>
 
 #import "AppDelegate.h"
+#import "Contact.h"
 #import "ContactManager.h"
 #import "MainViewController.h"
 #import "ContactViewController.h"
@@ -53,6 +46,7 @@
 @synthesize phoneWork;
 @synthesize lastContactedDate;
 
+// Debug priority
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Load in background image
@@ -157,7 +151,7 @@
         }
         
         // Get contact information for the current contact
-        NSManagedObject *contact = [contactMetadata valueForKey:@"Contact"];
+        Contact *contact = [contactMetadata valueForKey:@"Contact"];
         [self updateContactInformation:contact];
         
         // Update pertinent UI components
@@ -169,10 +163,11 @@
 }
 
 // Update information about the current contact
-- (void)updateContactInformation:(NSManagedObject*)contact {
-    firstName = [contact valueForKey:@"nameFirst"];
-    lastName = [contact valueForKey:@"nameLast"];
-    abrecordid = [[contact valueForKey:@"abrecordid"] intValue];
+- (void)updateContactInformation:(Contact *)contact {
+    // Get key contact info
+    firstName = [contact nameFirst];
+    lastName = [contact nameLast];
+    abrecordid = [[contact abrecordid] intValue];
     
     // Verify contact ID
     abrecordid = [ContactManager verifyABRecordID:abrecordid forContact:contact];
@@ -185,16 +180,18 @@
     emailHome = emailOther = emailWork = phoneHome = phoneMobile = phoneWork = nil;
     
     // Get photo (priority: fb, linkedIn, address book)
-    if ([contact valueForKey:@"facebookPhoto"] != NULL) {
-        photoData = [contact valueForKey:@"facebookPhoto"];
-    } else if ([contact valueForKey:@"linkedinPhoto"] != NULL) {
-        photoData = [contact valueForKey:@"linkedinPhoto"];
+    NSData *facebookPhoto = [contact facebookPhoto];
+    NSData *linkedinPhoto = [contact linkedinPhoto];
+    if (facebookPhoto != NULL) {
+        photoData = facebookPhoto;
+    } else if (linkedinPhoto != NULL) {
+        photoData = linkedinPhoto;
     } else {
         if (ABPersonHasImageData(currentContact)) {
             photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(currentContact);
-            [DebugLogger log:@"Got contact photo" withPriority:1];
+            [DebugLogger log:@"Got contact photo" withPriority:2];
         } else {
-            [DebugLogger log:@"No contact photo" withPriority:1];
+            [DebugLogger log:@"No contact photo" withPriority:2];
         }
     }
     
