@@ -82,9 +82,16 @@
         [globals setValue:today forKeyPath:@"lastUpdatedInfo"];
         [globals setValue:today forKey:@"lastUpdatedUrgency"];
         [globals setValue:[NSNumber numberWithBool:NO] forKeyPath:@"firstRun"];
-    } else {
-        [ContactManager updateUrgency];
-        [globals setValue:today forKey:@"lastUpdatedUrgency"];
+    }
+    // Update everyone's urgency once a day (subsequent urgency changes made by user interaction)
+    else {
+        NSDate *lastUrgencyUpdate = [globals valueForKey:@"lastUpdatedUrgency"];
+        NSInteger daysSinceLastUrgnecyUpdate = [self numDaysFrom:lastUrgencyUpdate To:[NSDate date]];
+        if (daysSinceLastUrgnecyUpdate != 0) {
+            [DebugLogger log:@"Updating urgency for all contacts" withPriority:2];
+            [ContactManager updateUrgency];
+            [globals setValue:today forKey:@"lastUpdatedUrgency"];
+        }
     }
     
     [self getNextContact];
@@ -129,8 +136,6 @@
         NSUInteger index = 0;
         NSManagedObject *contactMetadata;
         NSDate *lastPostponedDate;
-        NSDate *today = [NSDate date];
-        NSDateComponents *diff;
         NSInteger daysSinceLastPostponed;
         do {
             contactMetadata = [results objectAtIndex:index++];
@@ -141,9 +146,7 @@
                 daysSinceLastPostponed = 1; // any nonzero value will do
                 break;
             }
-            
-            diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:lastPostponedDate toDate:today options:0];
-            daysSinceLastPostponed = [diff day];
+            daysSinceLastPostponed = [self numDaysFrom:lastPostponedDate To:[NSDate date]];
         } while (daysSinceLastPostponed == 0 && index < [results count]);
         
         // No urgent contacts that were not postponed today
@@ -250,11 +253,8 @@
     [contactPhoto setImage:img];
     
     // Set last contacted label
-    NSDateComponents *diff;
-    NSDate *today = [NSDate date];
     if (lastContactedDate) {
-        diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:lastContactedDate toDate:today options:0];
-        NSInteger daysSinceLastContacted = [diff day];
+        NSInteger daysSinceLastContacted = [self numDaysFrom:lastContactedDate To:[NSDate date]];
         if (daysSinceLastContacted == 1) {
             [lastContactedLabel setText:@"Last contacted yesterday"];
         }
@@ -339,6 +339,14 @@
     [metadata setValue:[NSNumber numberWithInteger:frequency] forKey:@"freq"];
     [DebugLogger log:[NSString stringWithFormat:@"New frequency saved: %ld", (long)frequency] withPriority:2];
     [self save];
+}
+
+// Return the number of days from fromDate to toDate
+- (NSInteger)numDaysFrom:(NSDate *)fromDate To:(NSDate *)toDate {
+    NSDateComponents *diff;
+    diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:fromDate toDate:toDate options:0];
+    NSInteger daysDiff = [diff day];
+    return daysDiff;
 }
 
 #pragma mark - Swipe/Tap Gestures
