@@ -4,6 +4,7 @@
 #import "Contact.h"
 #import "ContactMetadata.h"
 #import "ContactManager.h"
+#import "GlobalData.h"
 #import "MainViewController.h"
 #import "ContactViewController.h"
 
@@ -66,28 +67,28 @@
         [DebugLogger log:@"Error getting globals" withPriority:2];
         abort();
     }
-    NSManagedObject *globals = [results objectAtIndex:0];
-    bool firstRun = [[globals valueForKeyPath:@"firstRun"] boolValue];
-    NSDate *today = [NSDate date];
+    GlobalData *globalData = [results objectAtIndex:0];
     
     // Update contact info on first run only
+    NSDate *today = [NSDate date];
+    bool firstRun = [[globalData firstRun] boolValue];
     if (firstRun) {
         [DebugLogger log:@"Updating contacts" withPriority:2];
         
-        [self requestContactsAccess];
-        
-        [globals setValue:today forKeyPath:@"lastUpdatedInfo"];
-        [globals setValue:today forKey:@"lastUpdatedUrgency"];
-        [globals setValue:[NSNumber numberWithBool:NO] forKeyPath:@"firstRun"];
+        [self requestContactsAccessAndSync];
+        [globalData setLastUpdatedInfo:today];
+        [globalData setLastUpdatedUrgency:today];
+        [globalData setFirstRun:[NSNumber numberWithBool:NO]];
     }
     // Update everyone's urgency once a day (subsequent urgency changes made by user interaction)
     else {
-        NSDate *lastUrgencyUpdate = [globals valueForKey:@"lastUpdatedUrgency"];
-        NSInteger daysSinceLastUrgnecyUpdate = [self numDaysFrom:lastUrgencyUpdate To:[NSDate date]];
+        NSDate *today = [NSDate date];
+        NSDate *lastUrgencyUpdate = [globalData lastUpdatedUrgency];
+        NSInteger daysSinceLastUrgnecyUpdate = [self numDaysFrom:lastUrgencyUpdate To:today];
         if (daysSinceLastUrgnecyUpdate != 0) {
             [DebugLogger log:@"Updating urgency for all contacts" withPriority:2];
             [ContactManager updateUrgency];
-            [globals setValue:today forKey:@"lastUpdatedUrgency"];
+            [globalData setLastUpdatedUrgency:today];
         }
     }
     
@@ -511,8 +512,8 @@
     return [appDelegate managedObjectModel];
 }
 
-// Request contacts access and sync
-- (void)requestContactsAccess {
+// Request contacts access and sync if authorized
+- (void)requestContactsAccessAndSync {
     // Request authorization to Address Book
     ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
     
