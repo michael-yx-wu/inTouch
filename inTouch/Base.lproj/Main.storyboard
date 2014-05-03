@@ -393,7 +393,6 @@
                             <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="fdK-to-CAo" secondAttribute="bottom" constant="10" id="dHD-q9-edw"/>
                             <constraint firstItem="hay-uN-S6J" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="22" id="eNU-1p-clF"/>
                             <constraint firstAttribute="trailing" secondItem="Fl0-1a-44Q" secondAttribute="trailing" constant="35" id="eoH-5X-22h"/>
-                            <constraint firstItem="7I9-He-U9a" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="123" id="ghG-ay-K8z"/>
                             <constraint firstItem="9hV-Rp-sqO" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" constant="30" id="i0c-nk-e3i"/>
                             <constraint firstItem="bjt-lR-3iW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="7I9-He-U9a" secondAttribute="bottom" constant="40" id="poO-Hw-azu"/>
                             <constraint firstItem="7I9-He-U9a" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Fl0-1a-44Q" secondAttribute="bottom" priority="750" constant="10" id="ylK-Rw-dHH"/>
@@ -700,6 +699,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Sr6-xF-J8P"/>
+        <segue reference="cG2-L0-skS"/>
     </inferredMetricsTieBreakers>
 </document>
