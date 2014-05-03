@@ -352,7 +352,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7I9-He-U9a" userLabel="Check Button">
-                                <rect key="frame" x="123" y="405" width="75" height="75"/>
+                                <rect key="frame" x="123" y="373" width="75" height="75"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cPN-Kg-Njz">
@@ -418,7 +418,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="455" y="-254"/>
+            <point key="canvasLocation" x="447" y="-240"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="9GX-2m-S6v">
@@ -675,7 +675,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vXu-LN-LnE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6" y="-903"/>
+            <point key="canvasLocation" x="6" y="-945"/>
         </scene>
     </scenes>
     <resources>
@@ -700,6 +700,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="cG2-L0-skS"/>
+        <segue reference="Sr6-xF-J8P"/>
     </inferredMetricsTieBreakers>
 </document>
