@@ -35,7 +35,7 @@
         GlobalData *globalData = [NSEntityDescription insertNewObjectForEntityForName:@"GlobalData" inManagedObjectContext:moc];
         [globalData setLastUpdatedInfo:nil];
         [globalData setLastUpdatedUrgency:nil];
-        [globalData setFirstRun:[NSNumber numberWithBool:NO]];
+        [globalData setFirstRun:[NSNumber numberWithBool:YES]];
         [globalData setNumContacts:0];
         [globalData setNumLogins:0];
         [globalData setNumNotInterested:0];

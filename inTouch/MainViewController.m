@@ -27,8 +27,10 @@
 @synthesize contactedView;
 @synthesize deletedView;
 @synthesize postponedView;
-@synthesize busyView;
-@synthesize activityIndicator;
+@synthesize syncingView;
+@synthesize syncingActivityIndicator;
+@synthesize updatingUrgencyView;
+@synthesize updatingUrgencyActivityIndicator;
 @synthesize leftSwipeRecognizer;
 @synthesize rightSwipeRecognizer;
 @synthesize downSwipeRecognizer;
@@ -84,8 +86,11 @@
     else {
         NSDate *today = [NSDate date];
         NSDate *lastUrgencyUpdate = [globalData lastUpdatedUrgency];
-        NSInteger daysSinceLastUrgnecyUpdate = [self numDaysFrom:lastUrgencyUpdate To:today];
-        if (daysSinceLastUrgnecyUpdate != 0) {
+        NSInteger daysSinceLastUrgencyUpdate = 1;
+        if (lastUrgencyUpdate != nil) {
+            daysSinceLastUrgencyUpdate = [self numDaysFrom:lastUrgencyUpdate To:today];
+        }
+        if (daysSinceLastUrgencyUpdate != 0) {
             [DebugLogger log:@"Updating urgency for all contacts" withPriority:2];
             [ContactManager updateUrgency];
             [globalData setLastUpdatedUrgency:today];
@@ -437,25 +442,46 @@
 }
 
 // Display "syncing contacts" message and sync contacts
-- (void)displayBusyViewAndSyncContacts {
+- (void)displaySyncingViewAndSyncContacts {
     // Show the busy view
     [self disableInteraction];
-    [DebugLogger log:@"Showing busy view" withPriority:2];
+    [DebugLogger log:@"Showing syncing view" withPriority:2];
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        [busyView setAlpha:1];
-        [activityIndicator startAnimating];
+        [syncingView setAlpha:1];
+        [syncingActivityIndicator startAnimating];
     } completion:^(BOOL finished) {
         [DebugLogger log:@"start updating..." withPriority:2];
         [ContactManager updateInformation];
         [ContactManager updateUrgency];
         [UIView animateWithDuration:0.3 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            [busyView setAlpha:0];
+            [syncingView setAlpha:0];
         } completion:^(BOOL finished){
-            [activityIndicator stopAnimating];
+            [syncingActivityIndicator stopAnimating];
             [self getNextContact];
         }];
     }];
 }
+
+// Display "updating urgencies" message and update urgencies for all
+- (void)displayUpdatingUrgenciesViewAndUpdateUrgencies {
+    // Show the updating view
+    [self disableInteraction];
+    [DebugLogger log:@"Showing busy view" withPriority:2];
+    [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [updatingUrgencyView setAlpha:1];
+        [updatingUrgencyActivityIndicator startAnimating];
+    } completion:^(BOOL finished) {
+        [DebugLogger log:@"start updating urgencies" withPriority:2];
+        [ContactManager updateUrgency];
+        [UIView animateWithDuration:0.3 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [updatingUrgencyView setAlpha:0];
+        } completion:^(BOOL finished) {
+            [updatingUrgencyActivityIndicator stopAnimating];
+            [self getNextContact];
+        }];
+    }];
+}
+
 
 // Enable swiping/taping after animation ends
 - (void)enableInteraction {
@@ -464,7 +490,6 @@
     [downSwipeRecognizer setEnabled:YES];
     [upSwipeRecognizer setEnabled:YES];
     [frequencySlider setUserInteractionEnabled:YES];
-//    [tapRecognizer setEnabled:YES];
 }
 
 // Disable swiping/taping during animation
@@ -475,7 +500,6 @@
     [downSwipeRecognizer setEnabled:NO];
     [upSwipeRecognizer setEnabled:NO];
     [frequencySlider setUserInteractionEnabled:NO];
-//    [tapRecognizer setEnabled:NO];
 }
 
 #pragma mark - Navigation
@@ -519,8 +543,11 @@
     
     if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
         ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error){
-            [self displayBusyViewAndSyncContacts];
+            [self displaySyncingViewAndSyncContacts];
         });
+    }
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
+        [self displaySyncingViewAndSyncContacts];
     }
     else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
         UIAlertView *deniedMessage = [[UIAlertView alloc] initWithTitle:@"Access to Contacts" message:@"Go to 'Settings > Privacy > Contacts' to change." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
