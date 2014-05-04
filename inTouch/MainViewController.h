@@ -1,11 +1,3 @@
-//
-//  ViewController.h
-//  inTouch
-//
-//  Created by Michael Wu on 2/28/14.
-//  Copyright (c) 2014 Michael Wu. All rights reserved.
-//
-
 @interface MainViewController : UIViewController
 
 // Current contact name and photo
@@ -17,8 +9,12 @@
 @property (weak, nonatomic) IBOutlet UIView *contactedView;
 @property (weak, nonatomic) IBOutlet UIView *deletedView;
 @property (weak, nonatomic) IBOutlet UIView *postponedView;
-@property (weak, nonatomic) IBOutlet UIView *busyView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (weak, nonatomic) IBOutlet UIView *syncingView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *syncingActivityIndicator;
+@property (weak, nonatomic) IBOutlet UIView *updatingUrgencyView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *updatingUrgencyActivityIndicator;
+
+
 @property (weak, nonatomic) IBOutlet UISwipeGestureRecognizer *leftSwipeRecognizer;
 @property (weak, nonatomic) IBOutlet UISwipeGestureRecognizer *rightSwipeRecognizer;
 @property (weak, nonatomic) IBOutlet UISwipeGestureRecognizer *downSwipeRecognizer;

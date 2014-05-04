@@ -1,15 +1,8 @@
-//
-//  AppDelegate.m
-//  inTouch
-//
-//  Created by Michael Wu on 2/28/14.
-//  Copyright (c) 2014 Michael Wu. All rights reserved.
-//
-
 #import <AddressBookUI/AddressBookUI.h>
 
 #import "AppDelegate.h"
 #import "ContactManager.h"
+#import "GlobalData.h"
 #import "UrgencyCalculator.h"
 
 #import "DebugLogger.h"
@@ -39,13 +32,13 @@
     
     // Create global data entity if does not exist
     if ([results count] == 0) {
-        NSManagedObject *globals = [NSEntityDescription insertNewObjectForEntityForName:@"GlobalData" inManagedObjectContext:moc];
-        [globals setValue:nil forKey:@"lastUpdatedInfo"];
-        [globals setValue:nil forKey:@"lastUpdatedUrgency"];
-        [globals setValue:[NSNumber numberWithBool:YES] forKeyPath:@"firstRun"];
-        [globals setValue:0 forKey:@"numContacts"];
-        [globals setValue:0 forKey:@"numLogins"];
-        [globals setValue:0 forKey:@"numNotInterested"];
+        GlobalData *globalData = [NSEntityDescription insertNewObjectForEntityForName:@"GlobalData" inManagedObjectContext:moc];
+        [globalData setLastUpdatedInfo:nil];
+        [globalData setLastUpdatedUrgency:nil];
+        [globalData setFirstRun:[NSNumber numberWithBool:YES]];
+        [globalData setNumContacts:0];
+        [globalData setNumLogins:0];
+        [globalData setNumNotInterested:0];
     }
     
     return YES;

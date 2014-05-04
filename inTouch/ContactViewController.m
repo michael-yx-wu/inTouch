@@ -1,14 +1,8 @@
-//
-//  ContactViewController.m
-//  inTouch
-//
-//  Created by Michael Wu on 3/24/14.
-//  Copyright (c) 2014 Michael Wu. All rights reserved.
-//
-
 #import <MessageUI/MessageUI.h>
 
 #import "AppDelegate.h"
+#import "Contact.h"
+#import "ContactMetadata.h"
 #import "ContactViewController.h"
 #import "UrgencyCalculator.h"
 
@@ -294,40 +288,41 @@
         abort();
     }
     
-    // Get timesContacted info
-    NSManagedObject *contact = [results objectAtIndex:0];
-    NSManagedObject *metadata = [contact valueForKey:@"metadata"];
+    Contact *contact = [results objectAtIndex:0];
+    ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
     
+    // Get timesContacted info
     NSNumber *numTimesContacted, *numTimesCalled, *numTimesMessaged, *numTimesEmailed, *timesContacted;
-    numTimesContacted = [metadata valueForKey:@"numTimesContacted"];
-    numTimesCalled = [metadata valueForKey:@"numTimesCalled"];
-    numTimesMessaged = [metadata valueForKey:@"numTimesMessaged"];
-    numTimesEmailed = [metadata valueForKey:@"numTimesEmailed"];
+    numTimesContacted = [metadata numTimesContacted];
+    numTimesCalled = [metadata numTimesCalled];
+    numTimesMessaged = [metadata numTimesMessaged];
+    numTimesEmailed = [metadata numTimesEmailed];
     
     // Increment times contacted
     timesContacted = [NSNumber numberWithInt:[numTimesContacted intValue]+1];
-    [metadata setValue:timesContacted forKey:@"numTimesContacted"];
+    [metadata setNumTimesContacted:timesContacted];
     [DebugLogger log:[NSString stringWithFormat:@"Times contacted: %d", [timesContacted intValue]] withPriority:3];
     
     // Increment times contacted based on medium
     if ([medium isEqualToString:contactedCall]) {
-        timesContacted = [NSNumber numberWithInt:[numTimesCalled intValue] +1];
-        [metadata setValue:timesContacted forKeyPath:@"numTimesCalled"];
+        timesContacted = [NSNumber numberWithInt:[numTimesCalled intValue]+1];
+        [metadata setNumTimesCalled:timesContacted];
         [DebugLogger log:[NSString stringWithFormat:@"Times called: %d", [timesContacted intValue]] withPriority:3];
     } else if ([medium isEqualToString:contactedMessage]) {
         timesContacted = [NSNumber numberWithInt:[numTimesMessaged intValue]+1];
-        [metadata setValue:timesContacted forKeyPath:@"numTimesMessaged"];
+        [metadata setNumTimesMessaged:timesContacted];
         [DebugLogger log:[NSString stringWithFormat:@"Times messaged: %d", [timesContacted intValue]] withPriority:3];
     } else if ([medium isEqualToString:contactedEmail]) {
         timesContacted = [NSNumber numberWithInt:[numTimesEmailed intValue]+1];
-        [metadata setValue:timesContacted forKeyPath:@"numTimesEmailed"];
+        [metadata setNumTimesEmailed:timesContacted];
         [DebugLogger log:[NSString stringWithFormat:@"Times emailed: %d", [timesContacted intValue]] withPriority:3];
     } else if (![medium isEqualToString:contactedGeneric]){
         [DebugLogger log:@"Error updating contact method frequency... please check spelling!" withPriority:3];
     }
 
     // Set last contact date
-    [metadata setValue:[NSDate date] forKeyPath:@"lastContactedDate"];
+    NSDate *today = [NSDate date];
+    [metadata setLastContactedDate:today];
     
     // Update urgency for this contact only
     [UrgencyCalculator updateUrgencyContact:contact Metadata:metadata];
@@ -367,29 +362,6 @@
     // Record email click before dismissal
     [self incrementNumberTimesContacted:contactedEmail];
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-#pragma mark - Helper methods
-
-// Fetch Contact entity from coredata based on nanme
-- (NSArray *)fetchContact {
-    NSManagedObjectContext *moc = [self managedObjectContext];
-    NSManagedObjectModel *model = [self managedObjectModel];
-    NSDictionary *subVars = @{
-                              @"NAMEFIRST": firstName,
-                              @"NAMELAST": lastName
-                              };
-    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactNameMatch"
-                                                substitutionVariables:subVars];
-    
-    NSError *error;
-    NSArray *results = [moc executeFetchRequest:request error:&error];
-    if (results == nil) {
-        [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
-                          error, [error userInfo]] withPriority:1];
-        abort();
-    }
-    return results;
 }
 
 #pragma mark - Core Data Accessor Methods

@@ -1,15 +1,10 @@
-//
-//  ViewController.m
-//  inTouch
-//
-//  Created by Naicheng Wangyu on 03/01/14.
-//  Copyright (c) 2014 Naicheng Wangyu. All rights reserved.
-//
-
 #import <AddressBookUI/AddressBookUI.h>
 
 #import "AppDelegate.h"
+#import "Contact.h"
+#import "ContactMetadata.h"
 #import "ContactManager.h"
+#import "GlobalData.h"
 #import "MainViewController.h"
 #import "ContactViewController.h"
 
@@ -32,8 +27,10 @@
 @synthesize contactedView;
 @synthesize deletedView;
 @synthesize postponedView;
-@synthesize busyView;
-@synthesize activityIndicator;
+@synthesize syncingView;
+@synthesize syncingActivityIndicator;
+@synthesize updatingUrgencyView;
+@synthesize updatingUrgencyActivityIndicator;
 @synthesize leftSwipeRecognizer;
 @synthesize rightSwipeRecognizer;
 @synthesize downSwipeRecognizer;
@@ -53,6 +50,7 @@
 @synthesize phoneWork;
 @synthesize lastContactedDate;
 
+// Debug priority
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Load in background image
@@ -71,26 +69,31 @@
         [DebugLogger log:@"Error getting globals" withPriority:2];
         abort();
     }
-    NSManagedObject *globals = [results objectAtIndex:0];
-    bool firstRun = [[globals valueForKeyPath:@"firstRun"] boolValue];
-    NSDate *today = [NSDate date];
+    GlobalData *globalData = [results objectAtIndex:0];
     
     // Update contact info on first run only
+    NSDate *today = [NSDate date];
+    bool firstRun = [[globalData firstRun] boolValue];
     if (firstRun) {
         [DebugLogger log:@"Updating contacts" withPriority:2];
-        [self displayBusyViewAndSyncContacts];
-        [globals setValue:today forKeyPath:@"lastUpdatedInfo"];
-        [globals setValue:today forKey:@"lastUpdatedUrgency"];
-        [globals setValue:[NSNumber numberWithBool:NO] forKeyPath:@"firstRun"];
+        
+        [self requestContactsAccessAndSync];
+        [globalData setLastUpdatedInfo:today];
+        [globalData setLastUpdatedUrgency:today];
+        [globalData setFirstRun:[NSNumber numberWithBool:NO]];
     }
     // Update everyone's urgency once a day (subsequent urgency changes made by user interaction)
     else {
-        NSDate *lastUrgencyUpdate = [globals valueForKey:@"lastUpdatedUrgency"];
-        NSInteger daysSinceLastUrgnecyUpdate = [self numDaysFrom:lastUrgencyUpdate To:[NSDate date]];
-        if (daysSinceLastUrgnecyUpdate != 0) {
+        NSDate *today = [NSDate date];
+        NSDate *lastUrgencyUpdate = [globalData lastUpdatedUrgency];
+        NSInteger daysSinceLastUrgencyUpdate = 1;
+        if (lastUrgencyUpdate != nil) {
+            daysSinceLastUrgencyUpdate = [self numDaysFrom:lastUrgencyUpdate To:today];
+        }
+        if (daysSinceLastUrgencyUpdate != 0) {
             [DebugLogger log:@"Updating urgency for all contacts" withPriority:2];
             [ContactManager updateUrgency];
-            [globals setValue:today forKey:@"lastUpdatedUrgency"];
+            [globalData setLastUpdatedUrgency:today];
         }
     }
     
@@ -134,19 +137,20 @@
     else {
         // Find the most urgent contact that was not postponed today
         NSUInteger index = 0;
-        NSManagedObject *contactMetadata;
+        ContactMetadata *contactMetadata;
         NSDate *lastPostponedDate;
         NSInteger daysSinceLastPostponed;
         do {
             contactMetadata = [results objectAtIndex:index++];
-            lastPostponedDate = [contactMetadata valueForKey:@"lastPostponedDate"];
+            lastPostponedDate = [contactMetadata lastPostponedDate];
             
             // Break if never postponed
             if (lastPostponedDate == nil) {
                 daysSinceLastPostponed = 1; // any nonzero value will do
                 break;
+            } else {
+                daysSinceLastPostponed = [self numDaysFrom:lastPostponedDate To:[NSDate date]];
             }
-            daysSinceLastPostponed = [self numDaysFrom:lastPostponedDate To:[NSDate date]];
         } while (daysSinceLastPostponed == 0 && index < [results count]);
         
         // No urgent contacts that were not postponed today
@@ -157,11 +161,11 @@
         }
         
         // Get contact information for the current contact
-        NSManagedObject *contact = [contactMetadata valueForKey:@"Contact"];
+        Contact *contact = (Contact *)[contactMetadata contact];
         [self updateContactInformation:contact];
         
         // Update pertinent UI components
-        NSInteger freq = [[contactMetadata valueForKey:@"freq"] integerValue];
+        NSInteger freq = [[contactMetadata freq] integerValue];
         [self updateUI:freq];
         
         [self enableInteraction];
@@ -169,10 +173,11 @@
 }
 
 // Update information about the current contact
-- (void)updateContactInformation:(NSManagedObject*)contact {
-    firstName = [contact valueForKey:@"nameFirst"];
-    lastName = [contact valueForKey:@"nameLast"];
-    abrecordid = [[contact valueForKey:@"abrecordid"] intValue];
+- (void)updateContactInformation:(Contact *)contact {
+    // Get key contact info
+    firstName = [contact nameFirst];
+    lastName = [contact nameLast];
+    abrecordid = [[contact abrecordid] intValue];
     
     // Verify contact ID
     abrecordid = [ContactManager verifyABRecordID:abrecordid forContact:contact];
@@ -185,16 +190,18 @@
     emailHome = emailOther = emailWork = phoneHome = phoneMobile = phoneWork = nil;
     
     // Get photo (priority: fb, linkedIn, address book)
-    if ([contact valueForKey:@"facebookPhoto"] != NULL) {
-        photoData = [contact valueForKey:@"facebookPhoto"];
-    } else if ([contact valueForKey:@"linkedinPhoto"] != NULL) {
-        photoData = [contact valueForKey:@"linkedinPhoto"];
+    NSData *facebookPhoto = [contact facebookPhoto];
+    NSData *linkedinPhoto = [contact linkedinPhoto];
+    if (facebookPhoto != NULL) {
+        photoData = facebookPhoto;
+    } else if (linkedinPhoto != NULL) {
+        photoData = linkedinPhoto;
     } else {
         if (ABPersonHasImageData(currentContact)) {
             photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(currentContact);
-            [DebugLogger log:@"Got contact photo" withPriority:1];
+            [DebugLogger log:@"Got contact photo" withPriority:2];
         } else {
-            [DebugLogger log:@"No contact photo" withPriority:1];
+            [DebugLogger log:@"No contact photo" withPriority:2];
         }
     }
     
@@ -239,8 +246,8 @@
         }
     }
 
-    NSManagedObject *contactMetadata = [contact valueForKey:@"metadata"];
-    lastContactedDate = [contactMetadata valueForKey:@"lastContactedDate"];
+    ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
+    lastContactedDate = [contactMetadata lastContactedDate];
 }
 
 - (void)updateUI:(NSInteger)freq {
@@ -324,8 +331,8 @@
 // Save frequency on touch up on slider
 - (IBAction)doneChangingFrequency:(id)sender {
     UISlider *freqSlider = (UISlider *)sender;
-    NSInteger frequency;
-    NSInteger sliderValue = freqSlider.value;
+    int frequency;
+    double sliderValue = [freqSlider value];
     if (sliderValue <= 300) {
         frequency = sliderValue/10;
     } else if (sliderValue <= 625) {
@@ -334,10 +341,10 @@
         frequency = 365;
     }
     
-    NSManagedObject *contact = [self fetchContact];
-    NSManagedObject *metadata = [contact valueForKey:@"metadata"];
-    [metadata setValue:[NSNumber numberWithInteger:frequency] forKey:@"freq"];
-    [DebugLogger log:[NSString stringWithFormat:@"New frequency saved: %ld", (long)frequency] withPriority:2];
+    Contact *contact = [self fetchContact];
+    ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
+    [metadata setFreq:[NSNumber numberWithInt:frequency]];
+    [DebugLogger log:[NSString stringWithFormat:@"New frequency saved: %d", frequency] withPriority:2];
     [self save];
 }
 
@@ -351,6 +358,7 @@
 
 #pragma mark - Swipe/Tap Gestures
 
+// Show the contact options for current contact
 - (IBAction)swipeLeftOrTap:(id)sender {
     [DebugLogger log:@"Contact Flip" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
@@ -358,58 +366,34 @@
     }
 }
 
+// Postpone the current contact
 - (IBAction)swipeRightOrTap:(id)sender {
     [DebugLogger log:@"Postpone" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName] withPriority:2];
-        NSManagedObject *contact = [self fetchContact];
-        NSManagedObject *metadata = [contact valueForKey:@"metadata"];
+        Contact *contact = [self fetchContact];
+        ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
         NSDate *today = [NSDate date];
-        NSNumber *timesPostponed = [NSNumber numberWithInteger:[[metadata valueForKey:@"numTimesPostponed"] integerValue]+1];
-        
-        [metadata setValue:today forKey:@"lastPostponedDate"];
-        [metadata setValue:timesPostponed forKey:@"numTimesPostponed"];
+        NSNumber *timesPostponed = [NSNumber numberWithInteger:[[metadata numTimesPostponed] integerValue]+1];
+        [metadata setLastPostponedDate:today];
+        [metadata setNumTimesPostponed:timesPostponed];
         [self save];
         [self displayPostponedView];
     }
 }
 
+// Delete the current contact
 - (IBAction)swipeDownOrTap:(id)sender {
     [DebugLogger log:@"Delete" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
-        NSManagedObject *contact = [self fetchContact];
-        NSManagedObject *metadata = [contact valueForKey:@"metadata"];
+        Contact *contact = [self fetchContact];
+        ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
         NSDate *today = [NSDate date];
-        [metadata setValue:[NSNumber numberWithBool:NO] forKey:@"interest"];
-        [metadata setValue:today forKey:@"noInterestDate"];
+        [metadata setNoInterestDate:today];
+        [metadata setInterest:[NSNumber numberWithBool:NO]];
         [self save];
         [self displayDeletedView];
     }
-}
-
-// Fetch Contact entity from coredata based on nanme
-- (NSManagedObject *)fetchContact {
-    NSManagedObjectContext *moc = [self managedObjectContext];
-    NSManagedObjectModel *model = [self managedObjectModel];
-    NSDictionary *subVars = @{
-                              @"NAMEFIRST": firstName,
-                              @"NAMELAST": lastName
-                              };
-    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactNameMatch"
-                                                substitutionVariables:subVars];
-    
-    NSError *error;
-    NSArray *results = [moc executeFetchRequest:request error:&error];
-    if (results == nil) {
-        [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
-                          error, [error userInfo]] withPriority:1];
-        abort();
-    }
-    if ([results count] != 1) {
-        [DebugLogger log:@"Abort! Multiple contacts with same name" withPriority:2];
-        abort();
-    }
-    return [results objectAtIndex:0];
 }
 
 #pragma mark - Custom Animation
@@ -458,25 +442,46 @@
 }
 
 // Display "syncing contacts" message and sync contacts
-- (void)displayBusyViewAndSyncContacts {
+- (void)displaySyncingViewAndSyncContacts {
     // Show the busy view
     [self disableInteraction];
-    [DebugLogger log:@"Showing busy view" withPriority:2];
+    [DebugLogger log:@"Showing syncing view" withPriority:2];
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        [busyView setAlpha:1];
-        [activityIndicator startAnimating];
+        [syncingView setAlpha:1];
+        [syncingActivityIndicator startAnimating];
     } completion:^(BOOL finished) {
         [DebugLogger log:@"start updating..." withPriority:2];
         [ContactManager updateInformation];
         [ContactManager updateUrgency];
         [UIView animateWithDuration:0.3 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            [busyView setAlpha:0];
+            [syncingView setAlpha:0];
         } completion:^(BOOL finished){
-            [activityIndicator stopAnimating];
+            [syncingActivityIndicator stopAnimating];
             [self getNextContact];
         }];
     }];
 }
+
+// Display "updating urgencies" message and update urgencies for all
+- (void)displayUpdatingUrgenciesViewAndUpdateUrgencies {
+    // Show the updating view
+    [self disableInteraction];
+    [DebugLogger log:@"Showing busy view" withPriority:2];
+    [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [updatingUrgencyView setAlpha:1];
+        [updatingUrgencyActivityIndicator startAnimating];
+    } completion:^(BOOL finished) {
+        [DebugLogger log:@"start updating urgencies" withPriority:2];
+        [ContactManager updateUrgency];
+        [UIView animateWithDuration:0.3 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [updatingUrgencyView setAlpha:0];
+        } completion:^(BOOL finished) {
+            [updatingUrgencyActivityIndicator stopAnimating];
+            [self getNextContact];
+        }];
+    }];
+}
+
 
 // Enable swiping/taping after animation ends
 - (void)enableInteraction {
@@ -485,7 +490,6 @@
     [downSwipeRecognizer setEnabled:YES];
     [upSwipeRecognizer setEnabled:YES];
     [frequencySlider setUserInteractionEnabled:YES];
-//    [tapRecognizer setEnabled:YES];
 }
 
 // Disable swiping/taping during animation
@@ -496,7 +500,6 @@
     [downSwipeRecognizer setEnabled:NO];
     [upSwipeRecognizer setEnabled:NO];
     [frequencySlider setUserInteractionEnabled:NO];
-//    [tapRecognizer setEnabled:NO];
 }
 
 #pragma mark - Navigation
@@ -521,7 +524,7 @@
     }
 }
 
-#pragma mark - Core Data Accessor Methods
+#pragma mark - Core Data Methods
 
 - (NSManagedObjectContext *)managedObjectContext {
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -533,6 +536,51 @@
     return [appDelegate managedObjectModel];
 }
 
+// Request contacts access and sync if authorized
+- (void)requestContactsAccessAndSync {
+    // Request authorization to Address Book
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+    
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error){
+            [self displaySyncingViewAndSyncContacts];
+        });
+    }
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
+        [self displaySyncingViewAndSyncContacts];
+    }
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
+        UIAlertView *deniedMessage = [[UIAlertView alloc] initWithTitle:@"Access to Contacts" message:@"Go to 'Settings > Privacy > Contacts' to change." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [deniedMessage show];
+    }
+}
+
+// Fetch Contact entity from coredata based on nanme
+- (Contact *)fetchContact {
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSManagedObjectModel *model = [self managedObjectModel];
+    NSDictionary *subVars = @{
+                              @"NAMEFIRST": firstName,
+                              @"NAMELAST": lastName
+                              };
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactNameMatch"
+                                                substitutionVariables:subVars];
+    
+    NSError *error;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (results == nil) {
+        [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
+                          error, [error userInfo]] withPriority:1];
+        abort();
+    }
+    if ([results count] != 1) {
+        [DebugLogger log:@"Abort! Multiple contacts with same name" withPriority:2];
+        abort();
+    }
+    return [results objectAtIndex:0];
+}
+
+// Save current context
 - (void)save {
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     [appDelegate saveContext];

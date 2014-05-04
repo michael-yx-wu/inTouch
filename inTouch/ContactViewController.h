@@ -1,11 +1,3 @@
-//
-//  ContactViewController.h
-//  inTouch
-//
-//  Created by Michael Wu on 3/24/14.
-//  Copyright (c) 2014 Michael Wu. All rights reserved.
-//
-
 @interface ContactViewController : UIViewController
 
 // Display
