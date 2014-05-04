@@ -1,3 +1,5 @@
+#import <CoreTelephony/CTCall.h>
+#import <CoreTelephony/CTCallCenter.h>
 #import <MessageUI/MessageUI.h>
 
 #import "AppDelegate.h"
@@ -31,6 +33,7 @@
 @synthesize phoneHome;
 @synthesize phoneMobile;
 @synthesize phoneWork;
+@synthesize callCenter;
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -69,6 +72,7 @@
     }
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissCall) name:CTCallStateDisconnected object:nil];
 }
 
 #pragma mark - Button Actions
@@ -100,8 +104,11 @@
                 
                 NSString *cleanedString = [[number componentsSeparatedByCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"0123456789-+()"] invertedSet]] componentsJoinedByString:@""];
                 NSString *escapedPhoneNumber = [cleanedString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                NSString *phoneURLString = [NSString stringWithFormat:@"telprompt:%@", escapedPhoneNumber];
+                NSString *phoneURLString = [NSString stringWithFormat:@"tel:%@", escapedPhoneNumber];
                 NSURL *phoneURL = [NSURL URLWithString:phoneURLString];
+
+                // Dismiss view before call (assuming that user does not cancel call)
+                [self dismissCall];
                 [[UIApplication sharedApplication] openURL:phoneURL];
             } else {
                 UIActionSheet *selectNumber = [[UIActionSheet alloc] initWithTitle:phoneActionSheetTitle delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
@@ -349,6 +356,7 @@
 - (void)dismissCall {
     // Record call click before dismissal
     [self incrementNumberTimesContacted:contactedCall];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:CTCallStateDisconnected object:nil];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

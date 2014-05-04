@@ -1,3 +1,5 @@
+#import <CoreTelephony/CTCallCenter.h>
+
 @interface ContactViewController : UIViewController
 
 // Display
@@ -19,6 +21,9 @@
 @property (nonatomic, strong) NSString *phoneHome;
 @property (nonatomic, strong) NSString *phoneMobile;
 @property (nonatomic, strong) NSString *phoneWork;
+
+// Call center
+@property (nonatomic, strong) CTCallCenter *callCenter;
 
 @end
 
