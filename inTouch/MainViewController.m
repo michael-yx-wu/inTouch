@@ -453,6 +453,7 @@
         [DebugLogger log:@"start updating..." withPriority:2];
         [ContactManager updateInformation];
         [ContactManager updateUrgency];
+        [self save];
         [UIView animateWithDuration:0.3 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [syncingView setAlpha:0];
         } completion:^(BOOL finished){
@@ -543,7 +544,9 @@
     
     if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
         ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error){
-            [self displaySyncingViewAndSyncContacts];
+            if (granted) {
+                [self displaySyncingViewAndSyncContacts];
+            }
         });
     }
     else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
