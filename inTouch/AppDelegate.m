@@ -5,6 +5,7 @@
 #import "GlobalData.h"
 #import "UrgencyCalculator.h"
 
+#import "DebugConstants.h"
 #import "DebugLogger.h"
 
 @implementation AppDelegate
@@ -15,7 +16,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Setting debug level to 1 (everything will be printed)
-    [DebugLogger setDebugLevel:1];
+    [DebugLogger setDebugLevel:minimumPriorityThreshold];
     
     // Check if global data entity exists
     NSManagedObjectContext *moc = [self managedObjectContext];
@@ -26,7 +27,7 @@
     NSArray *results = [moc executeFetchRequest:request error:&error];
     if (results == nil) {
         [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
-                          error, [error userInfo]] withPriority:1];
+                          error, [error userInfo]] withPriority:appDelegatePriority];
         abort();
     }
     
@@ -75,7 +76,7 @@
             // Keep trying until we successfully save -- is this safe?
             [self saveContext];
         }
-        [DebugLogger log:@"Saved!" withPriority:1];
+        [DebugLogger log:@"Saved!" withPriority:appDelegatePriority];
     }
 }
 
@@ -117,7 +118,7 @@
     NSError *error = nil;
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
-        [DebugLogger log:[NSString stringWithFormat:@"Error: %@, %@", error, [error userInfo]] withPriority:1];
+        [DebugLogger log:[NSString stringWithFormat:@"Error: %@, %@", error, [error userInfo]] withPriority:appDelegatePriority];
         abort();
     }
     

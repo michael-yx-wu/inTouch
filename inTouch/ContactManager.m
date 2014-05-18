@@ -5,6 +5,7 @@
 #import "ContactManager.h"
 #import "UrgencyCalculator.h"
 
+#import "DebugConstants.h"
 #import "DebugLogger.h"
 
 @implementation ContactManager
@@ -24,8 +25,8 @@
         NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonLastNameProperty);
         if (firstName == nil) firstName = @"";
         if (lastName == nil) lastName = @"";
-        [DebugLogger log:[NSString stringWithFormat:@"First Name: %@", firstName] withPriority:1];
-        [DebugLogger log:[NSString stringWithFormat:@"Last Name: %@", lastName] withPriority:1];
+        [DebugLogger log:[NSString stringWithFormat:@"First Name: %@", firstName] withPriority:contactManagerPriority];
+        [DebugLogger log:[NSString stringWithFormat:@"Last Name: %@", lastName] withPriority:contactManagerPriority];
 
         // Get contact identifier
         NSNumber *abrecordid = [NSNumber numberWithInt:ABRecordGetRecordID(currentContact)];
@@ -70,10 +71,10 @@
             // Fetch contact
             NSArray *fetchResults = [self fetchRequestWithFirstName:firstName LastName:lastName];
             if ([fetchResults count] > 1) {
-                [DebugLogger log:@"Did not update - multiple contacts with same name" withPriority:1];
+                [DebugLogger log:@"Did not update - multiple contacts with same name" withPriority:contactManagerPriority];
             } else {
                 contact = [fetchResults objectAtIndex:0];
-                [DebugLogger log:[NSString stringWithFormat:@"Updating contact: %@ %@", firstName, lastName] withPriority:1];
+                [DebugLogger log:[NSString stringWithFormat:@"Updating contact: %@ %@", firstName, lastName] withPriority:contactManagerPriority];
             }
         }
         
@@ -136,7 +137,7 @@
             }
             return [newID intValue];
         }
-        [DebugLogger log:@"Error finding ID for contact" withPriority:1];
+        [DebugLogger log:@"Error finding ID for contact" withPriority:contactManagerPriority];
         abort();
     } else {
         return abrecordid;

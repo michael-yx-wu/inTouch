@@ -8,6 +8,7 @@
 #import "ContactViewController.h"
 #import "UrgencyCalculator.h"
 
+#import "DebugConstants.h"
 #import "DebugLogger.h"
 
 @interface ContactViewController () <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
@@ -50,7 +51,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [DebugLogger log:@"Setting up ContactViewController" withPriority:3];
+    [DebugLogger log:@"Setting up ContactViewController" withPriority:contactViewControllerPriority];
     
     // Display contact information
     NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
@@ -78,11 +79,11 @@
 #pragma mark - Button Actions
 
 - (IBAction)callButton:(id)sender {
-    [DebugLogger log:@"Call button press" withPriority:3];
+    [DebugLogger log:@"Call button press" withPriority:contactViewControllerPriority];
     if (phoneHome || phoneMobile || phoneWork) {
-        [DebugLogger log:@"Has phone number" withPriority:3];
+        [DebugLogger log:@"Has phone number" withPriority:contactViewControllerPriority];
         if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tel://"]]) {
-            [DebugLogger log:@"Can make call" withPriority:3];
+            [DebugLogger log:@"Can make call" withPriority:contactViewControllerPriority];
 
             // Get all numbers
             NSMutableArray *phoneNumbers = [[NSMutableArray alloc] initWithCapacity:3];
@@ -100,7 +101,7 @@
             if ([phoneNumbers count] == 1) {
                 // Go straight to call
                 NSString *number = [phoneNumbers objectAtIndex:0];
-                [DebugLogger log:number withPriority:3];
+                [DebugLogger log:number withPriority:contactViewControllerPriority];
                 
                 NSString *cleanedString = [[number componentsSeparatedByCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"0123456789-+()"] invertedSet]] componentsJoinedByString:@""];
                 NSString *escapedPhoneNumber = [cleanedString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -121,18 +122,18 @@
                 [selectNumber showInView:[self view]];
             }
         } else {
-            [DebugLogger log:@"Cannot make call" withPriority:3];
+            [DebugLogger log:@"Cannot make call" withPriority:contactViewControllerPriority];
         }
     }
 }
 
 - (IBAction)messageButton:(id)sender {
-    [DebugLogger log:@"Message button press" withPriority:3];
+    [DebugLogger log:@"Message button press" withPriority:contactViewControllerPriority];
     if (phoneMobile != nil) {
-        [DebugLogger log:@"Has mobile" withPriority:3];
+        [DebugLogger log:@"Has mobile" withPriority:contactViewControllerPriority];
         if ([MFMessageComposeViewController canSendText]) {
-            [DebugLogger log:@"Can send text" withPriority:3];
-            [DebugLogger log:phoneMobile withPriority:3];
+            [DebugLogger log:@"Can send text" withPriority:contactViewControllerPriority];
+            [DebugLogger log:phoneMobile withPriority:contactViewControllerPriority];
             NSArray *recipient = @[[NSString stringWithString:phoneMobile]];
             MFMessageComposeViewController *messageViewControler = [[MFMessageComposeViewController alloc] init];
             [messageViewControler setRecipients:recipient];
@@ -146,19 +147,19 @@
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result {
     switch (result) {
         case MessageComposeResultCancelled: {
-            [DebugLogger log:@"Message compose cancelled" withPriority:3];
+            [DebugLogger log:@"Message compose cancelled" withPriority:contactViewControllerPriority];
             [self dismissViewControllerAnimated:YES completion:nil];
             break;
         }
         case MessageComposeResultFailed: {
-            [DebugLogger log:@"Message failed to send" withPriority:3];
+            [DebugLogger log:@"Message failed to send" withPriority:contactViewControllerPriority];
             UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Messaged failed to send!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [warningAlert show];
             [self dismissViewControllerAnimated:YES completion:nil];
             break;
         }
         case MessageComposeResultSent: {
-            [DebugLogger log:@"Message sent!" withPriority:3];
+            [DebugLogger log:@"Message sent!" withPriority:contactViewControllerPriority];
             [self dismissViewControllerAnimated:YES completion:nil];
             [self performSelector:@selector(dismissMessage) withObject:nil afterDelay:1];
         }
@@ -169,12 +170,12 @@
 }
 
 - (IBAction)email:(id)sender {
-    [DebugLogger log:@"Email button press" withPriority:3];
+    [DebugLogger log:@"Email button press" withPriority:contactViewControllerPriority];
     if (emailHome || emailOther || emailWork) {
-        [DebugLogger log:@"Has email" withPriority:3];
+        [DebugLogger log:@"Has email" withPriority:contactViewControllerPriority];
         if ([MFMailComposeViewController canSendMail]) {
             // Gather emails
-            [DebugLogger log:@"Can send email" withPriority:3];
+            [DebugLogger log:@"Can send email" withPriority:contactViewControllerPriority];
             NSMutableArray *recipient = [[NSMutableArray alloc] initWithCapacity:3];
             if (emailHome) {
                 [recipient addObject:emailHome];
@@ -212,21 +213,21 @@
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
     switch (result) {
         case MFMailComposeResultCancelled: {
-            [DebugLogger log:@"Email compose cancelled" withPriority:3];
+            [DebugLogger log:@"Email compose cancelled" withPriority:contactViewControllerPriority];
             [self dismissViewControllerAnimated:YES completion:nil];
             break;
         }
         case MFMailComposeResultFailed: {
-            [DebugLogger log:@"Email failed to save/send" withPriority:3];
+            [DebugLogger log:@"Email failed to save/send" withPriority:contactViewControllerPriority];
             break;
         }
         case MFMailComposeResultSaved: {
-            [DebugLogger log:@"Email saved" withPriority:3];
+            [DebugLogger log:@"Email saved" withPriority:contactViewControllerPriority];
             [self dismissViewControllerAnimated:YES completion:nil];
             break;
         }
         case MFMailComposeResultSent: {
-            [DebugLogger log:@"Message sent" withPriority:3];
+            [DebugLogger log:@"Message sent" withPriority:contactViewControllerPriority];
             [self dismissViewControllerAnimated:YES completion:nil];
             [self performSelector:@selector(dismissEmail) withObject:nil afterDelay:1];
             break;
@@ -284,13 +285,13 @@
     NSError *error;
     NSArray *results = [moc executeFetchRequest:request error:&error];
     if (results == nil) {
-        [DebugLogger log:[NSString stringWithFormat:@"Error updating num times contacted: %@, %@", error, [error userInfo]] withPriority:3];
+        [DebugLogger log:[NSString stringWithFormat:@"Error updating num times contacted: %@, %@", error, [error userInfo]] withPriority:contactViewControllerPriority];
         abort();
     }
     
     // If this error message appears, it's time to rethink contact identity
     if ([results count] != 1) {
-        [DebugLogger log:@"Multiple contacts with same name!" withPriority:3];
+        [DebugLogger log:@"Multiple contacts with same name!" withPriority:contactViewControllerPriority];
         NSLog(@"%@ %@", firstName, lastName);
         abort();
     }
@@ -308,23 +309,23 @@
     // Increment times contacted
     timesContacted = [NSNumber numberWithInt:[numTimesContacted intValue]+1];
     [metadata setNumTimesContacted:timesContacted];
-    [DebugLogger log:[NSString stringWithFormat:@"Times contacted: %d", [timesContacted intValue]] withPriority:3];
+    [DebugLogger log:[NSString stringWithFormat:@"Times contacted: %d", [timesContacted intValue]] withPriority:contactViewControllerPriority];
     
     // Increment times contacted based on medium
     if ([medium isEqualToString:contactedCall]) {
         timesContacted = [NSNumber numberWithInt:[numTimesCalled intValue]+1];
         [metadata setNumTimesCalled:timesContacted];
-        [DebugLogger log:[NSString stringWithFormat:@"Times called: %d", [timesContacted intValue]] withPriority:3];
+        [DebugLogger log:[NSString stringWithFormat:@"Times called: %d", [timesContacted intValue]] withPriority:contactViewControllerPriority];
     } else if ([medium isEqualToString:contactedMessage]) {
         timesContacted = [NSNumber numberWithInt:[numTimesMessaged intValue]+1];
         [metadata setNumTimesMessaged:timesContacted];
-        [DebugLogger log:[NSString stringWithFormat:@"Times messaged: %d", [timesContacted intValue]] withPriority:3];
+        [DebugLogger log:[NSString stringWithFormat:@"Times messaged: %d", [timesContacted intValue]] withPriority:contactViewControllerPriority];
     } else if ([medium isEqualToString:contactedEmail]) {
         timesContacted = [NSNumber numberWithInt:[numTimesEmailed intValue]+1];
         [metadata setNumTimesEmailed:timesContacted];
-        [DebugLogger log:[NSString stringWithFormat:@"Times emailed: %d", [timesContacted intValue]] withPriority:3];
+        [DebugLogger log:[NSString stringWithFormat:@"Times emailed: %d", [timesContacted intValue]] withPriority:contactViewControllerPriority];
     } else if (![medium isEqualToString:contactedGeneric]){
-        [DebugLogger log:@"Error updating contact method frequency... please check spelling!" withPriority:3];
+        [DebugLogger log:@"Error updating contact method frequency... please check spelling!" withPriority:contactViewControllerPriority];
     }
 
     // Set last contact date

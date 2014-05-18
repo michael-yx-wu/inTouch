@@ -1,5 +1,8 @@
 #import "HelpViewController.h"
 
+#import "DebugConstants.h"
+#import "DebugLogger.h"
+
 @interface HelpViewController ()
 
 @end

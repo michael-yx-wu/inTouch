@@ -1,6 +1,7 @@
 #import "ContactManager.h"
 #import "SettingsViewController.h"
 
+#import "DebugConstants.h"
 #import "DebugLogger.h"
 
 @interface SettingsViewController ()
@@ -42,7 +43,7 @@
 // Display the "syncing contacts" message and sync contacts
 - (IBAction)syncContacts:(id)sender {
     // Show the busy view
-    [DebugLogger log:@"Showing busy view" withPriority:2];
+    [DebugLogger log:@"Showing busy view" withPriority:settingsViewControllerPriority];
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [[self view] setUserInteractionEnabled:NO];
         [busyView setAlpha:1];

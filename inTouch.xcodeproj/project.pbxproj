@@ -50,6 +50,7 @@
 /* Begin PBXFileReference section */
 		4C16FBBD190B491D001C5A2D /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		4C16FBBE190B491D001C5A2D /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		4C1C34C1192943C20003DB81 /* DebugConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DebugConstants.h; sourceTree = "<group>"; };
 		4C340D5E18C16FF7009A96D8 /* inTouch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = inTouch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C340D6118C16FF7009A96D8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4C340D6318C16FF7009A96D8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -177,10 +178,11 @@
 		4C340D6818C16FF7009A96D8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4C1C34C1192943C20003DB81 /* DebugConstants.h */,
+				4C340D6F18C16FF7009A96D8 /* inTouch-Prefix.pch */,
 				4C340D6918C16FF7009A96D8 /* inTouch-Info.plist */,
 				4C340D6A18C16FF7009A96D8 /* InfoPlist.strings */,
 				4C340D6D18C16FF7009A96D8 /* main.m */,
-				4C340D6F18C16FF7009A96D8 /* inTouch-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

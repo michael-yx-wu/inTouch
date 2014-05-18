@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "UrgencyCalculator.h"
 
+#import "DebugConstants.h"
 #import "DebugLogger.h"
 
 @implementation UrgencyCalculator
@@ -27,12 +28,12 @@
     NSArray *results = [moc executeFetchRequest:request error:&error];
     if (results == nil){
         [DebugLogger log:[NSString stringWithFormat:@"Urgency update error: %@, %@",
-                          error, [error userInfo]] withPriority:1];
+                          error, [error userInfo]] withPriority:urgencyCalculatorPriority];
         abort();
     }
     
     [DebugLogger log:[NSString stringWithFormat:@"Updating urgency for %lu contacts",
-                      (unsigned long)[results count]] withPriority:1];
+                      (unsigned long)[results count]] withPriority:urgencyCalculatorPriority];
 
     NSManagedObject *metadata;
     NSManagedObject *contact;
@@ -61,10 +62,10 @@
     // Save the new urgency value (do not change if never contacted and urgency not nil)
     if (lastContactedDate != nil) {
         [metadata setValue:urgency forKey:@"urgency"];
-        [DebugLogger log:[NSString stringWithFormat:@"New urgency for %@ %@: %f", firstName, lastName, [urgency doubleValue]] withPriority:1];
+        [DebugLogger log:[NSString stringWithFormat:@"New urgency for %@ %@: %f", firstName, lastName, [urgency doubleValue]] withPriority:urgencyCalculatorPriority];
     } else if ([[metadata valueForKey:@"urgency"] intValue] == 0) {
         [metadata setValue:urgency forKey:@"urgency"];
-        [DebugLogger log:[NSString stringWithFormat:@"New urgency for %@ %@: %f", firstName, lastName, [urgency doubleValue]] withPriority:1];
+        [DebugLogger log:[NSString stringWithFormat:@"New urgency for %@ %@: %f", firstName, lastName, [urgency doubleValue]] withPriority:urgencyCalculatorPriority];
     }
 
     [self save];

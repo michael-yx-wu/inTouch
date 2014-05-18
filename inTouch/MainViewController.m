@@ -8,6 +8,7 @@
 #import "MainViewController.h"
 #import "ContactViewController.h"
 
+#import "DebugConstants.h"
 #import "DebugLogger.h"
 
 @interface MainViewController ()
@@ -66,7 +67,7 @@
     NSError *error;
     NSArray *results = [moc executeFetchRequest:request error:&error];
     if (results == nil) {
-        [DebugLogger log:@"Error getting globals" withPriority:2];
+        [DebugLogger log:@"Error getting globals" withPriority:mainViewControllerPriority];
         abort();
     }
     GlobalData *globalData = [results objectAtIndex:0];
@@ -75,7 +76,7 @@
     NSDate *today = [NSDate date];
     bool firstRun = [[globalData firstRun] boolValue];
     if (firstRun) {
-        [DebugLogger log:@"Updating contacts" withPriority:2];
+        [DebugLogger log:@"Updating contacts" withPriority:mainViewControllerPriority];
         
         [self requestContactsAccessAndSync];
         [globalData setLastUpdatedInfo:today];
@@ -91,7 +92,7 @@
             daysSinceLastUrgencyUpdate = [self numDaysFrom:lastUrgencyUpdate To:today];
         }
         if (daysSinceLastUrgencyUpdate != 0) {
-            [DebugLogger log:@"Updating urgency for all contacts" withPriority:2];
+            [DebugLogger log:@"Updating urgency for all contacts" withPriority:mainViewControllerPriority];
             [ContactManager updateUrgency];
             [globalData setLastUpdatedUrgency:today];
         }
@@ -109,7 +110,7 @@
 
 // Get the most urgent contact in the database
 - (void)getNextContact {
-    [DebugLogger log:@"Fetching next contact" withPriority:2];
+    [DebugLogger log:@"Fetching next contact" withPriority:mainViewControllerPriority];
     // Set up the request
     NSManagedObjectContext *moc = [self managedObjectContext];
     NSManagedObjectModel *model = [self managedObjectModel];
@@ -125,13 +126,13 @@
     NSError *error;
     NSArray *results = [moc executeFetchRequest:request error:&error];
     if (results == nil) {
-        [DebugLogger log:[NSString stringWithFormat:@"Error getting next contact: %@, %@", error, [error userInfo]] withPriority:2];
+        [DebugLogger log:[NSString stringWithFormat:@"Error getting next contact: %@, %@", error, [error userInfo]] withPriority:mainViewControllerPriority];
         abort();
     }
     
     // Get next urgent contact information if exists
     if ([results count] == 0) {
-        [DebugLogger log:@"No urgent contacts" withPriority:2];
+        [DebugLogger log:@"No urgent contacts" withPriority:mainViewControllerPriority];
         [self showNoUrgentContacts];
     }
     else {
@@ -155,7 +156,7 @@
         
         // No urgent contacts that were not postponed today
         if (index == [results count] && daysSinceLastPostponed == 0) {
-            [DebugLogger log:@"All contacts postponed today" withPriority:2];
+            [DebugLogger log:@"All contacts postponed today" withPriority:mainViewControllerPriority];
             [self showNoUrgentContacts];
             return;
         }
@@ -199,9 +200,9 @@
     } else {
         if (ABPersonHasImageData(currentContact)) {
             photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(currentContact);
-            [DebugLogger log:@"Got contact photo" withPriority:2];
+            [DebugLogger log:@"Got contact photo" withPriority:mainViewControllerPriority];
         } else {
-            [DebugLogger log:@"No contact photo" withPriority:2];
+            [DebugLogger log:@"No contact photo" withPriority:mainViewControllerPriority];
         }
     }
     
@@ -216,13 +217,13 @@
         
         if ([emailLabel isEqualToString:@"home"]) {
             emailHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Home Email: %@", emailHome] withPriority:1];
+            [DebugLogger log:[NSString stringWithFormat:@"Home Email: %@", emailHome] withPriority:mainViewControllerPriority];
         } else if ([emailLabel isEqualToString:@"other"]) {
             emailOther = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Other Email: %@", emailOther] withPriority:1];
+            [DebugLogger log:[NSString stringWithFormat:@"Other Email: %@", emailOther] withPriority:mainViewControllerPriority];
         } else if ([emailLabel isEqualToString:@"work"]) {
             emailWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Work Email: %@", emailWork] withPriority:1];
+            [DebugLogger log:[NSString stringWithFormat:@"Work Email: %@", emailWork] withPriority:mainViewControllerPriority];
         }
     }
 
@@ -236,13 +237,13 @@
         
         if ([phoneLabel isEqualToString:@"home"]) {
             phoneHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Home Phone: %@", phoneHome] withPriority:1];
+            [DebugLogger log:[NSString stringWithFormat:@"Home Phone: %@", phoneHome] withPriority:mainViewControllerPriority];
         } else if ([phoneLabel isEqualToString:@"mobile"] || [phoneLabel isEqualToString:@"iPhone"]) {
             phoneMobile = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Mobile Phone: %@", phoneMobile] withPriority:1];
+            [DebugLogger log:[NSString stringWithFormat:@"Mobile Phone: %@", phoneMobile] withPriority:mainViewControllerPriority];
         } else if ([phoneLabel isEqualToString:@"work"]) {
             phoneWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Work Phone: %@", phoneWork] withPriority:1];
+            [DebugLogger log:[NSString stringWithFormat:@"Work Phone: %@", phoneWork] withPriority:mainViewControllerPriority];
         }
     }
 
@@ -344,7 +345,7 @@
     Contact *contact = [self fetchContact];
     ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
     [metadata setFreq:[NSNumber numberWithInt:frequency]];
-    [DebugLogger log:[NSString stringWithFormat:@"New frequency saved: %d", frequency] withPriority:2];
+    [DebugLogger log:[NSString stringWithFormat:@"New frequency saved: %d", frequency] withPriority:mainViewControllerPriority];
     [self save];
 }
 
@@ -360,7 +361,7 @@
 
 // Show the contact options for current contact
 - (IBAction)swipeLeftOrTap:(id)sender {
-    [DebugLogger log:@"Contact Flip" withPriority:2];
+    [DebugLogger log:@"Contact Flip" withPriority:mainViewControllerPriority];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         [self performSegueWithIdentifier:@"contact" sender:sender];
     }
@@ -370,7 +371,7 @@
 - (IBAction)swipeRightOrTap:(id)sender {
     [DebugLogger log:@"Postpone" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
-        [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName] withPriority:2];
+        [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName] withPriority:mainViewControllerPriority];
         Contact *contact = [self fetchContact];
         ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
         NSDate *today = [NSDate date];
@@ -384,7 +385,7 @@
 
 // Delete the current contact
 - (IBAction)swipeDownOrTap:(id)sender {
-    [DebugLogger log:@"Delete" withPriority:2];
+    [DebugLogger log:@"Delete" withPriority:mainViewControllerPriority];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         Contact *contact = [self fetchContact];
         ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
@@ -445,12 +446,12 @@
 - (void)displaySyncingViewAndSyncContacts {
     // Show the busy view
     [self disableInteraction];
-    [DebugLogger log:@"Showing syncing view" withPriority:2];
+    [DebugLogger log:@"Showing syncing view" withPriority:mainViewControllerPriority];
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [syncingView setAlpha:1];
         [syncingActivityIndicator startAnimating];
     } completion:^(BOOL finished) {
-        [DebugLogger log:@"start updating..." withPriority:2];
+        [DebugLogger log:@"start updating..." withPriority:mainViewControllerPriority];
         [ContactManager updateInformation];
         [ContactManager updateUrgency];
         [self save];
@@ -467,12 +468,12 @@
 - (void)displayUpdatingUrgenciesViewAndUpdateUrgencies {
     // Show the updating view
     [self disableInteraction];
-    [DebugLogger log:@"Showing busy view" withPriority:2];
+    [DebugLogger log:@"Showing busy view" withPriority:mainViewControllerPriority];
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [updatingUrgencyView setAlpha:1];
         [updatingUrgencyActivityIndicator startAnimating];
     } completion:^(BOOL finished) {
-        [DebugLogger log:@"start updating urgencies" withPriority:2];
+        [DebugLogger log:@"start updating urgencies" withPriority:mainViewControllerPriority];
         [ContactManager updateUrgency];
         [UIView animateWithDuration:0.3 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [updatingUrgencyView setAlpha:0];
@@ -486,6 +487,7 @@
 
 // Enable swiping/taping after animation ends
 - (void)enableInteraction {
+    [DebugLogger log:@"Enabling interaction" withPriority:mainViewControllerPriority];
     [leftSwipeRecognizer setEnabled:YES];
     [rightSwipeRecognizer setEnabled:YES];
     [downSwipeRecognizer setEnabled:YES];
@@ -495,7 +497,7 @@
 
 // Disable swiping/taping during animation
 - (void)disableInteraction {
-    [DebugLogger log:@"Disabling interaction" withPriority:2];
+    [DebugLogger log:@"Disabling interaction" withPriority:mainViewControllerPriority];
     [leftSwipeRecognizer setEnabled:NO];
     [rightSwipeRecognizer setEnabled:NO];
     [downSwipeRecognizer setEnabled:NO];
@@ -507,7 +509,7 @@
 
 // Passing information to ContactViewController before segueing 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:2];
+    [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:mainViewControllerPriority];
     
     // Pass contact information to the new view controller.
     if ([[segue identifier] isEqualToString:@"contact"]) {
@@ -573,11 +575,11 @@
     NSArray *results = [moc executeFetchRequest:request error:&error];
     if (results == nil) {
         [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
-                          error, [error userInfo]] withPriority:1];
+                          error, [error userInfo]] withPriority:mainViewControllerPriority];
         abort();
     }
     if ([results count] != 1) {
-        [DebugLogger log:@"Abort! Multiple contacts with same name" withPriority:2];
+        [DebugLogger log:@"Abort! Multiple contacts with same name" withPriority:mainViewControllerPriority];
         abort();
     }
     return [results objectAtIndex:0];
