@@ -33,6 +33,8 @@
 		4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C47934C18E0EB2900A408AB /* ContactViewController.m */; };
 		4C7CBA1F18FC810400A9E4FF /* UrgencyCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7CBA1E18FC810400A9E4FF /* UrgencyCalculator.m */; };
 		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
+		4CB6256A1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
+		4CB6256B1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
 		4CC73FD21906330900B932A7 /* ContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC73FD11906330900B932A7 /* ContactManager.m */; };
 		4CE2435019080BCE00028430 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE2434F19080BCE00028430 /* CoreTelephony.framework */; };
 /* End PBXBuildFile section */
@@ -88,6 +90,7 @@
 		4C7CBA1E18FC810400A9E4FF /* UrgencyCalculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UrgencyCalculator.m; sourceTree = "<group>"; };
 		4C96311418CB71CB002D05A6 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
 		4C96311518CB71CB002D05A6 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
+		4CB625691932CDCC009335E6 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		4CC73FD01906330900B932A7 /* ContactManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactManager.h; sourceTree = "<group>"; };
 		4CC73FD11906330900B932A7 /* ContactManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactManager.m; sourceTree = "<group>"; };
 		4CE2434F19080BCE00028430 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -102,6 +105,7 @@
 				4C340DA318C18D91009A96D8 /* CoreData.framework in Frameworks */,
 				4C340D6418C16FF7009A96D8 /* CoreGraphics.framework in Frameworks */,
 				4CE2435019080BCE00028430 /* CoreTelephony.framework in Frameworks */,
+				4CB6256A1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */,
 				4C340D6218C16FF7009A96D8 /* Foundation.framework in Frameworks */,
 				4C367C9718FC96AE00FABB5C /* MessageUI.framework in Frameworks */,
 				4C340D6618C16FF7009A96D8 /* UIKit.framework in Frameworks */,
@@ -113,6 +117,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C340D8118C16FF8009A96D8 /* XCTest.framework in Frameworks */,
+				4CB6256B1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */,
 				4C340D8318C16FF8009A96D8 /* UIKit.framework in Frameworks */,
 				4C340D8218C16FF8009A96D8 /* Foundation.framework in Frameworks */,
 			);
@@ -147,6 +152,7 @@
 				4C340DA218C18D91009A96D8 /* CoreData.framework */,
 				4C340D6318C16FF7009A96D8 /* CoreGraphics.framework */,
 				4CE2434F19080BCE00028430 /* CoreTelephony.framework */,
+				4CB625691932CDCC009335E6 /* FacebookSDK.framework */,
 				4C340D6118C16FF7009A96D8 /* Foundation.framework */,
 				4C367C9618FC96AE00FABB5C /* MessageUI.framework */,
 				4C340D6518C16FF7009A96D8 /* UIKit.framework */,
@@ -279,7 +285,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0510;
-				ORGANIZATIONNAME = "inTouch Team";
+				ORGANIZATIONNAME = inTouch;
 				TargetAttributes = {
 					4C340D5D18C16FF7009A96D8 = {
 						DevelopmentTeam = QUF4M7QXQP;
@@ -480,6 +486,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/Michael/Documents/FacebookSDK,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "inTouch/inTouch-Prefix.pch";
@@ -502,6 +509,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/Michael/Documents/FacebookSDK,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "inTouch/inTouch-Prefix.pch";
@@ -522,6 +530,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "inTouch/inTouch-Prefix.pch";
@@ -544,6 +553,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "inTouch/inTouch-Prefix.pch";
