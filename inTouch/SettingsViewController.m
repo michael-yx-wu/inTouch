@@ -12,6 +12,7 @@
 
 @synthesize busyView;
 @synthesize activityIndicator;
+@synthesize fbLoginView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -23,6 +24,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // Set default Facebook login behavior
+    [fbLoginView setLoginBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent];
+    
     // Load in background image
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
 }

@@ -10,6 +10,8 @@
 
 @implementation AppDelegate
 
+@synthesize window;
+@synthesize session;
 @synthesize persistentStoreCoordinator;
 @synthesize managedObjectModel;
 @synthesize managedObjectContext;
@@ -44,7 +46,8 @@
     
     // Load necessary FacebookSDK classes here
     [FBLoginView class];
-    
+    [FBAppCall class];
+
     return YES;
 }
 
@@ -58,6 +61,7 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+    [FBAppCall handleDidBecomeActiveWithSession:session];
 }
 
 // Save changes to contacts before closing app
@@ -65,7 +69,15 @@
     [self saveContext];
 }
 
-#pragma mark - Save implementation
+#pragma mark - Facebook Interaction
+
+// Handle Facebook app response
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    BOOL handled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
+    return handled;
+}
+
+#pragma mark - Core Data
 
 // Save managed object context state if it has changed
 - (void)saveContext {
@@ -82,9 +94,6 @@
         [DebugLogger log:@"Saved!" withPriority:appDelegatePriority];
     }
 }
-
-
-#pragma mark - Core Data
 
 // Creates if necessary and returns the managed object context
 - (NSManagedObjectContext *)managedObjectContext {

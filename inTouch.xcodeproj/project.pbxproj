@@ -35,6 +35,9 @@
 		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
 		4CB6256A1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
 		4CB6256B1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
+		4CB6256D1932E330009335E6 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB6256C1932E330009335E6 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		4CB6256F1932E340009335E6 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB6256E1932E340009335E6 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		4CB625711932E346009335E6 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625701932E346009335E6 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		4CC73FD21906330900B932A7 /* ContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC73FD11906330900B932A7 /* ContactManager.m */; };
 		4CE2435019080BCE00028430 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE2434F19080BCE00028430 /* CoreTelephony.framework */; };
 /* End PBXBuildFile section */
@@ -91,6 +94,9 @@
 		4C96311418CB71CB002D05A6 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
 		4C96311518CB71CB002D05A6 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
 		4CB625691932CDCC009335E6 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
+		4CB6256C1932E330009335E6 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		4CB6256E1932E340009335E6 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		4CB625701932E346009335E6 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		4CC73FD01906330900B932A7 /* ContactManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactManager.h; sourceTree = "<group>"; };
 		4CC73FD11906330900B932A7 /* ContactManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactManager.m; sourceTree = "<group>"; };
 		4CE2434F19080BCE00028430 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -101,6 +107,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CB625711932E346009335E6 /* Social.framework in Frameworks */,
+				4CB6256F1932E340009335E6 /* AdSupport.framework in Frameworks */,
+				4CB6256D1932E330009335E6 /* Accounts.framework in Frameworks */,
 				4C03B9531906C70D003221EC /* AddressBookUI.framework in Frameworks */,
 				4C340DA318C18D91009A96D8 /* CoreData.framework in Frameworks */,
 				4C340D6418C16FF7009A96D8 /* CoreGraphics.framework in Frameworks */,
@@ -148,6 +157,9 @@
 		4C340D6018C16FF7009A96D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4CB625701932E346009335E6 /* Social.framework */,
+				4CB6256E1932E340009335E6 /* AdSupport.framework */,
+				4CB6256C1932E330009335E6 /* Accounts.framework */,
 				4C340D9918C175D3009A96D8 /* AddressBookUI.framework */,
 				4C340DA218C18D91009A96D8 /* CoreData.framework */,
 				4C340D6318C16FF7009A96D8 /* CoreGraphics.framework */,
