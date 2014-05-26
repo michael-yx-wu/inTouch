@@ -42,6 +42,9 @@
         [globalData setNumNotInterested:0];
     }
     
+    // Load necessary FacebookSDK classes here
+    [FBLoginView class];
+    
     return YES;
 }
 
