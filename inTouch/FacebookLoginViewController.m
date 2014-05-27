@@ -1,13 +1,19 @@
-#import "HelpViewController.h"
+//
+//  FacebookLoginViewController.m
+//  inTouch
+//
+//  Created by Michael Wu on 5/27/14.
+//  Copyright (c) 2014 inTouch. All rights reserved.
+//
 
-#import "DebugConstants.h"
-#import "DebugLogger.h"
+#import "FacebookLoginViewController.h"
 
-@interface HelpViewController ()
-
+@interface FacebookLoginViewController ()
 @end
 
-@implementation HelpViewController
+@implementation FacebookLoginViewController
+
+@synthesize fbLoginView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -19,8 +25,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
     
+    // Set default Facebook login behavior
+    [fbLoginView setLoginBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent];
+    
+    // Load in background image
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
 }
 
@@ -35,4 +44,5 @@
 - (IBAction)dismiss:(id)sender {
     [[self navigationController] popViewControllerAnimated:YES];
 }
+
 @end

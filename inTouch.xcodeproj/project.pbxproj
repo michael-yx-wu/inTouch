@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4C03B9531906C70D003221EC /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D9918C175D3009A96D8 /* AddressBookUI.framework */; };
-		4C16FBBF190B491D001C5A2D /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C16FBBE190B491D001C5A2D /* SettingsViewController.m */; };
 		4C340D6218C16FF7009A96D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6118C16FF7009A96D8 /* Foundation.framework */; };
 		4C340D6418C16FF7009A96D8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6318C16FF7009A96D8 /* CoreGraphics.framework */; };
 		4C340D6618C16FF7009A96D8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6518C16FF7009A96D8 /* UIKit.framework */; };
@@ -33,6 +32,8 @@
 		4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C47934C18E0EB2900A408AB /* ContactViewController.m */; };
 		4C7CBA1F18FC810400A9E4FF /* UrgencyCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7CBA1E18FC810400A9E4FF /* UrgencyCalculator.m */; };
 		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
+		4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107E51934362E00BB853C /* SettingsTableViewController.m */; };
+		4CB107EC19344F1300BB853C /* FacebookLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107EB19344F1300BB853C /* FacebookLoginViewController.m */; };
 		4CB6256A1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
 		4CB6256B1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
 		4CB6256D1932E330009335E6 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB6256C1932E330009335E6 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -53,8 +54,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4C16FBBD190B491D001C5A2D /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
-		4C16FBBE190B491D001C5A2D /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		4C1C34C1192943C20003DB81 /* DebugConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DebugConstants.h; sourceTree = "<group>"; };
 		4C340D5E18C16FF7009A96D8 /* inTouch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = inTouch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C340D6118C16FF7009A96D8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -93,6 +92,10 @@
 		4C7CBA1E18FC810400A9E4FF /* UrgencyCalculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UrgencyCalculator.m; sourceTree = "<group>"; };
 		4C96311418CB71CB002D05A6 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
 		4C96311518CB71CB002D05A6 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
+		4CB107E41934362E00BB853C /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
+		4CB107E51934362E00BB853C /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
+		4CB107EA19344F1300BB853C /* FacebookLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacebookLoginViewController.h; sourceTree = "<group>"; };
+		4CB107EB19344F1300BB853C /* FacebookLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacebookLoginViewController.m; sourceTree = "<group>"; };
 		4CB625691932CDCC009335E6 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		4CB6256C1932E330009335E6 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		4CB6256E1932E340009335E6 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
@@ -244,10 +247,12 @@
 				4C340D7718C16FF7009A96D8 /* MainViewController.m */,
 				4C47934B18E0EB2900A408AB /* ContactViewController.h */,
 				4C47934C18E0EB2900A408AB /* ContactViewController.m */,
+				4CB107E41934362E00BB853C /* SettingsTableViewController.h */,
+				4CB107E51934362E00BB853C /* SettingsTableViewController.m */,
 				4C96311418CB71CB002D05A6 /* HelpViewController.h */,
 				4C96311518CB71CB002D05A6 /* HelpViewController.m */,
-				4C16FBBD190B491D001C5A2D /* SettingsViewController.h */,
-				4C16FBBE190B491D001C5A2D /* SettingsViewController.m */,
+				4CB107EA19344F1300BB853C /* FacebookLoginViewController.h */,
+				4CB107EB19344F1300BB853C /* FacebookLoginViewController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -352,17 +357,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */,
 				4C340D7818C16FF7009A96D8 /* MainViewController.m in Sources */,
 				4C42688D1915B6B80014744F /* GlobalData.m in Sources */,
 				4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */,
 				4C340D7218C16FF7009A96D8 /* AppDelegate.m in Sources */,
 				4C340DA618C18DBD009A96D8 /* Model.xcdatamodeld in Sources */,
+				4CB107EC19344F1300BB853C /* FacebookLoginViewController.m in Sources */,
 				4CC73FD21906330900B932A7 /* ContactManager.m in Sources */,
 				4C42688919158D530014744F /* ContactMetadata.m in Sources */,
 				4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */,
 				4C7CBA1F18FC810400A9E4FF /* UrgencyCalculator.m in Sources */,
 				4C426885191580B90014744F /* Contact.m in Sources */,
-				4C16FBBF190B491D001C5A2D /* SettingsViewController.m in Sources */,
 				4C340D6E18C16FF7009A96D8 /* main.m in Sources */,
 				4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */,
 			);
