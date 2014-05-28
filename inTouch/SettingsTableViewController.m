@@ -73,6 +73,8 @@
         [syncingContactsActivityIndicator startAnimating];
         [syncingContactsActivityIndicator setAlpha:1];
     } completion:^(BOOL finished) {
+        [ContactManager updateInformation];
+        [ContactManager updateUrgency];
         [UIView animateWithDuration:1.0 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             // Hide activity indicator
             [syncingContactsActivityIndicator setAlpha:0];
