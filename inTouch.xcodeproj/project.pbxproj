@@ -179,6 +179,7 @@
 		4C340D6718C16FF7009A96D8 /* inTouch */ = {
 			isa = PBXGroup;
 			children = (
+				4C340D7318C16FF7009A96D8 /* Main.storyboard */,
 				4C340D7018C16FF7009A96D8 /* AppDelegate.h */,
 				4C340D7118C16FF7009A96D8 /* AppDelegate.m */,
 				4CC73FD01906330900B932A7 /* ContactManager.h */,
@@ -187,7 +188,6 @@
 				4C340DA018C17ACF009A96D8 /* DebugLogger.m */,
 				4C7CBA1D18FC810400A9E4FF /* UrgencyCalculator.h */,
 				4C7CBA1E18FC810400A9E4FF /* UrgencyCalculator.m */,
-				4C340D7318C16FF7009A96D8 /* Main.storyboard */,
 				4C42688A1915B4500014744F /* View Controllers */,
 				4C42688619158C8B0014744F /* Core Data Entities */,
 				4C340D7918C16FF7009A96D8 /* Images.xcassets */,

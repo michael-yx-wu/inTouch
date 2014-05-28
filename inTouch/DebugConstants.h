@@ -5,4 +5,4 @@
 #define mainViewControllerPriority 3
 #define contactViewControllerPriority 3
 #define helpViewControllerPriority 1
-#define settingsViewControllerPriority 1
+#define settingsTableViewControllerPriority 1
