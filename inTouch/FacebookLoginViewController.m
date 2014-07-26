@@ -18,6 +18,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [fbLoginView setDelegate:self];
+    
     // Set default Facebook login behavior
     [fbLoginView setLoginBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent];
     
@@ -28,6 +30,12 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Facebook login logic
+
+- (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)user {
+    NSLog(@"Logged in as %@(%@)", [user name], [user objectID]);
 }
 
 #pragma mark - Navigation

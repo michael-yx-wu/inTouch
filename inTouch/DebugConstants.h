@@ -6,3 +6,4 @@
 #define contactViewControllerPriority 3
 #define helpViewControllerPriority 1
 #define settingsTableViewControllerPriority 1
+#define editContactsTableViewControllerPriority 2

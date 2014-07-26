@@ -47,7 +47,12 @@
     // Load necessary FacebookSDK classes here
     [FBLoginView class];
     [FBAppCall class];
-
+    
+    // Open facebook session on launch if available
+    [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"] allowLoginUI:NO completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+        
+    }];  
+    
     return YES;
 }
 
@@ -92,6 +97,8 @@
             [self saveContext];
         }
         [DebugLogger log:@"Saved!" withPriority:appDelegatePriority];
+    } else {
+        [DebugLogger log:@"Nil moc!" withPriority:appDelegatePriority];
     }
 }
 

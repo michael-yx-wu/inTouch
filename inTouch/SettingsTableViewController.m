@@ -45,6 +45,11 @@
             [self performSegueWithIdentifier:@"help" sender:self];
         }
         
+        // Edit contacts
+        if ([indexPath row] == 2) {
+            [self performSegueWithIdentifier:@"editContacts" sender:self];
+        }
+        
         // Sync contacts
         if ([indexPath row] == 3) {
             [self syncContacts];

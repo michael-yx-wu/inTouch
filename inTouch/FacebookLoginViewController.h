@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 
-@interface FacebookLoginViewController : UIViewController
+@interface FacebookLoginViewController : UIViewController <FBLoginViewDelegate>
 
 @property (weak, nonatomic) IBOutlet FBLoginView *fbLoginView;
 

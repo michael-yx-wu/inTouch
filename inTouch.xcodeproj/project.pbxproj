@@ -25,6 +25,7 @@
 		4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340DA018C17ACF009A96D8 /* DebugLogger.m */; };
 		4C340DA318C18D91009A96D8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340DA218C18D91009A96D8 /* CoreData.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		4C340DA618C18DBD009A96D8 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C340DA418C18DBD009A96D8 /* Model.xcdatamodeld */; };
+		4C357F8C19839ECF00A64C44 /* EditContactsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C357F8B19839ECF00A64C44 /* EditContactsTableViewController.m */; };
 		4C367C9718FC96AE00FABB5C /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C367C9618FC96AE00FABB5C /* MessageUI.framework */; };
 		4C426885191580B90014744F /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C426884191580B90014744F /* Contact.m */; };
 		4C42688919158D530014744F /* ContactMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C42688819158D530014744F /* ContactMetadata.m */; };
@@ -76,6 +77,8 @@
 		4C340DA018C17ACF009A96D8 /* DebugLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugLogger.m; sourceTree = "<group>"; };
 		4C340DA218C18D91009A96D8 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		4C340DA518C18DBD009A96D8 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		4C357F8A19839ECF00A64C44 /* EditContactsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditContactsTableViewController.h; sourceTree = "<group>"; };
+		4C357F8B19839ECF00A64C44 /* EditContactsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditContactsTableViewController.m; sourceTree = "<group>"; };
 		4C367C9618FC96AE00FABB5C /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		4C426883191580B90014744F /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
 		4C426884191580B90014744F /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
@@ -217,13 +220,13 @@
 		4C42688619158C8B0014744F /* Core Data Entities */ = {
 			isa = PBXGroup;
 			children = (
+				4C340DA418C18DBD009A96D8 /* Model.xcdatamodeld */,
 				4C426883191580B90014744F /* Contact.h */,
 				4C426884191580B90014744F /* Contact.m */,
 				4C42688719158D530014744F /* ContactMetadata.h */,
 				4C42688819158D530014744F /* ContactMetadata.m */,
 				4C42688B1915B6B80014744F /* GlobalData.h */,
 				4C42688C1915B6B80014744F /* GlobalData.m */,
-				4C340DA418C18DBD009A96D8 /* Model.xcdatamodeld */,
 			);
 			name = "Core Data Entities";
 			sourceTree = "<group>";
@@ -237,6 +240,8 @@
 				4C47934C18E0EB2900A408AB /* ContactViewController.m */,
 				4CB107E41934362E00BB853C /* SettingsTableViewController.h */,
 				4CB107E51934362E00BB853C /* SettingsTableViewController.m */,
+				4C357F8A19839ECF00A64C44 /* EditContactsTableViewController.h */,
+				4C357F8B19839ECF00A64C44 /* EditContactsTableViewController.m */,
 				4C96311418CB71CB002D05A6 /* HelpViewController.h */,
 				4C96311518CB71CB002D05A6 /* HelpViewController.m */,
 				4CB107EA19344F1300BB853C /* FacebookLoginViewController.h */,
@@ -368,6 +373,7 @@
 				4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */,
 				4C340D7218C16FF7009A96D8 /* AppDelegate.m in Sources */,
 				4C340DA618C18DBD009A96D8 /* Model.xcdatamodeld in Sources */,
+				4C357F8C19839ECF00A64C44 /* EditContactsTableViewController.m in Sources */,
 				4CB107EC19344F1300BB853C /* FacebookLoginViewController.m in Sources */,
 				4CC73FD21906330900B932A7 /* ContactManager.m in Sources */,
 				4C42688919158D530014744F /* ContactMetadata.m in Sources */,
