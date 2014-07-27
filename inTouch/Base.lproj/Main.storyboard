@@ -32,14 +32,6 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="stack_icon" translatesAutoresizingMaskIntoConstraints="NO" id="YYP-1P-LgN">
-                                        <rect key="frame" x="29" y="25" width="224" height="222"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="224" id="9tR-0q-ssa"/>
-                                            <constraint firstAttribute="height" constant="222" id="wxG-zt-Fqj"/>
-                                        </constraints>
-                                    </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5DP-PC-WdX" userLabel="Contact Photo">
                                         <rect key="frame" x="57" y="42" width="164" height="164"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -183,8 +175,6 @@
                                     <constraint firstAttribute="height" constant="250" id="M9q-r9-7Fr"/>
                                     <constraint firstItem="5DP-PC-WdX" firstAttribute="top" secondItem="7Fn-GC-OVX" secondAttribute="bottom" constant="-123" id="RAZ-iV-dZd"/>
                                     <constraint firstItem="5DP-PC-WdX" firstAttribute="top" secondItem="UeY-4j-wj1" secondAttribute="bottom" constant="-123" id="ROp-co-Ebi"/>
-                                    <constraint firstItem="YYP-1P-LgN" firstAttribute="leading" secondItem="XX4-yL-Gwm" secondAttribute="leading" constant="29" id="WgY-lZ-I07"/>
-                                    <constraint firstItem="YYP-1P-LgN" firstAttribute="top" secondItem="xM2-iI-mT0" secondAttribute="bottom" constant="-6" id="Y5g-qa-o2L"/>
                                     <constraint firstItem="5DP-PC-WdX" firstAttribute="top" secondItem="XX4-yL-Gwm" secondAttribute="top" constant="42" id="Z55-Lk-Tqd"/>
                                     <constraint firstItem="5DP-PC-WdX" firstAttribute="top" secondItem="klc-cv-dcz" secondAttribute="bottom" constant="-123" id="ZZV-YH-sJU"/>
                                     <constraint firstItem="7Fn-GC-OVX" firstAttribute="leading" secondItem="5DP-PC-WdX" secondAttribute="trailing" constant="-127" id="bKT-1x-oUX"/>
