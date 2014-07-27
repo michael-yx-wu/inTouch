@@ -97,7 +97,7 @@
             [globalData setLastUpdatedUrgency:today];
         }
     }
-    
+//    [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
     [self getNextContact];
 }
 
