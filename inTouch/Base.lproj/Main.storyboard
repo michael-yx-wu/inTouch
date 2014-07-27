@@ -1072,6 +1072,23 @@
                                     <constraint firstAttribute="width" constant="260" id="cQr-Mp-iF0"/>
                                 </constraints>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="default_pf_v2" translatesAutoresizingMaskIntoConstraints="NO" id="ZwE-YK-W1E">
+                                <rect key="frame" x="80" y="154" width="160" height="160"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="160" id="E8t-x7-Z9c"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Sync Profile Photos" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="05h-RU-rgG">
+                                <rect key="frame" x="80" y="125" width="160" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="e7i-bD-m4b"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -1270,6 +1287,7 @@
         <image name="back_icon_40" width="32" height="32"/>
         <image name="check_icon" width="200" height="200"/>
         <image name="check_icon_fill" width="200" height="200"/>
+        <image name="default_pf_v2" width="512" height="512"/>
         <image name="mail_icon" width="200" height="200"/>
         <image name="mail_icon_ok" width="200" height="200"/>
         <image name="message_icon" width="200" height="200"/>
