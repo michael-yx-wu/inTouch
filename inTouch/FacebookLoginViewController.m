@@ -1,11 +1,17 @@
 #import "FacebookLoginViewController.h"
 
+#import "DebugConstants.h"
+#import "DebugLogger.h"
+
 @interface FacebookLoginViewController ()
 @end
 
 @implementation FacebookLoginViewController
 
 @synthesize fbLoginView;
+@synthesize userLabel;
+@synthesize profilePhoto;
+@synthesize user;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -23,6 +29,10 @@
     // Set default Facebook login behavior
     [fbLoginView setLoginBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent];
     
+    // Make contact photo round
+    [[profilePhoto layer] setCornerRadius:profilePhoto.frame.size.width/2];
+    [[profilePhoto layer] setMasksToBounds:YES];
+    
     // Load in background image
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
 }
@@ -34,8 +44,37 @@
 
 #pragma mark - Facebook login logic
 
-- (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)user {
-    NSLog(@"Logged in as %@(%@)", [user name], [user objectID]);
+// Save user info after fetching
+- (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)fbUser {
+    user = fbUser;
+    NSLog(@"Logged in as %@ (%@)", [user name], [user objectID]);
+}
+
+// User is currently logged in
+- (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
+    // Fetch my profile photo -- if logged in
+    [FBRequestConnection startWithGraphPath:@"me?fields=picture.height(500),picture.width(500)"completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        if (error) {
+            [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]] withPriority:facebookLoginViewControllerPriority];
+            return;
+        }
+        
+        // Set name text
+        [userLabel setText:[user name]];
+        
+        // Parse results for profile photo url and download photo
+        NSDictionary *picture = [[result valueForKeyPath:@"picture"] valueForKeyPath:@"data"];
+        NSString *url = [picture valueForKeyPath:@"url"];
+        NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
+        [profilePhoto setImage:[UIImage imageWithData:imageData]];
+    }];
+}
+
+// User is currently logged out
+- (void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView {
+    // Clear the profile photo and reset the label
+    [userLabel setText:@""];
+    [profilePhoto setImage:[[UIImage alloc] init]];
 }
 
 @end

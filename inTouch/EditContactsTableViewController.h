@@ -2,7 +2,7 @@
 
 @interface EditContactsTableViewController : UITableViewController
 
-@property NSMutableArray *contactIDs;
-@property NSMutableDictionary *contacts;
+@property (strong, nonatomic) NSMutableArray *contactIDs;
+@property (strong, nonatomic) NSMutableDictionary *contacts;
 
 @end

@@ -72,6 +72,10 @@
         [emailButton setEnabled:NO];
     }
     
+    // Make contact photo ronud
+    [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
+    [[contactPhoto layer] setMasksToBounds:YES];
+    
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissCall) name:CTCallStateDisconnected object:nil];
 }

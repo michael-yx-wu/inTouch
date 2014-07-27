@@ -32,7 +32,7 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5DP-PC-WdX" userLabel="Contact Photo">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_pf_v2" translatesAutoresizingMaskIntoConstraints="NO" id="5DP-PC-WdX" userLabel="Contact Photo">
                                         <rect key="frame" x="57" y="42" width="164" height="164"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
@@ -40,8 +40,8 @@
                                             <constraint firstAttribute="width" constant="164" id="mH4-Re-laO"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="NVr-Ax-Dzg" userLabel="Last Contacted Label">
-                                        <rect key="frame" x="49" y="207" width="180" height="21"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="NVr-Ax-Dzg" userLabel="Last Contacted Label">
+                                        <rect key="frame" x="49" y="214" width="180" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="Suv-rJ-sUq"/>
@@ -395,15 +395,7 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="stack_icon" translatesAutoresizingMaskIntoConstraints="NO" id="szh-7e-6j9">
-                                        <rect key="frame" x="21" y="29" width="209" height="208"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="209" id="Fz7-h6-5lW"/>
-                                            <constraint firstAttribute="height" constant="208" id="yFI-dI-pJG"/>
-                                        </constraints>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3C0-f2-7OB" userLabel="Contact Photo">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="default_pf_v2" translatesAutoresizingMaskIntoConstraints="NO" id="3C0-f2-7OB" userLabel="Contact Photo">
                                         <rect key="frame" x="48" y="45" width="153" height="153"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
@@ -411,7 +403,7 @@
                                             <constraint firstAttribute="width" constant="153" id="RPm-Zt-Y3J"/>
                                         </constraints>
                                     </imageView>
-                                    <view opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8f1-s6-VK4" userLabel="HasContacted View">
+                                    <view opaque="NO" alpha="0.0" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8f1-s6-VK4" userLabel="HasContacted View">
                                         <rect key="frame" x="80" y="71" width="90" height="90"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
@@ -426,8 +418,8 @@
                                             <constraint firstAttribute="height" constant="90" id="VEY-Jz-cEs"/>
                                         </constraints>
                                     </view>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="H3s-3e-84P" userLabel="Last Contacted Label">
-                                        <rect key="frame" x="39" y="199" width="172" height="21"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="H3s-3e-84P" userLabel="Last Contacted Label">
+                                        <rect key="frame" x="38" y="206" width="172" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="275-aa-iEj"/>
@@ -439,18 +431,12 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="H3s-3e-84P" firstAttribute="top" secondItem="szh-7e-6j9" secondAttribute="bottom" constant="-38" id="CGD-w4-puB"/>
                                     <constraint firstAttribute="height" constant="247" id="GWd-cG-79N"/>
-                                    <constraint firstItem="szh-7e-6j9" firstAttribute="top" secondItem="eCc-mg-fOb" secondAttribute="bottom" constant="2" id="LUY-do-efH"/>
-                                    <constraint firstItem="szh-7e-6j9" firstAttribute="leading" secondItem="H3s-3e-84P" secondAttribute="trailing" constant="-190" id="SN6-2l-c3u"/>
                                     <constraint firstItem="eCc-mg-fOb" firstAttribute="top" secondItem="9hV-Rp-sqO" secondAttribute="top" constant="6" id="Thu-9S-4sF"/>
                                     <constraint firstItem="8f1-s6-VK4" firstAttribute="leading" secondItem="3C0-f2-7OB" secondAttribute="trailing" constant="-121" id="dbb-aG-4Ky"/>
-                                    <constraint firstItem="szh-7e-6j9" firstAttribute="top" secondItem="3C0-f2-7OB" secondAttribute="bottom" constant="-169" id="g3m-oN-gCP"/>
                                     <constraint firstItem="eCc-mg-fOb" firstAttribute="leading" secondItem="9hV-Rp-sqO" secondAttribute="leading" id="keE-0N-OAd"/>
                                     <constraint firstAttribute="width" constant="250" id="mNH-aJ-yr0"/>
-                                    <constraint firstItem="szh-7e-6j9" firstAttribute="leading" secondItem="3C0-f2-7OB" secondAttribute="trailing" constant="-180" id="tSg-9I-oSt"/>
                                     <constraint firstItem="3C0-f2-7OB" firstAttribute="top" secondItem="8f1-s6-VK4" secondAttribute="bottom" constant="-116" id="uzs-tJ-Hdh"/>
-                                    <constraint firstItem="szh-7e-6j9" firstAttribute="leading" secondItem="9hV-Rp-sqO" secondAttribute="leading" constant="21" id="ygC-lz-IDR"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fl0-1a-44Q" userLabel="Contact Methods View">
@@ -1053,6 +1039,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nud-hS-5eU" userLabel="Name Label">
+                                <rect key="frame" x="78" y="139" width="164" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vhC-Fq-gGp" userLabel="Profile Photo">
+                                <rect key="frame" x="78" y="185" width="164" height="164"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="164" id="ZcK-NI-025"/>
+                                    <constraint firstAttribute="height" constant="164" id="m7c-uW-FNa"/>
+                                </constraints>
+                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MrB-LN-jUH" customClass="FBLoginView">
                                 <rect key="frame" x="30" y="453" width="260" height="41"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1075,6 +1075,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="fbLoginView" destination="MrB-LN-jUH" id="7B9-bd-VcZ"/>
+                        <outlet property="profilePhoto" destination="vhC-Fq-gGp" id="Wwe-O3-3Du"/>
+                        <outlet property="userLabel" destination="Nud-hS-5eU" id="Gpr-3q-UDE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EHz-Ra-OBc" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1260,6 +1262,7 @@
         <image name="back_icon_40" width="32" height="32"/>
         <image name="check_icon" width="200" height="200"/>
         <image name="check_icon_fill" width="200" height="200"/>
+        <image name="default_pf_v2" width="512" height="512"/>
         <image name="mail_icon" width="200" height="200"/>
         <image name="mail_icon_ok" width="200" height="200"/>
         <image name="message_icon" width="200" height="200"/>
@@ -1268,7 +1271,6 @@
         <image name="phone_icon_ok" width="200" height="200"/>
         <image name="postpone_icon" width="200" height="200"/>
         <image name="settings_icon" width="200" height="200"/>
-        <image name="stack_icon" width="512" height="512"/>
         <image name="x_icon" width="200" height="200"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

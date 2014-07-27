@@ -56,6 +56,10 @@
     [super viewDidLoad];
 	// Load in background image
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
+    
+    // Make contact photo round
+    [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
+    [[contactPhoto layer] setMasksToBounds:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -97,8 +101,7 @@
             [globalData setLastUpdatedUrgency:today];
         }
     }
-    [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
-    [[contactPhoto layer] setMasksToBounds:YES];
+    
     [self getNextContact];
 }
 
@@ -191,7 +194,7 @@
     photoData = NULL;
     emailHome = emailOther = emailWork = phoneHome = phoneMobile = phoneWork = nil;
     
-    // Get photo (priority: fb, linkedIn, address book)
+    // Get photo (priority: fb, twitter, address book)
     NSData *facebookPhoto = [contact facebookPhoto];
     NSData *linkedinPhoto = [contact linkedinPhoto];
     if (facebookPhoto != NULL) {
@@ -203,6 +206,8 @@
             photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(currentContact);
             [DebugLogger log:@"Got contact photo" withPriority:mainViewControllerPriority];
         } else {
+            UIImage *img = [UIImage imageNamed:@"default_pf_v2.png"];
+            photoData = UIImagePNGRepresentation(img);
             [DebugLogger log:@"No contact photo" withPriority:mainViewControllerPriority];
         }
     }
@@ -292,6 +297,14 @@
 
 - (void)showNoUrgentContacts {
     [[self contactName] setText:@"No Urgent Contacts"];
+    
+    // Clear the contact photo
+    [contactPhoto setImage:[[UIImage alloc] init]];
+    
+    
+    // not done -- also need to hide/unhide other elements
+    
+    // Prevent contact buttons from doing anything
     [self disableInteraction];
 }
 
