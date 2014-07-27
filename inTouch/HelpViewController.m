@@ -29,10 +29,4 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Navigation
-
-// Pop to parent view controller
-- (IBAction)dismiss:(id)sender {
-    [[self navigationController] popViewControllerAnimated:YES];
-}
 @end

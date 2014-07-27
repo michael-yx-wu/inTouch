@@ -38,11 +38,4 @@
     NSLog(@"Logged in as %@(%@)", [user name], [user objectID]);
 }
 
-#pragma mark - Navigation
-
-// Pop to parent view controller
-- (IBAction)dismiss:(id)sender {
-    [[self navigationController] popViewControllerAnimated:YES];
-}
-
 @end

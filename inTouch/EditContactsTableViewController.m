@@ -38,7 +38,6 @@
     contactIDs = [[NSMutableArray alloc] init];
     contacts = [[NSMutableDictionary alloc] init];
     
-    
     // Set up the request to retrieve all contacts
     NSManagedObjectContext *moc = [self managedObjectContext];
     NSManagedObjectModel *model = [self managedObjectModel];
@@ -46,7 +45,7 @@
     NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactAll" substitutionVariables:substitionVariables];
     
     // Sort by descending urgency name
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nameFirst" ascending:false];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nameFirst" ascending:YES];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
     [request setSortDescriptors:sortDescriptors];
     
@@ -172,13 +171,6 @@
     return YES;
 }
 */
-
-#pragma mark - Navigation
-
-// Pop to parent view controller
-- (IBAction)dismiss:(id)sender {
-    [[self navigationController] popViewControllerAnimated:YES];
-}
 
 #pragma mark - Core Data Methods
 
