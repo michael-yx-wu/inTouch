@@ -769,7 +769,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MrB-LN-jUH" customClass="FBLoginView">
-                                <rect key="frame" x="30" y="453" width="260" height="41"/>
+                                <rect key="frame" x="30" y="426" width="260" height="41"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -777,12 +777,35 @@
                                     <constraint firstAttribute="width" constant="260" id="cQr-Mp-iF0"/>
                                 </constraints>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_pf_v2" translatesAutoresizingMaskIntoConstraints="NO" id="05v-Q1-Vm9">
+                                <rect key="frame" x="80" y="149" width="160" height="160"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="160" id="BLK-mI-yig"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sync Profile Photos" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pZP-Cx-0L4">
+                                <rect key="frame" x="80" y="120" width="160" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="iR9-qP-2g1"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="kiZ-og-gUX" firstAttribute="top" secondItem="MrB-LN-jUH" secondAttribute="bottom" constant="74" id="Ihy-Xw-NM6"/>
+                            <constraint firstItem="05v-Q1-Vm9" firstAttribute="trailing" secondItem="pZP-Cx-0L4" secondAttribute="trailing" id="7YC-5y-3sX"/>
+                            <constraint firstItem="05v-Q1-Vm9" firstAttribute="centerX" secondItem="MrB-LN-jUH" secondAttribute="centerX" id="Ejf-hv-gxf"/>
+                            <constraint firstItem="kiZ-og-gUX" firstAttribute="top" secondItem="MrB-LN-jUH" secondAttribute="bottom" constant="101" id="Ihy-Xw-NM6"/>
                             <constraint firstItem="MrB-LN-jUH" firstAttribute="leading" secondItem="b1S-7R-a0Z" secondAttribute="leading" constant="30" id="JBD-5v-aK5"/>
+                            <constraint firstItem="pZP-Cx-0L4" firstAttribute="leading" secondItem="b1S-7R-a0Z" secondAttribute="leading" constant="80" id="jJH-5w-Dm9"/>
+                            <constraint firstItem="pZP-Cx-0L4" firstAttribute="leading" secondItem="05v-Q1-Vm9" secondAttribute="leading" id="kzK-gO-3n3"/>
                             <constraint firstAttribute="trailing" secondItem="MrB-LN-jUH" secondAttribute="trailing" constant="30" id="lOg-6X-lqj"/>
+                            <constraint firstItem="pZP-Cx-0L4" firstAttribute="top" secondItem="v3b-f4-ypR" secondAttribute="bottom" constant="56" id="pyD-CZ-9XL"/>
+                            <constraint firstItem="05v-Q1-Vm9" firstAttribute="top" secondItem="pZP-Cx-0L4" secondAttribute="bottom" constant="8" symbolic="YES" id="wsF-Kb-XDA"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Facebook Login" id="rSO-3g-8ps">
@@ -983,6 +1006,7 @@
         <image name="back_icon_40" width="32" height="32"/>
         <image name="check_icon" width="200" height="200"/>
         <image name="check_icon_fill" width="200" height="200"/>
+        <image name="default_pf_v2" width="512" height="512"/>
         <image name="mail_icon" width="200" height="200"/>
         <image name="mail_icon_ok" width="200" height="200"/>
         <image name="message_icon" width="200" height="200"/>
