@@ -39,6 +39,7 @@
 		4CB6256B1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
 		4CC73FD21906330900B932A7 /* ContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC73FD11906330900B932A7 /* ContactManager.m */; };
 		4CE2435019080BCE00028430 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE2434F19080BCE00028430 /* CoreTelephony.framework */; };
+		4CF7B3041984BB4A00F10889 /* ContactInformationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF7B3031984BB4A00F10889 /* ContactInformationTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +101,8 @@
 		4CC73FD01906330900B932A7 /* ContactManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactManager.h; sourceTree = "<group>"; };
 		4CC73FD11906330900B932A7 /* ContactManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactManager.m; sourceTree = "<group>"; };
 		4CE2434F19080BCE00028430 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		4CF7B3021984BB4A00F10889 /* ContactInformationTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactInformationTableViewController.h; sourceTree = "<group>"; };
+		4CF7B3031984BB4A00F10889 /* ContactInformationTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactInformationTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,6 +239,8 @@
 			children = (
 				4C340D7618C16FF7009A96D8 /* MainViewController.h */,
 				4C340D7718C16FF7009A96D8 /* MainViewController.m */,
+				4CF7B3021984BB4A00F10889 /* ContactInformationTableViewController.h */,
+				4CF7B3031984BB4A00F10889 /* ContactInformationTableViewController.m */,
 				4C47934B18E0EB2900A408AB /* ContactViewController.h */,
 				4C47934C18E0EB2900A408AB /* ContactViewController.m */,
 				4CB107E41934362E00BB853C /* SettingsTableViewController.h */,
@@ -378,6 +383,7 @@
 				4CC73FD21906330900B932A7 /* ContactManager.m in Sources */,
 				4C42688919158D530014744F /* ContactMetadata.m in Sources */,
 				4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */,
+				4CF7B3041984BB4A00F10889 /* ContactInformationTableViewController.m in Sources */,
 				4C7CBA1F18FC810400A9E4FF /* UrgencyCalculator.m in Sources */,
 				4C426885191580B90014744F /* Contact.m in Sources */,
 				4C340D6E18C16FF7009A96D8 /* main.m in Sources */,

@@ -1,20 +1,15 @@
-//
-//  EditContactsTableViewController.m
-//  inTouch
-//
-//  Created by Michael Wu on 7/26/14.
-//  Copyright (c) 2014 inTouch. All rights reserved.
-//
-
 #import "AppDelegate.h"
 #import "Contact.h"
+#import "ContactInformationTableViewController.h"
 #import "ContactMetadata.h"
 #import "EditContactsTableViewController.h"
 
 #import "DebugLogger.h"
 #import "DebugConstants.h"
 
-@interface EditContactsTableViewController ()
+@interface EditContactsTableViewController () {
+    Contact *selectedContact;
+}
 
 @end
 
@@ -71,6 +66,9 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [[self tableView] reloadData];
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -111,14 +109,30 @@
     return cell;
 }
 
-// Toggle interest on row select
+// Show detailed contact information
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    // Get contact/metadata by looking up associated abrecordid
+    NSInteger row  = [indexPath row];
+    NSString *contactID = [NSString stringWithFormat:@"%@", [contactIDs objectAtIndex:row]];
+    selectedContact = [contacts valueForKey:contactID];
+
+    [self performSegueWithIdentifier:@"contactInformation" sender:self];    
+    
+    // Save change to database and refresh table
+    [self save];
+    [tableView reloadData];
+    
+}
+
+// Toggle interest on accessory select -- this will only work after we throw a transparent uiview on top of the
+// tableview to intercept touch events. This is messy, but the only way we can have this custom functionality 
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     // Get contact/metadata by looking up associated abrecordid
     NSInteger row  = [indexPath row];
     NSString *contactID = [NSString stringWithFormat:@"%@", [contactIDs objectAtIndex:row]];
     Contact *contact = [contacts valueForKey:contactID];
     ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
-
+    
     // Toggle contact interest
     if ([[contactMetadata interest] intValue]) {
         NSDate *today = [NSDate date];
@@ -128,10 +142,23 @@
         [contactMetadata setInterest:[NSNumber numberWithBool:YES]];
         [contactMetadata setNoInterestDate:NULL];
     }
-    [self save];
     
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactCell" forIndexPath:indexPath];
+    // Save change to database and refresh table
+    [self save];
     [tableView reloadData];
+}
+
+# pragma mark - Navigation
+
+// Passing selectedContact to ContactViewController before segueing
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:editContactsTableViewControllerPriority];
+    
+    // Pass contact information to the new view controller.
+    if ([[segue identifier] isEqualToString:@"contactInformation"]) {
+        ContactInformationTableViewController *destViewController = [segue destinationViewController];
+        [destViewController setContact:selectedContact];
+    }
 }
 
 /*
