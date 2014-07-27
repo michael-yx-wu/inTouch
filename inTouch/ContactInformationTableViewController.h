@@ -12,6 +12,7 @@
 @property (weak, nonatomic) IBOutlet UITableViewCell *interestCell;
 @property (weak, nonatomic) IBOutlet UILabel *interestLabel;
 @property (weak, nonatomic) IBOutlet UILabel *frequencyLabel;
+@property (weak, nonatomic) IBOutlet UISlider *frequencySlider;
 @property Contact *contact;
 
 @end

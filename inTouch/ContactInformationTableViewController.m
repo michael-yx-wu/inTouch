@@ -7,7 +7,9 @@
 #import "DebugConstants.h"
 #import "DebugLogger.h"
 
-@interface ContactInformationTableViewController ()
+@interface ContactInformationTableViewController () {
+    NSInteger newFrequency;
+}
 
 @end
 
@@ -23,6 +25,7 @@
 @synthesize interestCell;
 @synthesize interestLabel;
 @synthesize frequencyLabel;
+@synthesize frequencySlider;
 @synthesize contact;
 
 - (id)initWithStyle:(UITableViewStyle)style {
@@ -97,6 +100,9 @@
         [interestCell setAccessoryType:UITableViewCellAccessoryNone];
     }
     
+    newFrequency = [[contactMetadata freq] integerValue];
+    [self positionFrequencySlider:newFrequency];
+    
     // Resize labels to fit
     [nameLabel sizeToFit];
     [phoneHomeLabel sizeToFit];
@@ -106,7 +112,9 @@
     [emailOtherLabel sizeToFit];
     [emailWorkLabel sizeToFit];
     [interestLabel sizeToFit];
-    [frequencyLabel sizeToFit];
+    
+    // Force text to fit inside frequency label
+    [frequencyLabel setAdjustsFontSizeToFitWidth:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -114,7 +122,58 @@
     // Dispose of any resources that can be recreated.
 }
 
-//
+- (void)positionFrequencySlider:(NSInteger)freq {
+    // Set appropriate value for slider
+    // Set frequency slider value and text
+    NSString *message;
+    if (freq == 1) {
+        [frequencySlider setValue:[frequencySlider minimumValue]];
+        message = @"Daily";
+    }
+    else if (freq < 30) {
+        [frequencySlider setValue:freq*10];
+        message = [NSString stringWithFormat:@"%ld days", (long)freq];
+    } else if (freq < 365) {
+        [frequencySlider setValue:(freq/30-1)*60+300];
+        message = [NSString stringWithFormat:@"%ld months", (long)freq/30];
+    } else {
+        [frequencySlider setValue:[frequencySlider maximumValue]];
+        message = @"Yearly";
+    }
+    [frequencyLabel setText:message];
+}
+
+// Slider to adjust the frequency of desired contact
+// Does not save until user hits "save"
+- (IBAction)changeFrequency:(id)sender {
+    // Map slider value to remind frequency (in days because of eventual CoreData entry)
+    NSInteger frequency;
+    NSInteger sliderValue = [frequencySlider value];
+    if (sliderValue <= 300) {
+        frequency = sliderValue/10;
+    } else if (sliderValue <= 625) {
+        frequency = ((sliderValue-300)/60+1)*30;
+    } else {
+        frequency = 365;
+    }
+    newFrequency = frequency;
+    
+    // Map frequency to user friendly display text
+    NSString *message;
+    if (frequency == 1) {
+        message = @"Daily";
+    } else if (frequency <= 30) {
+        message = [NSString stringWithFormat:@"Every %ld days", (long)frequency];
+    } else if (frequency < 365) {
+        NSInteger months = frequency/30;
+        message = [NSString stringWithFormat:@"Every %ld months", (long)months];
+    } else {
+        message = @"Yearly";
+    }
+    [frequencyLabel setText:message];
+}
+
+// Handle cell selection
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger row = [indexPath row];
     NSLog(@"%ld", (long)row);
@@ -140,13 +199,16 @@
     // save contact information -- to be implemented later
     
     
-    // save metadata
+    // Update interest
     ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
     if ([interestCell accessoryType] == UITableViewCellAccessoryCheckmark) {
         [metadata setInterest:[NSNumber numberWithBool:YES]];
     } else {
         [metadata setInterest:[NSNumber numberWithBool:NO]];
     }
+    
+    // Update frequency
+    [metadata setFreq:[NSNumber numberWithInteger:newFrequency]];
     
     [self save];
     

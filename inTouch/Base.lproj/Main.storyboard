@@ -974,7 +974,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="CGC-Px-zNc">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="CGC-Px-zNc">
                                         <rect key="frame" x="0.0" y="615" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CGC-Px-zNc" id="7A8-Y4-ske">
@@ -984,9 +984,14 @@
                                                 <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="10" minValue="10" maxValue="650" translatesAutoresizingMaskIntoConstraints="NO" id="rep-eW-srd">
                                                     <rect key="frame" x="126" y="7" width="176" height="31"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <connections>
+                                                        <action selector="changeFrequency:" destination="pND-op-Brf" eventType="touchUpInside" id="0mR-Wz-qzH"/>
+                                                        <action selector="changeFrequency:" destination="pND-op-Brf" eventType="touchUpOutside" id="D9Z-OG-EvJ"/>
+                                                        <action selector="changeFrequency:" destination="pND-op-Brf" eventType="valueChanged" id="E0X-DL-cua"/>
+                                                    </connections>
                                                 </slider>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Frequency" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORH-q8-mBw">
-                                                    <rect key="frame" x="20" y="11" width="81" height="21"/>
+                                                    <rect key="frame" x="20" y="11" width="100" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
@@ -1015,6 +1020,7 @@
                         <outlet property="emailOtherLabel" destination="3Qp-ic-VQg" id="g2k-ca-RNB"/>
                         <outlet property="emailWorkLabel" destination="WHh-eE-MRi" id="pWY-ju-B9T"/>
                         <outlet property="frequencyLabel" destination="ORH-q8-mBw" id="Pgn-wI-qxp"/>
+                        <outlet property="frequencySlider" destination="rep-eW-srd" id="jXO-xR-Inx"/>
                         <outlet property="interestCell" destination="yZQ-Vp-lfU" id="dZg-wi-THG"/>
                         <outlet property="interestLabel" destination="4E4-YR-d9R" id="bRR-GC-maD"/>
                         <outlet property="nameLabel" destination="1go-ne-nLe" id="WJi-vI-qS8"/>
