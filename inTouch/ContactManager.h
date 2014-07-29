@@ -1,3 +1,5 @@
+#import "MainViewController.h"
+
 @interface ContactManager : NSObject
 
 + (void)updateInformation;

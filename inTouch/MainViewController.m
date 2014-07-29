@@ -51,6 +51,10 @@
 @synthesize phoneWork;
 @synthesize lastContactedDate;
 
+// Keep 5 contacts in the queue, ordered by "most urgent" first
+@synthesize contactQueue;
+@synthesize facebookFriends;
+
 // Debug priority
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -60,6 +64,32 @@
     // Make contact photo round
     [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
     [[contactPhoto layer] setMasksToBounds:YES];
+    
+    // Initialize contact queue
+    contactQueue = [[NSMutableArray alloc] init];
+    
+    // Get list of facebook friends
+    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(500),picture.height(500)"                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        if (error) {
+            [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]] withPriority:contactManagerPriority];
+            return;
+        }
+        
+        // Process facebook json object
+        NSArray *taggableFriends = [result objectForKey:@"data"];
+        for (NSDictionary *friend in taggableFriends) {
+            NSString *name = [friend valueForKey:@"name"];
+            NSArray *picture = [friend valueForKey:@"picture"];
+            NSArray *pictureData = [picture valueForKey:@"data"];
+            NSString *url = [NSString stringWithString:[pictureData valueForKey:@"url"]];
+            [facebookFriends setValue:url forKey:name];
+        }
+    }];
+    
+    // Add notification observer to listen for a list of facebook friends
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFacebookFriends:) name:@"facebookFriends" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clearQueue:) name:@"clearQueue" object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -80,8 +110,7 @@
     NSDate *today = [NSDate date];
     bool firstRun = [[globalData firstRun] boolValue];
     if (firstRun) {
-        [DebugLogger log:@"Updating contacts" withPriority:mainViewControllerPriority];
-        
+        [DebugLogger log:@"First run today - syncing contacts" withPriority:mainViewControllerPriority];
         [self requestContactsAccessAndSync];
         [globalData setLastUpdatedInfo:today];
         [globalData setLastUpdatedUrgency:today];
@@ -102,7 +131,9 @@
         }
     }
     
-    [self getNextContact];
+//    [self getNextContact];
+    [self updateQueue];
+    [self getNextContactFromQueue];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -111,6 +142,152 @@
 }
 
 #pragma mark - Contact updating
+
+- (void)mergeChanges:(NSNotification *)notification {
+    NSLog(@"got merge notification");
+    [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
+    
+}
+
+- (void)clearQueue:(NSNotification *)notfication {
+    [contactQueue removeAllObjects];
+}
+
+- (void)updateFacebookFriends:(NSNotification *)notification {
+    NSLog(@"got new friend list");
+    facebookFriends = [[notification userInfo] valueForKey:@"data"];
+    
+    // Try again to download facebook photos for all contacts that don't have facebook photos in the queue
+    for (Contact *contact in contactQueue) {
+        if (![contact facebookPhoto]) {
+            [self downloadFbPhotoForContact:contact];
+        }
+    }
+}
+
+// Asynchronously attempts to download a facebook photo for the contact
+- (void)downloadFbPhotoForContact:(Contact *)contact {
+    NSManagedObjectID *contactID = [contact objectID];
+    MainViewController *thisController = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        @try {
+            NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] init];
+            AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+            [moc setPersistentStoreCoordinator:[appDelegate persistentStoreCoordinator]];
+            Contact *someContact = (Contact *)[moc objectWithID:contactID];
+            
+            [[NSNotificationCenter defaultCenter] addObserver:thisController selector:@selector(mergeChanges:) name:NSManagedObjectContextDidSaveNotification object:moc];
+            
+            NSString *fullName = [NSString stringWithFormat:@"%@ %@", [someContact nameFirst], [someContact nameLast]];
+            NSString *url = [facebookFriends valueForKey:fullName];
+            NSLog(@"%@", url);
+            if (url) {
+                NSLog(@"Downloading photo for contact: %@", fullName);
+                NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
+                [someContact setFacebookPhoto:imageData];
+                NSError *error;
+                if ([moc hasChanges]) {
+                    [moc save:&error];
+                }
+            }
+
+            // If we happened to download the photo for the current contact, reload photo
+            if ([[someContact nameFirst] isEqualToString:firstName] &&
+                [[someContact nameLast] isEqualToString:lastName]) {
+                [thisController updateContactInformationAfterFetch:[someContact objectID]];
+            }
+            
+            [[NSNotificationCenter defaultCenter] removeObserver:thisController name:NSManagedObjectContextDidSaveNotification object:moc];
+        }
+        @catch (NSException *exception) {
+            NSLog(@"error: thread probably terminated mid execution");
+        }
+    });
+}
+
+- (void)updateContactInformationAfterFetch:(NSManagedObjectID *)objectID {
+    Contact *contact = (Contact *)[[self managedObjectContext] objectWithID:objectID];
+    [self updateContactInformation:contact];
+}
+
+// Attempt to get the next contact from the contactQueue
+- (void)getNextContactFromQueue {
+    if ([contactQueue count] != 0) {
+        Contact *contact = (Contact *)[contactQueue objectAtIndex:0];
+        ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
+        
+        [contactQueue removeObjectAtIndex:0];
+        [self updateContactInformation:contact];
+        
+        // Update pertinent UI components
+        NSInteger freq = [[metadata freq] integerValue];
+        [self updateUI:freq];
+        [self enableInteraction];
+    } else {
+        [self showNoUrgentContacts];
+    }
+}
+
+- (void)updateQueue {
+    [DebugLogger log:@"Updating queue"
+        withPriority:mainViewControllerPriority];
+    
+    // Set up the request
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSManagedObjectModel *model = [self managedObjectModel];
+    NSDictionary *substitionVariables = [[NSDictionary alloc] init];
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactMetadataUrgent"
+                                                substitutionVariables:substitionVariables];
+    
+    // Sort by descending urgency
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"urgency" ascending:false];
+    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+    [request setSortDescriptors:sortDescriptors];
+    
+    // Execute request
+    NSError *error;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (results == nil) {
+        [DebugLogger log:[NSString stringWithFormat:@"Error getting next contact: %@, %@", error, [error userInfo]] withPriority:mainViewControllerPriority];
+        abort();
+    }
+    
+    // Look for contacts to add to queue while length < 5 or
+    // until we exhaust the list of urgent contacts
+    NSUInteger index = 0;
+    ContactMetadata *metadata;
+    NSDate *lastPostponedDate;
+    while ([contactQueue count] < 5 && index < [results count]) {
+        metadata = [results objectAtIndex:index++];
+        lastPostponedDate = [metadata lastPostponedDate];
+        Contact *contact = (Contact *)[metadata contact];
+
+        // Never postponed, add to queue if not already in queue
+        // Otherwise, add to queue if not postponed today and not already in queue
+        // Note: If nil, the second statement in the if will not evaluate,
+        // so this is safe
+        if (lastPostponedDate == nil || [self numDaysFrom:lastPostponedDate To:[NSDate date]]) {
+            if (![self queueContainsContact:contact]) {
+                [self downloadFbPhotoForContact:contact];
+                // Add contact to queue
+                [contactQueue addObject:contact];
+            }
+        }
+        
+    }
+}
+
+// Helper method that returns true if our contactQueue has an object containing the contents of the specified contact
+- (BOOL)queueContainsContact:(Contact *)contact {
+    for (Contact *queuedContact in contactQueue) {
+        if ([[[queuedContact objectID] URIRepresentation] isEqual:[[contact objectID] URIRepresentation]]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+#pragma mark - Deprecated contact fetching methods
 
 // Get the most urgent contact in the database
 - (void)getNextContact {
@@ -126,7 +303,7 @@
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
     [request setSortDescriptors:sortDescriptors];
     
-    // Fetch
+    // Execute request
     NSError *error;
     NSArray *results = [moc executeFetchRequest:request error:&error];
     if (results == nil) {
@@ -232,7 +409,7 @@
             [DebugLogger log:[NSString stringWithFormat:@"Work Email: %@", emailWork] withPriority:mainViewControllerPriority];
         }
     }
-
+    
     // Get home, mobile, and work phone numbers
     ABMultiValueRef phoneNumbers = ABRecordCopyValue(currentContact, kABPersonPhoneProperty);
     NSString *phoneLabel;
@@ -252,7 +429,7 @@
             [DebugLogger log:[NSString stringWithFormat:@"Work Phone: %@", phoneWork] withPriority:mainViewControllerPriority];
         }
     }
-
+    
     ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
     lastContactedDate = [contactMetadata lastContactedDate];
 }
@@ -432,12 +609,12 @@
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [deletedView setAlpha:1];
     }completion:^(BOOL finished) {
-       [UIView animateWithDuration:0.3 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-           [deletedView setAlpha:0];
-       } completion:^(BOOL finished) {
-           [self getNextContact];
-           [self enableInteraction];
-       }];
+        [UIView animateWithDuration:0.3 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [deletedView setAlpha:0];
+        } completion:^(BOOL finished) {
+            [self getNextContact];
+            [self enableInteraction];
+        }];
     }];
 }
 
@@ -521,7 +698,7 @@
 
 #pragma mark - Navigation
 
-// Passing information to ContactViewController before segueing 
+// Passing information to ContactViewController before segueing
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:mainViewControllerPriority];
     

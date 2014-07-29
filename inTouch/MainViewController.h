@@ -38,4 +38,7 @@
 @property (strong, nonatomic) NSString *phoneWork;
 @property (strong, nonatomic) NSDate *lastContactedDate;
 
+// Contact queue stuff
+@property (strong, nonatomic) NSMutableArray *contactQueue;
+@property (strong, nonatomic) NSMutableDictionary *facebookFriends;
 @end

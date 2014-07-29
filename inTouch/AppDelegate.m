@@ -57,12 +57,16 @@
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
+    // Need to reset the contact queue
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"clearQueue" object:self];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
+    // Need to reset the contact queue
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"clearQueue" object:self];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

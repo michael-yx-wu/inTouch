@@ -13,7 +13,7 @@
 NSInteger kFacebookRequestBegin = 1;
 NSInteger kFacebookRequestFinish = 0;
 
-+ (void)updateInformation {
++ (void)updateInformation{
     [DebugLogger log:@"Updating Contacts..." withPriority:1];
     // Open contacts
     ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
@@ -36,86 +36,78 @@ NSInteger kFacebookRequestFinish = 0;
             [fbFriends setValue:url forKey:name];
         }
         
-         // Loop through contacts
-         for (int i = 0; i < [allContacts count]; i++) {
-             ABRecordRef currentContact = (__bridge ABRecordRef)[allContacts objectAtIndex:i];
-             
-             // Get name
-             NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonFirstNameProperty);
-             NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonLastNameProperty);
-             if (firstName == nil) firstName = @"";
-             if (lastName == nil) lastName = @"";
-             [DebugLogger log:[NSString stringWithFormat:@"First Name: %@", firstName] withPriority:contactManagerPriority];
-             [DebugLogger log:[NSString stringWithFormat:@"Last Name: %@", lastName] withPriority:contactManagerPriority];
-             
-             // Get contact identifier
-             NSNumber *abrecordid = [NSNumber numberWithInt:ABRecordGetRecordID(currentContact)];
-             
-             NSManagedObject *contact;
-             NSManagedObject *metaData;
-             
-             // Create new contact if does not exist
-             if ([[self fetchRequestWithFirstName:firstName LastName:lastName] count] == 0) {
-                 // Create Contact and ContactMetadata
-                 contact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:[self managedObjectContext]];
-                 metaData = [NSEntityDescription insertNewObjectForEntityForName:@"ContactMetadata" inManagedObjectContext:[self managedObjectContext]];
-                 
-                 // Relate contact and metadata
-                 [contact setValue:metaData forKeyPath:@"metadata"];
-                 [metaData setValue:contact forKey:@"contact"];
-                 
-                 // Instantiate contact/metadata fields
-                 [contact setValue:firstName forKey:@"nameFirst"];
-                 [contact setValue:lastName forKey:@"nameLast"];
-                 [contact setValue:nil forKey:@"category"];
-                 [metaData setValue:[NSNumber numberWithInt:14] forKeyPath:@"freq"];
-                 [metaData setValue:[NSNumber numberWithBool:YES] forKey:@"interest"];
-                 [metaData setValue:nil forKey:@"lastContactedDate"];
-                 [metaData setValue:nil forKey:@"lastPostponedDate"];
-                 [metaData setValue:nil forKey:@"noInterestDate"];
-                 [metaData setValue:nil forKey:@"notes"];
-                 [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesAppeared"];
-                 [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesCalled"];
-                 [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesContacted"];
-                 [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesEmailed"];
-                 [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesMessaged"];
-                 [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesPostponed"];
-                 [metaData setValue:[[NSTimeZone localTimeZone] name] forKeyPath:@"timezone"];
-                 [metaData setValue:[NSNumber numberWithInteger:0] forKeyPath:@"urgency"];
-                 
-                 [DebugLogger log:[NSString stringWithFormat:@"Created Contact: %@ %@", firstName, lastName] withPriority:1];
-             }
-             
-             // Update contact with current information
-             else {
-                 // Fetch contact
-                 NSArray *fetchResults = [self fetchRequestWithFirstName:firstName LastName:lastName];
-                 if ([fetchResults count] > 1) {
-                     [DebugLogger log:@"Did not update - multiple contacts with same name" withPriority:contactManagerPriority];
-                 } else {
-                     contact = [fetchResults objectAtIndex:0];
-                     [DebugLogger log:[NSString stringWithFormat:@"Updating contact: %@ %@", firstName, lastName] withPriority:contactManagerPriority];
-                 }
-             }
-             
-             // Update contact id
-             [contact setValue:abrecordid forKey:@"abrecordid"];
-             
-             // Update contact with facebook photo if available
-             NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-             NSString *url = [fbFriends valueForKey:fullName];
-             NSLog(@"%@", url);
-             if (url) {
-                 NSLog(@"Downloading photo for contact: %@", fullName);
-                 NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
-                 [contact setValue:imageData forKey:@"facebookPhoto"];
-             }
-             
-         }
-         [self save];
-     }];
+        // Post notification for mainViewController
+        NSDictionary *notificationData = @{@"data": fbFriends};
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"facebookFriends" object:self userInfo:notificationData];
+    }];
+     
+    // Loop through contacts
+    for (int i = 0; i < [allContacts count]; i++) {
+        ABRecordRef currentContact = (__bridge ABRecordRef)[allContacts objectAtIndex:i];
+        
+        // Get name
+        NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonFirstNameProperty);
+        NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonLastNameProperty);
+        if (firstName == nil) firstName = @"";
+        if (lastName == nil) lastName = @"";
+        [DebugLogger log:[NSString stringWithFormat:@"First Name: %@", firstName] withPriority:contactManagerPriority];
+        [DebugLogger log:[NSString stringWithFormat:@"Last Name: %@", lastName] withPriority:contactManagerPriority];
+        
+        // Get contact identifier
+        NSNumber *abrecordid = [NSNumber numberWithInt:ABRecordGetRecordID(currentContact)];
+        
+        NSManagedObject *contact;
+        NSManagedObject *metaData;
+        
+        // Create new contact if does not exist
+        if ([[self fetchRequestWithFirstName:firstName LastName:lastName] count] == 0) {
+            // Create Contact and ContactMetadata
+            contact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:[self managedObjectContext]];
+            metaData = [NSEntityDescription insertNewObjectForEntityForName:@"ContactMetadata" inManagedObjectContext:[self managedObjectContext]];
+            
+            // Relate contact and metadata
+            [contact setValue:metaData forKeyPath:@"metadata"];
+            [metaData setValue:contact forKey:@"contact"];
+            
+            // Instantiate contact/metadata fields
+            [contact setValue:firstName forKey:@"nameFirst"];
+            [contact setValue:lastName forKey:@"nameLast"];
+            [contact setValue:nil forKey:@"category"];
+            [metaData setValue:[NSNumber numberWithInt:14] forKeyPath:@"freq"];
+            [metaData setValue:[NSNumber numberWithBool:YES] forKey:@"interest"];
+            [metaData setValue:nil forKey:@"lastContactedDate"];
+            [metaData setValue:nil forKey:@"lastPostponedDate"];
+            [metaData setValue:nil forKey:@"noInterestDate"];
+            [metaData setValue:nil forKey:@"notes"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesAppeared"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesCalled"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesContacted"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesEmailed"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesMessaged"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesPostponed"];
+            [metaData setValue:[[NSTimeZone localTimeZone] name] forKeyPath:@"timezone"];
+            [metaData setValue:[NSNumber numberWithInteger:0] forKeyPath:@"urgency"];
+            
+            [DebugLogger log:[NSString stringWithFormat:@"Created Contact: %@ %@", firstName, lastName] withPriority:1];
+        }
+        
+        // Update contact with current information
+        else {
+            // Fetch contact
+            NSArray *fetchResults = [self fetchRequestWithFirstName:firstName LastName:lastName];
+            if ([fetchResults count] > 1) {
+                [DebugLogger log:@"Did not update - multiple contacts with same name" withPriority:contactManagerPriority];
+            } else {
+                contact = [fetchResults objectAtIndex:0];
+                [DebugLogger log:[NSString stringWithFormat:@"Updating contact: %@ %@", firstName, lastName] withPriority:contactManagerPriority];
+            }
+        }
+        
+        // Update contact id
+        [contact setValue:abrecordid forKey:@"abrecordid"];
+    }
     
-    [DebugLogger log:@"Retrieved facebook photos" withPriority:contactManagerPriority];
+    [self save];
 }
 
 // Returns an array of all entities with matching first and last names
