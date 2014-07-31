@@ -55,7 +55,6 @@
 @synthesize contactQueue;
 @synthesize facebookFriends;
 
-// Debug priority
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Load in background image
@@ -68,10 +67,12 @@
     // Initialize contact queue
     contactQueue = [[NSMutableArray alloc] init];
     
-    // Get list of facebook friends
+    // Attempt to get list of facebook friends
+    // This will fail gracefully if user is not logged in
     [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(500),picture.height(500)"                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         if (error) {
-            [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]] withPriority:contactManagerPriority];
+            [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]]
+                withPriority:contactManagerPriority];
             return;
         }
         
@@ -86,10 +87,23 @@
         }
     }];
     
-    // Add notification observer to listen for a list of facebook friends
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFacebookFriends:) name:@"facebookFriends" object:nil];
+    // Initialize the contact queue with at most 5 urgent contacts
+    [self updateQueue];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clearQueue:) name:@"clearQueue" object:nil];
+    // Pop the first contact off the queue
+    [self getNextContactFromQueue];
+    
+    // Listen for notification to replace facebook friend list with new list
+    // Notification from ContactManager
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateFacebookFriends:)
+                                                 name:@"facebookFriends" object:nil];
+    
+    // Listen for notification to get next contact
+    // Notification from ContactViewController
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(contactWasContacted:)
+                                                 name:@"contacted" object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -106,7 +120,8 @@
     }
     GlobalData *globalData = [results objectAtIndex:0];
     
-    // Update contact info on first run only
+    // Automatically sync contact info on first run only
+    // Subsequent contact info updating will have to be manually done by user
     NSDate *today = [NSDate date];
     bool firstRun = [[globalData firstRun] boolValue];
     if (firstRun) {
@@ -116,8 +131,8 @@
         [globalData setLastUpdatedUrgency:today];
         [globalData setFirstRun:[NSNumber numberWithBool:NO]];
     }
-    // Update everyone's urgency once a day (subsequent urgency changes made by user interaction)
     else {
+        // Update everyone's urgency once a day (subsequent urgency changes made by user interaction)
         NSDate *today = [NSDate date];
         NSDate *lastUrgencyUpdate = [globalData lastUpdatedUrgency];
         NSInteger daysSinceLastUrgencyUpdate = 1;
@@ -130,26 +145,94 @@
             [globalData setLastUpdatedUrgency:today];
         }
     }
-    
-    [self updateQueue];
-    [self getNextContactFromQueue];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Contact updating
 
+// Attempt to get the next contact from the contactQueue
+- (void)getNextContactFromQueue {
+    if ([contactQueue count] != 0) {
+        Contact *contact = (Contact *)[contactQueue objectAtIndex:0];
+        ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
+        
+        [contactQueue removeObjectAtIndex:0];
+        [self updateContactInformation:contact];
+        
+        // Update pertinent UI components
+        NSInteger freq = [[metadata freq] integerValue];
+        [self updateUI:freq];
+        [self enableInteraction];
+    } else {
+        [self showNoUrgentContacts];
+    }
+}
+
+// Fill up our contactQueue with at most 5 contacts sorted by urgency
+- (void)updateQueue {
+    [DebugLogger log:@"Updating queue" withPriority:mainViewControllerPriority];
+    
+    // Set up the request
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSManagedObjectModel *model = [self managedObjectModel];
+    NSDictionary *substitionVariables = [[NSDictionary alloc] init];
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactMetadataUrgent"
+                                                substitutionVariables:substitionVariables];
+    
+    // Sort by descending urgency
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"urgency" ascending:false];
+    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+    [request setSortDescriptors:sortDescriptors];
+    
+    // Execute request
+    NSError *error;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (results == nil) {
+        NSString *errorString = [NSString stringWithFormat:@"Error getting next contact: %@, %@", error,
+                                 [error userInfo]];
+        [DebugLogger log:errorString withPriority:mainViewControllerPriority];
+        abort();
+    }
+    
+    // Look for contacts to add to queue while length < 5 or
+    // until we exhaust the list of urgent contacts
+    NSUInteger index = 0;
+    ContactMetadata *metadata;
+    NSDate *lastPostponedDate;
+    while ([contactQueue count] < 5 && index < [results count]) {
+        metadata = [results objectAtIndex:index++];
+        lastPostponedDate = [metadata lastPostponedDate];
+        Contact *contact = (Contact *)[metadata contact];
+        
+        // Never postponed, add to queue if not already in queue
+        // Otherwise, add to queue if not postponed today and not already in queue
+        // Note: If nil, the second statement in the if will not evaluate,
+        // so this is safe
+        if (lastPostponedDate == nil || [self numDaysFrom:lastPostponedDate To:[NSDate date]]) {
+            if (![self queueContainsContact:contact]) {
+                [self downloadFbPhotoForContact:contact];
+                // Add contact to queue
+                [contactQueue addObject:contact];
+            }
+        }
+        
+    }
+}
+
+// Merge NSManagedObjectContext changes across two different threads
 - (void)mergeChanges:(NSNotification *)notification {
     NSLog(@"got merge notification");
     [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
     
 }
 
-- (void)clearQueue:(NSNotification *)notfication {
-    [contactQueue removeAllObjects];
+// This method is used to selectively dismiss the current contact
+- (void)contactWasContacted:(NSNotification *)notification {
+    [self updateQueue];
+    [self getNextContactFromQueue];
 }
 
 - (void)updateFacebookFriends:(NSNotification *)notification {
@@ -175,7 +258,11 @@
             [moc setPersistentStoreCoordinator:[appDelegate persistentStoreCoordinator]];
             Contact *someContact = (Contact *)[moc objectWithID:contactID];
             
-            [[NSNotificationCenter defaultCenter] addObserver:thisController selector:@selector(mergeChanges:) name:NSManagedObjectContextDidSaveNotification object:moc];
+            // Dynamically add an observer to this controller to listen for context merge requests from other threads
+            [[NSNotificationCenter defaultCenter] addObserver:thisController
+                                                     selector:@selector(mergeChanges:)
+                                                         name:NSManagedObjectContextDidSaveNotification
+                                                       object:moc];
             
             NSString *fullName = [NSString stringWithFormat:@"%@ %@", [someContact nameFirst], [someContact nameLast]];
             NSString *url = [facebookFriends valueForKey:fullName];
@@ -196,7 +283,10 @@
                 [thisController updateContactInformationAfterFetch:[someContact objectID]];
             }
             
-            [[NSNotificationCenter defaultCenter] removeObserver:thisController name:NSManagedObjectContextDidSaveNotification object:moc];
+            // Remove the observer we just added -- we no longer need it
+            [[NSNotificationCenter defaultCenter] removeObserver:thisController
+                                                            name:NSManagedObjectContextDidSaveNotification
+                                                          object:moc];
         }
         @catch (NSException *exception) {
             NSLog(@"error: thread probably terminated mid execution");
@@ -209,73 +299,6 @@
     [self updateContactInformation:contact];
 }
 
-// Attempt to get the next contact from the contactQueue
-- (void)getNextContactFromQueue {
-    if ([contactQueue count] != 0) {
-        Contact *contact = (Contact *)[contactQueue objectAtIndex:0];
-        ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
-        
-        [contactQueue removeObjectAtIndex:0];
-        [self updateContactInformation:contact];
-        
-        // Update pertinent UI components
-        NSInteger freq = [[metadata freq] integerValue];
-        [self updateUI:freq];
-        [self enableInteraction];
-    } else {
-        [self showNoUrgentContacts];
-    }
-}
-
-- (void)updateQueue {
-    [DebugLogger log:@"Updating queue"
-        withPriority:mainViewControllerPriority];
-    
-    // Set up the request
-    NSManagedObjectContext *moc = [self managedObjectContext];
-    NSManagedObjectModel *model = [self managedObjectModel];
-    NSDictionary *substitionVariables = [[NSDictionary alloc] init];
-    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactMetadataUrgent"
-                                                substitutionVariables:substitionVariables];
-    
-    // Sort by descending urgency
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"urgency" ascending:false];
-    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
-    [request setSortDescriptors:sortDescriptors];
-    
-    // Execute request
-    NSError *error;
-    NSArray *results = [moc executeFetchRequest:request error:&error];
-    if (results == nil) {
-        [DebugLogger log:[NSString stringWithFormat:@"Error getting next contact: %@, %@", error, [error userInfo]] withPriority:mainViewControllerPriority];
-        abort();
-    }
-    
-    // Look for contacts to add to queue while length < 5 or
-    // until we exhaust the list of urgent contacts
-    NSUInteger index = 0;
-    ContactMetadata *metadata;
-    NSDate *lastPostponedDate;
-    while ([contactQueue count] < 5 && index < [results count]) {
-        metadata = [results objectAtIndex:index++];
-        lastPostponedDate = [metadata lastPostponedDate];
-        Contact *contact = (Contact *)[metadata contact];
-
-        // Never postponed, add to queue if not already in queue
-        // Otherwise, add to queue if not postponed today and not already in queue
-        // Note: If nil, the second statement in the if will not evaluate,
-        // so this is safe
-        if (lastPostponedDate == nil || [self numDaysFrom:lastPostponedDate To:[NSDate date]]) {
-            if (![self queueContainsContact:contact]) {
-                [self downloadFbPhotoForContact:contact];
-                // Add contact to queue
-                [contactQueue addObject:contact];
-            }
-        }
-        
-    }
-}
-
 // Helper method that returns true if our contactQueue has an object containing the contents of the specified contact
 - (BOOL)queueContainsContact:(Contact *)contact {
     for (Contact *queuedContact in contactQueue) {
@@ -286,7 +309,7 @@
     return NO;
 }
 
-#pragma mark - Deprecated contact fetching methods
+#pragma mark - UI upating
 
 // Update information about the current contact
 - (void)updateContactInformation:(Contact *)contact {
@@ -384,7 +407,7 @@
             [lastContactedLabel setText:@"Last contacted yesterday"];
         }
     } else {
-        [lastContactedLabel setText:@""];
+        [lastContactedLabel setText:@"Never contacted"];
     }
     
     // Set frequency slider value and text
@@ -484,32 +507,8 @@
 
 #pragma mark - Swipe/Tap Gestures
 
-// Show the contact options for current contact
-- (IBAction)swipeLeftOrTap:(id)sender {
-    [DebugLogger log:@"Contact Flip" withPriority:mainViewControllerPriority];
-    if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
-        [self performSegueWithIdentifier:@"contact" sender:sender];
-    }
-}
-
-// Postpone the current contact
-- (IBAction)swipeRightOrTap:(id)sender {
-    [DebugLogger log:@"Postpone" withPriority:2];
-    if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
-        [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName] withPriority:mainViewControllerPriority];
-        Contact *contact = [self fetchContact];
-        ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
-        NSDate *today = [NSDate date];
-        NSNumber *timesPostponed = [NSNumber numberWithInteger:[[metadata numTimesPostponed] integerValue]+1];
-        [metadata setLastPostponedDate:today];
-        [metadata setNumTimesPostponed:timesPostponed];
-        [self save];
-        [self displayPostponedView];
-    }
-}
-
 // Delete the current contact
-- (IBAction)swipeDownOrTap:(id)sender {
+- (IBAction)swipeLeftOrTap:(id)sender {
     [DebugLogger log:@"Delete" withPriority:mainViewControllerPriority];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         Contact *contact = [self fetchContact];
@@ -519,6 +518,31 @@
         [metadata setInterest:[NSNumber numberWithBool:NO]];
         [self save];
         [self displayDeletedView];
+    }
+}
+
+// Show available contact methods for the current contact
+- (IBAction)swipeRightOrTap:(id)sender {
+    [DebugLogger log:@"Contact Flip" withPriority:mainViewControllerPriority];
+    if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
+        [self performSegueWithIdentifier:@"contact" sender:sender];
+    }
+}
+
+// Postpone the current contact
+- (IBAction)swipeUpOrTap:(id)sender {
+    [DebugLogger log:@"Postpone" withPriority:2];
+    if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
+        [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName]
+            withPriority:mainViewControllerPriority];
+        Contact *contact = [self fetchContact];
+        ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
+        NSDate *today = [NSDate date];
+        NSNumber *timesPostponed = [NSNumber numberWithInteger:[[metadata numTimesPostponed] integerValue]+1];
+        [metadata setLastPostponedDate:today];
+        [metadata setNumTimesPostponed:timesPostponed];
+        [self save];
+        [self displayPostponedView];
     }
 }
 

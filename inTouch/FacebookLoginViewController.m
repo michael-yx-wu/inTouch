@@ -76,6 +76,28 @@
         // Set name label text
         [userLabel setText:[result valueForKeyPath:@"name"]];
     }];
+    
+    // Populate fbFriends with facebook friend names and url - this is so ugly right now (indentation is killing me)
+    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(500),picture.height(500)"                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        NSMutableDictionary *fbFriends = [[NSMutableDictionary alloc] init];
+        if (error) {
+            [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]] withPriority:contactManagerPriority];
+        }
+        
+        // Process facebook json object
+        NSArray *taggableFriends = [result objectForKey:@"data"];
+        for (NSDictionary *friend in taggableFriends) {
+            NSString *name = [friend valueForKey:@"name"];
+            NSArray *picture = [friend valueForKey:@"picture"];
+            NSArray *pictureData = [picture valueForKey:@"data"];
+            NSString *url = [NSString stringWithString:[pictureData valueForKey:@"url"]];
+            [fbFriends setValue:url forKey:name];
+        }
+        
+        // Post notification for mainViewController
+        NSDictionary *notificationData = @{@"data": fbFriends};
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"facebookFriends" object:self userInfo:notificationData];
+    }];
 }
 
 // User is currently logged out

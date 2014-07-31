@@ -40,7 +40,8 @@
     [super viewDidLoad];
     
     // Get key contact info
-    [nameLabel setText:[contact nameFirst]];
+    NSString *fullName = [NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]];
+    [nameLabel setText:fullName];
     int abrecordid = [[contact abrecordid] intValue];
     
     // Verify contact ID
@@ -178,8 +179,8 @@
     NSInteger row = [indexPath row];
     NSLog(@"%ld", (long)row);
     
-    //
-    if ([indexPath section] == 3) {
+    // Frequency section
+    if ([indexPath section] == 1) {
         // Interested cell
         if (row == 0) {
             UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -197,7 +198,6 @@
 
 - (IBAction)saveEdits {
     // save contact information -- to be implemented later
-    
     
     // Update interest
     ContactMetadata *metadata = (ContactMetadata *)[contact metadata];

@@ -344,38 +344,42 @@
 
 - (IBAction)dismissCancel:(id)sender {
     // InTouch canceled - no logging
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (IBAction)dismissCancelNoAnimate:(id)sender {
-    // Back button pressed
-    [self dismissViewControllerAnimated:NO completion:nil];
+    [self dismissViewController:NO];
 }
 
 - (IBAction)dismissContacted:(id)sender {
     // Generic contacted method
     [self incrementNumberTimesContacted:contactedGeneric];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewController:YES];
 }
 
 - (void)dismissCall {
     // Record call click before dismissal
     [self incrementNumberTimesContacted:contactedCall];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CTCallStateDisconnected object:nil];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewController:YES];
 }
 
 - (void)dismissMessage {
     // Record message click before dismissal
     [self incrementNumberTimesContacted:contactedMessage];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewController:YES];
 }
 
 - (void)dismissEmail {
     // Record email click before dismissal
     [self incrementNumberTimesContacted:contactedEmail];
+    [self dismissViewController:YES];
+}
+
+- (void)dismissViewController:(BOOL)contacted {
+    if (contacted) {
+        // Alert the MainViewController that the contact was contacted
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"contacted" object:self];
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
 
 #pragma mark - Core Data Accessor Methods
 

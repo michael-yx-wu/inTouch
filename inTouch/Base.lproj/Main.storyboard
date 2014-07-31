@@ -209,11 +209,11 @@
                                 </constraints>
                                 <state key="normal" image="check_icon"/>
                                 <connections>
-                                    <action selector="swipeLeftOrTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="B9Q-Tj-fi4"/>
+                                    <action selector="swipeRightOrTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="0OL-rR-9Lr"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jyx-J0-zs9" userLabel="Delete Button">
-                                <rect key="frame" x="130" y="418" width="60" height="60"/>
+                                <rect key="frame" x="45" y="418" width="60" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="hiC-Es-hsS"/>
@@ -223,11 +223,11 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="swipeDownOrTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Ho0-Hh-iCP"/>
+                                    <action selector="swipeLeftOrTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Set-Fw-ljd"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2rb-EC-qdd" userLabel="Postpone Button">
-                                <rect key="frame" x="45" y="418" width="60" height="60"/>
+                                <rect key="frame" x="130" y="418" width="60" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="11R-Ju-Y9W"/>
@@ -237,7 +237,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="swipeRightOrTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="IoR-Th-8AR"/>
+                                    <action selector="swipeUpOrTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="QTd-kT-cSS"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gIo-Im-uGc" userLabel="Settings Button">
@@ -251,7 +251,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="5WZ-iW-IZ3" kind="modal" id="JRd-hE-HfD"/>
+                                    <segue destination="5WZ-iW-IZ3" kind="modal" modalTransitionStyle="crossDissolve" id="JRd-hE-HfD"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -272,10 +272,10 @@
                             <constraint firstItem="7Fn-GC-OVX" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="110" id="LFu-Wr-R8m"/>
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="285-Im-Tzn" secondAttribute="bottom" priority="250" constant="90" id="LeM-0D-GSL"/>
                             <constraint firstAttribute="trailing" secondItem="285-Im-Tzn" secondAttribute="trailing" constant="45" id="LtS-ri-wyg"/>
-                            <constraint firstItem="2rb-EC-qdd" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="45" id="OPM-B8-qMd"/>
+                            <constraint firstItem="2rb-EC-qdd" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="130" id="OPM-B8-qMd"/>
                             <constraint firstItem="NVr-Ax-Dzg" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="45" id="OgV-OG-9Iw"/>
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="jyx-J0-zs9" secondAttribute="bottom" priority="250" constant="90" id="Ox8-zp-jcl"/>
-                            <constraint firstItem="285-Im-Tzn" firstAttribute="leading" secondItem="jyx-J0-zs9" secondAttribute="trailing" constant="25" id="PLr-a0-eV6"/>
+                            <constraint firstItem="285-Im-Tzn" firstAttribute="leading" secondItem="jyx-J0-zs9" secondAttribute="trailing" constant="110" id="PLr-a0-eV6"/>
                             <constraint firstItem="WY6-K2-IHX" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="45" id="Q07-lB-GCz"/>
                             <constraint firstItem="xM2-iI-mT0" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="45" id="VhG-iJ-6D9"/>
                             <constraint firstAttribute="trailing" secondItem="BlD-Zq-szb" secondAttribute="trailing" constant="45" id="WKz-VN-UAK"/>
@@ -293,13 +293,12 @@
                             <constraint firstItem="285-Im-Tzn" firstAttribute="top" relation="greaterThanOrEqual" secondItem="BlD-Zq-szb" secondAttribute="bottom" constant="4" id="sZL-fW-SMw"/>
                             <constraint firstAttribute="trailing" secondItem="WY6-K2-IHX" secondAttribute="trailing" constant="45" id="sb3-It-y4Q"/>
                             <constraint firstItem="37e-5s-1sy" firstAttribute="top" secondItem="xM2-iI-mT0" secondAttribute="bottom" constant="71" id="uae-xi-GXW"/>
-                            <constraint firstItem="jyx-J0-zs9" firstAttribute="leading" secondItem="2rb-EC-qdd" secondAttribute="trailing" constant="25" id="v9l-n3-SIh"/>
+                            <constraint firstItem="jyx-J0-zs9" firstAttribute="leading" secondItem="2rb-EC-qdd" secondAttribute="trailing" constant="-145" id="v9l-n3-SIh"/>
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="gIo-Im-uGc" secondAttribute="bottom" constant="10" id="xJL-UJ-he8"/>
                             <constraint firstItem="5DP-PC-WdX" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="45" id="y5h-EF-eA9"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="BfR-T4-VaM" appends="YES" id="ih4-Rk-VJp"/>
-                            <outletCollection property="gestureRecognizers" destination="Y7f-Af-2qE" appends="YES" id="5Vh-72-QZT"/>
                             <outletCollection property="gestureRecognizers" destination="96F-cS-sE5" appends="YES" id="v9w-8E-JQM"/>
                             <outletCollection property="gestureRecognizers" destination="R7Z-Kv-qsZ" appends="YES" id="zYv-8I-jqn"/>
                             <outletCollection property="gestureRecognizers" destination="6uu-8a-74z" appends="YES" id="60d-fv-YQ0"/>
@@ -310,7 +309,6 @@
                         <outlet property="contactName" destination="xM2-iI-mT0" id="NJu-9l-J8W"/>
                         <outlet property="contactPhoto" destination="5DP-PC-WdX" id="QkY-ga-4Gb"/>
                         <outlet property="deletedView" destination="7Fn-GC-OVX" id="ryP-M4-fxK"/>
-                        <outlet property="downSwipeRecognizer" destination="Y7f-Af-2qE" id="ct7-DO-nor"/>
                         <outlet property="frequencySlider" destination="BlD-Zq-szb" id="xfz-9n-BYf"/>
                         <outlet property="lastContactedLabel" destination="NVr-Ax-Dzg" id="DXE-TT-8wP"/>
                         <outlet property="leftSwipeRecognizer" destination="BfR-T4-VaM" id="bSU-mQ-pft"/>
@@ -323,26 +321,25 @@
                         <outlet property="updatingUrgencyActivityIndicator" destination="AAs-DA-rfU" id="InQ-ew-RmA"/>
                         <outlet property="updatingUrgencyView" destination="37e-5s-1sy" id="4O3-EW-ixE"/>
                         <outlet property="viewFrequency" destination="WY6-K2-IHX" id="RV5-g3-45w"/>
-                        <segue destination="ost-IX-nwv" kind="modal" identifier="contact" modalTransitionStyle="flipHorizontal" id="gZA-OX-qSe"/>
+                        <segue destination="ost-IX-nwv" kind="modal" identifier="contact" modalTransitionStyle="crossDissolve" id="gZA-OX-qSe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="left" id="BfR-T4-VaM">
+                <swipeGestureRecognizer direction="left" id="BfR-T4-VaM" userLabel="Swipe Left">
                     <connections>
                         <action selector="swipeLeftOrTap:" destination="vXZ-lx-hvc" id="xYv-66-TUW"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="right" id="R7Z-Kv-qsZ">
+                <swipeGestureRecognizer direction="right" id="R7Z-Kv-qsZ" userLabel="Swipe Right">
                     <connections>
                         <action selector="swipeRightOrTap:" destination="vXZ-lx-hvc" id="XEX-Zp-Ajq"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="down" id="Y7f-Af-2qE">
+                <swipeGestureRecognizer direction="up" id="6uu-8a-74z" userLabel="Swipe Up">
                     <connections>
-                        <action selector="swipeDownOrTap:" destination="vXZ-lx-hvc" id="x3O-d1-kzo"/>
+                        <action selector="swipeUpOrTap:" destination="vXZ-lx-hvc" id="9tl-Eb-dGp"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="up" id="6uu-8a-74z"/>
                 <tapGestureRecognizer id="96F-cS-sE5"/>
             </objects>
             <point key="canvasLocation" x="-14" y="-240"/>
@@ -366,7 +363,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="dismissCancelNoAnimate:" destination="ost-IX-nwv" eventType="touchUpInside" id="5Pi-vs-53b"/>
+                                    <action selector="dismissCancel:" destination="ost-IX-nwv" eventType="touchUpInside" id="mgO-qT-Ccn"/>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name Placeholder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCc-mg-fOb">
@@ -492,7 +489,8 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="I8L-OF-d3o" firstAttribute="leading" secondItem="2kq-BB-3yx" secondAttribute="trailing" constant="25" id="0ak-mA-fJw"/>
                                     <constraint firstItem="2kq-BB-3yx" firstAttribute="bottom" secondItem="I8L-OF-d3o" secondAttribute="bottom" id="7PQ-Fo-6S7"/>
@@ -551,9 +549,9 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j6a-IU-vq0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="right" id="Vd1-9b-8cl">
+                <swipeGestureRecognizer direction="left" id="Vd1-9b-8cl" userLabel="Swipe Left">
                     <connections>
-                        <action selector="dismissCancel:" destination="ost-IX-nwv" id="7z3-4A-gHF"/>
+                        <action selector="dismissCancel:" destination="ost-IX-nwv" id="ngJ-Cg-IqT"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
@@ -1025,7 +1023,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name Goes Here" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nud-hS-5eU" userLabel="Name Label">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nud-hS-5eU" userLabel="Name Label">
                                 <rect key="frame" x="45" y="120" width="230" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -1278,6 +1276,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="jnd-TT-3AF"/>
+        <segue reference="JRd-hE-HfD"/>
     </inferredMetricsTieBreakers>
 </document>
