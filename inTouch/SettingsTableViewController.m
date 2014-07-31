@@ -53,8 +53,7 @@
         // Sync contacts
         if ([indexPath row] == 3) {
             [self syncContacts];
-        }
-        
+        }        
     }
     
     // Section 1 - Social Network Login
