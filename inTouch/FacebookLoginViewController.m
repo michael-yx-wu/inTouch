@@ -46,21 +46,18 @@
 
 // Save user info after fetching
 - (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)fbUser {
-    user = fbUser;
     NSLog(@"Logged in as %@ (%@)", [user name], [user objectID]);
+    user = fbUser;
 }
 
 // User is currently logged in
 - (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
     // Fetch my profile photo -- if logged in
-    [FBRequestConnection startWithGraphPath:@"me?fields=picture.height(500),picture.width(500)"completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    [FBRequestConnection startWithGraphPath:@"me?fields=picture.height(500),picture.width(500)" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         if (error) {
             [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]] withPriority:facebookLoginViewControllerPriority];
             return;
         }
-        
-        // Set name text
-        [userLabel setText:[user name]];
         
         // Parse results for profile photo url and download photo
         NSDictionary *picture = [[result valueForKeyPath:@"picture"] valueForKeyPath:@"data"];
@@ -68,12 +65,23 @@
         NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
         [profilePhoto setImage:[UIImage imageWithData:imageData]];
     }];
+    
+    // Fetch name
+    [FBRequestConnection startWithGraphPath:@"me?fileds=name" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        if (error) {
+            [DebugLogger log:[NSString stringWithFormat:@"request error: %@", error] withPriority:facebookLoginViewControllerPriority];
+            return;
+        }
+        NSLog(@"%@", result);
+        // Set name label text
+        [userLabel setText:[result valueForKeyPath:@"name"]];
+    }];
 }
 
 // User is currently logged out
 - (void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView {
     // Clear the profile photo and reset the label
-    [userLabel setText:@""];
+    [userLabel setText:nil];
     [profilePhoto setImage:[[UIImage alloc] init]];
 }
 

@@ -131,7 +131,6 @@
         }
     }
     
-//    [self getNextContact];
     [self updateQueue];
     [self getNextContactFromQueue];
 }
@@ -288,71 +287,6 @@
 }
 
 #pragma mark - Deprecated contact fetching methods
-
-// Get the most urgent contact in the database
-- (void)getNextContact {
-    [DebugLogger log:@"Fetching next contact" withPriority:mainViewControllerPriority];
-    // Set up the request
-    NSManagedObjectContext *moc = [self managedObjectContext];
-    NSManagedObjectModel *model = [self managedObjectModel];
-    NSDictionary *substitionVariables = [[NSDictionary alloc] init];
-    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactMetadataUrgent" substitutionVariables:substitionVariables];
-    
-    // Sort by descending urgency
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"urgency" ascending:false];
-    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
-    [request setSortDescriptors:sortDescriptors];
-    
-    // Execute request
-    NSError *error;
-    NSArray *results = [moc executeFetchRequest:request error:&error];
-    if (results == nil) {
-        [DebugLogger log:[NSString stringWithFormat:@"Error getting next contact: %@, %@", error, [error userInfo]] withPriority:mainViewControllerPriority];
-        abort();
-    }
-    
-    // Get next urgent contact information if exists
-    if ([results count] == 0) {
-        [DebugLogger log:@"No urgent contacts" withPriority:mainViewControllerPriority];
-        [self showNoUrgentContacts];
-    }
-    else {
-        // Find the most urgent contact that was not postponed today
-        NSUInteger index = 0;
-        ContactMetadata *contactMetadata;
-        NSDate *lastPostponedDate;
-        NSInteger daysSinceLastPostponed;
-        do {
-            contactMetadata = [results objectAtIndex:index++];
-            lastPostponedDate = [contactMetadata lastPostponedDate];
-            
-            // Break if never postponed
-            if (lastPostponedDate == nil) {
-                daysSinceLastPostponed = 1; // any nonzero value will do
-                break;
-            } else {
-                daysSinceLastPostponed = [self numDaysFrom:lastPostponedDate To:[NSDate date]];
-            }
-        } while (daysSinceLastPostponed == 0 && index < [results count]);
-        
-        // No urgent contacts that were not postponed today
-        if (index == [results count] && daysSinceLastPostponed == 0) {
-            [DebugLogger log:@"All contacts postponed today" withPriority:mainViewControllerPriority];
-            [self showNoUrgentContacts];
-            return;
-        }
-        
-        // Get contact information for the current contact
-        Contact *contact = (Contact *)[contactMetadata contact];
-        [self updateContactInformation:contact];
-        
-        // Update pertinent UI components
-        NSInteger freq = [[contactMetadata freq] integerValue];
-        [self updateUI:freq];
-        
-        [self enableInteraction];
-    }
-}
 
 // Update information about the current contact
 - (void)updateContactInformation:(Contact *)contact {
@@ -612,7 +546,8 @@
         [UIView animateWithDuration:0.3 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [deletedView setAlpha:0];
         } completion:^(BOOL finished) {
-            [self getNextContact];
+            [self updateQueue];
+            [self getNextContactFromQueue];
             [self enableInteraction];
         }];
     }];
@@ -627,7 +562,8 @@
         [UIView animateWithDuration:0.3 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [postponedView setAlpha:0];
         } completion:^(BOOL finished) {
-            [self getNextContact];
+            [self updateQueue];
+            [self getNextContactFromQueue];
             [self enableInteraction];
         }];
     }];
@@ -650,7 +586,8 @@
             [syncingView setAlpha:0];
         } completion:^(BOOL finished){
             [syncingActivityIndicator stopAnimating];
-            [self getNextContact];
+            [self updateQueue];
+            [self getNextContactFromQueue];
         }];
     }];
 }
@@ -670,7 +607,8 @@
             [updatingUrgencyView setAlpha:0];
         } completion:^(BOOL finished) {
             [updatingUrgencyActivityIndicator stopAnimating];
-            [self getNextContact];
+            [self updateQueue];
+            [self getNextContactFromQueue];
         }];
     }];
 }
