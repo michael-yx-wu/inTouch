@@ -14,7 +14,6 @@
 		4C340D6C18C16FF7009A96D8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D6A18C16FF7009A96D8 /* InfoPlist.strings */; };
 		4C340D6E18C16FF7009A96D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340D6D18C16FF7009A96D8 /* main.m */; };
 		4C340D7218C16FF7009A96D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340D7118C16FF7009A96D8 /* AppDelegate.m */; };
-		4C340D7518C16FF7009A96D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D7318C16FF7009A96D8 /* Main.storyboard */; };
 		4C340D7818C16FF7009A96D8 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340D7718C16FF7009A96D8 /* MainViewController.m */; };
 		4C340D7A18C16FF7009A96D8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D7918C16FF7009A96D8 /* Images.xcassets */; };
 		4C340D8118C16FF8009A96D8 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D8018C16FF8009A96D8 /* XCTest.framework */; };
@@ -32,6 +31,7 @@
 		4C42688D1915B6B80014744F /* GlobalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C42688C1915B6B80014744F /* GlobalData.m */; };
 		4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C47934C18E0EB2900A408AB /* ContactViewController.m */; };
 		4C7CBA1F18FC810400A9E4FF /* UrgencyCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7CBA1E18FC810400A9E4FF /* UrgencyCalculator.m */; };
+		4C7EF962198A1F4800AF59E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D7318C16FF7009A96D8 /* Main.storyboard */; };
 		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
 		4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107E51934362E00BB853C /* SettingsTableViewController.m */; };
 		4CB107EC19344F1300BB853C /* FacebookLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107EB19344F1300BB853C /* FacebookLoginViewController.m */; };
@@ -337,7 +337,7 @@
 			files = (
 				4C340D7A18C16FF7009A96D8 /* Images.xcassets in Resources */,
 				4C340D6C18C16FF7009A96D8 /* InfoPlist.strings in Resources */,
-				4C340D7518C16FF7009A96D8 /* Main.storyboard in Resources */,
+				4C7EF962198A1F4800AF59E0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,22 +372,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */,
-				4C340D7818C16FF7009A96D8 /* MainViewController.m in Sources */,
-				4C42688D1915B6B80014744F /* GlobalData.m in Sources */,
-				4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */,
 				4C340D7218C16FF7009A96D8 /* AppDelegate.m in Sources */,
-				4C340DA618C18DBD009A96D8 /* Model.xcdatamodeld in Sources */,
-				4C357F8C19839ECF00A64C44 /* EditContactsTableViewController.m in Sources */,
-				4CB107EC19344F1300BB853C /* FacebookLoginViewController.m in Sources */,
 				4CC73FD21906330900B932A7 /* ContactManager.m in Sources */,
-				4C42688919158D530014744F /* ContactMetadata.m in Sources */,
-				4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */,
-				4CF7B3041984BB4A00F10889 /* ContactInformationTableViewController.m in Sources */,
-				4C7CBA1F18FC810400A9E4FF /* UrgencyCalculator.m in Sources */,
-				4C426885191580B90014744F /* Contact.m in Sources */,
-				4C340D6E18C16FF7009A96D8 /* main.m in Sources */,
 				4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */,
+				4C7CBA1F18FC810400A9E4FF /* UrgencyCalculator.m in Sources */,
+				4C340D7818C16FF7009A96D8 /* MainViewController.m in Sources */,
+				4CF7B3041984BB4A00F10889 /* ContactInformationTableViewController.m in Sources */,
+				4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */,
+				4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */,
+				4C357F8C19839ECF00A64C44 /* EditContactsTableViewController.m in Sources */,
+				4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */,
+				4CB107EC19344F1300BB853C /* FacebookLoginViewController.m in Sources */,
+				4C426885191580B90014744F /* Contact.m in Sources */,
+				4C42688919158D530014744F /* ContactMetadata.m in Sources */,
+				4C42688D1915B6B80014744F /* GlobalData.m in Sources */,
+				4C340DA618C18DBD009A96D8 /* Model.xcdatamodeld in Sources */,
+				4C340D6E18C16FF7009A96D8 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,7 +470,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "673EE2AC-3A10-438B-A528-E9834A118DCB";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -504,7 +504,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "296E4A49-2D15-4670-8D1E-40818DEE5501";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

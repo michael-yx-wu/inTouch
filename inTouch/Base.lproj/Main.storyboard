@@ -251,7 +251,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="5WZ-iW-IZ3" kind="modal" modalTransitionStyle="crossDissolve" id="JRd-hE-HfD"/>
+                                    <segue destination="5WZ-iW-IZ3" kind="modal" id="JRd-hE-HfD"/>
                                 </connections>
                             </button>
                         </subviews>
