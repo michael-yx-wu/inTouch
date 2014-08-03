@@ -103,8 +103,8 @@
 // User is currently logged out
 - (void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView {
     // Clear the profile photo and reset the label
-    [userLabel setText:nil];
-    [profilePhoto setImage:[[UIImage alloc] init]];
+    [userLabel setText:@"Sync Contact Photos"];
+    [profilePhoto setImage:[UIImage imageNamed:@"default_pf_v2"]];
 }
 
 @end

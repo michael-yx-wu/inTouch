@@ -407,7 +407,7 @@
             [lastContactedLabel setText:@"Last contacted yesterday"];
         }
     } else {
-        [lastContactedLabel setText:@"Never contacted"];
+        [lastContactedLabel setText:@""];
     }
     
     // Set frequency slider value and text
