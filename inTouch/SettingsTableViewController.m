@@ -1,10 +1,12 @@
+#import <MessageUI/MessageUI.h>
+
 #import "ContactManager.h"
 #import "SettingsTableViewController.h"
 
 #import "DebugConstants.h"
 #import "DebugLogger.h"
 
-@interface SettingsTableViewController ()
+@interface SettingsTableViewController () <MFMailComposeViewControllerDelegate>
 @end
 
 @implementation SettingsTableViewController
@@ -53,7 +55,26 @@
         // Sync contacts
         if ([indexPath row] == 3) {
             [self syncContacts];
-        }        
+        }
+        
+        // Feedback
+        if ([indexPath row] == 4) {
+            if ([MFMailComposeViewController canSendMail]) {
+                if ([MFMailComposeViewController canSendMail]) {
+                    MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
+                    [mailViewController setToRecipients:@[@"help@intouch.io"]];
+                    [mailViewController setSubject:@"App Feedback"];
+                    [mailViewController setMailComposeDelegate:self];
+                    [self presentViewController:mailViewController animated:YES completion:nil];
+                }
+            } else {
+                UIAlertView *cannotSendMailAlert = [[UIAlertView alloc] initWithTitle:@"Cannot Send Feedback"
+                                                                              message:@"An email account has not been setup on this device."
+                                                                             delegate:self cancelButtonTitle:@"Okay"
+                                                                    otherButtonTitles:nil];
+                [cannotSendMailAlert show];
+            }
+        }
     }
     
     // Section 1 - Social Network Login
@@ -88,6 +109,33 @@
             [[self view] setUserInteractionEnabled:YES];
         }];
     }];
+}
+
+// Handle email sent/cancelled events
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
+    switch (result) {
+        case MFMailComposeResultCancelled: {
+            [DebugLogger log:@"Feedback cancelled" withPriority:contactViewControllerPriority];
+            [self dismissViewControllerAnimated:YES completion:nil];
+            break;
+        }
+        case MFMailComposeResultFailed: {
+            [DebugLogger log:@"Feedback failed to save/send" withPriority:contactViewControllerPriority];
+            break;
+        }
+        case MFMailComposeResultSaved: {
+            [DebugLogger log:@"Feedback saved" withPriority:contactViewControllerPriority];
+            [self dismissViewControllerAnimated:YES completion:nil];
+            break;
+        }
+        case MFMailComposeResultSent: {
+            [DebugLogger log:@"Feedback sent" withPriority:contactViewControllerPriority];
+            [self dismissViewControllerAnimated:YES completion:nil];
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 @end
