@@ -337,7 +337,7 @@
     [metadata setLastContactedDate:today];
     
     // Update urgency for this contact only
-    [UrgencyCalculator updateUrgencyContact:contact Metadata:metadata];
+    [UrgencyCalculator updateUrgencyContact:contact];
 }
 
 #pragma mark - Dismiss methods

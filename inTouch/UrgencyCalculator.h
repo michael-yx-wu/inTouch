@@ -8,7 +8,7 @@
 @interface UrgencyCalculator : NSObject
 
 + (void)updateAll;
-+ (void)updateUrgencyContact:(NSManagedObject *)contact Metadata:(NSManagedObject *)metadata;
++ (void)updateUrgencyContact:(NSManagedObject *)contact;
 
 @end
 
