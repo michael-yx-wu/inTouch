@@ -25,7 +25,6 @@
 @synthesize viewFrequency;
 
 // User interaction
-@synthesize contactedView;
 @synthesize deletedView;
 @synthesize postponedView;
 @synthesize syncingView;
