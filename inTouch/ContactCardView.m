@@ -1,6 +1,7 @@
 #import "ContactCardView.h"
 
 #define ACTION_MARGIN 120
+#define OVERLAY_STRENGTH 0.75
 
 @implementation ContactCardView {
     CGFloat xFromCenter;
@@ -10,6 +11,8 @@
 @synthesize delegate;
 @synthesize panGestureRecognizer;
 @synthesize originalPoint;
+@synthesize deletedView;
+@synthesize postponedView;
 
 - (void)awakeFromNib {
     panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(beingDragged:)];
@@ -39,6 +42,10 @@
             //            CGFloat rotationAngle = (CGFloat) (ROTATION_ANGLE * rotationStrength);
             //            CGAffineTransform transform = CGAffineTransformMakeRotation(1);
             //            self.transform = transform;
+            
+            // Fade in overlay action
+            [self calculateOverlay];
+            
             break;
         }
             
@@ -60,8 +67,10 @@
     } else if (yFromCenter < -ACTION_MARGIN) {
         [self upAction];
     } else {
-        // Reset the card
+        // Reset the card and overlays
         [UIView animateWithDuration:0.3 animations:^{
+            [deletedView setAlpha:0.0];
+            [postponedView setAlpha:0.0];
             [self setCenter:originalPoint];
             [self setTransform:CGAffineTransformMakeRotation(0)];
         }];
@@ -86,6 +95,27 @@
     } completion:^(BOOL finished) {
         [delegate swipeUpOrTap:nil];
     }];
+}
+
+- (void)calculateOverlay {
+    CGFloat distanceFromCenter;
+    if (fabs(xFromCenter) > fabs(yFromCenter)) {        // Left/right
+        if (xFromCenter < 0) {                          // Left
+            distanceFromCenter = -xFromCenter;
+        } else {                                        // Right
+            distanceFromCenter = xFromCenter;
+        }
+        CGFloat relativeDistanceToMargin = fabs(distanceFromCenter)/ACTION_MARGIN;
+        CGFloat alpha = MIN(relativeDistanceToMargin/OVERLAY_STRENGTH, 1.0);
+        [deletedView setAlpha:alpha];
+        [postponedView setAlpha:0];
+    } else {                                            // Up
+        distanceFromCenter = -yFromCenter;
+        CGFloat relativeDistanceToMargin = fabs(distanceFromCenter)/ACTION_MARGIN;
+        CGFloat alpha = MIN(relativeDistanceToMargin/OVERLAY_STRENGTH, 1.0);
+        [postponedView setAlpha:alpha];
+        [deletedView setAlpha:0];
+    }
 }
 
 

@@ -17,6 +17,8 @@
 // Data to display
 @property (weak, nonatomic) IBOutlet UILabel *contactName;
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhoto;
+@property (weak, nonatomic) IBOutlet UIView *deletedView;
+@property (weak, nonatomic) IBOutlet UIView *postponedView;
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
 @property (nonatomic) CGPoint originalPoint;

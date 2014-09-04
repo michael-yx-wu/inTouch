@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dqC-Xd-Jnt" userLabel="ContactCard">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dqC-Xd-Jnt" userLabel="ContactCard" customClass="ContactCardView">
                                 <rect key="frame" x="20" y="50" width="280" height="267"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -195,6 +195,8 @@
                                 <connections>
                                     <outlet property="contactName" destination="xM2-iI-mT0" id="v8e-l2-DM6"/>
                                     <outlet property="contactPhoto" destination="5DP-PC-WdX" id="ply-XG-ZNu"/>
+                                    <outlet property="deletedView" destination="7Fn-GC-OVX" id="Pmi-cp-VSW"/>
+                                    <outlet property="postponedView" destination="UeY-4j-wj1" id="fSX-Dh-hya"/>
                                 </connections>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="NVr-Ax-Dzg" userLabel="Last Contacted Label">
