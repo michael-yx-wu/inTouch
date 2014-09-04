@@ -1,6 +1,9 @@
-@interface MainViewController : UIViewController
+#import "ContactCard.h"
+
+@interface MainViewController : UIViewController <MainViewDelegate>
 
 // Current contact name and photo
+@property (weak, nonatomic) IBOutlet ContactCard *contactCard;
 @property (weak, nonatomic) IBOutlet UILabel *contactName;
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhoto;
 @property (weak, nonatomic) IBOutlet UILabel *lastContactedLabel;
@@ -13,11 +16,11 @@
 @property (weak, nonatomic) IBOutlet UIView *updatingUrgencyView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *updatingUrgencyActivityIndicator;
 
-
+// Gesture recognizers
 @property (weak, nonatomic) IBOutlet UISwipeGestureRecognizer *leftSwipeRecognizer;
 @property (weak, nonatomic) IBOutlet UISwipeGestureRecognizer *rightSwipeRecognizer;
+@property (weak, nonatomic) IBOutlet UISwipeGestureRecognizer *upSwipeRecognizer;
 @property (weak, nonatomic) IBOutlet UISwipeGestureRecognizer *downSwipeRecognizer;
-@property (strong, nonatomic) IBOutlet UISwipeGestureRecognizer *upSwipeRecognizer;
 @property (weak, nonatomic) IBOutlet UITapGestureRecognizer *tapRecognizer;
 
 // Current contact remind frequency

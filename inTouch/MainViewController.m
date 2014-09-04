@@ -11,12 +11,15 @@
 #import "DebugConstants.h"
 #import "DebugLogger.h"
 
-@interface MainViewController ()
+@interface MainViewController () {
+    CGPoint originalCenter;
+}
 @end
 
 @implementation MainViewController
 
 // Contact display variables
+@synthesize contactCard;
 @synthesize contactName;
 @synthesize contactPhoto;
 @synthesize lastContactedLabel;
@@ -62,6 +65,11 @@
     // Make contact photo round
     [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
     [[contactPhoto layer] setMasksToBounds:YES];
+    
+    // Add contact card as subview
+    [[self view] addSubview:contactCard];
+    [contactCard setDelegate:self];
+    originalCenter = [contactCard center];
     
     // Initialize contact queue
     contactQueue = [[NSMutableArray alloc] init];
@@ -154,6 +162,7 @@
 
 // Attempt to get the next contact from the contactQueue
 - (void)getNextContactFromQueue {
+    [contactCard setCenter:originalCenter];
     if ([contactQueue count] != 0) {
         Contact *contact = (Contact *)[contactQueue objectAtIndex:0];
         ContactMetadata *metadata = (ContactMetadata *)[contact metadata];

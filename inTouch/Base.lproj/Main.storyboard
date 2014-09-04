@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dqC-Xd-Jnt" userLabel="ContactCard">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dqC-Xd-Jnt" userLabel="ContactCard" customClass="ContactCard">
                                 <rect key="frame" x="20" y="50" width="280" height="267"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -175,7 +175,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="7Fn-GC-OVX" firstAttribute="top" secondItem="xM2-iI-mT0" secondAttribute="bottom" constant="53" id="ADu-29-Qh7"/>
                                     <constraint firstItem="UeY-4j-wj1" firstAttribute="leading" secondItem="dqC-Xd-Jnt" secondAttribute="leading" constant="90" id="E1q-eB-DKv"/>
@@ -192,6 +192,10 @@
                                     <constraint firstItem="yVq-1z-7Dn" firstAttribute="leading" secondItem="dqC-Xd-Jnt" secondAttribute="leading" constant="90" id="qWE-03-I6G"/>
                                     <constraint firstItem="xM2-iI-mT0" firstAttribute="top" secondItem="dqC-Xd-Jnt" secondAttribute="top" id="zf5-u7-YFz"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="contactName" destination="xM2-iI-mT0" id="v8e-l2-DM6"/>
+                                    <outlet property="contactPhoto" destination="5DP-PC-WdX" id="ply-XG-ZNu"/>
+                                </connections>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="NVr-Ax-Dzg" userLabel="Last Contacted Label">
                                 <rect key="frame" x="45" y="325" width="230" height="21"/>
@@ -314,26 +318,21 @@
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="gIo-Im-uGc" secondAttribute="bottom" constant="10" id="xJL-UJ-he8"/>
                         </constraints>
                         <connections>
-                            <outletCollection property="gestureRecognizers" destination="BfR-T4-VaM" appends="YES" id="ih4-Rk-VJp"/>
                             <outletCollection property="gestureRecognizers" destination="96F-cS-sE5" appends="YES" id="v9w-8E-JQM"/>
-                            <outletCollection property="gestureRecognizers" destination="R7Z-Kv-qsZ" appends="YES" id="zYv-8I-jqn"/>
-                            <outletCollection property="gestureRecognizers" destination="6uu-8a-74z" appends="YES" id="60d-fv-YQ0"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="3fk-ON-6g7"/>
                     <connections>
+                        <outlet property="contactCard" destination="dqC-Xd-Jnt" id="cNE-H8-o3h"/>
                         <outlet property="contactName" destination="xM2-iI-mT0" id="NJu-9l-J8W"/>
                         <outlet property="contactPhoto" destination="5DP-PC-WdX" id="QkY-ga-4Gb"/>
                         <outlet property="deletedView" destination="7Fn-GC-OVX" id="ryP-M4-fxK"/>
                         <outlet property="frequencySlider" destination="BlD-Zq-szb" id="xfz-9n-BYf"/>
                         <outlet property="lastContactedLabel" destination="NVr-Ax-Dzg" id="DXE-TT-8wP"/>
-                        <outlet property="leftSwipeRecognizer" destination="BfR-T4-VaM" id="bSU-mQ-pft"/>
                         <outlet property="postponedView" destination="UeY-4j-wj1" id="cA3-yR-uAG"/>
-                        <outlet property="rightSwipeRecognizer" destination="R7Z-Kv-qsZ" id="Vug-rl-0jB"/>
                         <outlet property="syncingActivityIndicator" destination="Gls-DL-Grs" id="8C7-5O-jFa"/>
                         <outlet property="syncingView" destination="yVq-1z-7Dn" id="nJE-lo-jgg"/>
                         <outlet property="tapRecognizer" destination="96F-cS-sE5" id="bSW-ZP-TBW"/>
-                        <outlet property="upSwipeRecognizer" destination="6uu-8a-74z" id="ml7-2X-XcY"/>
                         <outlet property="updatingUrgencyActivityIndicator" destination="AAs-DA-rfU" id="InQ-ew-RmA"/>
                         <outlet property="updatingUrgencyView" destination="37e-5s-1sy" id="4O3-EW-ixE"/>
                         <outlet property="viewFrequency" destination="WY6-K2-IHX" id="RV5-g3-45w"/>
@@ -341,21 +340,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="left" id="BfR-T4-VaM" userLabel="Swipe Left">
-                    <connections>
-                        <action selector="swipeLeftOrTap:" destination="vXZ-lx-hvc" id="xYv-66-TUW"/>
-                    </connections>
-                </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="right" id="R7Z-Kv-qsZ" userLabel="Swipe Right">
-                    <connections>
-                        <action selector="swipeRightOrTap:" destination="vXZ-lx-hvc" id="XEX-Zp-Ajq"/>
-                    </connections>
-                </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="up" id="6uu-8a-74z" userLabel="Swipe Up">
-                    <connections>
-                        <action selector="swipeUpOrTap:" destination="vXZ-lx-hvc" id="9tl-Eb-dGp"/>
-                    </connections>
-                </swipeGestureRecognizer>
                 <tapGestureRecognizer id="96F-cS-sE5"/>
             </objects>
             <point key="canvasLocation" x="-14" y="-240"/>
