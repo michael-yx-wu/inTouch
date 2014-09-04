@@ -7,7 +7,7 @@
 
 @end
 
-@interface ContactCard : UIView 
+@interface ContactCardView : UIView
 
 @property (weak) id <MainViewDelegate> delegate;
 

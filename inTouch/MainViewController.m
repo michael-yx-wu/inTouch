@@ -34,11 +34,6 @@
 @synthesize syncingActivityIndicator;
 @synthesize updatingUrgencyView;
 @synthesize updatingUrgencyActivityIndicator;
-@synthesize leftSwipeRecognizer;
-@synthesize rightSwipeRecognizer;
-@synthesize downSwipeRecognizer;
-@synthesize upSwipeRecognizer;
-@synthesize tapRecognizer;
 
 // Contact data variables
 @synthesize firstName;
@@ -649,20 +644,12 @@
 // Enable swiping/taping after animation ends
 - (void)enableInteraction {
     [DebugLogger log:@"Enabling interaction" withPriority:mainViewControllerPriority];
-    [leftSwipeRecognizer setEnabled:YES];
-    [rightSwipeRecognizer setEnabled:YES];
-    [downSwipeRecognizer setEnabled:YES];
-    [upSwipeRecognizer setEnabled:YES];
     [frequencySlider setUserInteractionEnabled:YES];
 }
 
 // Disable swiping/taping during animation
 - (void)disableInteraction {
     [DebugLogger log:@"Disabling interaction" withPriority:mainViewControllerPriority];
-    [leftSwipeRecognizer setEnabled:NO];
-    [rightSwipeRecognizer setEnabled:NO];
-    [downSwipeRecognizer setEnabled:NO];
-    [upSwipeRecognizer setEnabled:NO];
     [frequencySlider setUserInteractionEnabled:NO];
 }
 

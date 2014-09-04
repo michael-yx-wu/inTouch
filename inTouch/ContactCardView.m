@@ -1,8 +1,8 @@
-#import "ContactCard.h"
+#import "ContactCardView.h"
 
 #define ACTION_MARGIN 120
 
-@implementation ContactCard {
+@implementation ContactCardView {
     CGFloat xFromCenter;
     CGFloat yFromCenter;
 }
