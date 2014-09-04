@@ -570,7 +570,7 @@
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [deletedView setAlpha:1];
     }completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.3 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView animateWithDuration:0.2 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [deletedView setAlpha:0];
         } completion:^(BOOL finished) {
             [self updateQueue];
@@ -586,7 +586,7 @@
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [postponedView setAlpha:1];
     } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.3 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView animateWithDuration:0.2 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [postponedView setAlpha:0];
         } completion:^(BOOL finished) {
             [self updateQueue];
