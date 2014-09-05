@@ -23,14 +23,16 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.getintouchnow.${PRODUCT_NAME}</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb863523550341327</string>
+				<string>inTouch</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>15</string>
+	<string>16</string>
 	<key>FacebookAppID</key>
 	<string>863523550341327</string>
 	<key>FacebookDisplayName</key>
