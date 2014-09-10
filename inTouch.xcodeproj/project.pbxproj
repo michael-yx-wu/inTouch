@@ -37,6 +37,7 @@
 		4CB107EC19344F1300BB853C /* FacebookLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107EB19344F1300BB853C /* FacebookLoginViewController.m */; };
 		4CB6256A1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
 		4CB6256B1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
+		4CC61A9D19AA74EC00FF7118 /* ContactCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC61A9C19AA74EC00FF7118 /* ContactCardView.m */; };
 		4CC73FD21906330900B932A7 /* ContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC73FD11906330900B932A7 /* ContactManager.m */; };
 		4CE2435019080BCE00028430 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE2434F19080BCE00028430 /* CoreTelephony.framework */; };
 		4CF7B3041984BB4A00F10889 /* ContactInformationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF7B3031984BB4A00F10889 /* ContactInformationTableViewController.m */; };
@@ -98,6 +99,8 @@
 		4CB107EA19344F1300BB853C /* FacebookLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacebookLoginViewController.h; sourceTree = "<group>"; };
 		4CB107EB19344F1300BB853C /* FacebookLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacebookLoginViewController.m; sourceTree = "<group>"; };
 		4CB625691932CDCC009335E6 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
+		4CC61A9B19AA74EC00FF7118 /* ContactCardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactCardView.h; sourceTree = "<group>"; };
+		4CC61A9C19AA74EC00FF7118 /* ContactCardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactCardView.m; sourceTree = "<group>"; };
 		4CC73FD01906330900B932A7 /* ContactManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactManager.h; sourceTree = "<group>"; };
 		4CC73FD11906330900B932A7 /* ContactManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactManager.m; sourceTree = "<group>"; };
 		4CE2434F19080BCE00028430 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -178,6 +181,8 @@
 				4C340D7118C16FF7009A96D8 /* AppDelegate.m */,
 				4CC73FD01906330900B932A7 /* ContactManager.h */,
 				4CC73FD11906330900B932A7 /* ContactManager.m */,
+				4CC61A9B19AA74EC00FF7118 /* ContactCardView.h */,
+				4CC61A9C19AA74EC00FF7118 /* ContactCardView.m */,
 				4C340D9F18C17ACF009A96D8 /* DebugLogger.h */,
 				4C340DA018C17ACF009A96D8 /* DebugLogger.m */,
 				4C7CBA1D18FC810400A9E4FF /* UrgencyCalculator.h */,
@@ -381,6 +386,7 @@
 				4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */,
 				4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */,
 				4C357F8C19839ECF00A64C44 /* EditContactsTableViewController.m in Sources */,
+				4CC61A9D19AA74EC00FF7118 /* ContactCardView.m in Sources */,
 				4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */,
 				4CB107EC19344F1300BB853C /* FacebookLoginViewController.m in Sources */,
 				4C426885191580B90014744F /* Contact.m in Sources */,
@@ -517,8 +523,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Michael Wu (98YW2GG2M7)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Michael Wu (98YW2GG2M7)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/Michael/Documents/FacebookSDK,
@@ -529,7 +535,7 @@
 				INFOPLIST_FILE = "inTouch/inTouch-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "02E33839-5A47-4484-843F-52DCB3651DF3";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -540,8 +546,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Michael Wu (98YW2GG2M7)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Michael Wu (98YW2GG2M7)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/Michael/Documents/FacebookSDK,
@@ -552,7 +558,7 @@
 				INFOPLIST_FILE = "inTouch/inTouch-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "02E33839-5A47-4484-843F-52DCB3651DF3";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

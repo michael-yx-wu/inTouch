@@ -11,12 +11,15 @@
 #import "DebugConstants.h"
 #import "DebugLogger.h"
 
-@interface MainViewController ()
+@interface MainViewController () {
+    CGPoint originalCenter;
+}
 @end
 
 @implementation MainViewController
 
 // Contact display variables
+@synthesize contactCard;
 @synthesize contactName;
 @synthesize contactPhoto;
 @synthesize lastContactedLabel;
@@ -25,18 +28,12 @@
 @synthesize viewFrequency;
 
 // User interaction
-@synthesize contactedView;
 @synthesize deletedView;
 @synthesize postponedView;
 @synthesize syncingView;
 @synthesize syncingActivityIndicator;
 @synthesize updatingUrgencyView;
 @synthesize updatingUrgencyActivityIndicator;
-@synthesize leftSwipeRecognizer;
-@synthesize rightSwipeRecognizer;
-@synthesize downSwipeRecognizer;
-@synthesize upSwipeRecognizer;
-@synthesize tapRecognizer;
 
 // Contact data variables
 @synthesize firstName;
@@ -63,6 +60,11 @@
     // Make contact photo round
     [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
     [[contactPhoto layer] setMasksToBounds:YES];
+    
+    // Add contact card as subview
+    [[self view] addSubview:contactCard];
+    [contactCard setDelegate:self];
+    originalCenter = [contactCard center];
     
     // Initialize contact queue
     contactQueue = [[NSMutableArray alloc] init];
@@ -155,6 +157,7 @@
 
 // Attempt to get the next contact from the contactQueue
 - (void)getNextContactFromQueue {
+    [contactCard setCenter:originalCenter];
     if ([contactQueue count] != 0) {
         Contact *contact = (Contact *)[contactQueue objectAtIndex:0];
         ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
@@ -567,7 +570,7 @@
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [deletedView setAlpha:1];
     }completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.3 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView animateWithDuration:0.2 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [deletedView setAlpha:0];
         } completion:^(BOOL finished) {
             [self updateQueue];
@@ -583,7 +586,7 @@
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [postponedView setAlpha:1];
     } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.3 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [UIView animateWithDuration:0.2 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [postponedView setAlpha:0];
         } completion:^(BOOL finished) {
             [self updateQueue];
@@ -641,20 +644,12 @@
 // Enable swiping/taping after animation ends
 - (void)enableInteraction {
     [DebugLogger log:@"Enabling interaction" withPriority:mainViewControllerPriority];
-    [leftSwipeRecognizer setEnabled:YES];
-    [rightSwipeRecognizer setEnabled:YES];
-    [downSwipeRecognizer setEnabled:YES];
-    [upSwipeRecognizer setEnabled:YES];
     [frequencySlider setUserInteractionEnabled:YES];
 }
 
 // Disable swiping/taping during animation
 - (void)disableInteraction {
     [DebugLogger log:@"Disabling interaction" withPriority:mainViewControllerPriority];
-    [leftSwipeRecognizer setEnabled:NO];
-    [rightSwipeRecognizer setEnabled:NO];
-    [downSwipeRecognizer setEnabled:NO];
-    [upSwipeRecognizer setEnabled:NO];
     [frequencySlider setUserInteractionEnabled:NO];
 }
 
