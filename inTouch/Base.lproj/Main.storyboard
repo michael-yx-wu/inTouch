@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dqC-Xd-Jnt" userLabel="Contact Card" customClass="ContactCardView">
-                                <rect key="frame" x="20" y="36" width="280" height="267"/>
+                                <rect key="frame" x="20" y="50" width="280" height="267"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name Placeholder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xM2-iI-mT0" userLabel="Contact Name">
@@ -199,18 +199,8 @@
                                     <outlet property="postponedView" destination="UeY-4j-wj1" id="fSX-Dh-hya"/>
                                 </connections>
                             </view>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="NVr-Ax-Dzg" userLabel="Last Contacted Label">
-                                <rect key="frame" x="45" y="311" width="230" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="230" id="N0z-fm-ZfT"/>
-                                    <constraint firstAttribute="height" constant="21" id="hfL-zE-tyg"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="13"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Frequency Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WY6-K2-IHX" userLabel="Chosen Frequency Label">
-                                <rect key="frame" x="45" y="338" width="230" height="20"/>
+                                <rect key="frame" x="45" y="320" width="230" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="230" id="GcQ-pa-7VQ"/>
@@ -221,7 +211,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="10" minValue="10" maxValue="650" translatesAutoresizingMaskIntoConstraints="NO" id="BlD-Zq-szb">
-                                <rect key="frame" x="43" y="366" width="234" height="31"/>
+                                <rect key="frame" x="43" y="348" width="234" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="bms-o5-w0d"/>
@@ -234,7 +224,7 @@
                                 </connections>
                             </slider>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="285-Im-Tzn" userLabel="Check Button">
-                                <rect key="frame" x="130" y="400" width="60" height="60"/>
+                                <rect key="frame" x="130" y="382" width="60" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="Eba-0h-biw"/>
@@ -246,7 +236,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jyx-J0-zs9" userLabel="Delete Button">
-                                <rect key="frame" x="45" y="400" width="60" height="60"/>
+                                <rect key="frame" x="45" y="382" width="60" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="hiC-Es-hsS"/>
@@ -260,7 +250,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2rb-EC-qdd" userLabel="Postpone Button">
-                                <rect key="frame" x="215" y="400" width="60" height="60"/>
+                                <rect key="frame" x="215" y="382" width="60" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="11R-Ju-Y9W"/>
@@ -273,13 +263,14 @@
                                     <action selector="swipeRightOrTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="NA9-5S-ZAo"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gIo-Im-uGc" userLabel="Settings Button">
-                                <rect key="frame" x="287" y="448" width="25" height="25"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="bottom" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gIo-Im-uGc" userLabel="Settings Button">
+                                <rect key="frame" x="282" y="443" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="25" id="2kf-Vk-U7p"/>
-                                    <constraint firstAttribute="height" constant="25" id="svE-6L-MmA"/>
+                                    <constraint firstAttribute="width" constant="30" id="2kf-Vk-U7p"/>
+                                    <constraint firstAttribute="height" constant="30" id="svE-6L-MmA"/>
                                 </constraints>
+                                <inset key="imageEdgeInsets" minX="5" minY="5" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" image="settings_icon">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -291,19 +282,16 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="NVr-Ax-Dzg" firstAttribute="top" secondItem="dqC-Xd-Jnt" secondAttribute="bottom" constant="8" id="0tC-Jy-Z9k"/>
                             <constraint firstItem="2rb-EC-qdd" firstAttribute="top" relation="greaterThanOrEqual" secondItem="BlD-Zq-szb" secondAttribute="bottom" constant="4" id="27y-gZ-MWD"/>
                             <constraint firstItem="jyx-J0-zs9" firstAttribute="top" relation="greaterThanOrEqual" secondItem="BlD-Zq-szb" secondAttribute="bottom" constant="4" id="4IL-2S-amA"/>
                             <constraint firstAttribute="trailing" secondItem="gIo-Im-uGc" secondAttribute="trailing" constant="8" id="A1N-4n-34S"/>
                             <constraint firstItem="BlD-Zq-szb" firstAttribute="top" secondItem="WY6-K2-IHX" secondAttribute="bottom" constant="8" id="Abh-tT-XMH"/>
                             <constraint firstItem="dqC-Xd-Jnt" firstAttribute="top" relation="greaterThanOrEqual" secondItem="VEZ-gE-Y26" secondAttribute="bottom" constant="10" id="EAs-X3-vGy"/>
-                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="2rb-EC-qdd" secondAttribute="bottom" priority="250" constant="76" id="GaI-cx-gTe"/>
-                            <constraint firstItem="WY6-K2-IHX" firstAttribute="top" secondItem="NVr-Ax-Dzg" secondAttribute="bottom" constant="6" id="GnH-XJ-H16"/>
-                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="285-Im-Tzn" secondAttribute="bottom" priority="250" constant="76" id="LeM-0D-GSL"/>
+                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="2rb-EC-qdd" secondAttribute="bottom" priority="250" constant="96" id="GaI-cx-gTe"/>
+                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="285-Im-Tzn" secondAttribute="bottom" priority="250" constant="96" id="LeM-0D-GSL"/>
                             <constraint firstAttribute="trailing" secondItem="285-Im-Tzn" secondAttribute="trailing" constant="130" id="LtS-ri-wyg"/>
                             <constraint firstItem="2rb-EC-qdd" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="215" id="OPM-B8-qMd"/>
-                            <constraint firstItem="NVr-Ax-Dzg" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="45" id="OgV-OG-9Iw"/>
-                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="jyx-J0-zs9" secondAttribute="bottom" priority="250" constant="76" id="Ox8-zp-jcl"/>
+                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="jyx-J0-zs9" secondAttribute="bottom" priority="250" constant="96" id="Ox8-zp-jcl"/>
                             <constraint firstItem="285-Im-Tzn" firstAttribute="leading" secondItem="jyx-J0-zs9" secondAttribute="trailing" constant="25" id="PLr-a0-eV6"/>
                             <constraint firstItem="WY6-K2-IHX" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="45" id="Q07-lB-GCz"/>
                             <constraint firstAttribute="trailing" secondItem="BlD-Zq-szb" secondAttribute="trailing" constant="45" id="WKz-VN-UAK"/>
@@ -311,6 +299,8 @@
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" relation="greaterThanOrEqual" secondItem="285-Im-Tzn" secondAttribute="bottom" constant="20" id="eu1-vb-PCl"/>
                             <constraint firstItem="BlD-Zq-szb" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="45" id="exU-wH-L4o"/>
                             <constraint firstItem="dqC-Xd-Jnt" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="imv-2x-f1k"/>
+                            <constraint firstItem="WY6-K2-IHX" firstAttribute="top" secondItem="5DP-PC-WdX" secondAttribute="bottom" priority="250" constant="17" id="lzV-5r-Oxd"/>
+                            <constraint firstItem="WY6-K2-IHX" firstAttribute="top" relation="greaterThanOrEqual" secondItem="5DP-PC-WdX" secondAttribute="bottom" constant="5" id="qru-4W-FKe"/>
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" relation="greaterThanOrEqual" secondItem="jyx-J0-zs9" secondAttribute="bottom" constant="20" id="sVN-si-RRR"/>
                             <constraint firstItem="285-Im-Tzn" firstAttribute="top" relation="greaterThanOrEqual" secondItem="BlD-Zq-szb" secondAttribute="bottom" constant="4" id="sZL-fW-SMw"/>
                             <constraint firstAttribute="trailing" secondItem="WY6-K2-IHX" secondAttribute="trailing" constant="45" id="sb3-It-y4Q"/>
@@ -329,7 +319,6 @@
                         <outlet property="contactPhoto" destination="5DP-PC-WdX" id="QkY-ga-4Gb"/>
                         <outlet property="deletedView" destination="7Fn-GC-OVX" id="ryP-M4-fxK"/>
                         <outlet property="frequencySlider" destination="BlD-Zq-szb" id="xfz-9n-BYf"/>
-                        <outlet property="lastContactedLabel" destination="NVr-Ax-Dzg" id="DXE-TT-8wP"/>
                         <outlet property="postponedView" destination="UeY-4j-wj1" id="cA3-yR-uAG"/>
                         <outlet property="syncingActivityIndicator" destination="Gls-DL-Grs" id="8C7-5O-jFa"/>
                         <outlet property="syncingView" destination="yVq-1z-7Dn" id="nJE-lo-jgg"/>
@@ -358,7 +347,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FNw-ri-lTc" userLabel="Contact Card">
-                                <rect key="frame" x="20" y="36" width="280" height="267"/>
+                                <rect key="frame" x="20" y="50" width="280" height="267"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name Placeholder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCc-mg-fOb" userLabel="Contact Name">
@@ -418,7 +407,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hay-uN-S6J" userLabel="Back Button">
-                                <rect key="frame" x="100" y="414" width="40" height="40"/>
+                                <rect key="frame" x="100" y="397" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="fNg-dK-r68"/>
@@ -431,18 +420,8 @@
                                     <action selector="dismissCancel:" destination="ost-IX-nwv" eventType="touchUpInside" id="mgO-qT-Ccn"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last contacted 120 days ago" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="H3s-3e-84P" userLabel="Last Contacted Label">
-                                <rect key="frame" x="45" y="311" width="230" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="230" id="274-bh-Ejc"/>
-                                    <constraint firstAttribute="height" constant="21" id="6Rb-4k-gdm"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="13"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cPN-Kg-Njz" userLabel="Check Button">
-                                <rect key="frame" x="180" y="414" width="40" height="40"/>
+                                <rect key="frame" x="180" y="397" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="TDi-tP-H2E"/>
@@ -456,12 +435,13 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fdK-to-CAo" userLabel="Settings Button">
-                                <rect key="frame" x="280" y="440" width="25" height="25"/>
+                                <rect key="frame" x="275" y="435" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="25" id="AXX-Qw-FBr"/>
-                                    <constraint firstAttribute="width" constant="25" id="LJx-Sv-eI8"/>
+                                    <constraint firstAttribute="height" constant="30" id="AXX-Qw-FBr"/>
+                                    <constraint firstAttribute="width" constant="30" id="LJx-Sv-eI8"/>
                                 </constraints>
+                                <inset key="contentEdgeInsets" minX="5" minY="5" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" image="settings_icon">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -470,7 +450,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZzW-lq-ByH" userLabel="Contact Buttons View">
-                                <rect key="frame" x="45" y="336" width="230" height="70"/>
+                                <rect key="frame" x="45" y="322" width="230" height="70"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lqK-Eh-GiI" userLabel="Call Button">
@@ -537,23 +517,23 @@
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="fdK-to-CAo" secondAttribute="trailing" constant="15" id="538-Ch-9hg"/>
-                            <constraint firstItem="ZzW-lq-ByH" firstAttribute="top" relation="greaterThanOrEqual" secondItem="H3s-3e-84P" secondAttribute="bottom" constant="4" id="5nY-xH-huS"/>
-                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="cPN-Kg-Njz" secondAttribute="bottom" constant="26" id="6py-lJ-Beb"/>
-                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="cPN-Kg-Njz" secondAttribute="bottom" priority="249" constant="76" id="6sq-RB-rih"/>
-                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="hay-uN-S6J" secondAttribute="bottom" priority="249" constant="76" id="BzK-4P-jbV"/>
-                            <constraint firstItem="hay-uN-S6J" firstAttribute="top" secondItem="ZzW-lq-ByH" secondAttribute="bottom" constant="8" id="CP4-zo-DrJ"/>
-                            <constraint firstItem="H3s-3e-84P" firstAttribute="top" secondItem="3C0-f2-7OB" secondAttribute="bottom" constant="10" id="G5X-RC-REK"/>
+                            <constraint firstItem="cPN-Kg-Njz" firstAttribute="top" relation="greaterThanOrEqual" secondItem="ZzW-lq-ByH" secondAttribute="bottom" constant="5" id="63i-kk-DCH"/>
+                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="cPN-Kg-Njz" secondAttribute="bottom" constant="28" id="6py-lJ-Beb"/>
+                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="cPN-Kg-Njz" secondAttribute="bottom" priority="251" constant="95" id="6sq-RB-rih"/>
+                            <constraint firstItem="ZzW-lq-ByH" firstAttribute="top" secondItem="3C0-f2-7OB" secondAttribute="bottom" priority="250" constant="28" id="96c-Cl-ubz"/>
+                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="hay-uN-S6J" secondAttribute="bottom" priority="251" constant="95" id="BzK-4P-jbV"/>
+                            <constraint firstItem="hay-uN-S6J" firstAttribute="top" relation="greaterThanOrEqual" secondItem="ZzW-lq-ByH" secondAttribute="bottom" constant="5" id="CP4-zo-DrJ"/>
                             <constraint firstItem="FNw-ri-lTc" firstAttribute="top" relation="greaterThanOrEqual" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" constant="10" id="IAO-ey-aVV"/>
-                            <constraint firstItem="ZzW-lq-ByH" firstAttribute="top" secondItem="H3s-3e-84P" secondAttribute="bottom" priority="250" constant="28" id="Ihb-Dm-53Y"/>
                             <constraint firstAttribute="trailing" secondItem="cPN-Kg-Njz" secondAttribute="trailing" constant="100" id="K9c-wR-vuT"/>
                             <constraint firstItem="bjt-lR-3iW" firstAttribute="top" secondItem="fdK-to-CAo" secondAttribute="bottom" constant="15" id="KiF-Nq-aJG"/>
-                            <constraint firstItem="FNw-ri-lTc" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" priority="251" constant="30" id="RGU-fD-5kf"/>
+                            <constraint firstItem="ZzW-lq-ByH" firstAttribute="top" relation="greaterThanOrEqual" secondItem="3C0-f2-7OB" secondAttribute="bottom" constant="7" id="Q3y-aZ-sPh"/>
+                            <constraint firstItem="FNw-ri-lTc" firstAttribute="top" secondItem="cGg-LT-Q9Q" secondAttribute="bottom" priority="252" constant="30" id="RGU-fD-5kf"/>
+                            <constraint firstItem="hay-uN-S6J" firstAttribute="top" secondItem="ZzW-lq-ByH" secondAttribute="bottom" priority="250" constant="20" id="RXH-al-lUh"/>
                             <constraint firstItem="cPN-Kg-Njz" firstAttribute="leading" secondItem="hay-uN-S6J" secondAttribute="trailing" constant="40" id="Tsx-2G-SsJ"/>
                             <constraint firstItem="ZzW-lq-ByH" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="45" id="Wvu-4x-WvM"/>
-                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="hay-uN-S6J" secondAttribute="bottom" constant="26" id="ZwP-g3-E98"/>
+                            <constraint firstItem="bjt-lR-3iW" firstAttribute="top" relation="greaterThanOrEqual" secondItem="hay-uN-S6J" secondAttribute="bottom" constant="28" id="ZwP-g3-E98"/>
                             <constraint firstItem="hay-uN-S6J" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="100" id="a2h-M9-e8P"/>
-                            <constraint firstItem="H3s-3e-84P" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="45" id="fYI-UJ-Ewn"/>
-                            <constraint firstItem="cPN-Kg-Njz" firstAttribute="top" secondItem="ZzW-lq-ByH" secondAttribute="bottom" constant="8" id="hwa-4x-q0f"/>
+                            <constraint firstItem="cPN-Kg-Njz" firstAttribute="top" secondItem="ZzW-lq-ByH" secondAttribute="bottom" priority="250" constant="20" id="hwa-4x-q0f"/>
                             <constraint firstItem="FNw-ri-lTc" firstAttribute="leading" secondItem="r1N-5g-ugV" secondAttribute="leading" constant="20" id="uLX-ea-JH3"/>
                         </constraints>
                         <connections>
@@ -566,7 +546,6 @@
                         <outlet property="contactName" destination="eCc-mg-fOb" id="ywW-eZ-mNZ"/>
                         <outlet property="contactPhoto" destination="3C0-f2-7OB" id="HXS-vv-pTK"/>
                         <outlet property="emailButton" destination="I8L-OF-d3o" id="lag-go-0ZZ"/>
-                        <outlet property="lastContactedLabel" destination="H3s-3e-84P" id="AqI-GL-zRC"/>
                         <outlet property="messageButton" destination="2kq-BB-3yx" id="9ln-YT-Fr2"/>
                     </connections>
                 </viewController>
@@ -1356,6 +1335,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="JRd-hE-HfD"/>
+        <segue reference="jnd-TT-3AF"/>
     </inferredMetricsTieBreakers>
 </document>

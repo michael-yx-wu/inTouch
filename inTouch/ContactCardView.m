@@ -82,7 +82,7 @@
 // Move card to left and alert MainViewController to show next contact
 - (void)leftAction {
     CGPoint finishPoint = CGPointMake(-200, 2*yFromCenter + originalPoint.y);
-    [UIView animateWithDuration:0.1 animations:^{
+    [UIView animateWithDuration:0.05 animations:^{
         [self setCenter:finishPoint];
     } completion:^(BOOL finished) {
         [delegate swipeLeftOrTap:nil];
@@ -92,7 +92,7 @@
 // Move card to top and alert MainViewController to show next contact
 - (void)rightAction {
     CGPoint finishPoint = CGPointMake(200 + [[UIScreen mainScreen] bounds].size.width, 2*yFromCenter + originalPoint.y);
-    [UIView animateWithDuration:0.1 animations:^{
+    [UIView animateWithDuration:0.05 animations:^{
         [self setCenter:finishPoint];
     } completion:^(BOOL finished) {
         [delegate swipeRightOrTap:nil];

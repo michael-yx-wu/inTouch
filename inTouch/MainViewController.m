@@ -399,18 +399,23 @@
     NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
     [contactName setText:name];
     
-    // Set contact photo
+    // Set contact photo if resolution sufficiently high
     UIImage *img = [[UIImage alloc] initWithData:photoData];
-    [contactPhoto setImage:img];
-    
-    // Set last contacted label
-    if (lastContactedDate) {
-        NSInteger daysSinceLastContacted = [self numDaysFrom:lastContactedDate To:[NSDate date]];
-        if (daysSinceLastContacted == 1) {
-            [lastContactedLabel setText:@"Last contacted yesterday"];
-        }
+    NSInteger resolution = [img size].width * [img scale] + [img size].height * [img scale];
+    if (resolution > 600) {
+        [contactPhoto setImage:img];
     } else {
-        [lastContactedLabel setText:@""];
+        [contactPhoto setImage:[UIImage imageNamed:@"default_pf_v2.png"]];
+    }
+    
+    // Set last contacted label - save this later for notes perhaps
+    if (lastContactedDate) {
+//        NSInteger daysSinceLastContacted = [self numDaysFrom:lastContactedDate To:[NSDate date]];
+//        if (daysSinceLastContacted == 1) {
+//            [lastContactedLabel setText:@"Last contacted yesterday"];
+//        }
+//    } else {
+//        [lastContactedLabel setText:@""];
     }
     
     // Set frequency slider value and text
@@ -443,6 +448,7 @@
     
     // Prevent contact buttons from doing anything
     [self disableInteraction];
+    
 }
 
 // Slider to adjust the frequency of desired contact
