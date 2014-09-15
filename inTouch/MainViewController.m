@@ -524,16 +524,8 @@
     }
 }
 
-// Show available contact methods for the current contact
-- (IBAction)swipeRightOrTap:(id)sender {
-    [DebugLogger log:@"Contact Flip" withPriority:mainViewControllerPriority];
-    if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
-        [self performSegueWithIdentifier:@"contact" sender:sender];
-    }
-}
-
 // Postpone the current contact
-- (IBAction)swipeUpOrTap:(id)sender {
+- (IBAction)swipeRightOrTap:(id)sender {
     [DebugLogger log:@"Postpone" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName]
@@ -548,6 +540,15 @@
         [self displayPostponedView];
     }
 }
+
+// Show available contact methods for the current contact
+- (IBAction)contactTap:(id)sender {
+    [DebugLogger log:@"Contact Flip" withPriority:mainViewControllerPriority];
+    if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
+        [self performSegueWithIdentifier:@"contact" sender:sender];
+    }
+}
+
 
 #pragma mark - Custom Animation
 

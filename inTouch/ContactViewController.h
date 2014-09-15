@@ -3,6 +3,7 @@
 @interface ContactViewController : UIViewController
 
 // Display
+@property (weak, nonatomic) IBOutlet UIView *contactCard;
 @property (nonatomic, weak) IBOutlet UILabel *contactName;
 @property (nonatomic, weak) IBOutlet UIImageView *contactPhoto;
 @property (nonatomic, weak) IBOutlet UILabel *lastContactedLabel;

@@ -3,7 +3,8 @@
 @protocol MainViewDelegate <NSObject>
 
 - (IBAction)swipeLeftOrTap:(id)sender;
-- (IBAction)swipeUpOrTap:(id)sender;
+- (IBAction)swipeRightOrTap:(id)sender;
+- (IBAction)contactTap:(id)sender;
 
 @end
 
@@ -21,7 +22,10 @@
 @property (weak, nonatomic) IBOutlet UIView *postponedView;
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
+@property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 @property (nonatomic) CGPoint originalPoint;
 
+- (void) leftAction;
+- (void) rightAction;
 
 @end

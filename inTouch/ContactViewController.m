@@ -17,6 +17,7 @@
 
 @implementation ContactViewController
 
+@synthesize contactCard;
 @synthesize contactName;
 @synthesize contactPhoto;
 @synthesize lastContactedLabel;
@@ -43,9 +44,6 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
     return self;
 }
 
@@ -62,7 +60,7 @@
     [lastContactedLabel setText:lastContactedString];
     
     // Disable buttons if needed
-    if ((!phoneHome && !phoneMobile && !phoneWork) || ![MFMessageComposeViewController canSendText]) {
+    if (!phoneHome && !phoneMobile && !phoneWork) {
         [callButton setEnabled:NO];
     }
     if (!phoneMobile || ![MFMessageComposeViewController canSendText]) {
@@ -77,6 +75,11 @@
     [[contactPhoto layer] setMasksToBounds:YES];
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]
+                                                    initWithTarget:self action:@selector(wasTapped:)];
+    [contactCard addGestureRecognizer:tapGestureRecognizer];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissCall) name:CTCallStateDisconnected object:nil];
 }
 
@@ -341,6 +344,12 @@
 }
 
 #pragma mark - Dismiss methods
+
+- (void)wasTapped:(UITapGestureRecognizer *)tapGestureRecognizer {
+    // Tapped picture, dismiss controller
+    NSLog(@"tapped");
+    [self dismissCancel:nil];
+}
 
 - (IBAction)dismissCancel:(id)sender {
     // InTouch canceled - no logging
