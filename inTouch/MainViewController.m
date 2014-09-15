@@ -407,6 +407,10 @@
     } else {
         [contactPhoto setImage:[UIImage imageNamed:@"default_pf_v2.png"]];
     }
+
+    [UIView animateWithDuration:0.3 animations:^{
+        [contactCard setAlpha:1];
+    }];
     
     // Set last contacted label - save this later for notes perhaps
     if (lastContactedDate) {
@@ -514,10 +518,20 @@
     return daysDiff;
 }
 
-#pragma mark - Swipe/Tap Gestures
+#pragma mark - Tap Gestures
+
+- (IBAction)deleteContactButton:(id)sender {
+    // Send contact left and delete it
+    [contactCard leftAction];
+}
+
+- (IBAction)postponeContactButton:(id)sender {
+    // Send contact right and postpone it
+    [contactCard rightAction];
+}
 
 // Delete the current contact
-- (IBAction)swipeLeftOrTap:(id)sender {
+- (void)deleteContact {
     [DebugLogger log:@"Delete" withPriority:mainViewControllerPriority];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         Contact *contact = [self fetchContact];
@@ -531,7 +545,7 @@
 }
 
 // Postpone the current contact
-- (IBAction)swipeRightOrTap:(id)sender {
+- (void)postponeContact {
     [DebugLogger log:@"Postpone" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName]
@@ -554,7 +568,6 @@
         [self performSegueWithIdentifier:@"contact" sender:sender];
     }
 }
-
 
 #pragma mark - Custom Animation
 

@@ -2,8 +2,8 @@
 
 @protocol MainViewDelegate <NSObject>
 
-- (IBAction)swipeLeftOrTap:(id)sender;
-- (IBAction)swipeRightOrTap:(id)sender;
+- (IBAction)deleteContact;
+- (IBAction)postponeContact;
 - (IBAction)contactTap:(id)sender;
 
 @end

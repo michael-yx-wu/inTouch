@@ -246,7 +246,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="swipeLeftOrTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Set-Fw-ljd"/>
+                                    <action selector="deleteContactButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="wJS-dU-sM0"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2rb-EC-qdd" userLabel="Postpone Button">
@@ -260,7 +260,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="swipeRightOrTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="NA9-5S-ZAo"/>
+                                    <action selector="postponeContactButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Ya7-Qd-pUj"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="bottom" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gIo-Im-uGc" userLabel="Settings Button">
@@ -413,6 +413,7 @@
                                     <constraint firstAttribute="height" constant="40" id="fNg-dK-r68"/>
                                     <constraint firstAttribute="width" constant="40" id="ql2-GA-XSC"/>
                                 </constraints>
+                                <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="2" maxY="2"/>
                                 <state key="normal" image="back_icon_40">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -427,6 +428,7 @@
                                     <constraint firstAttribute="width" constant="40" id="TDi-tP-H2E"/>
                                     <constraint firstAttribute="height" constant="40" id="cXX-nV-e0b"/>
                                 </constraints>
+                                <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="2" maxY="2"/>
                                 <state key="normal" image="check_icon_fill">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -1315,7 +1317,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="back_icon_40" width="32" height="32"/>
+        <image name="back_icon_40" width="200" height="200"/>
         <image name="check_icon" width="200" height="200"/>
         <image name="check_icon_fill" width="200" height="200"/>
         <image name="default_pf_v2" width="512" height="512"/>
@@ -1335,6 +1337,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="jnd-TT-3AF"/>
+        <segue reference="JRd-hE-HfD"/>
     </inferredMetricsTieBreakers>
 </document>

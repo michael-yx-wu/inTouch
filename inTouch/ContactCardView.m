@@ -26,7 +26,8 @@
     tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(wasTapped:)];
     [self addGestureRecognizer:panGestureRecognizer];
     [self addGestureRecognizer:tapGestureRecognizer];
-
+    [self resetTranslation];
+    originalPoint = [self center];
 }
 
 // Called when contact card is being dragged. Called many times per second
@@ -36,8 +37,6 @@
     yFromCenter = [gestureRecognizer translationInView:self].y;
     switch ([panGestureRecognizer state]) {
         case UIGestureRecognizerStateBegan: {
-            originalPoint = [self center];
-            NSLog(@"Center %f %f", originalPoint.x, originalPoint.y);
             break;
         }
             
@@ -81,22 +80,32 @@
 
 // Move card to left and alert MainViewController to show next contact
 - (void)leftAction {
-    CGPoint finishPoint = CGPointMake(-200, 2*yFromCenter + originalPoint.y);
-    [UIView animateWithDuration:0.05 animations:^{
-        [self setCenter:finishPoint];
-    } completion:^(BOOL finished) {
-        [delegate swipeLeftOrTap:nil];
-    }];
+    CGPoint finishPoint = CGPointMake(-75, 2*yFromCenter + originalPoint.y);
+    [UIView animateWithDuration:0.07
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         [self setCenter:finishPoint];
+                     } completion:^(BOOL finished) {
+                         [self setAlpha:0];
+                         [delegate deleteContact];
+                         [self resetTranslation];
+                     }];
 }
 
 // Move card to top and alert MainViewController to show next contact
 - (void)rightAction {
-    CGPoint finishPoint = CGPointMake(200 + [[UIScreen mainScreen] bounds].size.width, 2*yFromCenter + originalPoint.y);
-    [UIView animateWithDuration:0.05 animations:^{
-        [self setCenter:finishPoint];
-    } completion:^(BOOL finished) {
-        [delegate swipeRightOrTap:nil];
-    }];
+    CGPoint finishPoint = CGPointMake(75 + [[UIScreen mainScreen] bounds].size.width, 2*yFromCenter + originalPoint.y);
+    [UIView animateWithDuration:0.07
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         [self setCenter:finishPoint];
+                     } completion:^(BOOL finished) {
+                         [self setAlpha:0];
+                         [delegate postponeContact];
+                         [self resetTranslation];
+                     }];
 }
 
 - (void)calculateOverlay {
@@ -114,6 +123,11 @@
 // Was tapped, tell MainViewController to show the contact buttons
 - (void)wasTapped:(UITapGestureRecognizer *)tapGestureRecognizer {
     [delegate contactTap:nil];
+}
+
+- (void)resetTranslation {
+    xFromCenter = 0;
+    yFromCenter = 0;
 }
 
 @end
