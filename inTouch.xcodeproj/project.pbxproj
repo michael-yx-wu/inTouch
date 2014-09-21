@@ -16,7 +16,6 @@
 		4C340D7218C16FF7009A96D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340D7118C16FF7009A96D8 /* AppDelegate.m */; };
 		4C340D7818C16FF7009A96D8 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340D7718C16FF7009A96D8 /* MainViewController.m */; };
 		4C340D7A18C16FF7009A96D8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D7918C16FF7009A96D8 /* Images.xcassets */; };
-		4C340D8118C16FF8009A96D8 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D8018C16FF8009A96D8 /* XCTest.framework */; };
 		4C340D8218C16FF8009A96D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6118C16FF7009A96D8 /* Foundation.framework */; };
 		4C340D8318C16FF8009A96D8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6518C16FF7009A96D8 /* UIKit.framework */; };
 		4C340D8B18C16FF8009A96D8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D8918C16FF8009A96D8 /* InfoPlist.strings */; };
@@ -70,7 +69,6 @@
 		4C340D7718C16FF7009A96D8 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		4C340D7918C16FF7009A96D8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4C340D7F18C16FF8009A96D8 /* inTouchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = inTouchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C340D8018C16FF8009A96D8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		4C340D8818C16FF8009A96D8 /* inTouchTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "inTouchTests-Info.plist"; sourceTree = "<group>"; };
 		4C340D8A18C16FF8009A96D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4C340D8C18C16FF8009A96D8 /* inTouchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = inTouchTests.m; sourceTree = "<group>"; };
@@ -128,7 +126,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C340D8118C16FF8009A96D8 /* XCTest.framework in Frameworks */,
 				4CB6256B1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */,
 				4C340D8318C16FF8009A96D8 /* UIKit.framework in Frameworks */,
 				4C340D8218C16FF8009A96D8 /* Foundation.framework in Frameworks */,
@@ -168,7 +165,6 @@
 				4C340D6118C16FF7009A96D8 /* Foundation.framework */,
 				4C367C9618FC96AE00FABB5C /* MessageUI.framework */,
 				4C340D6518C16FF7009A96D8 /* UIKit.framework */,
-				4C340D8018C16FF8009A96D8 /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -305,7 +301,7 @@
 		4C340D5618C16FF7009A96D8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = inTouch;
 				TargetAttributes = {
 					4C340D5D18C16FF7009A96D8 = {
@@ -477,8 +473,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				ONLY_ACTIVE_ARCH = NO;
-				PROVISIONING_PROFILE = "02E33839-5A47-4484-843F-52DCB3651DF3";
+				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "5971341a-412e-47ae-8ea3-e6ee03432ffb";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -512,7 +508,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = NO;
-				PROVISIONING_PROFILE = "02E33839-5A47-4484-843F-52DCB3651DF3";
+				PROVISIONING_PROFILE = "5971341a-412e-47ae-8ea3-e6ee03432ffb";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -524,7 +520,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Michael Wu (98YW2GG2M7)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/Michael/Documents/FacebookSDK,
@@ -535,7 +531,7 @@
 				INFOPLIST_FILE = "inTouch/inTouch-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "5582704a-5471-4da8-9968-a29aee8a1a50";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -547,7 +543,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Michael Wu (98YW2GG2M7)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/Michael/Documents/FacebookSDK,
@@ -558,7 +554,7 @@
 				INFOPLIST_FILE = "inTouch/inTouch-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "5582704a-5471-4da8-9968-a29aee8a1a50";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

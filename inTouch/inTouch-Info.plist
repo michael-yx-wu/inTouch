@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.getintouchnow.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>com.intactu.$(PRODUCT_NAME:rfc1034identifier)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -24,7 +24,7 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>com.getintouchnow.${PRODUCT_NAME}</string>
+			<string>com.intactu.${PRODUCT_NAME}</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>inTouch</string>
@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20</string>
+	<string>24</string>
 	<key>FacebookAppID</key>
 	<string>863523550341327</string>
 	<key>FacebookDisplayName</key>
