@@ -14,6 +14,7 @@
     CGFloat yFromCenter;
 }
 
+@synthesize contactName;
 @synthesize delegate;
 @synthesize panGestureRecognizer;
 @synthesize tapGestureRecognizer;
@@ -37,6 +38,8 @@
     yFromCenter = [gestureRecognizer translationInView:self].y;
     switch ([panGestureRecognizer state]) {
         case UIGestureRecognizerStateBegan: {
+            // fade name
+            [self hideNameLabel];
             break;
         }
             
@@ -61,6 +64,20 @@
     }
 }
 
+// Fade name when you start dragging
+- (void)hideNameLabel {
+    [UIView animateWithDuration:0.15 animations:^{
+        [contactName setAlpha:0.0];
+    }];
+}
+
+// Show name when dragging stops
+- (void)showNameLabel {
+    [UIView animateWithDuration:0.2 animations:^{
+        [contactName setAlpha:1.0];
+    }];
+}
+
 // Called when done swiping
 - (void)doneDragging {
     if (xFromCenter < -ACTION_MARGIN) {
@@ -74,38 +91,48 @@
             [postponedView setAlpha:0.0];
             [self setCenter:originalPoint];
             [self setTransform:CGAffineTransformMakeRotation(0)];
+        } completion:^(BOOL finished) {
+            [self showNameLabel];
         }];
     }
 }
 
 // Move card to left and alert MainViewController to show next contact
 - (void)leftAction {
-    CGPoint finishPoint = CGPointMake(-75, 2*yFromCenter + originalPoint.y);
-    [UIView animateWithDuration:0.07
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         [self setCenter:finishPoint];
-                     } completion:^(BOOL finished) {
-                         [self setAlpha:0];
-                         [delegate deleteContact];
-                         [self resetTranslation];
-                     }];
+    [UIView animateWithDuration:0.15 animations:^{
+        [contactName setAlpha:0.0];
+    } completion:^(BOOL finished) {
+        CGPoint finishPoint = CGPointMake(-75, 2*yFromCenter + originalPoint.y);
+        [UIView animateWithDuration:0.07
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+                             [self setCenter:finishPoint];
+                         } completion:^(BOOL finished) {
+                             [self setAlpha:0];
+                             [delegate deleteContact];
+                             [self resetTranslation];
+                         }];
+    }];
 }
 
 // Move card to top and alert MainViewController to show next contact
 - (void)rightAction {
-    CGPoint finishPoint = CGPointMake(75 + [[UIScreen mainScreen] bounds].size.width, 2*yFromCenter + originalPoint.y);
-    [UIView animateWithDuration:0.07
-                          delay:0.0
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         [self setCenter:finishPoint];
-                     } completion:^(BOOL finished) {
-                         [self setAlpha:0];
-                         [delegate postponeContact];
-                         [self resetTranslation];
-                     }];
+    [UIView animateWithDuration:0.15 animations:^{
+        [contactName setAlpha:0.0];
+    } completion:^(BOOL finished) {
+        CGPoint finishPoint = CGPointMake(75 + [[UIScreen mainScreen] bounds].size.width, 2*yFromCenter + originalPoint.y);
+        [UIView animateWithDuration:0.07
+                              delay:0.0
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+                             [self setCenter:finishPoint];
+                         } completion:^(BOOL finished) {
+                             [self setAlpha:0];
+                             [delegate postponeContact];
+                             [self resetTranslation];
+                         }];
+    }];
 }
 
 - (void)calculateOverlay {
