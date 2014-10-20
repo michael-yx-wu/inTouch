@@ -25,7 +25,9 @@
 @synthesize contactCard;
 @synthesize contactName;
 @synthesize contactPhotoFront;
-
+@synthesize contactPhotoMiddle;
+@synthesize contactPhotoBottom;
+@synthesize contactPhotoAnchor;
 
 @synthesize frequencySlider;
 @synthesize viewFrequency;
@@ -60,15 +62,25 @@
 	// Load in background image
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
     
-    // Make contact photo round
+    // Make contact photos round
     [[contactPhotoFront layer] setCornerRadius:contactPhotoFront.frame.size.width/2];
+    [[contactPhotoMiddle layer] setCornerRadius:contactPhotoMiddle.frame.size.width/2];
+    [[contactPhotoBottom layer] setCornerRadius:contactPhotoBottom.frame.size.width/2];
+    [[contactPhotoAnchor layer] setCornerRadius:contactPhotoAnchor.frame.size.width/2];
     [[contactPhotoFront layer] setMasksToBounds:YES];
-    NSLog(@"%f", [[contactPhotoFront layer] cornerRadius]);
+    [[contactPhotoMiddle layer] setMasksToBounds:YES];
+    [[contactPhotoBottom layer] setMasksToBounds:YES];
+    [[contactPhotoAnchor layer] setMasksToBounds:YES];
+    
+    // Save the original centers of the profile photos
+    originalCenterFront = [contactPhotoFront center];
+    originalCenterMiddle = [contactPhotoMiddle center];
+    originalCenterBottom = [contactPhotoBottom center];
+    originalCenterAnchor = [contactPhotoAnchor center];
     
     // Add contact card as subview
     [[self view] addSubview:contactCard];
     [contactCard setDelegate:self];
-    originalCenterFront = [contactCard center];
     
     // Initialize contact queue
     contactQueue = [[NSMutableArray alloc] init];
@@ -161,7 +173,11 @@
 
 // Attempt to get the next contact from the contactQueue
 - (void)getNextContactFromQueue {
+    [UIView animateWithDuration:0.15 animations:^{
+        [contactName setAlpha:1.0];
+    }];
     [contactCard setCenter:originalCenterFront];
+    
     if ([contactQueue count] != 0) {
         Contact *contact = (Contact *)[contactQueue objectAtIndex:0];
         ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
@@ -412,19 +428,8 @@
         [contactPhotoFront setImage:[UIImage imageNamed:@"default_profile_fade0.png"]];
     }
 
-    [UIView animateWithDuration:0.3 animations:^{
-        [contactCard setAlpha:1];
-    }];
+    // Update UI for contact queue -- this needs to be refactored
     
-    // Set last contacted label - save this later for notes perhaps
-    if (lastContactedDate) {
-//        NSInteger daysSinceLastContacted = [self numDaysFrom:lastContactedDate To:[NSDate date]];
-//        if (daysSinceLastContacted == 1) {
-//            [lastContactedLabel setText:@"Last contacted yesterday"];
-//        }
-//    } else {
-//        [lastContactedLabel setText:@""];
-    }
     
     // Set frequency slider value and text
     NSString *message;
@@ -517,7 +522,10 @@
 // Return the number of days from fromDate to toDate
 - (NSInteger)numDaysFrom:(NSDate *)fromDate To:(NSDate *)toDate {
     NSDateComponents *diff;
-    diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit fromDate:fromDate toDate:toDate options:0];
+    diff = [[NSCalendar currentCalendar] components:NSCalendarUnitDay
+                                           fromDate:fromDate
+                                             toDate:toDate
+                                            options:0];
     NSInteger daysDiff = [diff day];
     return daysDiff;
 }

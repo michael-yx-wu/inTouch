@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <deployment version="1808" defaultVersion="1808" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -18,6 +17,52 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lwa-de-2St" userLabel="Contact Queue">
+                                <rect key="frame" x="20" y="40" width="280" height="277"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_profile_fade3" translatesAutoresizingMaskIntoConstraints="NO" id="xvG-Uz-HjS" userLabel="Contact Photo Anchor">
+                                        <rect key="frame" x="25" y="45" width="230" height="230"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="230" id="85f-DY-dbZ"/>
+                                            <constraint firstAttribute="width" constant="230" id="CmL-Iv-Yyj"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="230" id="Kdm-df-gVn"/>
+                                            <constraint firstAttribute="height" constant="230" id="mRn-iu-FvZ"/>
+                                        </constraints>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_profile_fade2" translatesAutoresizingMaskIntoConstraints="NO" id="dvT-RX-nVs" userLabel="Contact Photo Bottom">
+                                        <rect key="frame" x="25" y="45" width="230" height="230"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="230" id="62Y-mk-8yh"/>
+                                            <constraint firstAttribute="height" constant="230" id="QLM-EG-7ZW"/>
+                                            <constraint firstAttribute="width" constant="230" id="WyN-2a-e1p"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="230" id="sEV-ug-UAM"/>
+                                        </constraints>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_profile_fade1" translatesAutoresizingMaskIntoConstraints="NO" id="pdc-uE-fOz" userLabel="Contact Photo Middle">
+                                        <rect key="frame" x="25" y="40" width="230" height="230"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="230" id="VSQ-oR-o60"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="230" id="e91-Sn-OnG"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="230" id="pO1-4N-N10"/>
+                                            <constraint firstAttribute="width" constant="230" id="qlS-TT-zri"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" none="YES" notEnabled="YES"/>
+                                </accessibility>
+                                <constraints>
+                                    <constraint firstAttribute="centerX" secondItem="xvG-Uz-HjS" secondAttribute="centerX" id="2A6-gc-erp"/>
+                                    <constraint firstItem="pdc-uE-fOz" firstAttribute="top" secondItem="lwa-de-2St" secondAttribute="top" constant="40" id="Ekt-bk-yCi"/>
+                                    <constraint firstAttribute="width" constant="280" id="EvS-Vi-I52"/>
+                                    <constraint firstItem="dvT-RX-nVs" firstAttribute="top" secondItem="lwa-de-2St" secondAttribute="top" constant="45" id="Fdy-M9-XT5"/>
+                                    <constraint firstAttribute="centerX" secondItem="pdc-uE-fOz" secondAttribute="centerX" id="MYW-Bc-ItF"/>
+                                    <constraint firstItem="xvG-Uz-HjS" firstAttribute="top" secondItem="lwa-de-2St" secondAttribute="top" constant="45" id="SmO-9X-zcJ"/>
+                                    <constraint firstAttribute="centerX" secondItem="dvT-RX-nVs" secondAttribute="centerX" id="WA9-IL-LoT"/>
+                                    <constraint firstAttribute="height" constant="277" id="hir-7f-VbX"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dqC-Xd-Jnt" userLabel="Contact Card" customClass="ContactCardView">
                                 <rect key="frame" x="20" y="40" width="280" height="277"/>
                                 <subviews>
@@ -38,27 +83,6 @@
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="230" id="E0j-Zj-Jee"/>
                                             <constraint firstAttribute="height" constant="230" id="FfE-lP-7UO"/>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="230" id="kZv-tR-H1E"/>
-                                        </constraints>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_pf_v2" translatesAutoresizingMaskIntoConstraints="NO" id="pdc-uE-fOz" userLabel="Contact Photo Middle">
-                                        <rect key="frame" x="25" y="40" width="230" height="230"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="230" id="VSQ-oR-o60"/>
-                                            <constraint firstAttribute="width" constant="230" id="qlS-TT-zri"/>
-                                        </constraints>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_pf_v2" translatesAutoresizingMaskIntoConstraints="NO" id="dvT-RX-nVs" userLabel="Contact Photo Bottom">
-                                        <rect key="frame" x="25" y="45" width="230" height="230"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="230" id="QLM-EG-7ZW"/>
-                                            <constraint firstAttribute="width" constant="230" id="WyN-2a-e1p"/>
-                                        </constraints>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_pf_v2" translatesAutoresizingMaskIntoConstraints="NO" id="xvG-Uz-HjS" userLabel="Contact Photo Anchor">
-                                        <rect key="frame" x="25" y="45" width="230" height="230"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="230" id="CmL-Iv-Yyj"/>
-                                            <constraint firstAttribute="height" constant="230" id="mRn-iu-FvZ"/>
                                         </constraints>
                                     </imageView>
                                     <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="37e-5s-1sy" userLabel="Busy Urgency View">
@@ -191,19 +215,13 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="xvG-Uz-HjS" firstAttribute="top" secondItem="xM2-iI-mT0" secondAttribute="bottom" constant="14" id="16c-px-G31"/>
                                     <constraint firstItem="5DP-PC-WdX" firstAttribute="centerX" secondItem="yVq-1z-7Dn" secondAttribute="centerX" id="2Z7-Cb-zuc"/>
-                                    <constraint firstAttribute="centerX" secondItem="pdc-uE-fOz" secondAttribute="centerX" id="5RG-zk-Shs"/>
-                                    <constraint firstItem="dvT-RX-nVs" firstAttribute="top" secondItem="xM2-iI-mT0" secondAttribute="bottom" constant="14" id="5j6-BD-1bE"/>
-                                    <constraint firstAttribute="centerX" secondItem="dvT-RX-nVs" secondAttribute="centerX" id="7OD-5B-nPV"/>
                                     <constraint firstItem="5DP-PC-WdX" firstAttribute="centerY" secondItem="7Fn-GC-OVX" secondAttribute="centerY" id="EsN-m1-Dzv"/>
                                     <constraint firstItem="5DP-PC-WdX" firstAttribute="centerY" secondItem="yVq-1z-7Dn" secondAttribute="centerY" id="GPA-ld-8Z8"/>
                                     <constraint firstAttribute="width" constant="280" id="HUO-5R-aX3"/>
-                                    <constraint firstItem="pdc-uE-fOz" firstAttribute="top" secondItem="xM2-iI-mT0" secondAttribute="bottom" constant="9" id="LXa-et-GR7"/>
                                     <constraint firstAttribute="centerX" secondItem="xM2-iI-mT0" secondAttribute="centerX" id="Mlg-Go-qS2"/>
                                     <constraint firstAttribute="height" constant="277" id="Teb-zN-h9D"/>
                                     <constraint firstItem="5DP-PC-WdX" firstAttribute="centerX" secondItem="UeY-4j-wj1" secondAttribute="centerX" id="cIx-yf-Qhu"/>
-                                    <constraint firstAttribute="centerX" secondItem="xvG-Uz-HjS" secondAttribute="centerX" id="cdE-cf-Xfg"/>
                                     <constraint firstItem="5DP-PC-WdX" firstAttribute="centerY" secondItem="UeY-4j-wj1" secondAttribute="centerY" id="d2R-Pn-ksM"/>
                                     <constraint firstItem="5DP-PC-WdX" firstAttribute="centerY" secondItem="37e-5s-1sy" secondAttribute="centerY" id="dJC-rZ-BC2"/>
                                     <constraint firstAttribute="centerX" secondItem="5DP-PC-WdX" secondAttribute="centerX" id="gpK-8Q-s35"/>
@@ -214,7 +232,10 @@
                                 </constraints>
                                 <connections>
                                     <outlet property="contactName" destination="xM2-iI-mT0" id="v8e-l2-DM6"/>
-                                    <outlet property="contactPhoto" destination="5DP-PC-WdX" id="q2T-xp-duG"/>
+                                    <outlet property="contactPhotoAnchor" destination="xvG-Uz-HjS" id="dYN-Xs-Q6w"/>
+                                    <outlet property="contactPhotoBottom" destination="dvT-RX-nVs" id="S0X-Qk-cgz"/>
+                                    <outlet property="contactPhotoFront" destination="5DP-PC-WdX" id="Yns-vD-BNj"/>
+                                    <outlet property="contactPhotoMiddle" destination="pdc-uE-fOz" id="ScV-9S-eu4"/>
                                     <outlet property="deletedView" destination="7Fn-GC-OVX" id="Pmi-cp-VSW"/>
                                     <outlet property="postponedView" destination="UeY-4j-wj1" id="fSX-Dh-hya"/>
                                 </connections>
@@ -297,8 +318,8 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="bottom" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gIo-Im-uGc" userLabel="Settings Button">
                                 <rect key="frame" x="282" y="530" width="30" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="30" id="RqM-9s-kxB"/>
-                                    <constraint firstAttribute="height" constant="30" id="nF6-MT-KyL"/>
+                                    <constraint firstAttribute="height" constant="30" id="MrX-PH-nP0"/>
+                                    <constraint firstAttribute="width" constant="30" id="SeQ-kf-8Xh"/>
                                 </constraints>
                                 <inset key="imageEdgeInsets" minX="5" minY="5" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" image="settings_icon">
@@ -315,16 +336,19 @@
                             <constraint firstAttribute="centerX" secondItem="BlD-Zq-szb" secondAttribute="centerX" id="11y-aq-6VB"/>
                             <constraint firstItem="fX2-aQ-ian" firstAttribute="trailing" secondItem="BlD-Zq-szb" secondAttribute="trailing" id="3Re-pr-q97"/>
                             <constraint firstItem="BlD-Zq-szb" firstAttribute="top" secondItem="WY6-K2-IHX" secondAttribute="bottom" constant="8" id="Abh-tT-XMH"/>
-                            <constraint firstItem="WY6-K2-IHX" firstAttribute="top" secondItem="xvG-Uz-HjS" secondAttribute="bottom" constant="7" id="ClB-ap-NBt"/>
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="fX2-aQ-ian" secondAttribute="bottom" priority="250" constant="86" id="DWK-qT-tC8"/>
+                            <constraint firstItem="lwa-de-2St" firstAttribute="trailing" secondItem="dqC-Xd-Jnt" secondAttribute="trailing" id="DkN-Wg-MdE"/>
                             <constraint firstItem="dqC-Xd-Jnt" firstAttribute="top" relation="greaterThanOrEqual" secondItem="VEZ-gE-Y26" secondAttribute="bottom" constant="10" id="EAs-X3-vGy"/>
+                            <constraint firstItem="lwa-de-2St" firstAttribute="bottom" secondItem="dqC-Xd-Jnt" secondAttribute="bottom" id="Gzq-2f-qZg"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="gIo-Im-uGc" secondAttribute="trailing" constant="-8" id="Mgv-rU-omh"/>
+                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="gIo-Im-uGc" secondAttribute="bottom" constant="8" id="Tt0-Mb-NVo"/>
                             <constraint firstAttribute="centerX" secondItem="WY6-K2-IHX" secondAttribute="centerX" id="Umu-ef-NCn"/>
-                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="gIo-Im-uGc" secondAttribute="bottom" constant="8" id="WCz-UL-sIl"/>
+                            <constraint firstItem="lwa-de-2St" firstAttribute="top" secondItem="dqC-Xd-Jnt" secondAttribute="top" id="Zvi-hN-Oaf"/>
                             <constraint firstItem="fX2-aQ-ian" firstAttribute="leading" secondItem="BlD-Zq-szb" secondAttribute="leading" id="bp5-MG-3fA"/>
+                            <constraint firstItem="lwa-de-2St" firstAttribute="leading" secondItem="dqC-Xd-Jnt" secondAttribute="leading" id="hAn-zR-eqb"/>
                             <constraint firstItem="fX2-aQ-ian" firstAttribute="top" relation="greaterThanOrEqual" secondItem="BlD-Zq-szb" secondAttribute="bottom" constant="5" id="hXY-2R-FMC"/>
                             <constraint firstAttribute="centerX" secondItem="dqC-Xd-Jnt" secondAttribute="centerX" id="mPU-j3-nau"/>
                             <constraint firstItem="fX2-aQ-ian" firstAttribute="top" secondItem="BlD-Zq-szb" secondAttribute="bottom" priority="250" constant="23" id="n72-Zy-XjS"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="gIo-Im-uGc" secondAttribute="trailing" constant="-8" id="nJV-d4-Yrg"/>
                             <constraint firstItem="dqC-Xd-Jnt" firstAttribute="top" secondItem="VEZ-gE-Y26" secondAttribute="bottom" priority="750" constant="20" id="vC3-7m-eVi"/>
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" relation="greaterThanOrEqual" secondItem="fX2-aQ-ian" secondAttribute="bottom" constant="25" id="w33-5m-MG4"/>
                         </constraints>
@@ -1311,6 +1335,9 @@
         <image name="check_icon_fill" width="200" height="200"/>
         <image name="default_pf_v2" width="512" height="512"/>
         <image name="default_profile_fade0" width="512" height="512"/>
+        <image name="default_profile_fade1" width="512" height="512"/>
+        <image name="default_profile_fade2" width="512" height="512"/>
+        <image name="default_profile_fade3" width="512" height="512"/>
         <image name="mail_icon" width="200" height="200"/>
         <image name="mail_icon_ok" width="200" height="200"/>
         <image name="message_icon" width="200" height="200"/>

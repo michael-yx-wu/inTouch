@@ -61,7 +61,7 @@
     NSDate *currentDate = [NSDate date];
     double daysSinceLastContact;
     if (lastContactedDate) {
-        NSDateComponents *diff = [[NSCalendar currentCalendar] components:NSDayCalendarUnit
+        NSDateComponents *diff = [[NSCalendar currentCalendar] components:NSCalendarUnitDay
                                                                 fromDate:lastContactedDate
                                                                   toDate:currentDate
                                                                  options:0];
