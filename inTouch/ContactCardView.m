@@ -10,8 +10,15 @@
 
 
 @implementation ContactCardView {
+    CGFloat scaledDistanceToAction;
     CGFloat xFromCenter;
     CGFloat yFromCenter;
+    CGPoint originalFrontCenter;
+    CGPoint originalMiddleCenter;
+    CGPoint originalBottomCenter;
+    CGSize originalFrontDimensions;
+    CGSize originalMiddleDimensions;
+    CGSize originalBottomDimensions;
 }
 
 @synthesize contactName;
@@ -22,6 +29,11 @@
 @synthesize deletedView;
 @synthesize postponedView;
 
+@synthesize contactPhotoFront;
+@synthesize contactPhotoMiddle;
+@synthesize contactPhotoBottom;
+@synthesize contactPhotoAnchor;
+
 - (void)awakeFromNib {
     panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(beingDragged:)];
     tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(wasTapped:)];
@@ -29,6 +41,14 @@
     [self addGestureRecognizer:tapGestureRecognizer];
     [self resetTranslation];
     originalPoint = [self center];
+    
+    // Save dimensions and centers for contact queue
+    originalFrontCenter = [contactPhotoFront center];
+    originalMiddleCenter = [contactPhotoMiddle center];
+    originalBottomCenter = [contactPhotoBottom center];
+    originalFrontDimensions = [contactPhotoFront frame].size;
+    originalMiddleDimensions = [contactPhotoMiddle frame].size;
+    originalBottomDimensions = [contactPhotoBottom frame].size;
 }
 
 // Called when contact card is being dragged. Called many times per second
@@ -50,6 +70,27 @@
             // Fade in overlay action
             [self calculateOverlay];
             
+            // Move the other middle/bottom cards according to scaledDistanceToAction
+            scaledDistanceToAction = ABS(xFromCenter / ACTION_MARGIN);
+            scaledDistanceToAction = MIN(1, scaledDistanceToAction);
+            [self animateQueueMember:contactPhotoMiddle
+                       originalFrame:CGRectMake(originalMiddleCenter.x,
+                                                originalMiddleCenter.y,
+                                                originalMiddleDimensions.width,
+                                                originalMiddleDimensions.height)
+                           reference:CGRectMake(originalFrontCenter.x,
+                                                originalFrontCenter.y,
+                                                originalFrontDimensions.width,
+                                                originalFrontDimensions.height)];
+            [self animateQueueMember:contactPhotoBottom
+                       originalFrame:CGRectMake(originalBottomCenter.x,
+                                                originalBottomCenter.y,
+                                                originalBottomDimensions.width,
+                                                originalBottomDimensions.height)
+                           reference:CGRectMake(originalMiddleCenter.x,
+                                                originalMiddleCenter.y,
+                                                originalMiddleDimensions.width,
+                                                originalMiddleDimensions.height)];
             break;
         }
             
@@ -62,6 +103,29 @@
             break;
         }
     }
+}
+
+// Here, originalSize is formatted as follows: (x,y,w,h) where x, y represent the center coordinates and w, h represent
+// the width and height.
+// reference is formatted as follows: (x,y,w,h) where x, y represent the center coordinates and w, h represent
+// the width and height.
+- (void)animateQueueMember:(UIImageView *)contactPhoto originalFrame:(CGRect)originalFrame reference:(CGRect)reference {
+    // Scale
+    CGRect frame = [contactPhoto frame];
+    CGFloat width = originalFrame.size.width;
+    CGFloat height = originalFrame.size.height;
+    width += scaledDistanceToAction*(reference.size.width-width);
+    height += scaledDistanceToAction*(reference.size.height-height);
+    frame.size.width = width;
+    frame.size.height = height;
+    [contactPhoto setFrame:frame];
+    
+    // Translate
+    CGFloat newCenterY = originalFrame.origin.y - scaledDistanceToAction*(originalFrame.origin.y - reference.origin.y);
+    [contactPhoto setCenter:CGPointMake(originalFrame.origin.x, newCenterY)];
+    
+    // Redraw circular boundaries
+    [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
 }
 
 // Fade name when you start dragging
@@ -91,6 +155,17 @@
             [postponedView setAlpha:0.0];
             [self setCenter:originalPoint];
             [self setTransform:CGAffineTransformMakeRotation(0)];
+            
+            // Reset dimensions of middle and bottom photos
+            CGRect frame = [contactPhotoMiddle frame];
+            frame.size = originalMiddleDimensions;
+            [contactPhotoMiddle setFrame:frame];
+            frame = [contactPhotoBottom frame];
+            frame.size = originalBottomDimensions;
+            [contactPhotoBottom setFrame:frame];
+            [contactPhotoMiddle setCenter:originalMiddleCenter];
+            [contactPhotoBottom setCenter:originalBottomCenter];
+            
         } completion:^(BOOL finished) {
             [self showNameLabel];
         }];
@@ -109,7 +184,6 @@
                          animations:^{
                              [self setCenter:finishPoint];
                          } completion:^(BOOL finished) {
-                             [self setAlpha:0];
                              [delegate deleteContact];
                              [self resetTranslation];
                          }];
