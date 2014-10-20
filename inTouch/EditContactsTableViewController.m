@@ -17,6 +17,7 @@
 
 @synthesize contactIDs;
 @synthesize contacts;
+@synthesize alphabetIndices;
 
 - (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
@@ -39,7 +40,7 @@
     NSDictionary *substitionVariables = [[NSDictionary alloc] init];
     NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactAll" substitutionVariables:substitionVariables];
     
-    // Sort by descending urgency name
+    // Sort by descending name
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"nameFirst" ascending:YES];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
     [request setSortDescriptors:sortDescriptors];
@@ -58,31 +59,51 @@
     }
 
     [[self tableView] registerClass:[UITableViewCell class] forCellReuseIdentifier:@"ContactCell"];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
+    alphabetIndices = [self createAlphabetArray];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [[self tableView] reloadData];
+    alphabetIndices = [self createAlphabetArray];
 }
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
+- (NSArray *)createAlphabetArray {
+    NSMutableDictionary *firstLetters = [[NSMutableDictionary alloc] init];
+    for (id key in [contacts allKeys]) {
+        Contact *contact = [contacts objectForKey:key];
+        NSString *name = [NSString stringWithFormat:@"%@%@", [contact nameFirst], [contact nameLast]];
+        // Check for first letter only on non-empty strings
+        if (![name isEqualToString:@""]) {
+            NSString *firstLetter = [name substringToIndex:1];
+            if (![firstLetters objectForKey:firstLetter]) {
+                [firstLetters setValue:[NSNumber numberWithInt:1] forKey:firstLetter];
+            }
+        }
+    }
+    return [[firstLetters allKeys] sortedArrayUsingSelector:@selector(compare:)];
+}
+
 #pragma mark - Table view data source
 
+// Provide a localized table index
+//- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+//    return alphabetIndices;
+//}
+
+// Return the number of sections.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
+//    return [alphabetIndices count];
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [contactIDs count];
+    return [contacts count];
 }
 
 // Fill cell with user name

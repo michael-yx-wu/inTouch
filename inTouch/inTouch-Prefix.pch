@@ -15,4 +15,5 @@
     #import <UIKit/UIKit.h>
     #import <FacebookSDK/FacebookSDK.h>
     #import <Foundation/Foundation.h>
+    #import <QuartzCore/QuartzCore.h>
 #endif

@@ -60,6 +60,7 @@
     // Make contact photo round
     [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
     [[contactPhoto layer] setMasksToBounds:YES];
+    NSLog(@"%f", [[contactPhoto layer] cornerRadius]);
     
     // Add contact card as subview
     [[self view] addSubview:contactCard];
