@@ -3,6 +3,7 @@
     <dependencies>
         <deployment version="1808" defaultVersion="1808" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Main View Controller-->
@@ -30,7 +31,7 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_pf_v2" translatesAutoresizingMaskIntoConstraints="NO" id="5DP-PC-WdX" userLabel="Contact Photo Front">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_profile_fade0" translatesAutoresizingMaskIntoConstraints="NO" id="5DP-PC-WdX" userLabel="Contact Photo Front">
                                         <rect key="frame" x="25" y="35" width="230" height="230"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="230" id="324-Kv-krG"/>
@@ -213,7 +214,7 @@
                                 </constraints>
                                 <connections>
                                     <outlet property="contactName" destination="xM2-iI-mT0" id="v8e-l2-DM6"/>
-                                    <outlet property="contactPhoto" destination="5DP-PC-WdX" id="ply-XG-ZNu"/>
+                                    <outlet property="contactPhoto" destination="5DP-PC-WdX" id="q2T-xp-duG"/>
                                     <outlet property="deletedView" destination="7Fn-GC-OVX" id="Pmi-cp-VSW"/>
                                     <outlet property="postponedView" destination="UeY-4j-wj1" id="fSX-Dh-hya"/>
                                 </connections>
@@ -294,10 +295,10 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="bottom" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gIo-Im-uGc" userLabel="Settings Button">
-                                <rect key="frame" x="282" y="531" width="30" height="30"/>
+                                <rect key="frame" x="282" y="530" width="30" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="30" id="2kf-Vk-U7p"/>
-                                    <constraint firstAttribute="height" constant="30" id="svE-6L-MmA"/>
+                                    <constraint firstAttribute="width" constant="30" id="RqM-9s-kxB"/>
+                                    <constraint firstAttribute="height" constant="30" id="nF6-MT-KyL"/>
                                 </constraints>
                                 <inset key="imageEdgeInsets" minX="5" minY="5" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" image="settings_icon">
@@ -313,19 +314,19 @@
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="BlD-Zq-szb" secondAttribute="centerX" id="11y-aq-6VB"/>
                             <constraint firstItem="fX2-aQ-ian" firstAttribute="trailing" secondItem="BlD-Zq-szb" secondAttribute="trailing" id="3Re-pr-q97"/>
-                            <constraint firstAttribute="trailing" secondItem="gIo-Im-uGc" secondAttribute="trailing" constant="8" id="A1N-4n-34S"/>
                             <constraint firstItem="BlD-Zq-szb" firstAttribute="top" secondItem="WY6-K2-IHX" secondAttribute="bottom" constant="8" id="Abh-tT-XMH"/>
                             <constraint firstItem="WY6-K2-IHX" firstAttribute="top" secondItem="xvG-Uz-HjS" secondAttribute="bottom" constant="7" id="ClB-ap-NBt"/>
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="fX2-aQ-ian" secondAttribute="bottom" priority="250" constant="86" id="DWK-qT-tC8"/>
                             <constraint firstItem="dqC-Xd-Jnt" firstAttribute="top" relation="greaterThanOrEqual" secondItem="VEZ-gE-Y26" secondAttribute="bottom" constant="10" id="EAs-X3-vGy"/>
                             <constraint firstAttribute="centerX" secondItem="WY6-K2-IHX" secondAttribute="centerX" id="Umu-ef-NCn"/>
+                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="gIo-Im-uGc" secondAttribute="bottom" constant="8" id="WCz-UL-sIl"/>
                             <constraint firstItem="fX2-aQ-ian" firstAttribute="leading" secondItem="BlD-Zq-szb" secondAttribute="leading" id="bp5-MG-3fA"/>
                             <constraint firstItem="fX2-aQ-ian" firstAttribute="top" relation="greaterThanOrEqual" secondItem="BlD-Zq-szb" secondAttribute="bottom" constant="5" id="hXY-2R-FMC"/>
                             <constraint firstAttribute="centerX" secondItem="dqC-Xd-Jnt" secondAttribute="centerX" id="mPU-j3-nau"/>
                             <constraint firstItem="fX2-aQ-ian" firstAttribute="top" secondItem="BlD-Zq-szb" secondAttribute="bottom" priority="250" constant="23" id="n72-Zy-XjS"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="gIo-Im-uGc" secondAttribute="trailing" constant="-8" id="nJV-d4-Yrg"/>
                             <constraint firstItem="dqC-Xd-Jnt" firstAttribute="top" secondItem="VEZ-gE-Y26" secondAttribute="bottom" priority="750" constant="20" id="vC3-7m-eVi"/>
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" relation="greaterThanOrEqual" secondItem="fX2-aQ-ian" secondAttribute="bottom" constant="25" id="w33-5m-MG4"/>
-                            <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="gIo-Im-uGc" secondAttribute="bottom" constant="7" id="xJL-UJ-he8"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="96F-cS-sE5" appends="YES" id="v9w-8E-JQM"/>
@@ -335,7 +336,10 @@
                     <connections>
                         <outlet property="contactCard" destination="dqC-Xd-Jnt" id="cNE-H8-o3h"/>
                         <outlet property="contactName" destination="xM2-iI-mT0" id="NJu-9l-J8W"/>
-                        <outlet property="contactPhoto" destination="5DP-PC-WdX" id="QkY-ga-4Gb"/>
+                        <outlet property="contactPhotoAnchor" destination="xvG-Uz-HjS" id="xRU-yg-6Qu"/>
+                        <outlet property="contactPhotoBottom" destination="dvT-RX-nVs" id="ths-VZ-M3E"/>
+                        <outlet property="contactPhotoFront" destination="5DP-PC-WdX" id="BHG-rx-1tr"/>
+                        <outlet property="contactPhotoMiddle" destination="pdc-uE-fOz" id="lGf-Tn-zjM"/>
                         <outlet property="deletedView" destination="7Fn-GC-OVX" id="ryP-M4-fxK"/>
                         <outlet property="frequencySlider" destination="BlD-Zq-szb" id="xfz-9n-BYf"/>
                         <outlet property="postponedView" destination="UeY-4j-wj1" id="cA3-yR-uAG"/>
@@ -1300,29 +1304,13 @@
             </objects>
             <point key="canvasLocation" x="447" y="-1870.8499999999992"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="gSp-H7-959">
-            <objects>
-                <viewController id="K0b-wv-T8o" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="hvw-ns-Tdx"/>
-                        <viewControllerLayoutGuide type="bottom" id="aFV-q1-CR3"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="qMx-2P-qlF">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="NSi-xW-Hy3" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-        </scene>
     </scenes>
     <resources>
         <image name="back_icon_40" width="520" height="520"/>
         <image name="check_icon" width="200" height="200"/>
         <image name="check_icon_fill" width="200" height="200"/>
         <image name="default_pf_v2" width="512" height="512"/>
+        <image name="default_profile_fade0" width="512" height="512"/>
         <image name="mail_icon" width="200" height="200"/>
         <image name="mail_icon_ok" width="200" height="200"/>
         <image name="message_icon" width="200" height="200"/>

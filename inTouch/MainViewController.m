@@ -12,7 +12,10 @@
 #import "DebugLogger.h"
 
 @interface MainViewController () {
-    CGPoint originalCenter;
+    CGPoint originalCenterFront;
+    CGPoint originalCenterMiddle;
+    CGPoint originalCenterBottom;
+    CGPoint originalCenterAnchor;
 }
 @end
 
@@ -21,8 +24,8 @@
 // Contact display variables
 @synthesize contactCard;
 @synthesize contactName;
-@synthesize contactPhoto;
-@synthesize lastContactedLabel;
+@synthesize contactPhotoFront;
+
 
 @synthesize frequencySlider;
 @synthesize viewFrequency;
@@ -58,14 +61,14 @@
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
     
     // Make contact photo round
-    [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
-    [[contactPhoto layer] setMasksToBounds:YES];
-    NSLog(@"%f", [[contactPhoto layer] cornerRadius]);
+    [[contactPhotoFront layer] setCornerRadius:contactPhotoFront.frame.size.width/2];
+    [[contactPhotoFront layer] setMasksToBounds:YES];
+    NSLog(@"%f", [[contactPhotoFront layer] cornerRadius]);
     
     // Add contact card as subview
     [[self view] addSubview:contactCard];
     [contactCard setDelegate:self];
-    originalCenter = [contactCard center];
+    originalCenterFront = [contactCard center];
     
     // Initialize contact queue
     contactQueue = [[NSMutableArray alloc] init];
@@ -158,7 +161,7 @@
 
 // Attempt to get the next contact from the contactQueue
 - (void)getNextContactFromQueue {
-    [contactCard setCenter:originalCenter];
+    [contactCard setCenter:originalCenterFront];
     if ([contactQueue count] != 0) {
         Contact *contact = (Contact *)[contactQueue objectAtIndex:0];
         ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
@@ -344,7 +347,7 @@
             photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(currentContact);
             [DebugLogger log:@"Got contact photo" withPriority:mainViewControllerPriority];
         } else {
-            UIImage *img = [UIImage imageNamed:@"default_pf_v2.png"];
+            UIImage *img = [UIImage imageNamed:@"default_profile_fade0.png"];
             photoData = UIImagePNGRepresentation(img);
             [DebugLogger log:@"No contact photo" withPriority:mainViewControllerPriority];
         }
@@ -404,9 +407,9 @@
     UIImage *img = [[UIImage alloc] initWithData:photoData];
     NSInteger resolution = [img size].width * [img scale] + [img size].height * [img scale];
     if (resolution > 600) {
-        [contactPhoto setImage:img];
+        [contactPhotoFront setImage:img];
     } else {
-        [contactPhoto setImage:[UIImage imageNamed:@"default_pf_v2.png"]];
+        [contactPhotoFront setImage:[UIImage imageNamed:@"default_profile_fade0.png"]];
     }
 
     [UIView animateWithDuration:0.3 animations:^{
@@ -446,7 +449,7 @@
     [[self contactName] setText:@"No Urgent Contacts"];
     
     // Clear the contact photo
-    [contactPhoto setImage:[[UIImage alloc] init]];
+    [contactPhotoFront setImage:[[UIImage alloc] init]];
     
     
     // not done -- also need to hide/unhide other elements
@@ -685,14 +688,13 @@
         ContactViewController *destViewController = [segue destinationViewController];
         [destViewController setFirstName:firstName];
         [destViewController setLastName:lastName];
-        [destViewController setPhotoData:[contactPhoto image]];
+        [destViewController setPhotoData:[contactPhotoFront image]];
         [destViewController setEmailHome:emailHome];
         [destViewController setEmailOther:emailOther];
         [destViewController setEmailWork:emailWork];
         [destViewController setPhoneHome:phoneHome];
         [destViewController setPhoneMobile:phoneMobile];
         [destViewController setPhoneWork:phoneWork];
-        [destViewController setLastContactedString:[lastContactedLabel text]];
     }
 }
 

@@ -5,8 +5,12 @@
 // Current contact name and photo
 @property (weak, nonatomic) IBOutlet ContactCardView *contactCard;
 @property (weak, nonatomic) IBOutlet UILabel *contactName;
-@property (weak, nonatomic) IBOutlet UIImageView *contactPhoto;
-@property (weak, nonatomic) IBOutlet UILabel *lastContactedLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *contactPhotoFront;
+
+// Queue photos
+@property (weak, nonatomic) IBOutlet UIImageView *contactPhotoMiddle;
+@property (weak, nonatomic) IBOutlet UIImageView *contactPhotoBottom;
+@property (weak, nonatomic) IBOutlet UIImageView *contactPhotoAnchor;
 
 // User interaction
 @property (weak, nonatomic) IBOutlet UIView *deletedView;
