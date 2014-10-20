@@ -16,6 +16,7 @@
     CGPoint originalCenterMiddle;
     CGPoint originalCenterBottom;
     CGPoint originalCenterAnchor;
+    NSMutableArray *photoQueue;
 }
 @end
 
@@ -73,10 +74,19 @@
     [[contactPhotoAnchor layer] setMasksToBounds:YES];
     
     // Save the original centers of the profile photos
-    originalCenterFront = [contactPhotoFront center];
+    originalCenterFront = CGPointMake([contactPhotoFront center].x,
+                                      [contactPhotoFront center].y);
     originalCenterMiddle = [contactPhotoMiddle center];
     originalCenterBottom = [contactPhotoBottom center];
     originalCenterAnchor = [contactPhotoAnchor center];
+    
+    // Add the references to the contact queue
+    photoQueue = [[NSMutableArray alloc] initWithCapacity:3];
+    [photoQueue addObject:contactPhotoMiddle];
+    [photoQueue addObject:contactPhotoBottom];
+    [photoQueue addObject:contactPhotoAnchor];
+//     
+//     addObjectsFromArray:@[contactPhotoMiddle, contactPhotoBottom, contactPhotoAnchor]];
     
     // Add contact card as subview
     [[self view] addSubview:contactCard];
@@ -173,10 +183,9 @@
 
 // Attempt to get the next contact from the contactQueue
 - (void)getNextContactFromQueue {
-    [UIView animateWithDuration:0.15 animations:^{
-        [contactName setAlpha:1.0];
-    }];
-    [contactCard setCenter:originalCenterFront];
+    [self printQueue];
+    NSLog(@"%f %f", originalCenterFront.x, originalCenterFront.y);
+    NSLog(@"%f %f", [contactCard center].x, [contactCard center].y);
     
     if ([contactQueue count] != 0) {
         Contact *contact = (Contact *)[contactQueue objectAtIndex:0];
@@ -191,6 +200,22 @@
         [self enableInteraction];
     } else {
         [self showNoUrgentContacts];
+    }
+
+    // Update positions when done
+    [UIView animateWithDuration:0.15 animations:^{
+        [contactName setAlpha:1.0];
+    }];
+    [contactCard setCenter:originalCenterFront];
+    [contactCard setAlpha:1];
+    
+}
+
+- (void)printQueue {
+    for (int i = 0; i < [contactQueue count]; i++) {
+        Contact *contact = [contactQueue objectAtIndex:i];
+        NSString *name = [contact nameFirst];
+        NSLog(@"Queue member: %@", name);
     }
 }
 
@@ -427,9 +452,6 @@
     } else {
         [contactPhotoFront setImage:[UIImage imageNamed:@"default_profile_fade0.png"]];
     }
-
-    // Update UI for contact queue -- this needs to be refactored
-    
     
     // Set frequency slider value and text
     NSString *message;
@@ -448,6 +470,58 @@
         message = @"Remind me every year";
     }
     [self.viewFrequency setText:message];
+    
+    // Update photos of the contact queue
+    for (int i = 0; i < [contactQueue count] && i < 3; i++) {
+        // Get queued contact id
+        Contact *queuedContact = [contactQueue objectAtIndex:i];
+        int queuedContactId = [[queuedContact abrecordid] intValue];
+        queuedContactId = [ContactManager verifyABRecordID:queuedContactId
+                                                forContact:queuedContact];
+        
+        // Verify id
+        ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+        ABRecordRef queuedContactRef = ABAddressBookGetPersonWithRecordID(addressBookRef, queuedContactId);
+        
+        // Get facebook, linkedin, or contact book photo data
+        NSData *imageData;
+        NSData *facebookPhoto = [queuedContact facebookPhoto];
+        NSData *linkedinPhoto = [queuedContact linkedinPhoto];
+        if (facebookPhoto != NULL) {
+            imageData = facebookPhoto;
+        } else if (linkedinPhoto != NULL) {
+            imageData = linkedinPhoto;
+        } else {
+            if (ABPersonHasImageData(queuedContactRef)) {
+                imageData = (__bridge_transfer NSData *)ABPersonCopyImageData(queuedContactRef);
+                [DebugLogger log:@"Got contact photo" withPriority:mainViewControllerPriority];
+            } else {
+                imageData = NULL;
+                [DebugLogger log:@"No contact photo" withPriority:mainViewControllerPriority];
+            }
+        }
+        
+        UIImageView *queuedPhoto = [photoQueue objectAtIndex:i];
+        UIImage *img;
+        bool shouldUseDefaultPhoto = NO;
+        if (!imageData) {
+            shouldUseDefaultPhoto = YES;
+        } else {
+            // Use found data if resolution sufficiently high
+            img = [[UIImage alloc] initWithData:imageData];
+            NSInteger resolution = [img size].width * [img scale] + [img size].height * [img scale];
+            if (resolution < 600) {
+                shouldUseDefaultPhoto = YES;
+            }
+        }
+        
+        // Set appropriate photo
+        if (shouldUseDefaultPhoto) {
+            NSString *defaultPhoto = [NSString stringWithFormat:@"default_profile_fade%d.png", i];
+            img = [UIImage imageNamed:defaultPhoto];
+        }
+        [queuedPhoto setImage:img];
+    }
 }
 
 - (void)showNoUrgentContacts {
