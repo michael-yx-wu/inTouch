@@ -60,13 +60,11 @@
         // Feedback
         if ([indexPath row] == 4) {
             if ([MFMailComposeViewController canSendMail]) {
-                if ([MFMailComposeViewController canSendMail]) {
-                    MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
-                    [mailViewController setToRecipients:@[@"help@intouch.io"]];
-                    [mailViewController setSubject:@"App Feedback"];
-                    [mailViewController setMailComposeDelegate:self];
-                    [self presentViewController:mailViewController animated:YES completion:nil];
-                }
+                MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
+                [mailViewController setToRecipients:@[@"help@intouchapp.io"]];
+                [mailViewController setSubject:@"App Feedback"];
+                [mailViewController setMailComposeDelegate:self];
+                [self presentViewController:mailViewController animated:YES completion:nil];
             } else {
                 UIAlertView *cannotSendMailAlert = [[UIAlertView alloc] initWithTitle:@"Cannot Send Feedback"
                                                                               message:@"An email account has not been setup on this device."
