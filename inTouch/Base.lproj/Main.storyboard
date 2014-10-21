@@ -21,21 +21,21 @@
                                 <rect key="frame" x="20" y="40" width="280" height="277"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_profile_fade3" translatesAutoresizingMaskIntoConstraints="NO" id="xvG-Uz-HjS" userLabel="Contact Photo Anchor">
-                                        <rect key="frame" x="35" y="65" width="210" height="210"/>
+                                        <rect key="frame" x="35" y="67" width="210" height="210"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="210" id="Ul8-Tc-Hd2"/>
                                             <constraint firstAttribute="width" constant="210" id="a99-Rr-hXm"/>
                                         </constraints>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_profile_fade2" translatesAutoresizingMaskIntoConstraints="NO" id="dvT-RX-nVs" userLabel="Contact Photo Bottom">
-                                        <rect key="frame" x="35" y="65" width="210" height="210"/>
+                                        <rect key="frame" x="35" y="67" width="210" height="210"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="210" id="QLM-EG-7ZW"/>
                                             <constraint firstAttribute="width" constant="210" id="WyN-2a-e1p"/>
                                         </constraints>
                                     </imageView>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_profile_fade1" translatesAutoresizingMaskIntoConstraints="NO" id="pdc-uE-fOz" userLabel="Contact Photo Middle">
-                                        <rect key="frame" x="30" y="50" width="220" height="220"/>
+                                        <rect key="frame" x="30" y="52" width="220" height="220"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="220" id="M6a-CQ-H06"/>
                                             <constraint firstAttribute="height" constant="220" id="c0R-d2-MoD"/>
@@ -51,10 +51,10 @@
                                     <constraint firstAttribute="centerX" secondItem="pdc-uE-fOz" secondAttribute="centerX" id="8Lb-PN-va7"/>
                                     <constraint firstAttribute="width" constant="280" id="EvS-Vi-I52"/>
                                     <constraint firstAttribute="centerX" secondItem="dvT-RX-nVs" secondAttribute="centerX" id="WA9-IL-LoT"/>
-                                    <constraint firstItem="dvT-RX-nVs" firstAttribute="top" secondItem="lwa-de-2St" secondAttribute="top" constant="65" id="hcl-gQ-xrT"/>
+                                    <constraint firstItem="dvT-RX-nVs" firstAttribute="top" secondItem="lwa-de-2St" secondAttribute="top" constant="67" id="hcl-gQ-xrT"/>
                                     <constraint firstAttribute="height" constant="277" id="hir-7f-VbX"/>
-                                    <constraint firstItem="pdc-uE-fOz" firstAttribute="top" secondItem="lwa-de-2St" secondAttribute="top" constant="50" id="iXP-eg-V1p"/>
-                                    <constraint firstItem="xvG-Uz-HjS" firstAttribute="top" secondItem="lwa-de-2St" secondAttribute="top" constant="65" id="ygP-gO-Loe"/>
+                                    <constraint firstItem="pdc-uE-fOz" firstAttribute="top" secondItem="lwa-de-2St" secondAttribute="top" constant="52" id="iXP-eg-V1p"/>
+                                    <constraint firstItem="xvG-Uz-HjS" firstAttribute="top" secondItem="lwa-de-2St" secondAttribute="top" constant="67" id="ygP-gO-Loe"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dqC-Xd-Jnt" userLabel="Contact Card" customClass="ContactCardView">
