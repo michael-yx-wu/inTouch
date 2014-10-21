@@ -128,8 +128,27 @@
     [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
 }
 
+// When delete/postpone buttons clicked, slide up the contact queue photos
 - (void)slideUp {
-    
+    scaledDistanceToAction = 1;
+    [self animateQueueMember:contactPhotoMiddle
+               originalFrame:CGRectMake(originalMiddleCenter.x,
+                                        originalMiddleCenter.y,
+                                        originalMiddleDimensions.width,
+                                        originalMiddleDimensions.height)
+                   reference:CGRectMake(originalFrontCenter.x,
+                                        originalFrontCenter.y,
+                                        originalFrontDimensions.width,
+                                        originalFrontDimensions.height)];
+    [self animateQueueMember:contactPhotoBottom
+               originalFrame:CGRectMake(originalBottomCenter.x,
+                                        originalBottomCenter.y,
+                                        originalBottomDimensions.width,
+                                        originalBottomDimensions.height)
+                   reference:CGRectMake(originalMiddleCenter.x,
+                                        originalMiddleCenter.y,
+                                        originalMiddleDimensions.width,
+                                        originalMiddleDimensions.height)];
 }
 
 // Return the middle and bottom photos to their original positions and sizes
@@ -191,6 +210,7 @@
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
                              [self setCenter:finishPoint];
+                             [self slideUp];
                          } completion:^(BOOL finished) {
                              [delegate deleteContact];
                              [self resetTranslation];
@@ -209,6 +229,7 @@
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
                              [self setCenter:finishPoint];
+                             [self slideUp];
                          } completion:^(BOOL finished) {
                              [self setAlpha:0];
                              [delegate postponeContact];
