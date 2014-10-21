@@ -31,7 +31,8 @@
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 @property (nonatomic) CGPoint originalPoint;
 
-- (void) leftAction;
-- (void) rightAction;
+- (void)leftAction;
+- (void)rightAction;
+- (void)returnToOriginalPositions;
 
 @end

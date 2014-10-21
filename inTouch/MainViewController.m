@@ -682,6 +682,7 @@
             [self updateQueue];
             [self getNextContactFromQueue];
             [self enableInteraction];
+            [contactCard returnToOriginalPositions];
         }];
     }];
 }
@@ -698,6 +699,7 @@
             [self updateQueue];
             [self getNextContactFromQueue];
             [self enableInteraction];
+            [contactCard returnToOriginalPositions];
         }];
     }];
 }

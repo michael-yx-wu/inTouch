@@ -128,6 +128,25 @@
     [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
 }
 
+- (void)slideUp {
+    
+}
+
+// Return the middle and bottom photos to their original positions and sizes
+- (void)returnToOriginalPositions {
+    // Reset dimensions of middle and bottom photos
+    CGRect frame = [contactPhotoMiddle frame];
+    frame.size = originalMiddleDimensions;
+    [contactPhotoMiddle setFrame:frame];
+    frame = [contactPhotoBottom frame];
+    frame.size = originalBottomDimensions;
+    [contactPhotoBottom setFrame:frame];
+    [contactPhotoMiddle setCenter:originalMiddleCenter];
+    [contactPhotoBottom setCenter:originalBottomCenter];
+    [[contactPhotoMiddle layer] setCornerRadius:contactPhotoMiddle.frame.size.width/2];
+    [[contactPhotoBottom layer] setCornerRadius:contactPhotoBottom.frame.size.width/2];
+}
+
 // Fade name when you start dragging
 - (void)hideNameLabel {
     [UIView animateWithDuration:0.15 animations:^{
@@ -154,18 +173,7 @@
             [deletedView setAlpha:0.0];
             [postponedView setAlpha:0.0];
             [self setCenter:originalPoint];
-            [self setTransform:CGAffineTransformMakeRotation(0)];
-            
-            // Reset dimensions of middle and bottom photos
-            CGRect frame = [contactPhotoMiddle frame];
-            frame.size = originalMiddleDimensions;
-            [contactPhotoMiddle setFrame:frame];
-            frame = [contactPhotoBottom frame];
-            frame.size = originalBottomDimensions;
-            [contactPhotoBottom setFrame:frame];
-            [contactPhotoMiddle setCenter:originalMiddleCenter];
-            [contactPhotoBottom setCenter:originalBottomCenter];
-            
+            [self returnToOriginalPositions];
         } completion:^(BOOL finished) {
             [self showNameLabel];
         }];
@@ -177,7 +185,7 @@
     [UIView animateWithDuration:0.15 animations:^{
         [contactName setAlpha:0.0];
     } completion:^(BOOL finished) {
-        CGPoint finishPoint = CGPointMake(-75, 2*yFromCenter + originalPoint.y);
+        CGPoint finishPoint = CGPointMake(-150, 2*yFromCenter + originalPoint.y);
         [UIView animateWithDuration:0.07
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseIn
@@ -195,7 +203,7 @@
     [UIView animateWithDuration:0.15 animations:^{
         [contactName setAlpha:0.0];
     } completion:^(BOOL finished) {
-        CGPoint finishPoint = CGPointMake(75 + [[UIScreen mainScreen] bounds].size.width, 2*yFromCenter + originalPoint.y);
+        CGPoint finishPoint = CGPointMake(150 + [[UIScreen mainScreen] bounds].size.width, 2*yFromCenter + originalPoint.y);
         [UIView animateWithDuration:0.07
                               delay:0.0
                             options:UIViewAnimationOptionCurveEaseIn
