@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.intactu.$(PRODUCT_NAME:rfc1034identifier)</string>
+	<string>intactu.$(PRODUCT_NAME)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>26</string>
+	<string>27</string>
 	<key>FacebookAppID</key>
 	<string>863523550341327</string>
 	<key>FacebookDisplayName</key>
