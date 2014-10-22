@@ -64,6 +64,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
     [[self tableView] reloadData];
     alphabetIndices = [self createAlphabetArray];
 }

@@ -472,7 +472,8 @@
     [self.viewFrequency setText:message];
     
     // Update photos of the contact queue
-    for (int i = 0; i < [contactQueue count] && i < 3; i++) {
+    int i;
+    for (i = 0; i < [contactQueue count] && i < 3; i++) {
         // Get queued contact id
         Contact *queuedContact = [contactQueue objectAtIndex:i];
         int queuedContactId = [[queuedContact abrecordid] intValue];
@@ -520,8 +521,15 @@
             NSString *defaultPhoto = [NSString stringWithFormat:@"default_profile_fade%d.png", i];
             img = [UIImage imageNamed:defaultPhoto];
         }
+        [queuedPhoto setAlpha:1];
         [queuedPhoto setImage:img];
     }
+    
+    // In cases where we have fewer than 3 contacts left in the queue, hide the photo all together
+    for (; i < [photoQueue count]; i++) {
+        UIImageView *queuedPhoto = [photoQueue objectAtIndex:i];
+        [queuedPhoto setAlpha:0];
+    }    
 }
 
 - (void)showNoUrgentContacts {
