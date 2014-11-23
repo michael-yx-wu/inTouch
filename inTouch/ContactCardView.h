@@ -33,6 +33,7 @@
 
 - (void)leftAction;
 - (void)rightAction;
+- (void)showNameLabel;
 - (void)returnToOriginalPositions;
 
 @end

@@ -12,11 +12,9 @@
 #import "DebugLogger.h"
 
 @interface MainViewController () {
-    CGPoint originalCenterFront;
-    CGPoint originalCenterMiddle;
-    CGPoint originalCenterBottom;
-    CGPoint originalCenterAnchor;
     NSMutableArray *photoQueue;
+    NSMutableArray *currentQueue;
+    Contact *currentContact;
 }
 @end
 
@@ -30,32 +28,15 @@
 @synthesize contactPhotoBottom;
 @synthesize contactPhotoAnchor;
 
-@synthesize frequencySlider;
-@synthesize viewFrequency;
-
 // User interaction
 @synthesize deletedView;
 @synthesize postponedView;
 @synthesize syncingView;
 @synthesize syncingActivityIndicator;
-@synthesize updatingUrgencyView;
-@synthesize updatingUrgencyActivityIndicator;
-
-// Contact data variables
-@synthesize firstName;
-@synthesize lastName;
-@synthesize photoData;
-@synthesize abrecordid;
-@synthesize emailHome;
-@synthesize emailOther;
-@synthesize emailWork;
-@synthesize phoneHome;
-@synthesize phoneMobile;
-@synthesize phoneWork;
-@synthesize lastContactedDate;
 
 // Keep 5 contacts in the queue, ordered by "most urgent" first
-@synthesize contactQueue;
+@synthesize contactAppearedQueue;
+@synthesize contactNeverAppearedQueue;
 @synthesize facebookFriends;
 
 - (void)viewDidLoad {
@@ -73,31 +54,24 @@
     [[contactPhotoBottom layer] setMasksToBounds:YES];
     [[contactPhotoAnchor layer] setMasksToBounds:YES];
     
-    // Save the original centers of the profile photos
-    originalCenterFront = CGPointMake([contactPhotoFront center].x,
-                                      [contactPhotoFront center].y);
-    originalCenterMiddle = [contactPhotoMiddle center];
-    originalCenterBottom = [contactPhotoBottom center];
-    originalCenterAnchor = [contactPhotoAnchor center];
-    
     // Add the references to the contact queue
-    photoQueue = [[NSMutableArray alloc] initWithCapacity:3];
+    photoQueue = [[NSMutableArray alloc] initWithCapacity:4];
+    [photoQueue addObject:contactPhotoFront];
     [photoQueue addObject:contactPhotoMiddle];
     [photoQueue addObject:contactPhotoBottom];
     [photoQueue addObject:contactPhotoAnchor];
-//     
-//     addObjectsFromArray:@[contactPhotoMiddle, contactPhotoBottom, contactPhotoAnchor]];
     
     // Add contact card as subview
     [[self view] addSubview:contactCard];
     [contactCard setDelegate:self];
     
-    // Initialize contact queue
-    contactQueue = [[NSMutableArray alloc] init];
+    // Initialize the queues
+    contactAppearedQueue = [[NSMutableArray alloc] initWithCapacity:5];
+    contactNeverAppearedQueue = [[NSMutableArray alloc] initWithCapacity:5];    
     
     // Attempt to get list of facebook friends
     // This will fail gracefully if user is not logged in
-    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(500),picture.height(500)"                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(500),picture.height(500)" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         if (error) {
             [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]]
                 withPriority:contactManagerPriority];
@@ -115,11 +89,14 @@
         }
     }];
     
-    // Initialize the contact queue with at most 5 urgent contacts
+    // Initialize the contact queue with at most 5 urgent contacts - load appeared queue on default
+    currentQueue = contactAppearedQueue;
     [self updateQueue];
-    
-    // Pop the first contact off the queue
+    currentQueue = contactNeverAppearedQueue;
+    [self updateQueue];
+    currentQueue = contactAppearedQueue;
     [self getNextContactFromQueue];
+
     
     // Listen for notification to replace facebook friend list with new list
     // Notification from ContactManager
@@ -135,6 +112,8 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
     // Determine last time we update contact info
     NSManagedObjectContext *moc = [self managedObjectContext];
     NSManagedObjectModel *model = [self managedObjectModel];
@@ -149,29 +128,13 @@
     GlobalData *globalData = [results objectAtIndex:0];
     
     // Automatically sync contact info on first run only
-    // Subsequent contact info updating will have to be manually done by user
     NSDate *today = [NSDate date];
     bool firstRun = [[globalData firstRun] boolValue];
     if (firstRun) {
         [DebugLogger log:@"First run today - syncing contacts" withPriority:mainViewControllerPriority];
         [self requestContactsAccessAndSync];
         [globalData setLastUpdatedInfo:today];
-        [globalData setLastUpdatedUrgency:today];
         [globalData setFirstRun:[NSNumber numberWithBool:NO]];
-    }
-    else {
-        // Update everyone's urgency once a day (subsequent urgency changes made by user interaction)
-        NSDate *today = [NSDate date];
-        NSDate *lastUrgencyUpdate = [globalData lastUpdatedUrgency];
-        NSInteger daysSinceLastUrgencyUpdate = 1;
-        if (lastUrgencyUpdate != nil) {
-            daysSinceLastUrgencyUpdate = [self numDaysFrom:lastUrgencyUpdate To:today];
-        }
-        if (daysSinceLastUrgencyUpdate != 0) {
-            [DebugLogger log:@"Updating urgency for all contacts" withPriority:mainViewControllerPriority];
-            [ContactManager updateUrgency];
-            [globalData setLastUpdatedUrgency:today];
-        }
     }
 }
 
@@ -181,60 +144,56 @@
 
 #pragma mark - Contact updating
 
-// Attempt to get the next contact from the contactQueue
 - (void)getNextContactFromQueue {
-    [self printQueue];
-    NSLog(@"%f %f", originalCenterFront.x, originalCenterFront.y);
-    NSLog(@"%f %f", [contactCard center].x, [contactCard center].y);
-    
-    if ([contactQueue count] != 0) {
-        Contact *contact = (Contact *)[contactQueue objectAtIndex:0];
-        ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
-        
-        [contactQueue removeObjectAtIndex:0];
-        [self updateContactInformation:contact];
-        
-        // Update pertinent UI components
-        NSInteger freq = [[metadata freq] integerValue];
-        [self updateUI:freq];
-        [self enableInteraction];
+    if ([currentQueue count]) {
+        currentContact = [currentQueue objectAtIndex:0];
     } else {
         [self showNoUrgentContacts];
     }
-
-    // Update positions when done
-    [UIView animateWithDuration:0.15 animations:^{
-        [contactName setAlpha:1.0];
-    }];
-    [contactCard setCenter:originalCenterFront];
-    [contactCard setAlpha:1];
-    
 }
 
-- (void)printQueue {
-    for (int i = 0; i < [contactQueue count]; i++) {
-        Contact *contact = [contactQueue objectAtIndex:i];
-        NSString *name = [contact nameFirst];
-        NSLog(@"Queue member: %@", name);
+// Fill up the current queue with at most 5 contacts, sorted by descending urgency
+- (void)updateQueue {
+    [DebugLogger log:@"Updating queue" withPriority:mainViewControllerPriority];
+    // Execute fetch request for contactAppearedQueue or contactNeverAppearedQueue depending on the currentQueue
+    NSManagedObjectModel *model = [self managedObjectModel];
+    NSFetchRequest *request;
+    if (currentQueue == contactAppearedQueue) {
+        NSDictionary *substitionVariables = [NSDictionary dictionaryWithObjectsAndKeys:[NSDate date], @"DATE", nil];
+        request = [model fetchRequestFromTemplateWithName:@"ContactMetadataUrgent"
+                                    substitutionVariables:substitionVariables];
+        
+        // Set the sort descriptor to sort by descending urgency and execute
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"remindOnDate" ascending:false];
+        NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+        [request setSortDescriptors:sortDescriptors];
+    }
+    else {
+        // Get all contacts that have never appeared
+        request = [model fetchRequestFromTemplateWithName:@"ContactMetadataNeverAppeared"
+                                    substitutionVariables:[[NSDictionary alloc] init]];
+    }
+    NSArray *results = [self executeFetchRequest:request];
+    
+    // Get contacts to add to currentQueue while length < 5 or until we exhuast the list of urgent contacts
+    ContactMetadata *metadata;
+    NSUInteger index = 0;
+    while ([currentQueue count] < 5 && index < [results count]) {
+        metadata = [results objectAtIndex:index++];
+        Contact *contact = (Contact *)[metadata contact];
+        
+        // Add contact to queue if not already in queue
+        if (![self queue:currentQueue ContainsContact:contact]) {
+            [self downloadFbPhotoForContact:contact];
+            // Add contact to queue
+            [currentQueue addObject:contact];
+        }
     }
 }
 
-// Fill up our contactQueue with at most 5 contacts sorted by urgency
-- (void)updateQueue {
-    [DebugLogger log:@"Updating queue" withPriority:mainViewControllerPriority];
-    
-    // Set up the request
+// Helper method that executes the given fetch request and returns the results
+- (NSArray *)executeFetchRequest:(NSFetchRequest *)request {
     NSManagedObjectContext *moc = [self managedObjectContext];
-    NSManagedObjectModel *model = [self managedObjectModel];
-    NSDictionary *substitionVariables = [[NSDictionary alloc] init];
-    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactMetadataUrgent"
-                                                substitutionVariables:substitionVariables];
-    
-    // Sort by descending urgency
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"urgency" ascending:false];
-    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
-    [request setSortDescriptors:sortDescriptors];
-    
     // Execute request
     NSError *error;
     NSArray *results = [moc executeFetchRequest:request error:&error];
@@ -244,30 +203,7 @@
         [DebugLogger log:errorString withPriority:mainViewControllerPriority];
         abort();
     }
-    
-    // Look for contacts to add to queue while length < 5 or
-    // until we exhaust the list of urgent contacts
-    NSUInteger index = 0;
-    ContactMetadata *metadata;
-    NSDate *lastPostponedDate;
-    while ([contactQueue count] < 5 && index < [results count]) {
-        metadata = [results objectAtIndex:index++];
-        lastPostponedDate = [metadata lastPostponedDate];
-        Contact *contact = (Contact *)[metadata contact];
-        
-        // Never postponed, add to queue if not already in queue
-        // Otherwise, add to queue if not postponed today and not already in queue
-        // Note: If nil, the second statement in the if will not evaluate,
-        // so this is safe
-        if (lastPostponedDate == nil || [self numDaysFrom:lastPostponedDate To:[NSDate date]]) {
-            if (![self queueContainsContact:contact]) {
-                [self downloadFbPhotoForContact:contact];
-                // Add contact to queue
-                [contactQueue addObject:contact];
-            }
-        }
-        
-    }
+    return results;
 }
 
 // Merge NSManagedObjectContext changes across two different threads
@@ -279,16 +215,15 @@
 
 // This method is used to selectively dismiss the current contact
 - (void)contactWasContacted:(NSNotification *)notification {
-    [self updateQueue];
-    [self getNextContactFromQueue];
+    [self dismissContactAndSetReminder:5];
 }
 
 - (void)updateFacebookFriends:(NSNotification *)notification {
     NSLog(@"got new friend list");
     facebookFriends = [[notification userInfo] valueForKey:@"data"];
     
-    // Try again to download facebook photos for all contacts that don't have facebook photos in the queue
-    for (Contact *contact in contactQueue) {
+    // Try again to download facebook photos for all contacts that don't have facebook photos in currentQueue
+    for (Contact *contact in currentQueue) {
         if (![contact facebookPhoto]) {
             [self downloadFbPhotoForContact:contact];
         }
@@ -324,12 +259,6 @@
                     [moc save:&error];
                 }
             }
-
-            // If we happened to download the photo for the current contact, reload photo
-            if ([[someContact nameFirst] isEqualToString:firstName] &&
-                [[someContact nameLast] isEqualToString:lastName]) {
-                [thisController updateContactInformationAfterFetch:[someContact objectID]];
-            }
             
             // Remove the observer we just added -- we no longer need it
             [[NSNotificationCenter defaultCenter] removeObserver:thisController
@@ -342,174 +271,59 @@
     });
 }
 
-- (void)updateContactInformationAfterFetch:(NSManagedObjectID *)objectID {
-    Contact *contact = (Contact *)[[self managedObjectContext] objectWithID:objectID];
-    [self updateContactInformation:contact];
-}
-
-// Helper method that returns true if our contactQueue has an object containing the contents of the specified contact
-- (BOOL)queueContainsContact:(Contact *)contact {
-    for (Contact *queuedContact in contactQueue) {
-        if ([[[queuedContact objectID] URIRepresentation] isEqual:[[contact objectID] URIRepresentation]]) {
+// Helper method that returns true if the specified queue contains a copy of the contact
+- (BOOL)queue:(NSMutableArray *)queue ContainsContact:(Contact *)contact {
+    for (Contact *queuedContact in queue) {
+        if([[[queuedContact objectID] URIRepresentation] isEqual:[[contact objectID] URIRepresentation]]) {
             return YES;
         }
     }
     return NO;
 }
 
-#pragma mark - UI upating
-
-// Update information about the current contact
-- (void)updateContactInformation:(Contact *)contact {
-    // Get key contact info
-    firstName = [contact nameFirst];
-    lastName = [contact nameLast];
-    abrecordid = [[contact abrecordid] intValue];
-    
-    // Verify contact ID
-    abrecordid = [ContactManager verifyABRecordID:abrecordid forContact:contact];
-    
-    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-    ABRecordRef currentContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
-    
-    // Reset contact info fields
-    photoData = NULL;
-    emailHome = emailOther = emailWork = phoneHome = phoneMobile = phoneWork = nil;
-    
-    // Get photo (priority: fb, twitter, address book)
-    NSData *facebookPhoto = [contact facebookPhoto];
-    NSData *linkedinPhoto = [contact linkedinPhoto];
-    if (facebookPhoto != NULL) {
-        photoData = facebookPhoto;
-    } else if (linkedinPhoto != NULL) {
-        photoData = linkedinPhoto;
-    } else {
-        if (ABPersonHasImageData(currentContact)) {
-            photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(currentContact);
-            [DebugLogger log:@"Got contact photo" withPriority:mainViewControllerPriority];
-        } else {
-            UIImage *img = [UIImage imageNamed:@"default_profile_fade0.png"];
-            photoData = UIImagePNGRepresentation(img);
-            [DebugLogger log:@"No contact photo" withPriority:mainViewControllerPriority];
-        }
-    }
-    
-    // Get home, other, and work emails
-    ABMultiValueRef emails = ABRecordCopyValue(currentContact, kABPersonEmailProperty);
-    NSString *emailLabel;
-    CFStringRef label;
-    for (int j = 0; j < ABMultiValueGetCount(emails); j++) {
-        // Get label for current email
-        label = ABMultiValueCopyLabelAtIndex(emails, j);
-        emailLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
-        
-        if ([emailLabel isEqualToString:@"home"]) {
-            emailHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Home Email: %@", emailHome] withPriority:mainViewControllerPriority];
-        } else if ([emailLabel isEqualToString:@"other"]) {
-            emailOther = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Other Email: %@", emailOther] withPriority:mainViewControllerPriority];
-        } else if ([emailLabel isEqualToString:@"work"]) {
-            emailWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Work Email: %@", emailWork] withPriority:mainViewControllerPriority];
-        }
-    }
-    
-    // Get home, mobile, and work phone numbers
-    ABMultiValueRef phoneNumbers = ABRecordCopyValue(currentContact, kABPersonPhoneProperty);
-    NSString *phoneLabel;
-    for (int j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
-        // Get label for current phone number
-        label = ABMultiValueCopyLabelAtIndex(phoneNumbers, j);
-        phoneLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
-        
-        if ([phoneLabel isEqualToString:@"home"]) {
-            phoneHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Home Phone: %@", phoneHome] withPriority:mainViewControllerPriority];
-        } else if ([phoneLabel isEqualToString:@"mobile"] || [phoneLabel isEqualToString:@"iPhone"]) {
-            phoneMobile = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Mobile Phone: %@", phoneMobile] withPriority:mainViewControllerPriority];
-        } else if ([phoneLabel isEqualToString:@"work"]) {
-            phoneWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Work Phone: %@", phoneWork] withPriority:mainViewControllerPriority];
-        }
-    }
-    
-    ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
-    lastContactedDate = [contactMetadata lastContactedDate];
+// 1. Set the remindOnDate metadata property and remind in some number of days
+// 2. Remove the contact from the current queue
+// 3. Update the current queue
+// 4. Reset the current contact
+// 5. Redraw photos
+- (void)dismissContactAndSetReminder:(NSUInteger)days {
+    [self printQueue];
+    NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
+    NSDate *today = [NSDate date];
+    NSDateComponents *futureComponents = [[NSDateComponents alloc] init];
+    [futureComponents setDay:days];
+    NSDate *remindDate = [calendar dateByAddingComponents:futureComponents toDate:today options:0];
+    ContactMetadata *contactMetadata = (ContactMetadata *)[currentContact metadata];
+    [contactMetadata setNumTimesAppeared:[NSNumber numberWithInt:([[contactMetadata numTimesAppeared] intValue] + 1)]];
+    [contactMetadata setRemindOnDate:remindDate];
+    [currentQueue removeObjectAtIndex:0];
+    [self getNextContactFromQueue];
+    [self updateQueue];
+    [self updateUI];
+    [self printQueue];
 }
 
-- (void)updateUI:(NSInteger)freq {
+#pragma mark - UI upating
+
+// Place photos for contacts in the correct position
+- (void)updateUI {
     // Set display name
-    NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+    NSString *name = [NSString stringWithFormat:@"%@ %@", [currentContact nameFirst], [currentContact nameLast]];
     [contactName setText:name];
     
-    // Set contact photo if resolution sufficiently high
-    UIImage *img = [[UIImage alloc] initWithData:photoData];
-    NSInteger resolution = [img size].width * [img scale] + [img size].height * [img scale];
-    if (resolution > 600) {
-        [contactPhotoFront setImage:img];
-    } else {
-        [contactPhotoFront setImage:[UIImage imageNamed:@"default_profile_fade0.png"]];
-    }
-    
-    // Set frequency slider value and text
-    NSString *message;
-    if (freq == 1) {
-        frequencySlider.value = frequencySlider.minimumValue;
-        message = @"Remind me every day";
-    }
-    else if (freq < 30) {
-        frequencySlider.value = freq*10;
-        message = [NSString stringWithFormat:@"Remind me every %ld days", (long)freq];
-    } else if (freq < 365) {
-        frequencySlider.value = (freq/30-1)*60+300;
-        message = [NSString stringWithFormat:@"Remind me every %ld months", (long)freq/30];
-    } else {
-        frequencySlider.value = frequencySlider.maximumValue;
-        message = @"Remind me every year";
-    }
-    [self.viewFrequency setText:message];
-    
-    // Update photos of the contact queue
     int i;
-    for (i = 0; i < [contactQueue count] && i < 3; i++) {
+    for (i = 0; i < [currentQueue count] && i < 4; i++) {
         // Get queued contact id
-        Contact *queuedContact = [contactQueue objectAtIndex:i];
-        int queuedContactId = [[queuedContact abrecordid] intValue];
-        queuedContactId = [ContactManager verifyABRecordID:queuedContactId
-                                                forContact:queuedContact];
-        
-        // Verify id
-        ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-        ABRecordRef queuedContactRef = ABAddressBookGetPersonWithRecordID(addressBookRef, queuedContactId);
-        
-        // Get facebook, linkedin, or contact book photo data
-        NSData *imageData;
-        NSData *facebookPhoto = [queuedContact facebookPhoto];
-        NSData *linkedinPhoto = [queuedContact linkedinPhoto];
-        if (facebookPhoto != NULL) {
-            imageData = facebookPhoto;
-        } else if (linkedinPhoto != NULL) {
-            imageData = linkedinPhoto;
-        } else {
-            if (ABPersonHasImageData(queuedContactRef)) {
-                imageData = (__bridge_transfer NSData *)ABPersonCopyImageData(queuedContactRef);
-                [DebugLogger log:@"Got contact photo" withPriority:mainViewControllerPriority];
-            } else {
-                imageData = NULL;
-                [DebugLogger log:@"No contact photo" withPriority:mainViewControllerPriority];
-            }
-        }
-        
+        Contact *queuedContact = [currentQueue objectAtIndex:i];
+        NSData *photoData = [self getPhotoDataForContact:queuedContact];
         UIImageView *queuedPhoto = [photoQueue objectAtIndex:i];
         UIImage *img;
         bool shouldUseDefaultPhoto = NO;
-        if (!imageData) {
+        if (!photoData) {
             shouldUseDefaultPhoto = YES;
         } else {
             // Use found data if resolution sufficiently high
-            img = [[UIImage alloc] initWithData:imageData];
+            img = [[UIImage alloc] initWithData:photoData];
             NSInteger resolution = [img size].width * [img scale] + [img size].height * [img scale];
             if (resolution < 600) {
                 shouldUseDefaultPhoto = YES;
@@ -521,15 +335,39 @@
             NSString *defaultPhoto = [NSString stringWithFormat:@"default_profile_fade%d.png", i];
             img = [UIImage imageNamed:defaultPhoto];
         }
-        [queuedPhoto setAlpha:1];
         [queuedPhoto setImage:img];
+        [queuedPhoto setAlpha:1];
     }
     
-    // In cases where we have fewer than 3 contacts left in the queue, hide the photo all together
+    // In cases where we don't have a contact to put in the queue position, hide the photo all together
     for (; i < [photoQueue count]; i++) {
         UIImageView *queuedPhoto = [photoQueue objectAtIndex:i];
         [queuedPhoto setAlpha:0];
     }    
+}
+
+- (NSData *)getPhotoDataForContact:(Contact *)contact {
+    NSData *photoData;
+    NSData *facebookPhoto = [contact facebookPhoto];
+    NSData *linkedinPhoto = [contact linkedinPhoto];
+    if (facebookPhoto != NULL) {
+        photoData = facebookPhoto;
+    } else if (linkedinPhoto != NULL) {
+        photoData = linkedinPhoto;
+    } else {
+        int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
+        ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+        ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
+        if (ABPersonHasImageData(addressBookContact)) {
+            photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(addressBookContact);
+            [DebugLogger log:@"Got contact photo" withPriority:mainViewControllerPriority];
+        } else {
+            UIImage *img = [UIImage imageNamed:@"default_profile_fade0.png"];
+            photoData = UIImagePNGRepresentation(img);
+            [DebugLogger log:@"No contact photo" withPriority:mainViewControllerPriority];
+        }
+    }
+    return photoData;
 }
 
 - (void)showNoUrgentContacts {
@@ -542,74 +380,6 @@
     // not done -- also need to hide/unhide other elements
     
     // Prevent contact buttons from doing anything
-    [self disableInteraction];
-    
-}
-
-// Slider to adjust the frequency of desired contact
-- (IBAction)changeFrequency:(id)sender {
-    UISlider *freqSlider = (UISlider *)sender;
-    
-    // Default value or a pre-existing value needs to be determined
-    [freqSlider setContinuous:YES];
-    [freqSlider setMinimumValue:10];
-    [freqSlider setMaximumValue:650];
-    
-    // Map slider value to remind frequency (in days because of eventual CoreData entry)
-    NSInteger frequency;
-    NSInteger sliderValue = freqSlider.value;
-    if (sliderValue <= 300) {
-        frequency = sliderValue/10;
-    } else if (sliderValue <= 625) {
-        frequency = ((sliderValue-300)/60+1)*30;
-    } else {
-        frequency = 365;
-    }
-    
-    // Map frequency to user friendly display text
-    NSString *message;
-    if (frequency == 1) {
-        message = @"Remind me every day";
-    } else if (frequency <= 30) {
-        message = [NSString stringWithFormat:@"Remind me every %ld days", (long)frequency];
-    } else if (frequency < 365) {
-        NSInteger months = frequency/30;
-        message = [NSString stringWithFormat:@"Remind me every %ld months", (long)months];
-    } else {
-        message = @"Remind me every year";
-    }
-    [self.viewFrequency setText:message];
-}
-
-// Save frequency on touch up on slider
-- (IBAction)doneChangingFrequency:(id)sender {
-    UISlider *freqSlider = (UISlider *)sender;
-    int frequency;
-    double sliderValue = [freqSlider value];
-    if (sliderValue <= 300) {
-        frequency = sliderValue/10;
-    } else if (sliderValue <= 625) {
-        frequency = ((sliderValue-300)/60+1)*30;
-    } else {
-        frequency = 365;
-    }
-    
-    Contact *contact = [self fetchContact];
-    ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
-    [metadata setFreq:[NSNumber numberWithInt:frequency]];
-    [DebugLogger log:[NSString stringWithFormat:@"New frequency saved: %d", frequency] withPriority:mainViewControllerPriority];
-    [self save];
-}
-
-// Return the number of days from fromDate to toDate
-- (NSInteger)numDaysFrom:(NSDate *)fromDate To:(NSDate *)toDate {
-    NSDateComponents *diff;
-    diff = [[NSCalendar currentCalendar] components:NSCalendarUnitDay
-                                           fromDate:fromDate
-                                             toDate:toDate
-                                            options:0];
-    NSInteger daysDiff = [diff day];
-    return daysDiff;
 }
 
 #pragma mark - Tap Gestures
@@ -628,13 +398,16 @@
 - (void)deleteContact {
     [DebugLogger log:@"Delete" withPriority:mainViewControllerPriority];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
-        Contact *contact = [self fetchContact];
-        ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
+        ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
         NSDate *today = [NSDate date];
         [metadata setNoInterestDate:today];
         [metadata setInterest:[NSNumber numberWithBool:NO]];
         [self save];
-        [self displayDeletedView];
+        
+        [deletedView setAlpha:0];
+        [self dismissContactAndSetReminder:5];
+        [contactCard returnToOriginalPositions];
+        [contactCard showNameLabel];
     }
 }
 
@@ -642,16 +415,18 @@
 - (void)postponeContact {
     [DebugLogger log:@"Postpone" withPriority:2];
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
-        [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", firstName, lastName]
-            withPriority:mainViewControllerPriority];
-        Contact *contact = [self fetchContact];
-        ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
+        [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", [currentContact nameFirst], [currentContact nameLast]] withPriority:mainViewControllerPriority];
+        ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
         NSDate *today = [NSDate date];
         NSNumber *timesPostponed = [NSNumber numberWithInteger:[[metadata numTimesPostponed] integerValue]+1];
         [metadata setLastPostponedDate:today];
         [metadata setNumTimesPostponed:timesPostponed];
         [self save];
-        [self displayPostponedView];
+        
+        [postponedView setAlpha:0];
+        [self dismissContactAndSetReminder:5];
+        [contactCard returnToOriginalPositions];
+        [contactCard showNameLabel];
     }
 }
 
@@ -661,6 +436,27 @@
     if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
         [self performSegueWithIdentifier:@"contact" sender:sender];
     }
+}
+
+// Switch between "appeared" and "never appeared queues
+// When switching, we need to add the current contact back to the queue
+- (IBAction)switchQueue:(id)sender {
+    [DebugLogger log:@"Switching Queues" withPriority:mainViewControllerPriority];
+
+    // Switch queue
+    UIButton *switchQueueButton = (UIButton *)sender;
+    if (currentQueue == contactAppearedQueue) {
+        currentQueue = contactNeverAppearedQueue;
+        [switchQueueButton setTitle:@"Queue Toggle (New)" forState:UIControlStateNormal];
+    } else {
+        currentQueue = contactAppearedQueue;
+        [switchQueueButton setTitle:@"Queue Toggle (Seen)" forState:UIControlStateNormal];
+    }
+
+    // Redraw the UI with information from the current queue
+    [self getNextContactFromQueue];
+    [self updateUI];
+    [self printQueue];
 }
 
 #pragma mark - Custom Animation
@@ -678,40 +474,6 @@
     }];
 }
 
-// Display "deleted" icon. Interaction disabled for duration of animation
-- (void)displayDeletedView {
-    [self disableInteraction];
-    [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        [deletedView setAlpha:1];
-    }completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.2 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            [deletedView setAlpha:0];
-        } completion:^(BOOL finished) {
-            [self updateQueue];
-            [self getNextContactFromQueue];
-            [self enableInteraction];
-            [contactCard returnToOriginalPositions];
-        }];
-    }];
-}
-
-// Display "postponed" icon. Interaction disabled for duration of animation
-- (void)displayPostponedView {
-    [self disableInteraction];
-    [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        [postponedView setAlpha:1];
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:0.2 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            [postponedView setAlpha:0];
-        } completion:^(BOOL finished) {
-            [self updateQueue];
-            [self getNextContactFromQueue];
-            [self enableInteraction];
-            [contactCard returnToOriginalPositions];
-        }];
-    }];
-}
-
 // Display "syncing contacts" message and sync contacts
 - (void)displaySyncingViewAndSyncContacts {
     // Show the busy view
@@ -723,50 +485,36 @@
     } completion:^(BOOL finished) {
         [DebugLogger log:@"start updating..." withPriority:mainViewControllerPriority];
         [ContactManager updateInformation];
-        [ContactManager updateUrgency];
         [self save];
         [UIView animateWithDuration:0.3 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [syncingView setAlpha:0];
         } completion:^(BOOL finished){
             [syncingActivityIndicator stopAnimating];
+            
+            // Populate the queues
+            currentQueue = contactAppearedQueue;
             [self updateQueue];
+            [self printQueue];
+            currentQueue = contactNeverAppearedQueue;
+            [self updateQueue];
+            [self printQueue];
+            currentQueue = contactAppearedQueue;
             [self getNextContactFromQueue];
+            [self enableInteraction];
         }];
     }];
 }
-
-// Display "updating urgencies" message and update urgencies for all
-- (void)displayUpdatingUrgenciesViewAndUpdateUrgencies {
-    // Show the updating view
-    [self disableInteraction];
-    [DebugLogger log:@"Showing busy view" withPriority:mainViewControllerPriority];
-    [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        [updatingUrgencyView setAlpha:1];
-        [updatingUrgencyActivityIndicator startAnimating];
-    } completion:^(BOOL finished) {
-        [DebugLogger log:@"start updating urgencies" withPriority:mainViewControllerPriority];
-        [ContactManager updateUrgency];
-        [UIView animateWithDuration:0.3 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            [updatingUrgencyView setAlpha:0];
-        } completion:^(BOOL finished) {
-            [updatingUrgencyActivityIndicator stopAnimating];
-            [self updateQueue];
-            [self getNextContactFromQueue];
-        }];
-    }];
-}
-
 
 // Enable swiping/taping after animation ends
 - (void)enableInteraction {
     [DebugLogger log:@"Enabling interaction" withPriority:mainViewControllerPriority];
-    [frequencySlider setUserInteractionEnabled:YES];
+    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 }
 
 // Disable swiping/taping during animation
 - (void)disableInteraction {
     [DebugLogger log:@"Disabling interaction" withPriority:mainViewControllerPriority];
-    [frequencySlider setUserInteractionEnabled:NO];
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 }
 
 #pragma mark - Navigation
@@ -778,15 +526,7 @@
     // Pass contact information to the new view controller.
     if ([[segue identifier] isEqualToString:@"contact"]) {
         ContactViewController *destViewController = [segue destinationViewController];
-        [destViewController setFirstName:firstName];
-        [destViewController setLastName:lastName];
-        [destViewController setPhotoData:[contactPhotoFront image]];
-        [destViewController setEmailHome:emailHome];
-        [destViewController setEmailOther:emailOther];
-        [destViewController setEmailWork:emailWork];
-        [destViewController setPhoneHome:phoneHome];
-        [destViewController setPhoneMobile:phoneMobile];
-        [destViewController setPhoneWork:phoneWork];
+        [destViewController setContact:currentContact];
     }
 }
 
@@ -823,35 +563,17 @@
     }
 }
 
-// Fetch Contact entity from coredata based on nanme
-- (Contact *)fetchContact {
-    NSManagedObjectContext *moc = [self managedObjectContext];
-    NSManagedObjectModel *model = [self managedObjectModel];
-    NSDictionary *subVars = @{
-                              @"NAMEFIRST": firstName,
-                              @"NAMELAST": lastName
-                              };
-    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactNameMatch"
-                                                substitutionVariables:subVars];
-    
-    NSError *error;
-    NSArray *results = [moc executeFetchRequest:request error:&error];
-    if (results == nil) {
-        [DebugLogger log:[NSString stringWithFormat:@"Fetch error: %@, %@",
-                          error, [error userInfo]] withPriority:mainViewControllerPriority];
-        abort();
-    }
-    if ([results count] != 1) {
-        [DebugLogger log:@"Abort! Multiple contacts with same name" withPriority:mainViewControllerPriority];
-        abort();
-    }
-    return [results objectAtIndex:0];
-}
-
 // Save current context
 - (void)save {
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     [appDelegate saveContext];
+}
+
+- (void)printQueue {
+    NSLog(@"Printing queue");
+    for (Contact *contact in currentQueue) {
+        NSLog(@"%@", [contact nameFirst]);
+    }
 }
 
 @end

@@ -2,7 +2,6 @@
 
 @interface ContactMetadata : NSManagedObject
 
-@property (nonatomic, retain) NSNumber * freq;
 @property (nonatomic, retain) NSNumber * interest;
 @property (nonatomic, retain) NSDate * lastContactedDate;
 @property (nonatomic, retain) NSDate * lastPostponedDate;
@@ -14,8 +13,8 @@
 @property (nonatomic, retain) NSNumber * numTimesEmailed;
 @property (nonatomic, retain) NSNumber * numTimesMessaged;
 @property (nonatomic, retain) NSNumber * numTimesPostponed;
+@property (nonatomic, retain) NSDate * remindOnDate;
 @property (nonatomic, retain) NSString * timezone;
-@property (nonatomic, retain) NSNumber * urgency;
 @property (nonatomic, retain) NSManagedObject *contact;
 
 @end

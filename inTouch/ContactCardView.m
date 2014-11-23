@@ -40,7 +40,7 @@
     [self addGestureRecognizer:panGestureRecognizer];
     [self addGestureRecognizer:tapGestureRecognizer];
     [self resetTranslation];
-    originalPoint = [self center];
+    originalPoint = CGPointMake([self center].x, [self center].y);
     
     // Save dimensions and centers for contact queue
     originalFrontCenter = [contactPhotoFront center];
@@ -154,6 +154,8 @@
 // Return the middle and bottom photos to their original positions and sizes
 - (void)returnToOriginalPositions {
     // Reset dimensions of middle and bottom photos
+    [self setCenter:originalPoint];
+    [self setAlpha:1.0];
     CGRect frame = [contactPhotoMiddle frame];
     frame.size = originalMiddleDimensions;
     [contactPhotoMiddle setFrame:frame];
@@ -191,7 +193,6 @@
         [UIView animateWithDuration:0.3 animations:^{
             [deletedView setAlpha:0.0];
             [postponedView setAlpha:0.0];
-            [self setCenter:originalPoint];
             [self returnToOriginalPositions];
         } completion:^(BOOL finished) {
             [self showNameLabel];
@@ -212,6 +213,7 @@
                              [self setCenter:finishPoint];
                              [self slideUp];
                          } completion:^(BOOL finished) {
+                             [self setAlpha:1.0];
                              [delegate deleteContact];
                              [self resetTranslation];
                          }];
@@ -231,7 +233,7 @@
                              [self setCenter:finishPoint];
                              [self slideUp];
                          } completion:^(BOOL finished) {
-                             [self setAlpha:0];
+                             [self setAlpha:1.0];
                              [delegate postponeContact];
                              [self resetTranslation];
                          }];

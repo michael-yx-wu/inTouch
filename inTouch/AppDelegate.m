@@ -3,7 +3,6 @@
 #import "AppDelegate.h"
 #import "ContactManager.h"
 #import "GlobalData.h"
-#import "UrgencyCalculator.h"
 
 #import "DebugConstants.h"
 #import "DebugLogger.h"
@@ -37,7 +36,6 @@
     if ([results count] == 0) {
         GlobalData *globalData = [NSEntityDescription insertNewObjectForEntityForName:@"GlobalData" inManagedObjectContext:moc];
         [globalData setLastUpdatedInfo:nil];
-        [globalData setLastUpdatedUrgency:nil];
         [globalData setFirstRun:[NSNumber numberWithBool:YES]];
         [globalData setNumContacts:0];
         [globalData setNumLogins:0];

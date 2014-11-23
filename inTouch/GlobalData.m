@@ -12,7 +12,6 @@
 
 @dynamic firstRun;
 @dynamic lastUpdatedInfo;
-@dynamic lastUpdatedUrgency;
 @dynamic numContacts;
 @dynamic numLogins;
 @dynamic numNotInterested;

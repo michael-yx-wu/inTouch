@@ -1,12 +1,13 @@
+#import <AddressBookUI/AddressBookUI.h>
 #import <CoreTelephony/CTCall.h>
 #import <CoreTelephony/CTCallCenter.h>
 #import <MessageUI/MessageUI.h>
 
 #import "AppDelegate.h"
 #import "Contact.h"
+#import "ContactManager.h"
 #import "ContactMetadata.h"
 #import "ContactViewController.h"
-#import "UrgencyCalculator.h"
 
 #import "DebugConstants.h"
 #import "DebugLogger.h"
@@ -20,15 +21,13 @@
 @synthesize contactCard;
 @synthesize contactName;
 @synthesize contactPhoto;
-@synthesize lastContactedLabel;
 @synthesize callButton;
 @synthesize messageButton;
 @synthesize emailButton;
 
+@synthesize contact;
 @synthesize firstName;
 @synthesize lastName;
-@synthesize photoData;
-@synthesize lastContactedString;
 @synthesize emailHome;
 @synthesize emailWork;
 @synthesize emailOther;
@@ -51,13 +50,11 @@
     [super viewDidLoad];
     [DebugLogger log:@"Setting up ContactViewController" withPriority:contactViewControllerPriority];
     
-    // Display contact information
-    NSString *name = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-    [contactName setText:name];
-    if (photoData) {
-        [contactPhoto setImage:photoData];
-    }
-    [lastContactedLabel setText:lastContactedString];
+    // Get necessary information from contact
+    [self setName];
+    [self setPhoto];
+    [self getNumbers];
+    [self getEmails];
     
     // Disable buttons if needed
     if (!phoneHome && !phoneMobile && !phoneWork) {
@@ -81,6 +78,90 @@
     [contactCard addGestureRecognizer:tapGestureRecognizer];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissCall) name:CTCallStateDisconnected object:nil];
+}
+
+#pragma mark - Getting contact information
+
+- (void)setName {
+    NSString *name = [NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]];
+    [contactName setText:name];
+}
+
+- (void)setPhoto {
+    // Get photo (priority: fb, twitter, address book)
+    NSData *photoData;
+    NSData *facebookPhoto = [contact facebookPhoto];
+    NSData *linkedinPhoto = [contact linkedinPhoto];
+    if (facebookPhoto != NULL) {
+        photoData = facebookPhoto;
+    } else if (linkedinPhoto != NULL) {
+        photoData = linkedinPhoto;
+    } else {
+        int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
+        ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+        ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
+        if (ABPersonHasImageData(addressBookContact)) {
+            photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(addressBookContact);
+            [DebugLogger log:@"Got contact photo" withPriority:mainViewControllerPriority];
+        } else {
+            UIImage *img = [UIImage imageNamed:@"default_profile_fade0.png"];
+            photoData = UIImagePNGRepresentation(img);
+            [DebugLogger log:@"No contact photo" withPriority:mainViewControllerPriority];
+        }
+    }
+    [contactPhoto setImage:[[UIImage alloc] initWithData:photoData]];
+}
+
+- (void)getNumbers {
+    int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+    ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
+    ABMultiValueRef phoneNumbers = ABRecordCopyValue(addressBookContact, kABPersonPhoneProperty);
+
+    NSString *phoneLabel;
+    CFStringRef label;
+    for (int j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
+        // Get label for current phone number
+        label = ABMultiValueCopyLabelAtIndex(phoneNumbers, j);
+        phoneLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
+        
+        if ([phoneLabel isEqualToString:@"home"]) {
+            phoneHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Home Phone: %@", phoneHome] withPriority:mainViewControllerPriority];
+        } else if ([phoneLabel isEqualToString:@"mobile"] || [phoneLabel isEqualToString:@"iPhone"]) {
+            phoneMobile = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Mobile Phone: %@", phoneMobile] withPriority:mainViewControllerPriority];
+        } else if ([phoneLabel isEqualToString:@"work"]) {
+            phoneWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Work Phone: %@", phoneWork] withPriority:mainViewControllerPriority];
+        }
+    }
+}
+
+- (void)getEmails {
+    // Verify contact ID
+    int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+    ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
+    ABMultiValueRef emails = ABRecordCopyValue(addressBookContact, kABPersonEmailProperty);
+    NSString *emailLabel;
+    CFStringRef label;
+    for (int j = 0; j < ABMultiValueGetCount(emails); j++) {
+        // Get label for current email
+        label = ABMultiValueCopyLabelAtIndex(emails, j);
+        emailLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
+        
+        if ([emailLabel isEqualToString:@"home"]) {
+            emailHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Home Email: %@", emailHome] withPriority:mainViewControllerPriority];
+        } else if ([emailLabel isEqualToString:@"other"]) {
+            emailOther = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Other Email: %@", emailOther] withPriority:mainViewControllerPriority];
+        } else if ([emailLabel isEqualToString:@"work"]) {
+            emailWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+            [DebugLogger log:[NSString stringWithFormat:@"Work Email: %@", emailWork] withPriority:mainViewControllerPriority];
+        }
+    }
 }
 
 #pragma mark - Button Actions
@@ -244,10 +325,6 @@
     }
 }
 
-- (IBAction)manuallyContacted:(id)sender {
-    
-}
-
 // Handle phone number/email selection
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     // Cancel
@@ -337,10 +414,7 @@
 
     // Set last contact date
     NSDate *today = [NSDate date];
-    [metadata setLastContactedDate:today];
-    
-    // Update urgency for this contact only
-    [UrgencyCalculator updateUrgencyContact:contact];
+    [metadata setLastContactedDate:today];    
 }
 
 #pragma mark - Dismiss methods

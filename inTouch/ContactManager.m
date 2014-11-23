@@ -3,7 +3,8 @@
 
 #import "AppDelegate.h"
 #import "ContactManager.h"
-#import "UrgencyCalculator.h"
+#import "Contact.h"
+#import "ContactMetadata.h"
 
 #import "DebugConstants.h"
 #import "DebugLogger.h"
@@ -56,8 +57,8 @@ NSInteger kFacebookRequestFinish = 0;
         // Get contact identifier
         NSNumber *abrecordid = [NSNumber numberWithInt:ABRecordGetRecordID(currentContact)];
         
-        NSManagedObject *contact;
-        NSManagedObject *metaData;
+        Contact *contact;
+        ContactMetadata *metaData;
         
         // Create new contact if does not exist
         if ([[self fetchRequestWithFirstName:firstName LastName:lastName] count] == 0) {
@@ -66,27 +67,27 @@ NSInteger kFacebookRequestFinish = 0;
             metaData = [NSEntityDescription insertNewObjectForEntityForName:@"ContactMetadata" inManagedObjectContext:[self managedObjectContext]];
             
             // Relate contact and metadata
-            [contact setValue:metaData forKeyPath:@"metadata"];
-            [metaData setValue:contact forKey:@"contact"];
+            [contact setMetadata:metaData];
+            [metaData setContact:contact];
             
             // Instantiate contact/metadata fields
-            [contact setValue:firstName forKey:@"nameFirst"];
-            [contact setValue:lastName forKey:@"nameLast"];
-            [contact setValue:nil forKey:@"category"];
-            [metaData setValue:[NSNumber numberWithInt:14] forKeyPath:@"freq"];
-            [metaData setValue:[NSNumber numberWithBool:YES] forKey:@"interest"];
-            [metaData setValue:nil forKey:@"lastContactedDate"];
-            [metaData setValue:nil forKey:@"lastPostponedDate"];
-            [metaData setValue:nil forKey:@"noInterestDate"];
-            [metaData setValue:nil forKey:@"notes"];
-            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesAppeared"];
-            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesCalled"];
-            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesContacted"];
-            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesEmailed"];
-            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesMessaged"];
-            [metaData setValue:[NSNumber numberWithInteger:0] forKey:@"numTimesPostponed"];
-            [metaData setValue:[[NSTimeZone localTimeZone] name] forKeyPath:@"timezone"];
-            [metaData setValue:[NSNumber numberWithInteger:0] forKeyPath:@"urgency"];
+            [contact setNameFirst:firstName];
+            [contact setNameLast:lastName];
+            [contact setCategory:nil];
+            
+            [metaData setInterest:[NSNumber numberWithBool:YES]];
+            [metaData setNumTimesAppeared:[NSNumber numberWithInt:0]];
+            [metaData setNumTimesCalled:[NSNumber numberWithInt:0]];
+            [metaData setNumTimesContacted:[NSNumber numberWithInt:0]];
+            [metaData setNumTimesEmailed:[NSNumber numberWithInt:0]];
+            [metaData setNumTimesMessaged:[NSNumber numberWithInt:0]];
+            [metaData setNumTimesPostponed:[NSNumber numberWithInt:0]];
+            [metaData setLastContactedDate:nil];
+            [metaData setLastPostponedDate:nil];
+            [metaData setNoInterestDate:nil];
+            [metaData setNotes:nil];
+            [metaData setRemindOnDate:nil];
+            [metaData setTimezone:[[NSTimeZone localTimeZone] name]];
             
             [DebugLogger log:[NSString stringWithFormat:@"Created Contact: %@ %@", firstName, lastName] withPriority:1];
         }
@@ -104,9 +105,8 @@ NSInteger kFacebookRequestFinish = 0;
         }
         
         // Update contact id
-        [contact setValue:abrecordid forKey:@"abrecordid"];
+        [contact setAbrecordid:abrecordid];
     }
-    
     [self save];
 }
 
@@ -168,10 +168,6 @@ NSInteger kFacebookRequestFinish = 0;
     } else {
         return abrecordid;
     }
-}
-
-+ (void)updateUrgency {
-    [UrgencyCalculator updateAll];
 }
 
 #pragma mark - Core Data Accessor Methods

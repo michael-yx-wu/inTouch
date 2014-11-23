@@ -12,7 +12,6 @@
 
 @property (nonatomic, retain) NSNumber * firstRun;
 @property (nonatomic, retain) NSDate * lastUpdatedInfo;
-@property (nonatomic, retain) NSDate * lastUpdatedUrgency;
 @property (nonatomic, retain) NSNumber * numContacts;
 @property (nonatomic, retain) NSNumber * numLogins;
 @property (nonatomic, retain) NSNumber * numNotInterested;

@@ -10,7 +10,6 @@
 
 @implementation ContactMetadata
 
-@dynamic freq;
 @dynamic interest;
 @dynamic lastContactedDate;
 @dynamic lastPostponedDate;
@@ -22,8 +21,8 @@
 @dynamic numTimesEmailed;
 @dynamic numTimesMessaged;
 @dynamic numTimesPostponed;
+@dynamic remindOnDate;
 @dynamic timezone;
-@dynamic urgency;
 @dynamic contact;
 
 @end

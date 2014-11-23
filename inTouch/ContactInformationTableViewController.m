@@ -101,9 +101,6 @@
         [interestCell setAccessoryType:UITableViewCellAccessoryNone];
     }
     
-    newFrequency = [[contactMetadata freq] integerValue];
-    [self positionFrequencySlider:newFrequency];
-    
     // Resize labels to fit
     [nameLabel sizeToFit];
     [phoneHomeLabel sizeToFit];
@@ -113,9 +110,6 @@
     [emailOtherLabel sizeToFit];
     [emailWorkLabel sizeToFit];
     [interestLabel sizeToFit];
-    
-    // Force text to fit inside frequency label
-    [frequencyLabel setAdjustsFontSizeToFitWidth:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -206,9 +200,6 @@
     } else {
         [metadata setInterest:[NSNumber numberWithBool:NO]];
     }
-    
-    // Update frequency
-    [metadata setFreq:[NSNumber numberWithInteger:newFrequency]];
     
     [self save];
     
