@@ -26,6 +26,7 @@
 @synthesize emailButton;
 
 @synthesize contact;
+@synthesize photoData;
 @synthesize firstName;
 @synthesize lastName;
 @synthesize emailHome;
@@ -52,7 +53,7 @@
     
     // Get necessary information from contact
     [self setName];
-    [self setPhoto];
+    [contactPhoto setImage:photoData];
     [self getNumbers];
     [self getEmails];
     
@@ -85,32 +86,6 @@
 - (void)setName {
     NSString *name = [NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]];
     [contactName setText:name];
-}
-
-- (void)setPhoto {
-    // Get photo (priority: fb, twitter, address book)
-    NSData *photoData;
-    NSData *facebookPhoto = [contact facebookPhoto];
-    NSData *linkedinPhoto = [contact linkedinPhoto];
-    if (facebookPhoto != NULL) {
-        photoData = facebookPhoto;
-    } else if (linkedinPhoto != NULL) {
-        photoData = linkedinPhoto;
-    } else {
-        int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
-        ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-        ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
-        if (ABPersonHasImageData(addressBookContact)) {
-            photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(addressBookContact);
-            [DebugLogger log:@"Got contact photo" withPriority:mainViewControllerPriority];
-        } else {
-            UIImage *img = [UIImage imageNamed:@"default_profile_fade0.png"];
-            photoData = UIImagePNGRepresentation(img);
-            [DebugLogger log:@"No contact photo" withPriority:mainViewControllerPriority];
-        }
-        CFRelease(addressBookRef);
-    }
-    [contactPhoto setImage:[[UIImage alloc] initWithData:photoData]];
 }
 
 - (void)getNumbers {
@@ -149,11 +124,10 @@
     ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
     ABMultiValueRef emails = ABRecordCopyValue(addressBookContact, kABPersonEmailProperty);
     NSString *emailLabel;
-    CFStringRef label;
     for (int j = 0; j < ABMultiValueGetCount(emails); j++) {
         // Get label for current email
-        label = ABMultiValueCopyLabelAtIndex(emails, j);
-        emailLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
+        NSString *label = (__bridge_transfer NSString*)ABMultiValueCopyLabelAtIndex(emails, j);
+        emailLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label);
         
         if ([emailLabel isEqualToString:@"home"]) {
             emailHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
@@ -165,7 +139,6 @@
             emailWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
             [DebugLogger log:[NSString stringWithFormat:@"Work Email: %@", emailWork] withPriority:mainViewControllerPriority];
         }
-        CFRelease(label);
     }
     CFRelease(addressBookRef);
     CFRelease(emails);

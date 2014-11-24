@@ -539,6 +539,7 @@
     if ([[segue identifier] isEqualToString:@"contact"]) {
         ContactViewController *destViewController = [segue destinationViewController];
         [destViewController setContact:currentContact];
+        [destViewController setPhotoData:[contactPhotoFront image]];
     }
 }
 

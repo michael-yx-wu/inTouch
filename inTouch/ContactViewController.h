@@ -14,6 +14,7 @@
 
 // Contact Data
 @property (nonatomic, strong) Contact *contact;
+@property (nonatomic, strong) UIImage *photoData;
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) NSString *emailHome;
