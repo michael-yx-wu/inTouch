@@ -1,5 +1,8 @@
 #import "ContactCardView.h"
 
+#import "DebugLogger.h"
+#import "DebugConstants.h"
+
 #define ACTION_MARGIN 120
 #define OVERLAY_STRENGTH 0.75
 #define ROTATION_ANGLE M_PI/8
@@ -254,12 +257,29 @@
 
 // Was tapped, tell MainViewController to show the contact buttons
 - (void)wasTapped:(UITapGestureRecognizer *)tapGestureRecognizer {
-    [delegate contactTap:nil];
+    [DebugLogger log:@"Contact tapped" withPriority:contactCardViewPriority];
+    [delegate performSegueWithIdentifier:@"contact" sender:nil];
 }
 
 - (void)resetTranslation {
     xFromCenter = 0;
     yFromCenter = 0;
+}
+
+- (void)hideAndDisableInteraction {
+    [self setUserInteractionEnabled:NO];
+    [contactPhotoFront setAlpha:0];
+    [contactPhotoMiddle setAlpha:0];
+    [contactPhotoBottom setAlpha:0];
+    [contactPhotoAnchor setAlpha:0];
+}
+
+- (void)showAndEnableInteraction {
+    [self setUserInteractionEnabled:YES];
+    [contactPhotoFront setAlpha:1];
+    [contactPhotoMiddle setAlpha:1];
+    [contactPhotoBottom setAlpha:1];
+    [contactPhotoAnchor setAlpha:1];
 }
 
 @end

@@ -380,8 +380,7 @@
         abort();
     }
     
-    Contact *contact = [results objectAtIndex:0];
-    ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
+    ContactMetadata *metadata = (ContactMetadata *)[(Contact *)[results objectAtIndex:0] metadata];
     
     // Get timesContacted info
     NSNumber *numTimesContacted, *numTimesCalled, *numTimesMessaged, *numTimesEmailed, *timesContacted;

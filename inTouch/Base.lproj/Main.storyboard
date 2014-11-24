@@ -303,6 +303,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="3fk-ON-6g7"/>
                     <connections>
+                        <outlet property="contactActionButtonsView" destination="fX2-aQ-ian" id="UR0-lC-naY"/>
                         <outlet property="contactCard" destination="dqC-Xd-Jnt" id="cNE-H8-o3h"/>
                         <outlet property="contactName" destination="xM2-iI-mT0" id="NJu-9l-J8W"/>
                         <outlet property="contactPhotoAnchor" destination="xvG-Uz-HjS" id="xRU-yg-6Qu"/>

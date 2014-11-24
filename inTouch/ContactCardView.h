@@ -4,7 +4,7 @@
 
 - (IBAction)deleteContact;
 - (IBAction)postponeContact;
-- (IBAction)contactTap:(id)sender;
+- (void)performSegueWithIdentifier:(NSString *)string sender:(id)sender;
 
 @end
 
@@ -35,5 +35,7 @@
 - (void)rightAction;
 - (void)showNameLabel;
 - (void)returnToOriginalPositions;
+- (void)hideAndDisableInteraction;
+- (void)showAndEnableInteraction;
 
 @end

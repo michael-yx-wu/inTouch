@@ -29,6 +29,7 @@
 @synthesize contactPhotoAnchor;
 
 // User interaction
+@synthesize contactActionButtonsView;
 @synthesize deletedView;
 @synthesize postponedView;
 @synthesize syncingView;
@@ -96,6 +97,7 @@
     [self updateQueue];
     currentQueue = contactAppearedQueue;
     [self getNextContactFromQueue];
+    [self updateUI];
 
     
     // Listen for notification to replace facebook friend list with new list
@@ -148,7 +150,8 @@
     if ([currentQueue count]) {
         currentContact = [currentQueue objectAtIndex:0];
     } else {
-        [self showNoUrgentContacts];
+        NSLog(@"No contacts left in queue");
+        currentContact = nil;
     }
 }
 
@@ -307,10 +310,31 @@
 
 // Place photos for contacts in the correct position
 - (void)updateUI {
+    // If the current queue is empty
+    if (!currentContact) {
+        if (currentQueue == contactAppearedQueue) {
+            NSLog(@"No seen contacts");
+            //        [[self contactName] setText:@"No Urgent Contacts"];
+            [contactName setText:@"No Urgent Contacts"];
+        } else {
+            NSLog(@"No new contacts");
+            [contactName setText:@"No New Contacts"];
+        }
+        
+        // Hide the current queue
+        [contactCard hideAndDisableInteraction];
+        
+        // Hide the buttons
+        [contactActionButtonsView setHidden:YES];
+        
+        return;
+    }
+    
     // Set display name
     NSString *name = [NSString stringWithFormat:@"%@ %@", [currentContact nameFirst], [currentContact nameLast]];
     [contactName setText:name];
     
+    // Draw the queue photos
     int i;
     for (i = 0; i < [currentQueue count] && i < 4; i++) {
         // Get queued contact id
@@ -343,7 +367,10 @@
     for (; i < [photoQueue count]; i++) {
         UIImageView *queuedPhoto = [photoQueue objectAtIndex:i];
         [queuedPhoto setAlpha:0];
-    }    
+    }
+    
+    // Make sure to make the action buttons are visible
+    [contactActionButtonsView setHidden:NO];
 }
 
 - (NSData *)getPhotoDataForContact:(Contact *)contact {
@@ -368,18 +395,6 @@
         }
     }
     return photoData;
-}
-
-- (void)showNoUrgentContacts {
-    [[self contactName] setText:@"No Urgent Contacts"];
-    
-    // Clear the contact photo
-    [contactPhotoFront setImage:[[UIImage alloc] init]];
-    
-    
-    // not done -- also need to hide/unhide other elements
-    
-    // Prevent contact buttons from doing anything
 }
 
 #pragma mark - Tap Gestures
@@ -430,14 +445,6 @@
     }
 }
 
-// Show available contact methods for the current contact
-- (IBAction)contactTap:(id)sender {
-    [DebugLogger log:@"Contact Flip" withPriority:mainViewControllerPriority];
-    if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
-        [self performSegueWithIdentifier:@"contact" sender:sender];
-    }
-}
-
 // Switch between "appeared" and "never appeared queues
 // When switching, we need to add the current contact back to the queue
 - (IBAction)switchQueue:(id)sender {
@@ -454,6 +461,7 @@
     }
 
     // Redraw the UI with information from the current queue
+    [contactCard showAndEnableInteraction];
     [self getNextContactFromQueue];
     [self updateUI];
     [self printQueue];
@@ -500,6 +508,7 @@
             [self printQueue];
             currentQueue = contactAppearedQueue;
             [self getNextContactFromQueue];
+            [self updateUI];
             [self enableInteraction];
         }];
     }];

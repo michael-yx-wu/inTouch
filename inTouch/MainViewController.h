@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhotoAnchor;
 
 // User interaction
+@property (weak, nonatomic) IBOutlet UIView *contactActionButtonsView;
 @property (weak, nonatomic) IBOutlet UIView *deletedView;
 @property (weak, nonatomic) IBOutlet UIView *postponedView;
 @property (weak, nonatomic) IBOutlet UIView *syncingView;
