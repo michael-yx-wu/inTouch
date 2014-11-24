@@ -401,12 +401,14 @@
 #pragma mark - Tap Gestures
 
 - (IBAction)deleteContactButton:(id)sender {
-    // Send contact left and delete it
     [contactCard leftAction];
 }
 
+- (IBAction)checkContactButton:(id)sender {
+    [self performSegueWithIdentifier:@"contact" sender:sender];
+}
+
 - (IBAction)postponeContactButton:(id)sender {
-    // Send contact right and postpone it
     [contactCard rightAction];
 }
 

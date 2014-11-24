@@ -220,7 +220,7 @@
                                         </constraints>
                                         <state key="normal" image="check_icon"/>
                                         <connections>
-                                            <action selector="contactTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="8th-iw-cQB"/>
+                                            <action selector="checkContactButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Zzb-g6-82l"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2rb-EC-qdd" userLabel="Postpone Button">

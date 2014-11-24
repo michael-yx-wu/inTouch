@@ -363,31 +363,7 @@
 
 // Update ContactMetadata before dismissing
 - (void)incrementNumberTimesContacted:(NSString *)medium {
-    // Set up the fetch request for current contact
-    NSManagedObjectContext *moc = [self managedObjectContext];
-    NSManagedObjectModel *model = [self managedObjectModel];
-    
-    NSDictionary *subVars = @{
-                              @"NAMEFIRST": firstName,
-                              @"NAMELAST": lastName
-                              };
-    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"ContactNameMatch"substitutionVariables:subVars];
-    
-    NSError *error;
-    NSArray *results = [moc executeFetchRequest:request error:&error];
-    if (results == nil) {
-        [DebugLogger log:[NSString stringWithFormat:@"Error updating num times contacted: %@, %@", error, [error userInfo]] withPriority:contactViewControllerPriority];
-        abort();
-    }
-    
-    // If this error message appears, it's time to rethink contact identity
-    if ([results count] != 1) {
-        [DebugLogger log:@"Multiple contacts with same name!" withPriority:contactViewControllerPriority];
-        NSLog(@"%@ %@", firstName, lastName);
-        abort();
-    }
-    
-    ContactMetadata *metadata = (ContactMetadata *)[(Contact *)[results objectAtIndex:0] metadata];
+    ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
     
     // Get timesContacted info
     NSNumber *numTimesContacted, *numTimesCalled, *numTimesMessaged, *numTimesEmailed, *timesContacted;
@@ -420,7 +396,7 @@
 
     // Set last contact date
     NSDate *today = [NSDate date];
-    [metadata setLastContactedDate:today];    
+    [metadata setLastContactedDate:today];
 }
 
 #pragma mark - Dismiss methods
@@ -462,11 +438,12 @@
 }
 
 - (void)dismissViewController:(BOOL)contacted {
-    if (contacted) {
-        // Alert the MainViewController that the contact was contacted
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"contacted" object:self];
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (contacted) {
+            // Alert the MainViewController that the contact was contacted
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"contacted" object:self];
+        }
+    }];
 }
 
 
