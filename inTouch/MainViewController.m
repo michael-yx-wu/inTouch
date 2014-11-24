@@ -393,6 +393,7 @@
             photoData = UIImagePNGRepresentation(img);
             [DebugLogger log:@"No contact photo" withPriority:mainViewControllerPriority];
         }
+        CFRelease(addressBookRef);
     }
     return photoData;
 }
@@ -570,6 +571,8 @@
         UIAlertView *deniedMessage = [[UIAlertView alloc] initWithTitle:@"Access to Contacts" message:@"Go to 'Settings > Privacy > Contacts' to change." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
         [deniedMessage show];
     }
+    
+    CFRelease(addressBookRef);
 }
 
 // Save current context

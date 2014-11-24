@@ -108,6 +108,7 @@
             photoData = UIImagePNGRepresentation(img);
             [DebugLogger log:@"No contact photo" withPriority:mainViewControllerPriority];
         }
+        CFRelease(addressBookRef);
     }
     [contactPhoto setImage:[[UIImage alloc] initWithData:photoData]];
 }
@@ -135,7 +136,10 @@
             phoneWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
             [DebugLogger log:[NSString stringWithFormat:@"Work Phone: %@", phoneWork] withPriority:mainViewControllerPriority];
         }
+        CFRelease(label);
     }
+    CFRelease(addressBookRef);
+    CFRelease(phoneNumbers);
 }
 
 - (void)getEmails {
@@ -161,7 +165,10 @@
             emailWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
             [DebugLogger log:[NSString stringWithFormat:@"Work Email: %@", emailWork] withPriority:mainViewControllerPriority];
         }
+        CFRelease(label);
     }
+    CFRelease(addressBookRef);
+    CFRelease(emails);
 }
 
 #pragma mark - Button Actions

@@ -69,6 +69,7 @@
             phoneNumber = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
             [phoneWorkLabel setText:phoneNumber];
         }
+        CFRelease(label);
     }
     
     // Get home, other, and work emails
@@ -89,6 +90,7 @@
             email = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
             [emailWorkLabel setText:email];
         }
+        CFRelease(label);
     }
     
     // Set appropriate value for "interested cell"
@@ -110,6 +112,10 @@
     [emailOtherLabel sizeToFit];
     [emailWorkLabel sizeToFit];
     [interestLabel sizeToFit];
+    
+    CFRelease(addressBookRef);
+    CFRelease(phoneNumbers);
+    CFRelease(emails);
 }
 
 - (void)didReceiveMemoryWarning {

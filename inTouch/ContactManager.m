@@ -18,7 +18,7 @@ NSInteger kFacebookRequestFinish = 0;
     [DebugLogger log:@"Updating Contacts..." withPriority:1];
     // Open contacts
     ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-    NSArray *allContacts = (__bridge NSArray*)ABAddressBookCopyArrayOfAllPeople(addressBookRef);
+    NSArray *allContacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(addressBookRef);
     
     // Populate fbFriends with facebook friend names and url - this is so ugly right now (indentation is killing me)
     [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(500),picture.height(500)"                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -108,6 +108,10 @@ NSInteger kFacebookRequestFinish = 0;
         [contact setAbrecordid:abrecordid];
     }
     [self save];
+    
+    // Clean up
+    CFRelease(addressBookRef);
+    
 }
 
 // Returns an array of all entities with matching first and last names
@@ -155,17 +159,19 @@ NSInteger kFacebookRequestFinish = 0;
         NSArray *matches = (__bridge_transfer NSArray*)ABAddressBookCopyPeopleWithName(addressBookRef, name);
         for (int i = 0; i < [matches count]; i++) {
             ABRecordRef potentialMatch = (__bridge ABRecordRef)[matches objectAtIndex:i];
-            NSString *someFirstName = (__bridge NSString*)ABRecordCopyValue(potentialMatch, kABPersonFirstNameProperty);
-            NSString *someLastName = (__bridge NSString*)ABRecordCopyValue(potentialMatch, kABPersonLastNameProperty);
+            NSString *someFirstName = (__bridge_transfer NSString*)ABRecordCopyValue(potentialMatch, kABPersonFirstNameProperty);
+            NSString *someLastName = (__bridge_transfer NSString*)ABRecordCopyValue(potentialMatch, kABPersonLastNameProperty);
             if ([someFirstName isEqualToString:fname] && [someLastName isEqualToString:lname]) {
                 newID = [NSNumber numberWithInt:ABRecordGetRecordID(potentialMatch)];
                 [contact setValue:newID forKey:@"abrecorid"];
-            }
+            }            
+            CFRelease(addressBookRef);
             return [newID intValue];
         }
         [DebugLogger log:@"Error finding ID for contact" withPriority:contactManagerPriority];
         abort();
     } else {
+        CFRelease(addressBookRef);
         return abrecordid;
     }
 }
