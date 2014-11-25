@@ -250,7 +250,7 @@
 - (void)showPickerView {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"test"];
-    [pvc setShouldHideCancelButton:YES];
+    [pvc setShouldHideCancelButton:NO];
     [pvc setPostponingContact:YES];
     [pvc setPostponingContactFromButton:NO];
     [pvc setDaysSinceLastReminder:[[(ContactMetadata *)[currentContact metadata] daysSinceLastReminder]
