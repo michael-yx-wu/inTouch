@@ -218,7 +218,9 @@
 
 // This method is used to selectively dismiss the current contact
 - (void)contactWasContacted:(NSNotification *)notification {
-    [self dismissContactAndSetReminder:5];
+    // pause and ask for days input in the future
+    // after input, animate and then dismiss
+    [contactCard slideContactCardUp:5];
 }
 
 - (void)updateFacebookFriends:(NSNotification *)notification {

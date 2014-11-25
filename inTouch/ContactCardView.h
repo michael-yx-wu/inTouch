@@ -5,6 +5,7 @@
 - (IBAction)deleteContact;
 - (IBAction)postponeContact;
 - (void)performSegueWithIdentifier:(NSString *)string sender:(id)sender;
+- (void)dismissContactAndSetReminder:(NSUInteger)days;
 
 @end
 
@@ -33,6 +34,7 @@
 
 - (void)leftAction;
 - (void)rightAction;
+- (void)slideContactCardUp:(NSUInteger)days;
 - (void)showNameLabel;
 - (void)returnToOriginalPositions;
 - (void)hideAndDisableInteraction;

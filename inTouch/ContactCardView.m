@@ -209,8 +209,8 @@
         [contactName setAlpha:0.0];
     } completion:^(BOOL finished) {
         CGPoint finishPoint = CGPointMake(-150, 2*yFromCenter + originalPoint.y);
-        [UIView animateWithDuration:0.07
-                              delay:0.0
+        [UIView animateWithDuration:0.15
+                              delay:0
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
                              [self setCenter:finishPoint];
@@ -229,8 +229,8 @@
         [contactName setAlpha:0.0];
     } completion:^(BOOL finished) {
         CGPoint finishPoint = CGPointMake(150 + [[UIScreen mainScreen] bounds].size.width, 2*yFromCenter + originalPoint.y);
-        [UIView animateWithDuration:0.07
-                              delay:0.0
+        [UIView animateWithDuration:0.15
+                              delay:0
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
                              [self setCenter:finishPoint];
@@ -238,8 +238,32 @@
                          } completion:^(BOOL finished) {
                              [self setAlpha:1.0];
                              [delegate postponeContact];
+                             [self returnToOriginalPositions];
                              [self resetTranslation];
                          }];
+    }];
+}
+
+// When the contact has been contacted, slide card upwards and off the screen
+// The main view controller will handle getting the next contact
+- (void)slideContactCardUp:(NSUInteger)days {
+    [UIView animateWithDuration:0.15 animations:^{
+        [contactName setAlpha:0];
+    } completion:^(BOOL finished) {
+        CGPoint finishPoint = CGPointMake(originalPoint.x, -150);
+        [UIView animateWithDuration:0.15
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+            [self setCenter:finishPoint];
+            [self slideUp];
+        } completion:^(BOOL finished) {
+            [self setAlpha:1.0];
+            [delegate dismissContactAndSetReminder:days];
+            [self returnToOriginalPositions];
+            [self resetTranslation];
+            [self showNameLabel];
+        }];
     }];
 }
 
