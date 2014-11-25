@@ -543,10 +543,10 @@
     UIButton *switchQueueButton = (UIButton *)sender;
     if (currentQueue == contactAppearedQueue) {
         currentQueue = contactNeverAppearedQueue;
-        [switchQueueButton setTitle:@"C" forState:UIControlStateNormal];
+        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];
     } else {
         currentQueue = contactAppearedQueue;
-        [switchQueueButton setTitle:@"O" forState:UIControlStateNormal];
+        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
     }
 
     // Redraw the UI with information from the current queue

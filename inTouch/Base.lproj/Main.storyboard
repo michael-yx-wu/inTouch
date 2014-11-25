@@ -265,13 +265,13 @@
                                     <segue destination="5WZ-iW-IZ3" kind="modal" id="JRd-hE-HfD"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q08-uQ-aoQ">
-                                <rect key="frame" x="282" y="20" width="30" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q08-uQ-aoQ">
+                                <rect key="frame" x="282" y="25" width="30" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="THj-ln-hkd"/>
-                                    <constraint firstAttribute="height" constant="30" id="pss-pu-DxN"/>
+                                    <constraint firstAttribute="height" constant="20" id="pss-pu-DxN"/>
                                 </constraints>
-                                <state key="normal" title="O">
+                                <state key="normal" image="eye_queue_open">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -289,7 +289,7 @@
                             <constraint firstItem="lwa-de-2St" firstAttribute="bottom" secondItem="dqC-Xd-Jnt" secondAttribute="bottom" id="Gzq-2f-qZg"/>
                             <constraint firstItem="fX2-aQ-ian" firstAttribute="top" secondItem="dqC-Xd-Jnt" secondAttribute="bottom" priority="750" constant="23" id="HCD-rF-AaN"/>
                             <constraint firstItem="dqC-Xd-Jnt" firstAttribute="top" secondItem="VEZ-gE-Y26" secondAttribute="bottom" priority="750" constant="36" id="I64-Jp-4pV"/>
-                            <constraint firstItem="q08-uQ-aoQ" firstAttribute="top" secondItem="VEZ-gE-Y26" secondAttribute="bottom" id="IOT-up-rs7"/>
+                            <constraint firstItem="q08-uQ-aoQ" firstAttribute="top" secondItem="VEZ-gE-Y26" secondAttribute="bottom" constant="5" id="IOT-up-rs7"/>
                             <constraint firstAttribute="trailingMargin" secondItem="gIo-Im-uGc" secondAttribute="trailing" constant="-8" id="Mgv-rU-omh"/>
                             <constraint firstItem="hKI-x5-1Ez" firstAttribute="top" secondItem="fX2-aQ-ian" secondAttribute="bottom" priority="250" constant="133" id="Oez-w9-cV2"/>
                             <constraint firstItem="q08-uQ-aoQ" firstAttribute="trailing" secondItem="gIo-Im-uGc" secondAttribute="trailing" id="P26-oO-TOz"/>
@@ -1401,6 +1401,7 @@
         <image name="default_profile_fade1" width="512" height="512"/>
         <image name="default_profile_fade2" width="512" height="512"/>
         <image name="default_profile_fade3" width="512" height="512"/>
+        <image name="eye_queue_open" width="121" height="80"/>
         <image name="mail_icon" width="200" height="200"/>
         <image name="mail_icon_ok" width="200" height="200"/>
         <image name="message_icon" width="200" height="200"/>
