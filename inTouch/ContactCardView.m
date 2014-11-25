@@ -159,6 +159,8 @@
     // Reset dimensions of middle and bottom photos
     [self setCenter:originalPoint];
     [self setAlpha:1.0];
+    [deletedView setAlpha:0];
+    [postponedView setAlpha:0];
     CGRect frame = [contactPhotoMiddle frame];
     frame.size = originalMiddleDimensions;
     [contactPhotoMiddle setFrame:frame];
@@ -190,12 +192,10 @@
     if (xFromCenter < -ACTION_MARGIN) {
         [self leftAction];
     } else if (xFromCenter > ACTION_MARGIN) {
-        [self rightAction];
+        [self rightActionFromButton:NO];
     } else {
         // Reset the card and overlays
         [UIView animateWithDuration:0.3 animations:^{
-            [deletedView setAlpha:0.0];
-            [postponedView setAlpha:0.0];
             [self returnToOriginalPositions];
         } completion:^(BOOL finished) {
             [self showNameLabel];
@@ -224,7 +224,7 @@
 }
 
 // Move card to top and alert MainViewController to show next contact
-- (void)rightAction {
+- (void)rightActionFromButton:(BOOL)fromButton {
     [UIView animateWithDuration:0.15 animations:^{
         [contactName setAlpha:0.0];
     } completion:^(BOOL finished) {
@@ -236,10 +236,15 @@
                              [self setCenter:finishPoint];
                              [self slideUp];
                          } completion:^(BOOL finished) {
-                             [self setAlpha:1.0];
-                             [delegate postponeContact];
-                             [self returnToOriginalPositions];
-                             [self resetTranslation];
+                             if (fromButton) {
+                                 [self setAlpha:1.0];
+                                 [delegate postponeContact];
+                                 [self returnToOriginalPositions];
+                                 [self resetTranslation];
+                             } else {
+                                 // Postponing via swipe -- need to show picker view 
+                                 [delegate showPickerView];
+                             }
                          }];
     }];
 }

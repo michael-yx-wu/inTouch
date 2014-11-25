@@ -6,6 +6,7 @@
 - (IBAction)postponeContact;
 - (void)performSegueWithIdentifier:(NSString *)string sender:(id)sender;
 - (void)dismissContactAndSetReminder:(NSUInteger)days;
+- (void)showPickerView;
 
 @end
 
@@ -33,7 +34,7 @@
 @property (nonatomic) CGPoint originalPoint;
 
 - (void)leftAction;
-- (void)rightAction;
+- (void)rightActionFromButton:(BOOL)fromButton;
 - (void)slideContactCardUp:(NSUInteger)days;
 - (void)showNameLabel;
 - (void)returnToOriginalPositions;

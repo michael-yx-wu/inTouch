@@ -5,8 +5,10 @@
 #import "ContactMetadata.h"
 #import "ContactManager.h"
 #import "GlobalData.h"
+
 #import "MainViewController.h"
 #import "ContactViewController.h"
+#import "PickerViewController.h"
 
 #import "DebugConstants.h"
 #import "DebugLogger.h"
@@ -104,13 +106,29 @@
     // Notification from ContactManager
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updateFacebookFriends:)
-                                                 name:@"facebookFriends" object:nil];
+                                                 name:@"facebookFriends"
+                                               object:nil];
     
-    // Listen for notification to get next contact
+    // Listen for notification to show picker view and select a remind date
     // Notification from ContactViewController
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(contactWasContacted:)
-                                                 name:@"contacted" object:nil];
+                                                 name:@"contacted"
+                                               object:nil];
+    
+    // Listen for notification to set the remind date and slide up
+    // Notification from PickerViewController
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pickerViewDone:)
+                                                 name:@"pickerViewDone"
+                                               object:nil];
+    
+    // Listen for notification to dismiss the picker view controller and do nothing
+    // Notification from PickerViewController
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pickerViewCancel:)
+                                                 name:@"pickerViewCancel"
+                                               object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -216,12 +234,106 @@
     
 }
 
-// This method is used to selectively dismiss the current contact
+// Show the PickerViewController. Hide the cancel button
 - (void)contactWasContacted:(NSNotification *)notification {
-    // pause and ask for days input in the future
-    // after input, animate and then dismiss
-    [contactCard slideContactCardUp:5];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"test"];
+    [pvc setShouldHideCancelButton:YES];
+    [pvc setPostponingContact:NO];
+    [pvc setDaysSinceLastReminder:[[(ContactMetadata *)[currentContact metadata] daysSinceLastReminder]
+                                  unsignedIntegerValue]];
+    [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    [self presentViewController:pvc animated:YES completion:nil];
 }
+
+// This method is only called when swiping to postpone a contact
+- (void)showPickerView {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"test"];
+    [pvc setShouldHideCancelButton:YES];
+    [pvc setPostponingContact:YES];
+    [pvc setPostponingContactFromButton:NO];
+    [pvc setDaysSinceLastReminder:[[(ContactMetadata *)[currentContact metadata] daysSinceLastReminder]
+                                   unsignedIntegerValue]];
+    [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    [self presentViewController:pvc animated:YES completion:nil];
+}
+
+// Save relevant metadata and slide the contact up
+- (void)pickerViewDone:(NSNotification *)notification {
+    [self dismissViewControllerAnimated:YES completion:^{
+        NSDictionary *dict = [notification userInfo];
+        NSNumber *daysToPostpone = [dict valueForKey:@"days"];
+        ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
+        
+        BOOL postponingContact = [[dict valueForKey:@"postponingContact"] boolValue];
+        BOOL postponingContactFromButton = [[dict valueForKey:@"postponingContactFromButton"] boolValue];
+
+        // We finished contacting a contact
+        if (!postponingContact) {
+            [metadata setDaysSinceLastReminder:daysToPostpone];
+            [contactCard slideContactCardUp:[daysToPostpone unsignedIntegerValue]];
+
+        }
+        // We are postponing from a button
+        else if (postponingContactFromButton) {
+            [metadata setDaysSinceLastReminder:daysToPostpone];
+            [contactCard rightActionFromButton:YES];
+        }
+        // We are postponing from a swipe -- this is a little hairy
+        else {
+            [metadata setDaysSinceLastReminder:daysToPostpone];
+            [contactCard returnToOriginalPositions];
+            [self dismissContactAndSetReminder:[daysToPostpone unsignedIntegerValue]];
+            [contactCard showNameLabel];
+        }
+        
+    }];
+}
+
+// Dismiss the picker view and move cards back to original positions if necessary
+- (void)pickerViewCancel:(NSNotification *)notification {
+    [self dismissViewControllerAnimated:YES completion:nil];
+    [UIView animateWithDuration:0.3 animations:^{
+        [contactCard returnToOriginalPositions];
+    } completion:^(BOOL finished) {
+        [contactCard showNameLabel];
+    }];
+}
+
+// 1. Set the remindOnDate metadata property and remind in some number of days
+// 2. Remove the contact from the current queue
+// 3. Update the current queue
+// 4. Reset the current contact
+// 5. Redraw photos
+- (void)dismissContactAndSetReminder:(NSUInteger)days {
+    [self printQueue];
+    NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
+    NSDate *today = [NSDate date];
+    NSDateComponents *futureComponents = [[NSDateComponents alloc] init];
+    [futureComponents setDay:days];
+    NSDate *remindDate = [calendar dateByAddingComponents:futureComponents toDate:today options:0];
+    ContactMetadata *contactMetadata = (ContactMetadata *)[currentContact metadata];
+    [contactMetadata setNumTimesAppeared:[NSNumber numberWithInt:([[contactMetadata numTimesAppeared] intValue] + 1)]];
+    [contactMetadata setRemindOnDate:remindDate];
+    [currentQueue removeObjectAtIndex:0];
+    [self getNextContactFromQueue];
+    [self updateQueue];
+    [self updateUI];
+    [self printQueue];
+}
+
+// Helper method that returns true if the specified queue contains a copy of the contact
+- (BOOL)queue:(NSMutableArray *)queue ContainsContact:(Contact *)contact {
+    for (Contact *queuedContact in queue) {
+        if([[[queuedContact objectID] URIRepresentation] isEqual:[[contact objectID] URIRepresentation]]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+#pragma mark - Facebook methods
 
 - (void)updateFacebookFriends:(NSNotification *)notification {
     NSLog(@"got new friend list");
@@ -274,38 +386,6 @@
             NSLog(@"error: thread probably terminated mid execution");
         }
     });
-}
-
-// Helper method that returns true if the specified queue contains a copy of the contact
-- (BOOL)queue:(NSMutableArray *)queue ContainsContact:(Contact *)contact {
-    for (Contact *queuedContact in queue) {
-        if([[[queuedContact objectID] URIRepresentation] isEqual:[[contact objectID] URIRepresentation]]) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
-// 1. Set the remindOnDate metadata property and remind in some number of days
-// 2. Remove the contact from the current queue
-// 3. Update the current queue
-// 4. Reset the current contact
-// 5. Redraw photos
-- (void)dismissContactAndSetReminder:(NSUInteger)days {
-    [self printQueue];
-    NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
-    NSDate *today = [NSDate date];
-    NSDateComponents *futureComponents = [[NSDateComponents alloc] init];
-    [futureComponents setDay:days];
-    NSDate *remindDate = [calendar dateByAddingComponents:futureComponents toDate:today options:0];
-    ContactMetadata *contactMetadata = (ContactMetadata *)[currentContact metadata];
-    [contactMetadata setNumTimesAppeared:[NSNumber numberWithInt:([[contactMetadata numTimesAppeared] intValue] + 1)]];
-    [contactMetadata setRemindOnDate:remindDate];
-    [currentQueue removeObjectAtIndex:0];
-    [self getNextContactFromQueue];
-    [self updateQueue];
-    [self updateUI];
-    [self printQueue];
 }
 
 #pragma mark - UI upating
@@ -411,7 +491,15 @@
 }
 
 - (IBAction)postponeContactButton:(id)sender {
-    [contactCard rightAction];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"test"];
+    [pvc setShouldHideCancelButton:NO];
+    [pvc setPostponingContact:YES];
+    [pvc setPostponingContactFromButton:YES];
+    [pvc setDaysSinceLastReminder:[[(ContactMetadata *)[currentContact metadata] daysSinceLastReminder]
+                                   unsignedIntegerValue]];
+    [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    [self presentViewController:pvc animated:YES completion:nil];
 }
 
 // Delete the current contact
