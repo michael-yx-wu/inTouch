@@ -417,37 +417,33 @@
 // Delete the current contact
 - (void)deleteContact {
     [DebugLogger log:@"Delete" withPriority:mainViewControllerPriority];
-    if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
-        ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
-        NSDate *today = [NSDate date];
-        [metadata setNoInterestDate:today];
-        [metadata setInterest:[NSNumber numberWithBool:NO]];
-        [self save];
-        
-        [deletedView setAlpha:0];
-        [self dismissContactAndSetReminder:5];
-        [contactCard returnToOriginalPositions];
-        [contactCard showNameLabel];
-    }
+    ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
+    NSDate *today = [NSDate date];
+    [metadata setNoInterestDate:today];
+    [metadata setInterest:[NSNumber numberWithBool:NO]];
+    [self save];
+    
+    [deletedView setAlpha:0];
+    [self dismissContactAndSetReminder:5];
+    [contactCard returnToOriginalPositions];
+    [contactCard showNameLabel];
 }
 
 // Postpone the current contact
 - (void)postponeContact {
     [DebugLogger log:@"Postpone" withPriority:2];
-    if (![[contactName text] isEqualToString:@"No Urgent Contacts"]) {
-        [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", [currentContact nameFirst], [currentContact nameLast]] withPriority:mainViewControllerPriority];
-        ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
-        NSDate *today = [NSDate date];
-        NSNumber *timesPostponed = [NSNumber numberWithInteger:[[metadata numTimesPostponed] integerValue]+1];
-        [metadata setLastPostponedDate:today];
-        [metadata setNumTimesPostponed:timesPostponed];
-        [self save];
-        
-        [postponedView setAlpha:0];
-        [self dismissContactAndSetReminder:5];
-        [contactCard returnToOriginalPositions];
-        [contactCard showNameLabel];
-    }
+    [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", [currentContact nameFirst], [currentContact nameLast]] withPriority:mainViewControllerPriority];
+    ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
+    NSDate *today = [NSDate date];
+    NSNumber *timesPostponed = [NSNumber numberWithInteger:[[metadata numTimesPostponed] integerValue]+1];
+    [metadata setLastPostponedDate:today];
+    [metadata setNumTimesPostponed:timesPostponed];
+    [self save];
+    
+    [postponedView setAlpha:0];
+    [self dismissContactAndSetReminder:5];
+    [contactCard returnToOriginalPositions];
+    [contactCard showNameLabel];
 }
 
 // Switch between "appeared" and "never appeared queues
@@ -459,10 +455,10 @@
     UIButton *switchQueueButton = (UIButton *)sender;
     if (currentQueue == contactAppearedQueue) {
         currentQueue = contactNeverAppearedQueue;
-        [switchQueueButton setTitle:@"Queue Toggle (New)" forState:UIControlStateNormal];
+        [switchQueueButton setTitle:@"C" forState:UIControlStateNormal];
     } else {
         currentQueue = contactAppearedQueue;
-        [switchQueueButton setTitle:@"Queue Toggle (Seen)" forState:UIControlStateNormal];
+        [switchQueueButton setTitle:@"O" forState:UIControlStateNormal];
     }
 
     // Redraw the UI with information from the current queue
