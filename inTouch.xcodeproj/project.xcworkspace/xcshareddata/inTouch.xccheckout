@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>64F1B7B7-2C38-4EC6-B87C-1306EE75CF27</string>
+	<key>IDESourceControlProjectName</key>
+	<string>inTouch</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>899C80C0-EE98-411D-A183-BCBE1F6FE29C</key>
+		<string>https://github.com/michael-yx-wu/inTouch.git</string>
+		<key>945C1D2BD4205C03C501D31BEC43CF57038F8164</key>
+		<string>https://github.com/michael-yx-wu/inTouch.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>inTouch.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>899C80C0-EE98-411D-A183-BCBE1F6FE29C</key>
+		<string>../../../inTouch</string>
+		<key>945C1D2BD4205C03C501D31BEC43CF57038F8164</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/michael-yx-wu/inTouch.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>945C1D2BD4205C03C501D31BEC43CF57038F8164</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>899C80C0-EE98-411D-A183-BCBE1F6FE29C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>inTouch</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>945C1D2BD4205C03C501D31BEC43CF57038F8164</string>
+			<key>IDESourceControlWCCName</key>
+			<string>inTouch%20App</string>
+		</dict>
+	</array>
+</dict>
+</plist>

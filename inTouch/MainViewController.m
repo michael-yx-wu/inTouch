@@ -156,6 +156,9 @@
         [globalData setLastUpdatedInfo:today];
         [globalData setFirstRun:[NSNumber numberWithBool:NO]];
     }
+    
+    // Save the original centers after main view has loaded -- method is screen width dependent
+    [contactCard setImageCenters];
 }
 
 - (void)didReceiveMemoryWarning {

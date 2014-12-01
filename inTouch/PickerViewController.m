@@ -63,12 +63,11 @@ enum {
 
 // Set the row height -- may need to adjust for larger screens
 - (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component {
-    return 30.0;
+    return 24.0;
 }
 
-// Set the text of the rows
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return [NSString stringWithFormat:@"%ld", row];
+    return [NSString stringWithFormat:@"%ld", (long)row];
 }
 
 // Update the remindDate label text
@@ -78,6 +77,10 @@ enum {
     NSUInteger days = [pickerView selectedRowInComponent:daysComponent];
     NSUInteger totalDays = months * 30 + days;
     
+    if (totalDays == 0) {
+        [remindDate setText:@"later today"];
+    }
+    
     // Add days to current date and set the label text
     NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
     NSDate *today = [NSDate date];
@@ -85,9 +88,9 @@ enum {
     [futureComponents setDay:totalDays];
     NSDate *remindOnDate = [calendar dateByAddingComponents:futureComponents toDate:today options:0];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-    [remindDate setText:[NSString stringWithFormat:@"Remind me on %@", [dateFormatter stringFromDate:remindOnDate]]];
+    [remindDate setText:[NSString stringWithFormat:@" %@", [dateFormatter stringFromDate:remindOnDate]]];
 }
 
 // Cancel

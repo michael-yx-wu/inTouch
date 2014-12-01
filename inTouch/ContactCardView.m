@@ -3,7 +3,7 @@
 #import "DebugLogger.h"
 #import "DebugConstants.h"
 
-#define ACTION_MARGIN 120
+#define ACTION_MARGIN 100
 #define OVERLAY_STRENGTH 0.75
 #define ROTATION_ANGLE M_PI/8
 #define ROTATION_MAX 1
@@ -37,15 +37,19 @@
 @synthesize contactPhotoBottom;
 @synthesize contactPhotoAnchor;
 
+// Add gesture recognizers on load. These are screen size independent.
 - (void)awakeFromNib {
     panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(beingDragged:)];
     tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(wasTapped:)];
     [self addGestureRecognizer:panGestureRecognizer];
     [self addGestureRecognizer:tapGestureRecognizer];
     [self resetTranslation];
-    originalPoint = CGPointMake([self center].x, [self center].y);
-    
+}
+
+// Save the original image centers. Screen size dependent so this is called after main view has loaded.
+- (void)setImageCenters {
     // Save dimensions and centers for contact queue
+    originalPoint = [self center];
     originalFrontCenter = [contactPhotoFront center];
     originalMiddleCenter = [contactPhotoMiddle center];
     originalBottomCenter = [contactPhotoBottom center];
@@ -53,6 +57,7 @@
     originalMiddleDimensions = [contactPhotoMiddle frame].size;
     originalBottomDimensions = [contactPhotoBottom frame].size;
 }
+
 
 // Called when contact card is being dragged. Called many times per second
 -(void)beingDragged:(UIPanGestureRecognizer *)gestureRecognizer {
@@ -208,13 +213,14 @@
     [UIView animateWithDuration:0.15 animations:^{
         [contactName setAlpha:0.0];
     } completion:^(BOOL finished) {
-        CGPoint finishPoint = CGPointMake(-150, 2*yFromCenter + originalPoint.y);
+        CGPoint finishPoint = CGPointMake(-125, 2*yFromCenter + originalPoint.y);
         [UIView animateWithDuration:0.15
                               delay:0
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
                              [self setCenter:finishPoint];
                              [self slideUp];
+                             [deletedView setAlpha:1];
                          } completion:^(BOOL finished) {
                              [self setAlpha:1.0];
                              [delegate deleteContact];
@@ -228,13 +234,14 @@
     [UIView animateWithDuration:0.15 animations:^{
         [contactName setAlpha:0.0];
     } completion:^(BOOL finished) {
-        CGPoint finishPoint = CGPointMake(150 + [[UIScreen mainScreen] bounds].size.width, 2*yFromCenter + originalPoint.y);
+        CGPoint finishPoint = CGPointMake(125 + [[UIScreen mainScreen] bounds].size.width, 2*yFromCenter + originalPoint.y);
         [UIView animateWithDuration:0.15
                               delay:0
                             options:UIViewAnimationOptionCurveEaseIn
                          animations:^{
                              [self setCenter:finishPoint];
                              [self slideUp];
+                             [postponedView setAlpha:1];
                          } completion:^(BOOL finished) {
                              if (fromButton) {
                                  [self setAlpha:1.0];
@@ -282,6 +289,8 @@
         [deletedView setAlpha:0];
         [postponedView setAlpha:alpha];
     }
+    NSLog(@"%f", xFromCenter);
+    NSLog(@"alpha: %f", alpha);
 }
 
 // Was tapped, tell MainViewController to show the contact buttons
