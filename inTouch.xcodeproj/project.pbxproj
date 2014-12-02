@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C03B9531906C70D003221EC /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D9918C175D3009A96D8 /* AddressBookUI.framework */; };
+		4C0ED67D1A2D8A3700718BE7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D7318C16FF7009A96D8 /* Main.storyboard */; };
 		4C340D6218C16FF7009A96D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6118C16FF7009A96D8 /* Foundation.framework */; };
 		4C340D6418C16FF7009A96D8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6318C16FF7009A96D8 /* CoreGraphics.framework */; };
 		4C340D6618C16FF7009A96D8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6518C16FF7009A96D8 /* UIKit.framework */; };
@@ -29,7 +30,6 @@
 		4C42688919158D530014744F /* ContactMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C42688819158D530014744F /* ContactMetadata.m */; };
 		4C42688D1915B6B80014744F /* GlobalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C42688C1915B6B80014744F /* GlobalData.m */; };
 		4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C47934C18E0EB2900A408AB /* ContactViewController.m */; };
-		4C7EF962198A1F4800AF59E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D7318C16FF7009A96D8 /* Main.storyboard */; };
 		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
 		4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107E51934362E00BB853C /* SettingsTableViewController.m */; };
 		4CB107EC19344F1300BB853C /* FacebookLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107EB19344F1300BB853C /* FacebookLoginViewController.m */; };
@@ -336,9 +336,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C0ED67D1A2D8A3700718BE7 /* Main.storyboard in Resources */,
 				4C340D7A18C16FF7009A96D8 /* Images.xcassets in Resources */,
 				4C340D6C18C16FF7009A96D8 /* InfoPlist.strings in Resources */,
-				4C7EF962198A1F4800AF59E0 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
