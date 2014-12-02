@@ -1608,7 +1608,7 @@
                                                 </connections>
                                             </button>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="hay-uN-S6J" firstAttribute="leading" secondItem="7LZ-Fr-NBn" secondAttribute="leading" constant="8" id="1Cw-MX-5Jb"/>
                                             <constraint firstAttribute="centerY" secondItem="cPN-Kg-Njz" secondAttribute="centerY" id="AU0-P7-s0I"/>
@@ -1644,7 +1644,7 @@
                                         </variation>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="centerY" secondItem="7LZ-Fr-NBn" secondAttribute="centerY" id="17u-L6-FWH"/>
                                     <constraint firstAttribute="height" constant="80" id="H2T-pW-nKV"/>

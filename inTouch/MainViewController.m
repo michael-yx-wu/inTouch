@@ -62,26 +62,6 @@
     contactAppearedQueue = [[NSMutableArray alloc] initWithCapacity:5];
     contactNeverAppearedQueue = [[NSMutableArray alloc] initWithCapacity:5];    
     
-    // Attempt to get list of facebook friends
-    // This will fail gracefully if user is not logged in
-    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(500),picture.height(500)" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        if (error) {
-            [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]]
-                withPriority:contactManagerPriority];
-            return;
-        }
-        
-        // Process facebook json object
-        NSArray *taggableFriends = [result objectForKey:@"data"];
-        for (NSDictionary *friend in taggableFriends) {
-            NSString *name = [friend valueForKey:@"name"];
-            NSArray *picture = [friend valueForKey:@"picture"];
-            NSArray *pictureData = [picture valueForKey:@"data"];
-            NSString *url = [NSString stringWithString:[pictureData valueForKey:@"url"]];
-            [facebookFriends setValue:url forKey:name];
-        }
-    }];
-    
     // Initialize the contact queue with at most 5 urgent contacts - load appeared queue on default
     currentQueue = contactAppearedQueue;
     [self updateQueue];
@@ -124,6 +104,9 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    // Save the original centers after main view has loaded -- method is screen width dependent
+    [contactCard setImageCentersAndMasks];
+    
     // Determine last time we update contact info
     NSManagedObjectContext *moc = [self managedObjectContext];
     NSManagedObjectModel *model = [self managedObjectModel];
@@ -147,8 +130,25 @@
         [globalData setFirstRun:[NSNumber numberWithBool:NO]];
     }
     
-    // Save the original centers after main view has loaded -- method is screen width dependent
-    [contactCard setImageCentersAndMasks];
+    // Attempt to get list of facebook friends
+    // This will fail gracefully if user is not logged in
+    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(500),picture.height(500)" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        if (error) {
+            [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]]
+                withPriority:contactManagerPriority];
+            return;
+        }
+        
+        // Process facebook json object
+        NSArray *taggableFriends = [result objectForKey:@"data"];
+        for (NSDictionary *friend in taggableFriends) {
+            NSString *name = [friend valueForKey:@"name"];
+            NSArray *picture = [friend valueForKey:@"picture"];
+            NSArray *pictureData = [picture valueForKey:@"data"];
+            NSString *url = [NSString stringWithString:[pictureData valueForKey:@"url"]];
+            [facebookFriends setValue:url forKey:name];
+        }
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
