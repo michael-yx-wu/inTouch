@@ -47,16 +47,6 @@
 	// Load in background image
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
     
-    // Make contact photos round
-    [[contactPhotoFront layer] setCornerRadius:contactPhotoFront.frame.size.width/2];
-    [[contactPhotoMiddle layer] setCornerRadius:contactPhotoMiddle.frame.size.width/2];
-    [[contactPhotoBottom layer] setCornerRadius:contactPhotoBottom.frame.size.width/2];
-    [[contactPhotoAnchor layer] setCornerRadius:contactPhotoAnchor.frame.size.width/2];
-    [[contactPhotoFront layer] setMasksToBounds:YES];
-    [[contactPhotoMiddle layer] setMasksToBounds:YES];
-    [[contactPhotoBottom layer] setMasksToBounds:YES];
-    [[contactPhotoAnchor layer] setMasksToBounds:YES];
-    
     // Add the references to the contact queue
     photoQueue = [[NSMutableArray alloc] initWithCapacity:4];
     [photoQueue addObject:contactPhotoFront];
@@ -158,7 +148,7 @@
     }
     
     // Save the original centers after main view has loaded -- method is screen width dependent
-    [contactCard setImageCenters];
+    [contactCard setImageCentersAndMasks];
 }
 
 - (void)didReceiveMemoryWarning {

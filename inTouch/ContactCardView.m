@@ -46,8 +46,9 @@
     [self resetTranslation];
 }
 
-// Save the original image centers. Screen size dependent so this is called after main view has loaded.
-- (void)setImageCenters {
+// Save the original image centers and makes images circular.
+// Screen size dependent so this is called after main view has loaded.
+- (void)setImageCentersAndMasks {
     // Save dimensions and centers for contact queue
     originalPoint = [self center];
     originalFrontCenter = [contactPhotoFront center];
@@ -56,6 +57,16 @@
     originalFrontDimensions = [contactPhotoFront frame].size;
     originalMiddleDimensions = [contactPhotoMiddle frame].size;
     originalBottomDimensions = [contactPhotoBottom frame].size;
+    
+    // Make contact photos round
+    [[contactPhotoFront layer] setCornerRadius:contactPhotoFront.frame.size.width/2];
+    [[contactPhotoMiddle layer] setCornerRadius:contactPhotoMiddle.frame.size.width/2];
+    [[contactPhotoBottom layer] setCornerRadius:contactPhotoBottom.frame.size.width/2];
+    [[contactPhotoAnchor layer] setCornerRadius:contactPhotoAnchor.frame.size.width/2];
+    [[contactPhotoFront layer] setMasksToBounds:YES];
+    [[contactPhotoMiddle layer] setMasksToBounds:YES];
+    [[contactPhotoBottom layer] setMasksToBounds:YES];
+    [[contactPhotoAnchor layer] setMasksToBounds:YES];
 }
 
 
