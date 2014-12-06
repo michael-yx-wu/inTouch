@@ -33,7 +33,7 @@
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
 @property (nonatomic) CGPoint originalPoint;
 
-- (void)setImageCenters;
+- (void)setImageCentersAndMasks;
 - (void)leftAction;
 - (void)rightActionFromButton:(BOOL)fromButton;
 - (void)slideContactCardUp:(NSUInteger)days;

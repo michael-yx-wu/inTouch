@@ -68,10 +68,6 @@
         [emailButton setEnabled:NO];
     }
     
-    // Make contact photo ronud
-    [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
-    [[contactPhoto layer] setMasksToBounds:YES];
-    
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]
@@ -79,6 +75,13 @@
     [contactCard addGestureRecognizer:tapGestureRecognizer];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissCall) name:CTCallStateDisconnected object:nil];
+}
+
+// Set mask only after view appears because it is screen width dependent
+- (void)viewDidAppear:(BOOL)animated {
+    // Make contact photo ronud
+    [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
+    [[contactPhoto layer] setMasksToBounds:YES];
 }
 
 #pragma mark - Getting contact information
@@ -411,7 +414,7 @@
 }
 
 - (void)dismissViewController:(BOOL)contacted {
-    [self dismissViewControllerAnimated:YES completion:^{
+    [self dismissViewControllerAnimated:NO completion:^{
         if (contacted) {
             // Alert the MainViewController that the contact was contacted
             [[NSNotificationCenter defaultCenter] postNotificationName:@"contacted" object:self];
