@@ -202,7 +202,8 @@
                                                                 <exclude reference="6aw-Lk-9FQ"/>
                                                             </mask>
                                                         </variation>
-                                                        <variation key="heightClass=regular-widthClass=compact">
+                                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                            <rect key="frame" x="33" y="17" width="40" height="39"/>
                                                             <mask key="constraints">
                                                                 <include reference="6aw-Lk-9FQ"/>
                                                                 <exclude reference="7kr-fY-Qqi"/>
@@ -318,7 +319,8 @@
                                                                 <exclude reference="Pmf-QM-aMU"/>
                                                             </mask>
                                                         </variation>
-                                                        <variation key="heightClass=regular-widthClass=compact">
+                                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                            <rect key="frame" x="10" y="10" width="86" height="86"/>
                                                             <mask key="constraints">
                                                                 <exclude reference="1hL-VS-OXJ"/>
                                                                 <include reference="Pmf-QM-aMU"/>
@@ -378,7 +380,8 @@
                                                                 <exclude reference="aA9-4C-EVD"/>
                                                             </mask>
                                                         </variation>
-                                                        <variation key="heightClass=regular-widthClass=compact">
+                                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                            <rect key="frame" x="10" y="10" width="86" height="86"/>
                                                             <mask key="constraints">
                                                                 <exclude reference="M8f-dG-Kwg"/>
                                                                 <exclude reference="Pcg-Ix-Dp8"/>
@@ -1240,7 +1243,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RBo-NR-3uF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-27" y="363.75"/>
+            <point key="canvasLocation" x="-6" y="363.75"/>
         </scene>
         <!--Contact View Controller-->
         <scene sceneID="Vbk-hK-mq7">
@@ -1406,33 +1409,6 @@
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZzW-lq-ByH" userLabel="Contact Buttons View">
                                 <rect key="frame" x="185" y="391" width="230" height="70"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lqK-Eh-GiI" userLabel="Call Button">
-                                        <rect key="frame" x="0.0" y="5" width="60" height="60"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="lqK-Eh-GiI" secondAttribute="height" multiplier="1:1" id="Aqi-ic-jTU"/>
-                                            <constraint firstAttribute="height" constant="60" id="CkZ-AA-OFa"/>
-                                            <constraint firstAttribute="width" constant="60" id="e5C-Q5-qQe"/>
-                                        </constraints>
-                                        <state key="normal" image="phone_icon_ok">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="disabled" image="phone_icon"/>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="Aqi-ic-jTU"/>
-                                            </mask>
-                                        </variation>
-                                        <variation key="heightClass=regular-widthClass=compact">
-                                            <mask key="constraints">
-                                                <include reference="Aqi-ic-jTU"/>
-                                                <exclude reference="CkZ-AA-OFa"/>
-                                                <exclude reference="e5C-Q5-qQe"/>
-                                            </mask>
-                                        </variation>
-                                        <connections>
-                                            <action selector="callButton:" destination="ost-IX-nwv" eventType="touchUpInside" id="b4E-1c-fcc"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2kq-BB-3yx" userLabel="Message Button">
                                         <rect key="frame" x="85" y="5" width="60" height="60"/>
                                         <constraints>
@@ -1485,6 +1461,33 @@
                                         </variation>
                                         <connections>
                                             <action selector="email:" destination="ost-IX-nwv" eventType="touchUpInside" id="Gfq-Jg-DDb"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lqK-Eh-GiI" userLabel="Call Button">
+                                        <rect key="frame" x="0.0" y="5" width="60" height="60"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="lqK-Eh-GiI" secondAttribute="height" multiplier="1:1" id="Aqi-ic-jTU"/>
+                                            <constraint firstAttribute="height" constant="60" id="CkZ-AA-OFa"/>
+                                            <constraint firstAttribute="width" constant="60" id="e5C-Q5-qQe"/>
+                                        </constraints>
+                                        <state key="normal" image="phone_icon_ok">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="disabled" image="phone_icon"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="Aqi-ic-jTU"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="heightClass=regular-widthClass=compact">
+                                            <mask key="constraints">
+                                                <include reference="Aqi-ic-jTU"/>
+                                                <exclude reference="CkZ-AA-OFa"/>
+                                                <exclude reference="e5C-Q5-qQe"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <action selector="callButton:" destination="ost-IX-nwv" eventType="touchUpInside" id="b4E-1c-fcc"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -2569,12 +2572,12 @@
         <image name="default_profile_fade2" width="512" height="512"/>
         <image name="default_profile_fade3" width="512" height="512"/>
         <image name="eye_queue_open" width="121" height="80"/>
-        <image name="mail_icon" width="500" height="500"/>
-        <image name="mail_icon_ok" width="500" height="500"/>
-        <image name="message_icon" width="500" height="500"/>
-        <image name="message_icon_ok" width="500" height="500"/>
-        <image name="phone_icon" width="500" height="500"/>
-        <image name="phone_icon_ok" width="500" height="500"/>
+        <image name="mail_icon" width="400" height="400"/>
+        <image name="mail_icon_ok" width="400" height="400"/>
+        <image name="message_icon" width="400" height="400"/>
+        <image name="message_icon_ok" width="400" height="400"/>
+        <image name="phone_icon" width="400" height="400"/>
+        <image name="phone_icon_ok" width="400" height="400"/>
         <image name="postpone_icon" width="612" height="612"/>
         <image name="settings_icon" width="200" height="200"/>
         <image name="x_icon" width="800" height="800"/>
