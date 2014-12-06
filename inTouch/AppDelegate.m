@@ -45,6 +45,7 @@
     // Load necessary FacebookSDK classes here
     [FBLoginView class];
     [FBAppCall class];
+    [FBSession class];
     
     // Open facebook session on launch if available
     [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"] allowLoginUI:NO completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {

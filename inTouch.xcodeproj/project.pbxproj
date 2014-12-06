@@ -30,10 +30,10 @@
 		4C42688919158D530014744F /* ContactMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C42688819158D530014744F /* ContactMetadata.m */; };
 		4C42688D1915B6B80014744F /* GlobalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C42688C1915B6B80014744F /* GlobalData.m */; };
 		4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C47934C18E0EB2900A408AB /* ContactViewController.m */; };
+		4C85E5E21A339F6900FEC472 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
 		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
 		4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107E51934362E00BB853C /* SettingsTableViewController.m */; };
 		4CB107EC19344F1300BB853C /* FacebookLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107EB19344F1300BB853C /* FacebookLoginViewController.m */; };
-		4CB6256A1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
 		4CB6256B1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
 		4CC61A9D19AA74EC00FF7118 /* ContactCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC61A9C19AA74EC00FF7118 /* ContactCardView.m */; };
 		4CC73FD21906330900B932A7 /* ContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC73FD11906330900B932A7 /* ContactManager.m */; };
@@ -115,7 +115,7 @@
 				4C340DA318C18D91009A96D8 /* CoreData.framework in Frameworks */,
 				4C340D6418C16FF7009A96D8 /* CoreGraphics.framework in Frameworks */,
 				4CE2435019080BCE00028430 /* CoreTelephony.framework in Frameworks */,
-				4CB6256A1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */,
+				4C85E5E21A339F6900FEC472 /* FacebookSDK.framework in Frameworks */,
 				4C340D6218C16FF7009A96D8 /* Foundation.framework in Frameworks */,
 				4C367C9718FC96AE00FABB5C /* MessageUI.framework in Frameworks */,
 				4C340D6618C16FF7009A96D8 /* UIKit.framework in Frameworks */,
