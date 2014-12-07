@@ -1,6 +1,6 @@
 #import "PickerViewController.h"
 enum {
-    monthsComponent,
+    weeksComponent,
     daysComponent
 };
 
@@ -25,6 +25,8 @@ enum {
     if (shouldHideCancelButton) {
         [self hideCancelButton];
     }
+    
+//    [remindDatePickerView ]
 }
 
 - (void)didReceiveMemoryWarning {
@@ -33,9 +35,9 @@ enum {
 
 // Determine the correct rows to highlight on load
 - (void)configureRows {
-    NSUInteger months = daysSinceLastReminder/30;
-    NSUInteger days = daysSinceLastReminder%30;
-    [remindDatePickerView selectRow:months inComponent:monthsComponent animated:YES];
+    NSUInteger weeks = daysSinceLastReminder/7;
+    NSUInteger days = daysSinceLastReminder%7;
+    [remindDatePickerView selectRow:weeks inComponent:weeksComponent animated:YES];
     [remindDatePickerView selectRow:days inComponent:daysComponent animated:YES];
     [self pickerView:remindDatePickerView didSelectRow:days inComponent:1];
 }
@@ -55,7 +57,7 @@ enum {
 
 // Set the number of rows in each list
 - (NSInteger) pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    if (component == monthsComponent) {
+    if (component == weeksComponent) {
         return 7;
     }
     return 31;
@@ -66,20 +68,33 @@ enum {
     return 24.0;
 }
 
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return [NSString stringWithFormat:@"%ld", (long)row];
+- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component {
+    return [[self view] bounds].size.width/3;
+}
+
+//- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+//    return [NSString stringWithFormat:@"%ld", (long)row];
+//}
+
+-(NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    if (component == weeksComponent) {
+        [paragraphStyle setAlignment:NSTextAlignmentRight];
+//        [paragraphStyle setTailIndent:10];
+    } else {
+//        [paragraphStyle setHeadIndent:10];
+        [paragraphStyle setAlignment:NSTextAlignmentLeft];
+    }
+    return [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%ld", (long)row]
+                                           attributes:@{NSParagraphStyleAttributeName:paragraphStyle}];
 }
 
 // Update the remindDate label text
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     // Convert picker rows to days
-    NSUInteger months = [pickerView selectedRowInComponent:monthsComponent];
+    NSUInteger weeks = [pickerView selectedRowInComponent:weeksComponent];
     NSUInteger days = [pickerView selectedRowInComponent:daysComponent];
-    NSUInteger totalDays = months * 30 + days;
-    
-    if (totalDays == 0) {
-        [remindDate setText:@"later today"];
-    }
+    NSUInteger totalDays = weeks * 7 + days;
     
     // Add days to current date and set the label text
     NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
@@ -90,7 +105,12 @@ enum {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-    [remindDate setText:[NSString stringWithFormat:@" %@", [dateFormatter stringFromDate:remindOnDate]]];
+    
+    if (totalDays == 0) {
+        [remindDate setText:@" later today"];
+    } else {
+            [remindDate setText:[NSString stringWithFormat:@" %@", [dateFormatter stringFromDate:remindOnDate]]];
+    }
 }
 
 // Cancel
@@ -100,7 +120,7 @@ enum {
 
 // Done
 - (IBAction)done:(id)sender {
-    NSInteger daysToPostpone = [remindDatePickerView selectedRowInComponent:monthsComponent]*30 +
+    NSInteger daysToPostpone = [remindDatePickerView selectedRowInComponent:weeksComponent]*30 +
     [remindDatePickerView selectedRowInComponent:daysComponent];
     NSDictionary *userInfo =  [NSDictionary dictionaryWithObjects:@[[NSNumber numberWithInteger:daysToPostpone],
                                                                     [NSNumber numberWithBool:postponingContact],
