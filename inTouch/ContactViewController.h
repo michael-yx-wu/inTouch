@@ -17,19 +17,17 @@
 @property (nonatomic, strong) UIImage *photoData;
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
-@property (nonatomic, strong) NSString *emailHome;
-@property (nonatomic, strong) NSString *emailWork;
-@property (nonatomic, strong) NSString *emailOther;
-@property (nonatomic, strong) NSString *phoneHome;
-@property (nonatomic, strong) NSString *phoneMobile;
-@property (nonatomic, strong) NSString *phoneWork;
+@property (nonatomic, strong) NSMutableDictionary *allEmailAddresses;
+@property (nonatomic, strong) NSMutableDictionary *allPhoneNumbers;
+
 
 // Call center
 @property (nonatomic, strong) CTCallCenter *callCenter;
 
 @end
 
-static NSString *phoneActionSheetTitle = @"Which number?";
+static NSString *phoneActionSheetTitle = @"Which number to call?";
+static NSString *messageActionSheetTitle = @"Which number to text?";
 static NSString *emailActionSheetTitle = @"Which email?";
 static NSString *contactedCall = @"called";
 static NSString *contactedMessage = @"messaged";

@@ -112,7 +112,6 @@ NSInteger kFacebookRequestFinish = 0;
     
     // Clean up
     CFRelease(addressBookRef);
-    
 }
 
 // Returns an array of all entities with matching first and last names

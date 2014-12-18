@@ -29,12 +29,9 @@
 @synthesize photoData;
 @synthesize firstName;
 @synthesize lastName;
-@synthesize emailHome;
-@synthesize emailWork;
-@synthesize emailOther;
-@synthesize phoneHome;
-@synthesize phoneMobile;
-@synthesize phoneWork;
+@synthesize allEmailAddresses;
+@synthesize allPhoneNumbers;
+
 @synthesize callCenter;
 
 - (void)didReceiveMemoryWarning {
@@ -50,7 +47,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [DebugLogger log:@"Setting up ContactViewController" withPriority:contactViewControllerPriority];
-    
+
+    // Reset the dictionaries on each load
+    allEmailAddresses = [[NSMutableDictionary alloc] init];
+    allPhoneNumbers = [[NSMutableDictionary alloc] init];
+
     // Get necessary information from contact
     [self setName];
     [contactPhoto setImage:photoData];
@@ -58,13 +59,13 @@
     [self getEmails];
     
     // Disable buttons if needed
-    if (!phoneHome && !phoneMobile && !phoneWork) {
+    if ([allPhoneNumbers count] == 0 || ![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tel://"]]) {
         [callButton setEnabled:NO];
     }
-    if (!phoneMobile || ![MFMessageComposeViewController canSendText]) {
+    if ([allPhoneNumbers count] == 0) {
         [messageButton setEnabled:NO];
     }
-    if (!emailHome && !emailOther && !emailWork) {
+    if ([allEmailAddresses count] == 0) {
         [emailButton setEnabled:NO];
     }
     
@@ -94,126 +95,138 @@
 }
 
 - (void)getNumbers {
+    [DebugLogger log:@"Getting all linked numbers" withPriority:contactCardViewPriority];
     int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
     ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
     ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
-    ABMultiValueRef phoneNumbers = ABRecordCopyValue(addressBookContact, kABPersonPhoneProperty);
-
-    NSString *phoneLabel;
-    CFStringRef label;
-    for (int j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
-        // Get label for current phone number
-        label = ABMultiValueCopyLabelAtIndex(phoneNumbers, j);
-        phoneLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
+    CFArrayRef linkedAddressBookContacts = ABPersonCopyArrayOfAllLinkedPeople(addressBookContact);
+    
+    ABRecordRef linkedAddressBookContact;
+    ABMultiValueRef phoneNumbers;
+    for (CFIndex i = 0; i < CFArrayGetCount(linkedAddressBookContacts); i++) {
+        linkedAddressBookContact = CFArrayGetValueAtIndex(linkedAddressBookContacts, i);
+        phoneNumbers = ABRecordCopyValue(linkedAddressBookContact, kABPersonPhoneProperty);
         
-        if ([phoneLabel isEqualToString:@"home"]) {
-            phoneHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Home Phone: %@", phoneHome] withPriority:mainViewControllerPriority];
-        } else if ([phoneLabel isEqualToString:@"mobile"] || [phoneLabel isEqualToString:@"iPhone"]) {
-            phoneMobile = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Mobile Phone: %@", phoneMobile] withPriority:mainViewControllerPriority];
-        } else if ([phoneLabel isEqualToString:@"work"]) {
-            phoneWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Work Phone: %@", phoneWork] withPriority:mainViewControllerPriority];
+        // Loop through linked contact's phone numbers and add everything to allPhoneNumbers
+        for (CFIndex j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
+            NSString *label = (__bridge_transfer NSString*)ABMultiValueCopyLabelAtIndex(phoneNumbers, j);
+            label = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label);
+            if ([label isEqualToString:@""]) {
+                label = @"other";
+            }
+            NSString *phoneNumber = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
+            [allPhoneNumbers setObject:phoneNumber forKey:label];
         }
-        CFRelease(label);
+        
+        // Release if not null
+        if (phoneNumbers) {
+            CFRelease(phoneNumbers);
+        }
     }
+    CFRelease(linkedAddressBookContacts);
     CFRelease(addressBookRef);
-    CFRelease(phoneNumbers);
 }
 
 - (void)getEmails {
-    // Verify contact ID
+    [DebugLogger log:@"Getting all linked emails" withPriority:contactCardViewPriority];
     int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
     ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
     ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
-    ABMultiValueRef emails = ABRecordCopyValue(addressBookContact, kABPersonEmailProperty);
-    NSString *emailLabel;
-    for (int j = 0; j < ABMultiValueGetCount(emails); j++) {
-        // Get label for current email
-        NSString *label = (__bridge_transfer NSString*)ABMultiValueCopyLabelAtIndex(emails, j);
-        emailLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label);
+    CFArrayRef linkedAddressBookContacts = ABPersonCopyArrayOfAllLinkedPeople(addressBookContact);
+    
+    ABRecordRef linkedAddressBookContact;
+    ABMultiValueRef emails;
+    for (CFIndex i = 0; i < CFArrayGetCount(linkedAddressBookContacts); i++) {
+        linkedAddressBookContact = CFArrayGetValueAtIndex(linkedAddressBookContacts, i);
+        emails = ABRecordCopyValue(linkedAddressBookContact, kABPersonEmailProperty);
         
-        if ([emailLabel isEqualToString:@"home"]) {
-            emailHome = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Home Email: %@", emailHome] withPriority:mainViewControllerPriority];
-        } else if ([emailLabel isEqualToString:@"other"]) {
-            emailOther = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Other Email: %@", emailOther] withPriority:mainViewControllerPriority];
-        } else if ([emailLabel isEqualToString:@"work"]) {
-            emailWork = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            [DebugLogger log:[NSString stringWithFormat:@"Work Email: %@", emailWork] withPriority:mainViewControllerPriority];
+        // Loop through linked contact's phone numbers and add everything to allPhoneNumbers
+        for (CFIndex j = 0; j < ABMultiValueGetCount(emails); j++) {
+            NSString *label = (__bridge_transfer NSString*)ABMultiValueCopyLabelAtIndex(emails, j);
+            label = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label);
+            NSString *email = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
+            if ([label isEqualToString:@""]) {
+                label = @"other";
+            }
+            [allEmailAddresses setObject:email forKey:label];
+        }
+        
+        // Release if not null
+        if (emails) {
+            CFRelease(emails);
         }
     }
+    CFRelease(linkedAddressBookContacts);
     CFRelease(addressBookRef);
-    CFRelease(emails);
 }
 
 #pragma mark - Button Actions
 
-- (IBAction)callButton:(id)sender {
-    [DebugLogger log:@"Call button press" withPriority:contactViewControllerPriority];
-    if (phoneHome || phoneMobile || phoneWork) {
-        [DebugLogger log:@"Has phone number" withPriority:contactViewControllerPriority];
-        if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tel://"]]) {
-            [DebugLogger log:@"Can make call" withPriority:contactViewControllerPriority];
+// Phone or message button pressed
+- (IBAction)showNumbers:(id)sender {
+    [DebugLogger log:@"Call button pressed" withPriority:contactViewControllerPriority];
 
-            // Get all numbers
-            NSMutableArray *phoneNumbers = [[NSMutableArray alloc] initWithCapacity:3];
-            if (phoneHome) {
-                [phoneNumbers addObject:phoneHome];
-            }
-            if (phoneMobile) {
-                [phoneNumbers addObject:phoneMobile];
-            }
-            if (phoneWork) {
-                [phoneNumbers addObject:phoneWork];
-            }
-            
-            // Variable number of buttons
-            if ([phoneNumbers count] == 1) {
-                // Go straight to call
-                NSString *number = [phoneNumbers objectAtIndex:0];
-                [DebugLogger log:number withPriority:contactViewControllerPriority];
-                
-                NSString *cleanedString = [[number componentsSeparatedByCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"0123456789-+()"] invertedSet]] componentsJoinedByString:@""];
-                NSString *escapedPhoneNumber = [cleanedString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                NSString *phoneURLString = [NSString stringWithFormat:@"tel:%@", escapedPhoneNumber];
-                NSURL *phoneURL = [NSURL URLWithString:phoneURLString];
-
-                // Dismiss view before call (assuming that user does not cancel call)
-                [self dismissCall];
-                [[UIApplication sharedApplication] openURL:phoneURL];
-            } else {
-                UIActionSheet *selectNumber = [[UIActionSheet alloc] initWithTitle:phoneActionSheetTitle delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
-                int i;
-                for (i = 0; i < [phoneNumbers count]; i++) {
-                    [selectNumber addButtonWithTitle:[phoneNumbers objectAtIndex:i]];
-                }
-                [selectNumber addButtonWithTitle:@"Cancel"];
-                [selectNumber setCancelButtonIndex:i];
-                [selectNumber showInView:[self view]];
-            }
-        } else {
-            [DebugLogger log:@"Cannot make call" withPriority:contactViewControllerPriority];
-        }
+    // Set action sheet title based on sender
+    UIActionSheet *selectNumber;
+    if (sender == callButton) {
+        selectNumber = [[UIActionSheet alloc] initWithTitle:phoneActionSheetTitle
+                                                   delegate:self
+                                          cancelButtonTitle:nil
+                                     destructiveButtonTitle:nil
+                                          otherButtonTitles:nil];
+    } else if (sender == messageButton) {
+        selectNumber = [[UIActionSheet alloc] initWithTitle:messageActionSheetTitle
+                                                   delegate:self
+                                          cancelButtonTitle:nil
+                                     destructiveButtonTitle:nil
+                                          otherButtonTitles:nil];
     }
+    
+    // Add all numbers to action sheet
+    NSArray *sortedLabels = [[allPhoneNumbers allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    NSUInteger i;
+    for (i = 0; i < [sortedLabels count]; i++) {
+        NSString *numberWithLabel = [NSString stringWithFormat:@"%@: %@",
+                                     [sortedLabels objectAtIndex:i],
+                                     [allPhoneNumbers valueForKey:[sortedLabels objectAtIndex:i]]];
+        [selectNumber addButtonWithTitle:numberWithLabel];
+    }
+    
+    // Add the cancel button at the bottom
+    [selectNumber addButtonWithTitle:@"Cancel"];
+    [selectNumber setCancelButtonIndex:i];
+    
+    // Show action sheet
+    [selectNumber showInView:[self view]];
 }
 
-- (IBAction)messageButton:(id)sender {
-    [DebugLogger log:@"Message button press" withPriority:contactViewControllerPriority];
-    if (phoneMobile != nil) {
-        [DebugLogger log:@"Has mobile" withPriority:contactViewControllerPriority];
-        if ([MFMessageComposeViewController canSendText]) {
-            [DebugLogger log:@"Can send text" withPriority:contactViewControllerPriority];
-            [DebugLogger log:phoneMobile withPriority:contactViewControllerPriority];
-            NSArray *recipient = @[[NSString stringWithString:phoneMobile]];
-            MFMessageComposeViewController *messageViewControler = [[MFMessageComposeViewController alloc] init];
-            [messageViewControler setRecipients:recipient];
-            messageViewControler.messageComposeDelegate = self;
-            [self presentViewController:messageViewControler animated:YES completion:nil];
-        }
+- (IBAction)showEmails:(id)sender {
+    [DebugLogger log:@"Email button pressed" withPriority:contactViewControllerPriority];
+    
+    // Set action sheet title based on sender
+    UIActionSheet *selectEmail;
+    selectEmail = [[UIActionSheet alloc] initWithTitle:emailActionSheetTitle
+                                               delegate:self
+                                      cancelButtonTitle:nil
+                                 destructiveButtonTitle:nil
+                                      otherButtonTitles:nil];
+    
+    // Add all numbers to action sheet
+    NSArray *sortedLabels = [[allEmailAddresses allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    NSUInteger i;
+    for (i = 0; i < [sortedLabels count]; i++) {
+        NSString *emailWithLabel = [NSString stringWithFormat:@"%@: %@",
+                                     [sortedLabels objectAtIndex:i],
+                                     [allEmailAddresses valueForKey:[sortedLabels objectAtIndex:i]]];
+        [selectEmail addButtonWithTitle:emailWithLabel];
     }
+    
+    // Add the cancel button at the bottom
+    [selectEmail addButtonWithTitle:@"Cancel"];
+    [selectEmail setCancelButtonIndex:i];
+    
+    // Show action sheet
+    [selectEmail showInView:[self view]];
 }
 
 // Handle message sent/cancelled events
@@ -238,46 +251,6 @@
         }
         default: {
             break;
-        }
-    }
-}
-
-- (IBAction)email:(id)sender {
-    [DebugLogger log:@"Email button press" withPriority:contactViewControllerPriority];
-    if (emailHome || emailOther || emailWork) {
-        [DebugLogger log:@"Has email" withPriority:contactViewControllerPriority];
-        if ([MFMailComposeViewController canSendMail]) {
-            // Gather emails
-            [DebugLogger log:@"Can send email" withPriority:contactViewControllerPriority];
-            NSMutableArray *recipient = [[NSMutableArray alloc] initWithCapacity:3];
-            if (emailHome) {
-                [recipient addObject:emailHome];
-            }
-            if (emailWork) {
-                [recipient addObject:emailWork];
-            }
-            if (emailOther) {
-                [recipient addObject:emailOther];
-            }
-            
-            // Variable number of buttons
-            UIActionSheet *selectEmail;
-            if ([recipient count] == 1) {
-                // Go straight to mail composer
-                MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
-                [mailViewController setToRecipients:recipient];
-                [mailViewController setMailComposeDelegate:self];
-                [self presentViewController:mailViewController animated:YES completion:nil];
-            } else {
-                selectEmail = [[UIActionSheet alloc] initWithTitle:emailActionSheetTitle delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
-                int i;
-                for (i = 0; i < [recipient count]; i++) {
-                    [selectEmail addButtonWithTitle:[recipient objectAtIndex:i]];
-                }
-                [selectEmail addButtonWithTitle:@"Cancel"];
-                [selectEmail setCancelButtonIndex:i];
-                [selectEmail showInView:[self view]];
-            }
         }
     }
 }
@@ -317,19 +290,32 @@
         return;
     }
     
+    NSString *numberOrEmail = [actionSheet buttonTitleAtIndex:buttonIndex];
+    NSRange rangeOfColonSpace = [numberOrEmail rangeOfString:@": "];
+    numberOrEmail = [numberOrEmail substringFromIndex:rangeOfColonSpace.location + rangeOfColonSpace.length];
+    
     // Phone Select
     if ([[actionSheet title] isEqualToString:phoneActionSheetTitle]) {
-        NSString *number = [actionSheet buttonTitleAtIndex:buttonIndex];
-        NSString *cleanedString = [[number componentsSeparatedByCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"0123456789-+()"] invertedSet]] componentsJoinedByString:@""];
-        NSString *escapedPhoneNumber = [cleanedString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        NSString *phoneURLString = [NSString stringWithFormat:@"telprompt:%@", escapedPhoneNumber];
+        // Create the phone URL before passing it off
+        numberOrEmail = [[numberOrEmail componentsSeparatedByCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"0123456789-+()"] invertedSet]] componentsJoinedByString:@""];
+        numberOrEmail = [numberOrEmail stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *phoneURLString = [NSString stringWithFormat:@"telprompt:%@", numberOrEmail];
         NSURL *phoneURL = [NSURL URLWithString:phoneURLString];
         [[UIApplication sharedApplication] openURL:phoneURL];
     }
     
+    // Message Select
+    else if ([[actionSheet title] isEqualToString:messageActionSheetTitle]) {
+        NSArray *recipient = @[numberOrEmail];
+        MFMessageComposeViewController *messageViewController = [[MFMessageComposeViewController alloc] init];
+        [messageViewController setRecipients:recipient];
+        [messageViewController setMessageComposeDelegate:self];
+        [self presentViewController:messageViewController animated:YES completion:nil];
+    }
+    
     // Email select
     else if ([[actionSheet title] isEqualToString:emailActionSheetTitle]) {
-        NSArray *recipient = @[[actionSheet buttonTitleAtIndex:buttonIndex]];
+        NSArray *recipient = @[numberOrEmail];
         MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
         [mailViewController setToRecipients:recipient];
         [mailViewController setMailComposeDelegate:self];
