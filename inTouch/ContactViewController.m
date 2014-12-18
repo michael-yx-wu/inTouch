@@ -79,6 +79,8 @@
 
 // Set mask only after view appears because it is screen width dependent
 - (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
     // Make contact photo ronud
     [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
     [[contactPhoto layer] setMasksToBounds:YES];
