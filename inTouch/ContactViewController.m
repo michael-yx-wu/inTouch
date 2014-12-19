@@ -117,11 +117,7 @@
             NSString *phoneNumber = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
             [allPhoneNumbers setObject:phoneNumber forKey:label];
         }
-        
-        // Release if not null
-        if (phoneNumbers) {
-            CFRelease(phoneNumbers);
-        }
+        CFRelease(phoneNumbers);
     }
     CFRelease(linkedAddressBookContacts);
     CFRelease(addressBookRef);
@@ -152,9 +148,7 @@
         }
         
         // Release if not null
-        if (emails) {
-            CFRelease(emails);
-        }
+        CFRelease(emails);
     }
     CFRelease(linkedAddressBookContacts);
     CFRelease(addressBookRef);
@@ -162,7 +156,7 @@
 
 #pragma mark - Button Actions
 
-// Phone or message button pressed
+// Phone or message button pressed. Show UIActionSheet with phone numbers for contact
 - (IBAction)showNumbers:(id)sender {
     [DebugLogger log:@"Call button pressed" withPriority:contactViewControllerPriority];
 
@@ -200,6 +194,7 @@
     [selectNumber showInView:[self view]];
 }
 
+// Email button pressed. Show UIActionSheet with emails for contact
 - (IBAction)showEmails:(id)sender {
     [DebugLogger log:@"Email button pressed" withPriority:contactViewControllerPriority];
     
@@ -283,7 +278,7 @@
     }
 }
 
-// Handle phone number/email selection
+// Handle phone number/email selection from UIActionSheet
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     // Cancel
     if (buttonIndex == [actionSheet cancelButtonIndex]) {

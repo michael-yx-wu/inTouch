@@ -300,8 +300,6 @@
         [deletedView setAlpha:0];
         [postponedView setAlpha:alpha];
     }
-    NSLog(@"%f", xFromCenter);
-    NSLog(@"alpha: %f", alpha);
 }
 
 // Was tapped, tell MainViewController to show the contact buttons

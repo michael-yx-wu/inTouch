@@ -243,7 +243,7 @@
                                             <view opaque="NO" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UeY-4j-wj1" userLabel="Postponed View">
                                                 <rect key="frame" x="90" y="100" width="100" height="100"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="postpone_icon" translatesAutoresizingMaskIntoConstraints="NO" id="D4G-Bg-iRl" userLabel="Postponed icon">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="postpone_icon_overlay" translatesAutoresizingMaskIntoConstraints="NO" id="D4G-Bg-iRl" userLabel="Postponed icon">
                                                         <rect key="frame" x="10" y="10" width="80" height="80"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="D4G-Bg-iRl" secondAttribute="height" multiplier="1:1" id="Pmf-QM-aMU"/>
@@ -2233,6 +2233,7 @@
         <image name="phone_icon" width="400" height="400"/>
         <image name="phone_icon_ok" width="400" height="400"/>
         <image name="postpone_icon" width="612" height="612"/>
+        <image name="postpone_icon_overlay" width="612" height="612"/>
         <image name="settings_icon" width="200" height="200"/>
         <image name="x_icon" width="800" height="800"/>
         <image name="x_icon_overlay" width="800" height="800"/>
