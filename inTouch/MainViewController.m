@@ -78,6 +78,13 @@
                                              selector:@selector(updateFacebookFriends:)
                                                  name:@"facebookFriends"
                                                object:nil];
+
+    // Listen for notification to redraw profile photos when downloads finish. Photos can take several seconds to load.
+    // Notification from self (background process)
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateUI)
+                                                 name:@"photoDownloaded"
+                                               object:nil];
     
     // Listen for notification to show picker view and select a remind date
     // Notification from ContactViewController
@@ -368,6 +375,7 @@
                 NSError *error;
                 if ([moc hasChanges]) {
                     [moc save:&error];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"photoDownloaded" object:nil];
                 }
             }
             
@@ -386,6 +394,7 @@
 
 // Place photos for contacts in the correct position
 - (void)updateUI {
+    [self mergeChanges:nil];
     // If the current queue is empty
     if (!currentContact) {
         if (currentQueue == contactAppearedQueue) {
