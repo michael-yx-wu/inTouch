@@ -132,23 +132,24 @@
     
     // Attempt to get list of facebook friends
     // This will fail gracefully if user is not logged in
-    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(500),picture.height(500)" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        if (error) {
-            [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]]
-                withPriority:contactManagerPriority];
-            return;
-        }
-        
-        // Process facebook json object
-        NSArray *taggableFriends = [result objectForKey:@"data"];
-        for (NSDictionary *friend in taggableFriends) {
-            NSString *name = [friend valueForKey:@"name"];
-            NSArray *picture = [friend valueForKey:@"picture"];
-            NSArray *pictureData = [picture valueForKey:@"data"];
-            NSString *url = [NSString stringWithString:[pictureData valueForKey:@"url"]];
-            [facebookFriends setValue:url forKey:name];
-        }
-    }];
+    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(400).height(400)"
+                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                              if (error) {
+                                  [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]]
+                                      withPriority:contactManagerPriority];
+                                  return;
+                              }
+                              
+                              // Process facebook json object
+                              NSArray *taggableFriends = [result objectForKey:@"data"];
+                              for (NSDictionary *friend in taggableFriends) {
+                                  NSString *name = [friend valueForKey:@"name"];
+                                  NSArray *picture = [friend valueForKey:@"picture"];
+                                  NSArray *pictureData = [picture valueForKey:@"data"];
+                                  NSString *url = [NSString stringWithString:[pictureData valueForKey:@"url"]];
+                                  [facebookFriends setValue:url forKey:name];
+                              }
+                          }];
 }
 
 - (void)didReceiveMemoryWarning {

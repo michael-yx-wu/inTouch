@@ -52,22 +52,34 @@
 
 // User is currently logged in
 - (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
-    // Fetch my profile photo -- if logged in
-    [FBRequestConnection startWithGraphPath:@"me?fields=picture.height(500),picture.width(500)" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        if (error) {
-            [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]] withPriority:facebookLoginViewControllerPriority];
-            return;
-        }
-        
-        // Parse results for profile photo url and download photo
-        NSDictionary *picture = [[result valueForKeyPath:@"picture"] valueForKeyPath:@"data"];
-        NSString *url = [picture valueForKeyPath:@"url"];
-        NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
-        [profilePhoto setImage:[UIImage imageWithData:imageData]];
-    }];
+    // Get my profile picture
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            @"false", @"redirect",
+                            @"400", @"height",
+                            @"large", @"type",
+                            @"400", @"width",
+                            nil
+                            ];
+    [FBRequestConnection startWithGraphPath:@"/me/picture"
+                                 parameters:params
+                                 HTTPMethod:@"GET"
+                          completionHandler:^(
+                                              FBRequestConnection *connection,
+                                              id result,
+                                              NSError *error
+                                              ) {
+                              if (error) {
+                                  NSLog(@"ERROR!!!!!");
+                                  [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]] withPriority:facebookLoginViewControllerPriority];
+                                  return;
+                              }
+                              NSString *url = [[result valueForKeyPath:@"data"] valueForKeyPath:@"url"];
+                              NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
+                              [profilePhoto setImage:[UIImage imageWithData:imageData]];
+                          }];
     
-    // Fetch name
-    [FBRequestConnection startWithGraphPath:@"me?fileds=name" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    // Get my name
+    [FBRequestConnection startWithGraphPath:@"me?fields=name" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         if (error) {
             [DebugLogger log:[NSString stringWithFormat:@"request error: %@", error] withPriority:facebookLoginViewControllerPriority];
             return;
@@ -78,26 +90,29 @@
     }];
     
     // Populate fbFriends with facebook friend names and url - this is so ugly right now (indentation is killing me)
-    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(500),picture.height(500)"                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        NSMutableDictionary *fbFriends = [[NSMutableDictionary alloc] init];
-        if (error) {
-            [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]] withPriority:contactManagerPriority];
-        }
-        
-        // Process facebook json object
-        NSArray *taggableFriends = [result objectForKey:@"data"];
-        for (NSDictionary *friend in taggableFriends) {
-            NSString *name = [friend valueForKey:@"name"];
-            NSArray *picture = [friend valueForKey:@"picture"];
-            NSArray *pictureData = [picture valueForKey:@"data"];
-            NSString *url = [NSString stringWithString:[pictureData valueForKey:@"url"]];
-            [fbFriends setValue:url forKey:name];
-        }
-        
-        // Post notification for mainViewController
-        NSDictionary *notificationData = @{@"data": fbFriends};
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"facebookFriends" object:self userInfo:notificationData];
-    }];
+    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(400).height(400)"
+                          completionHandler:^(FBRequestConnection *connection,
+                                              id result, NSError
+                                              *error) {
+                              NSMutableDictionary *fbFriends = [[NSMutableDictionary alloc] init];
+                              if (error) {
+                                  [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]]
+                                      withPriority:contactManagerPriority];
+                              }
+                              // Process facebook json object
+                              NSArray *taggableFriends = [result objectForKey:@"data"];
+                              for (NSDictionary *friend in taggableFriends) {
+                                  NSString *name = [friend valueForKey:@"name"];
+                                  NSArray *url = [[[friend valueForKey:@"picture"] valueForKey:@"data"] valueForKey:@"url"];
+                                  [fbFriends setValue:url forKey:name];
+                              }
+                              
+                              // Post notification for mainViewController
+                              NSDictionary *notificationData = @{@"data": fbFriends};
+                              [[NSNotificationCenter defaultCenter] postNotificationName:@"facebookFriends"
+                                                                                  object:self
+                                                                                userInfo:notificationData];
+                          }];
 }
 
 // User is currently logged out
