@@ -44,10 +44,7 @@
 
 #pragma mark - Facebook login logic
 
-// Save user info after fetching
 - (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)fbUser {
-    NSLog(@"Logged in as %@ (%@)", [user name], [user objectID]);
-    user = fbUser;
 }
 
 // User is currently logged in
@@ -69,7 +66,6 @@
                                               NSError *error
                                               ) {
                               if (error) {
-                                  NSLog(@"ERROR!!!!!");
                                   [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]] withPriority:facebookLoginViewControllerPriority];
                                   return;
                               }
@@ -84,8 +80,6 @@
             [DebugLogger log:[NSString stringWithFormat:@"request error: %@", error] withPriority:facebookLoginViewControllerPriority];
             return;
         }
-        NSLog(@"%@", result);
-        // Set name label text
         [userLabel setText:[result valueForKeyPath:@"name"]];
     }];
     

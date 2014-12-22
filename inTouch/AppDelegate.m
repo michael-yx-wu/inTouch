@@ -46,11 +46,9 @@
     [FBLoginView class];
     [FBAppCall class];
     [FBSession class];
-    
-    // Open facebook session on launch if available
-    [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"] allowLoginUI:NO completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-        
-    }];  
+
+    // Attempt to start facebook session on launch
+    [self checkForFacebookSession];
     
     return YES;
 }
@@ -77,12 +75,30 @@
     [self saveContext];
 }
 
-#pragma mark - Facebook Interaction
+#pragma mark - Facebook
+
+// Attempt to use cached facebook section
+- (void)checkForFacebookSession {
+    if ([[FBSession activeSession] state] == FBSessionStateCreatedTokenLoaded) {
+        // Open silently
+        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
+                                           allowLoginUI:NO
+                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                          // Handler for state changes
+                                          [self sessionStateChanged:session state:status error:error];
+                                      }];
+    }
+}
 
 // Handle Facebook app response
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
     BOOL handled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
     return handled;
+}
+
+// Handle session state changes
+- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)status error:(NSError *)error {
+    
 }
 
 #pragma mark - Core Data
