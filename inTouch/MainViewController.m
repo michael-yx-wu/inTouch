@@ -137,22 +137,28 @@
     // Attempt to get list of facebook friends
     // This will fail gracefully if user is not logged in
     [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(400).height(400)"
-                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                          completionHandler:^(FBRequestConnection *connection,
+                                              id result, NSError
+                                              *error) {
+                              NSMutableDictionary *fbFriends = [[NSMutableDictionary alloc] init];
                               if (error) {
                                   [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]]
                                       withPriority:contactManagerPriority];
-                                  return;
                               }
-                              
                               // Process facebook json object
                               NSArray *taggableFriends = [result objectForKey:@"data"];
                               for (NSDictionary *friend in taggableFriends) {
                                   NSString *name = [friend valueForKey:@"name"];
-                                  NSArray *picture = [friend valueForKey:@"picture"];
-                                  NSArray *pictureData = [picture valueForKey:@"data"];
-                                  NSString *url = [NSString stringWithString:[pictureData valueForKey:@"url"]];
-                                  [facebookFriends setValue:url forKey:name];
+                                  NSArray *url = [[[friend valueForKey:@"picture"] valueForKey:@"data"]
+                                                  valueForKey:@"url"];
+                                  [fbFriends setValue:url forKey:name];
                               }
+                              
+                              // Post notification for MainViewController
+                              NSDictionary *notificationData = @{@"data": fbFriends};
+                              [[NSNotificationCenter defaultCenter] postNotificationName:@"facebookFriends"
+                                                                                  object:self
+                                                                                userInfo:notificationData];
                           }];
 }
 
@@ -656,7 +662,11 @@
         [self displaySyncingViewAndSyncContacts];
     }
     else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
-        UIAlertView *deniedMessage = [[UIAlertView alloc] initWithTitle:@"Access to Contacts" message:@"Go to 'Settings > Privacy > Contacts' to change." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        UIAlertView *deniedMessage = [[UIAlertView alloc] initWithTitle:@"Access to Contacts"
+                                                                message:@"Go to 'Settings > Privacy > Contacts' to change."
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Ok"
+                                                      otherButtonTitles:nil];
         [deniedMessage show];
     }
     

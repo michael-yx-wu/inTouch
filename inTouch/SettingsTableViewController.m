@@ -14,10 +14,6 @@
 
 @synthesize syncingContactsActivityIndicator;
 
-- (void)viewWillAppear:(BOOL)animated {
-    [self updateFacebookNameLabel];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Listen for fb session state changed notifications from app delegate
@@ -27,8 +23,8 @@
                                                object:nil];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
+- (void)viewWillAppear:(BOOL)animated {
+    [self updateFacebookNameLabel];
 }
 
 // Dismiss settings view
@@ -91,8 +87,24 @@
     // If session state is open then close the session and remove access token from cache
     if ([[FBSession activeSession] state] == FBSessionStateOpen ||
         [[FBSession activeSession] state] == FBSessionStateOpenTokenExtended) {
-        [[FBSession activeSession] closeAndClearTokenInformation];
+        // Prompt user if it's okay to log out
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Disconnect account?"
+                                                                                 message:@"If you disconnect your Facebook account from InTouch, we will no longer be able to pull contact profile pictures from Facebook."
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
+                                                         style:UIAlertActionStyleCancel
+                                                       handler:^(UIAlertAction *action) {
+                                                       }];
+        UIAlertAction *disconnect = [UIAlertAction actionWithTitle:@"Disconnect"
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction *action) {
+                                                               [[FBSession activeSession] closeAndClearTokenInformation];
+                                                           }];
+        [alertController addAction:cancel];
+        [alertController addAction:disconnect];
+        [self presentViewController:alertController animated:YES completion:nil];
     }
+    
     // If session state is closed then open session showing the login UI.
     else {
         [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
@@ -157,16 +169,49 @@
 
 #pragma mark - Facebook
 
+// This is called when the session state changes and every time the view is about to be shown
 - (void)updateFacebookNameLabel {
     // If we are logged in, set the user name
     if ([[FBSession activeSession] state] == FBSessionStateOpen ||
         [[FBSession activeSession] state] == FBSessionStateOpenTokenExtended) {
         [facebookCell setAccessoryType:UITableViewCellAccessoryCheckmark];
         [facebookCellDetailLabel setText:@"Connected"];
+        
+        // Update the user's facebook friends list
+        [self getFacebookFriends];
     } else {
         [facebookCell setAccessoryType:UITableViewCellAccessoryNone];
         [facebookCellDetailLabel setText:@"Not Connected"];
     }
+}
+
+// Populate fbFriends with facebook friend names and url - this is so ugly right now (indentation is killing me)
+- (void)getFacebookFriends {
+    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(400).height(400)"
+                          completionHandler:^(FBRequestConnection *connection,
+                                              id result, NSError
+                                              *error) {
+                              NSMutableDictionary *fbFriends = [[NSMutableDictionary alloc] init];
+                              if (error) {
+                                  [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]]
+                                      withPriority:contactManagerPriority];
+                              }
+                              // Process facebook json object
+                              NSArray *taggableFriends = [result objectForKey:@"data"];
+                              for (NSDictionary *friend in taggableFriends) {
+                                  NSString *name = [friend valueForKey:@"name"];
+                                  NSArray *url = [[[friend valueForKey:@"picture"] valueForKey:@"data"]
+                                                  valueForKey:@"url"];
+                                  [fbFriends setValue:url forKey:name];
+                              }
+                              
+                              // Post notification for MainViewController
+                              NSDictionary *notificationData = @{@"data": fbFriends};
+                              [[NSNotificationCenter defaultCenter] postNotificationName:@"facebookFriends"
+                                                                                  object:self
+                                                                                userInfo:notificationData];
+                          }];
+    
 }
 
 @end

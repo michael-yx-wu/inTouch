@@ -34,6 +34,7 @@
 		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
 		4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107E51934362E00BB853C /* SettingsTableViewController.m */; };
 		4CB107EC19344F1300BB853C /* FacebookLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107EB19344F1300BB853C /* FacebookLoginViewController.m */; };
+		4CB4AA221A47E8400017EF9E /* FacebookManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB4AA211A47E8400017EF9E /* FacebookManager.m */; };
 		4CB6256B1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
 		4CC61A9D19AA74EC00FF7118 /* ContactCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC61A9C19AA74EC00FF7118 /* ContactCardView.m */; };
 		4CC73FD21906330900B932A7 /* ContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC73FD11906330900B932A7 /* ContactManager.m */; };
@@ -94,6 +95,8 @@
 		4CB107E51934362E00BB853C /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		4CB107EA19344F1300BB853C /* FacebookLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacebookLoginViewController.h; sourceTree = "<group>"; };
 		4CB107EB19344F1300BB853C /* FacebookLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacebookLoginViewController.m; sourceTree = "<group>"; };
+		4CB4AA201A47E8400017EF9E /* FacebookManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacebookManager.h; sourceTree = "<group>"; };
+		4CB4AA211A47E8400017EF9E /* FacebookManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FacebookManager.m; sourceTree = "<group>"; };
 		4CB625691932CDCC009335E6 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		4CC61A9B19AA74EC00FF7118 /* ContactCardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactCardView.h; sourceTree = "<group>"; };
 		4CC61A9C19AA74EC00FF7118 /* ContactCardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactCardView.m; sourceTree = "<group>"; };
@@ -181,6 +184,8 @@
 				4CC61A9C19AA74EC00FF7118 /* ContactCardView.m */,
 				4C340D9F18C17ACF009A96D8 /* DebugLogger.h */,
 				4C340DA018C17ACF009A96D8 /* DebugLogger.m */,
+				4CB4AA201A47E8400017EF9E /* FacebookManager.h */,
+				4CB4AA211A47E8400017EF9E /* FacebookManager.m */,
 				4C42688A1915B4500014744F /* View Controllers */,
 				4C42688619158C8B0014744F /* Core Data Entities */,
 				4C340D7918C16FF7009A96D8 /* Images.xcassets */,
@@ -380,6 +385,7 @@
 				4CF7B3041984BB4A00F10889 /* ContactInformationTableViewController.m in Sources */,
 				4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */,
 				4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */,
+				4CB4AA221A47E8400017EF9E /* FacebookManager.m in Sources */,
 				4C357F8C19839ECF00A64C44 /* EditContactsTableViewController.m in Sources */,
 				4CC61A9D19AA74EC00FF7118 /* ContactCardView.m in Sources */,
 				4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */,
