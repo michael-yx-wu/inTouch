@@ -9,18 +9,22 @@
 
 @implementation SettingsTableViewController
 
+@synthesize facebookCell;
+@synthesize facebookCellDetailLabel;
+
 @synthesize syncingContactsActivityIndicator;
 
-- (id)initWithStyle:(UITableViewStyle)style {
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+- (void)viewWillAppear:(BOOL)animated {
+    [self updateFacebookNameLabel];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // Listen for fb session state changed notifications from app delegate
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateFacebookNameLabel)
+                                                 name:@"fbSessionStateChanged"
+                                               object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -46,17 +50,17 @@
         }
         
         // Edit contacts
-        if ([indexPath row] == 2) {
+        if ([indexPath row] == 1) {
             [self performSegueWithIdentifier:@"editContacts" sender:self];
         }
         
         // Sync contacts
-        if ([indexPath row] == 3) {
+        if ([indexPath row] == 2) {
             [self syncContacts];
         }
         
         // Feedback
-        if ([indexPath row] == 4) {
+        if ([indexPath row] == 3) {
             if ([MFMailComposeViewController canSendMail]) {
                 MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
                 [mailViewController setToRecipients:@[@"help@intouchapp.io"]];
@@ -77,11 +81,12 @@
     else if ([indexPath section] == 1) {
         // Display facebook login page
         if ([indexPath row] == 0) {
-            [self performSegueWithIdentifier:@"facebook" sender:self];
+            [self facebookLogin];
         }
     }
 }
 
+// Attempt a login using the Facebook app. Fall back to Safari web form if not available
 - (void)facebookLogin {
     // If session state is open then close the session and remove access token from cache
     if ([[FBSession activeSession] state] == FBSessionStateOpen ||
@@ -97,7 +102,6 @@
                                           [delegate sessionStateChanged:session state:status error:error];
                                       }];
     }
-    
 }
 
 // Sync contacts and show busy indicator
@@ -148,6 +152,20 @@
         }
         default:
             break;
+    }
+}
+
+#pragma mark - Facebook
+
+- (void)updateFacebookNameLabel {
+    // If we are logged in, set the user name
+    if ([[FBSession activeSession] state] == FBSessionStateOpen ||
+        [[FBSession activeSession] state] == FBSessionStateOpenTokenExtended) {
+        [facebookCell setAccessoryType:UITableViewCellAccessoryCheckmark];
+        [facebookCellDetailLabel setText:@"Connected"];
+    } else {
+        [facebookCell setAccessoryType:UITableViewCellAccessoryNone];
+        [facebookCellDetailLabel setText:@"Not Connected"];
     }
 }
 

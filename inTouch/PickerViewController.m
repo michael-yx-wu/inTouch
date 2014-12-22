@@ -25,8 +25,6 @@ enum {
     if (shouldHideCancelButton) {
         [self hideCancelButton];
     }
-    
-//    [remindDatePickerView ]
 }
 
 - (void)didReceiveMemoryWarning {

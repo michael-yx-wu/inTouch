@@ -235,7 +235,7 @@
 // Show the PickerViewController. Hide the cancel button
 - (void)contactWasContacted:(NSNotification *)notification {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"test"];
+    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
     [pvc setShouldHideCancelButton:YES];
     [pvc setPostponingContact:NO];
     [pvc setDaysSinceLastReminder:[[(ContactMetadata *)[currentContact metadata] daysSinceLastReminder]
@@ -247,7 +247,7 @@
 // This method is only called when swiping to postpone a contact
 - (void)showPickerView {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"test"];
+    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
     [pvc setShouldHideCancelButton:NO];
     [pvc setPostponingContact:YES];
     [pvc setPostponingContactFromButton:NO];
@@ -619,10 +619,9 @@
 
 // Passing information to ContactViewController before segueing
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:mainViewControllerPriority];
-    
     // Pass contact information to the new view controller.
     if ([[segue identifier] isEqualToString:@"contact"]) {
+        [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:mainViewControllerPriority];
         ContactViewController *destViewController = [segue destinationViewController];
         [destViewController setContact:currentContact];
         [destViewController setPhotoData:[contactPhotoFront image]];

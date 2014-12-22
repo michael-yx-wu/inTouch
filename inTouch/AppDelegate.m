@@ -3,6 +3,7 @@
 #import "AppDelegate.h"
 #import "ContactManager.h"
 #import "GlobalData.h"
+#import "SettingsTableViewController.h"
 
 @implementation AppDelegate
 
@@ -92,20 +93,27 @@
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
+    // Handler block may be lost when app terminated due to low memory -- must explicitly set block
+    // This will produce a log message saying that the handler is being overwritten. 
+    [[FBSession activeSession] setStateChangeHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+        [self sessionStateChanged:session state:status error:error];
+    }];
     return [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
 }
 
 // Handle session state changes -- for now just prints errors and state
-- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)state error:(NSError *)error {
+- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)status error:(NSError *)error {
     // Session opened success
-    if (!error && state == FBSessionStateOpen) {
+    if (!error && (status == FBSessionStateOpen || status == FBSessionStateOpenTokenExtended)) {
         [DebugLogger log:@"FB session opened" withPriority:appDelegatePriority];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"fbSessionStateChanged" object:nil userInfo:nil];
         return;
     }
     
     // Session closed
-    if (state == FBSessionStateClosed || state == FBSessionStateClosedLoginFailed) {
+    if (status == FBSessionStateClosed || status == FBSessionStateClosedLoginFailed) {
         [DebugLogger log:@"FB session closed or closed with login fail" withPriority:appDelegatePriority];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"fbSessionStateChanged" object:nil userInfo:nil];
     }
     
     // Handle any errors
@@ -137,7 +145,7 @@
                 [self showAlertViewWithTitle:@"Oops something went wrong!"
                                      message:[NSString stringWithFormat:@"Please retry. \n\n If the problem persists contact us and mention this error code: %@", [errorInformation objectForKey:@"message"]]];
             }
-        }        
+        }
     }
 }
 
