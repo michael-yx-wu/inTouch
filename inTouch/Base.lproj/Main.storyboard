@@ -1706,7 +1706,6 @@
                         <outlet property="facebookCellDetailLabel" destination="dRv-rB-rNQ" id="L3n-Tf-5lt"/>
                         <outlet property="syncingContactsActivityIndicator" destination="pi9-dl-VNf" id="YGB-cD-0f2"/>
                         <segue destination="5sW-QD-Z4q" kind="show" identifier="help" id="Fr9-bp-PSb"/>
-                        <segue destination="4Ju-dd-xzN" kind="show" identifier="facebook" id="Bln-7P-hJC"/>
                         <segue destination="bnF-JX-c3G" kind="show" identifier="editContacts" id="hMQ-2r-cqA"/>
                     </connections>
                 </tableViewController>
@@ -2017,72 +2016,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bLR-Cp-xya" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2278.125" y="-1145"/>
-        </scene>
-        <!--Facebook Login-->
-        <scene sceneID="7hV-90-B1d">
-            <objects>
-                <viewController id="4Ju-dd-xzN" customClass="FacebookLoginViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="v3b-f4-ypR"/>
-                        <viewControllerLayoutGuide type="bottom" id="kiZ-og-gUX"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="b1S-7R-a0Z">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sync Contact Photos" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nud-hS-5eU" userLabel="Name Label">
-                                <rect key="frame" x="45" y="120" width="230" height="31"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="31" id="N5x-0Z-jeQ"/>
-                                    <constraint firstAttribute="width" constant="230" id="w23-xc-pt0"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_profile_fade0" translatesAutoresizingMaskIntoConstraints="NO" id="vhC-Fq-gGp" userLabel="Profile Photo">
-                                <rect key="frame" x="45" y="159" width="230" height="230"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="230" id="hxv-1p-BWA"/>
-                                    <constraint firstAttribute="height" constant="230" id="p72-wz-OhG"/>
-                                </constraints>
-                            </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MrB-LN-jUH" customClass="FBLoginView">
-                                <rect key="frame" x="30" y="451" width="260" height="41"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="41" id="GNK-Z8-aEy"/>
-                                    <constraint firstAttribute="width" constant="260" id="cQr-Mp-iF0"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="Nud-hS-5eU" firstAttribute="top" secondItem="v3b-f4-ypR" secondAttribute="bottom" priority="250" constant="56" id="7Sw-HB-8i9"/>
-                            <constraint firstItem="vhC-Fq-gGp" firstAttribute="leading" secondItem="b1S-7R-a0Z" secondAttribute="leading" constant="45" id="AAp-dC-a9q"/>
-                            <constraint firstItem="Nud-hS-5eU" firstAttribute="leading" secondItem="b1S-7R-a0Z" secondAttribute="leading" constant="45" id="HYI-eV-lme"/>
-                            <constraint firstItem="MrB-LN-jUH" firstAttribute="leading" secondItem="b1S-7R-a0Z" secondAttribute="leading" constant="30" id="JBD-5v-aK5"/>
-                            <constraint firstItem="MrB-LN-jUH" firstAttribute="top" secondItem="vhC-Fq-gGp" secondAttribute="bottom" priority="249" constant="62" id="Kl4-pE-1ik"/>
-                            <constraint firstItem="Nud-hS-5eU" firstAttribute="top" relation="greaterThanOrEqual" secondItem="v3b-f4-ypR" secondAttribute="bottom" constant="20" id="VIi-Gh-r4A"/>
-                            <constraint firstAttribute="trailing" secondItem="Nud-hS-5eU" secondAttribute="trailing" constant="45" id="X54-U4-bSK"/>
-                            <constraint firstAttribute="trailing" secondItem="vhC-Fq-gGp" secondAttribute="trailing" constant="45" id="X8p-im-Kfe"/>
-                            <constraint firstItem="vhC-Fq-gGp" firstAttribute="top" secondItem="Nud-hS-5eU" secondAttribute="bottom" constant="8" id="hW0-jR-jM0"/>
-                            <constraint firstItem="MrB-LN-jUH" firstAttribute="top" relation="greaterThanOrEqual" secondItem="vhC-Fq-gGp" secondAttribute="bottom" constant="40" id="had-Bq-AFG"/>
-                            <constraint firstAttribute="trailing" secondItem="MrB-LN-jUH" secondAttribute="trailing" constant="30" id="lOg-6X-lqj"/>
-                            <constraint firstItem="kiZ-og-gUX" firstAttribute="top" relation="greaterThanOrEqual" secondItem="MrB-LN-jUH" secondAttribute="bottom" constant="40" id="ydt-fC-fNI"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" title="Facebook Login" id="rSO-3g-8ps">
-                        <barButtonItem key="backBarButtonItem" title=" " id="1aU-Ui-EtE"/>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="fbLoginView" destination="MrB-LN-jUH" id="7B9-bd-VcZ"/>
-                        <outlet property="profilePhoto" destination="vhC-Fq-gGp" id="Wwe-O3-3Du"/>
-                        <outlet property="userLabel" destination="Nud-hS-5eU" id="Gpr-3q-UDE"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="EHz-Ra-OBc" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1582.5" y="-1976.2499999999991"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="HrM-D9-fOR">
