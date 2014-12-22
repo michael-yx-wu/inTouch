@@ -2,6 +2,7 @@
 
 #import "AppDelegate.h"
 #import "ContactManager.h"
+#import "FacebookManager.h"
 #import "SettingsTableViewController.h"
 
 @interface SettingsTableViewController () <MFMailComposeViewControllerDelegate>
@@ -77,42 +78,8 @@
     else if ([indexPath section] == 1) {
         // Display facebook login page
         if ([indexPath row] == 0) {
-            [self facebookLogin];
+            [self facebookButton];
         }
-    }
-}
-
-// Attempt a login using the Facebook app. Fall back to Safari web form if not available
-- (void)facebookLogin {
-    // If session state is open then close the session and remove access token from cache
-    if ([[FBSession activeSession] state] == FBSessionStateOpen ||
-        [[FBSession activeSession] state] == FBSessionStateOpenTokenExtended) {
-        // Prompt user if it's okay to log out
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Disconnect account?"
-                                                                                 message:@"If you disconnect your Facebook account from InTouch, we will no longer be able to pull contact profile pictures from Facebook."
-                                                                          preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
-                                                         style:UIAlertActionStyleCancel
-                                                       handler:^(UIAlertAction *action) {
-                                                       }];
-        UIAlertAction *disconnect = [UIAlertAction actionWithTitle:@"Disconnect"
-                                                             style:UIAlertActionStyleDefault
-                                                           handler:^(UIAlertAction *action) {
-                                                               [[FBSession activeSession] closeAndClearTokenInformation];
-                                                           }];
-        [alertController addAction:cancel];
-        [alertController addAction:disconnect];
-        [self presentViewController:alertController animated:YES completion:nil];
-    }
-    
-    // If session state is closed then open session showing the login UI.
-    else {
-        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
-                                           allowLoginUI:YES
-                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                          AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
-                                          [delegate sessionStateChanged:session state:status error:error];
-                                      }];
     }
 }
 
@@ -168,6 +135,47 @@
 }
 
 #pragma mark - Facebook
+
+// Handle facebook cell press -- masquerading as a button
+- (void)facebookButton {
+    UIAlertController *alertController;
+    UIAlertAction *cancel;
+    UIAlertAction *okay;
+    
+    // Prompt user with brief message before connecting/disconnecting facebook account
+    if ([FacebookManager sessionOpen]) {
+        alertController = [UIAlertController alertControllerWithTitle:@"Disconnect account?"
+                                                              message:@"If you disconnect your Facebook account, we will no longer be able to use the latest contact profile pictures from Facebook."
+                                                       preferredStyle:UIAlertControllerStyleAlert];
+        cancel = [UIAlertAction actionWithTitle:@"Cancel"
+                                          style:UIAlertActionStyleCancel
+                                        handler:^(UIAlertAction *action) {
+                                        }];
+        okay = [UIAlertAction actionWithTitle:@"Disconnect"
+                                        style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction *action) {
+                                          [FacebookManager logout];
+                                      }];
+    } else {
+        alertController = [UIAlertController alertControllerWithTitle:@"Connect to Facebook?"
+                                                              message:@"Connecting your Facebook account will allow us to use Facebook profile pictures for your contacts."
+                                                       preferredStyle:UIAlertControllerStyleAlert];
+        cancel = [UIAlertAction actionWithTitle:@"Cancel"
+                                          style:UIAlertActionStyleCancel
+                                        handler:^(UIAlertAction *action) {
+                                        }];
+        okay = [UIAlertAction actionWithTitle:@"Connect"
+                                        style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction *action) {
+                                          [FacebookManager login];
+                                      }];
+    }
+    
+    // Show the message
+    [alertController addAction:cancel];
+    [alertController addAction:okay];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
 
 // This is called when the session state changes and every time the view is about to be shown
 - (void)updateFacebookNameLabel {

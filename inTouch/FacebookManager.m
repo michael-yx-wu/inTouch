@@ -3,7 +3,7 @@
 
 @implementation FacebookManager
 
-+ (BOOL)fbSessionIsOpen {
++ (BOOL)sessionOpen {
     // Return true if state is one of two possible session open states
     return ([[FBSession activeSession] state] == FBSessionStateOpen ||
             [[FBSession activeSession] state] == FBSessionStateOpenTokenExtended);

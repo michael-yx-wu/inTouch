@@ -1,7 +1,7 @@
 @interface FacebookManager : NSObject
 
 // Check if the session is in one of two possible open states
-+ (BOOL)fbSessionIsOpen;
++ (BOOL)sessionOpen;
 
 // Uses the taggable_friends endpoint to get a list of the user's friends. List is passed off to MainViewController
 + (void)getFriendsList;
