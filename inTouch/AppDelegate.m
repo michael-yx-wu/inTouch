@@ -7,7 +7,6 @@
 @implementation AppDelegate
 
 @synthesize window;
-@synthesize session;
 @synthesize persistentStoreCoordinator;
 @synthesize managedObjectModel;
 @synthesize managedObjectContext;
@@ -40,14 +39,19 @@
     }
     
     // Load necessary FacebookSDK classes here
-    [FBLoginView class];
-    [FBAppCall class];
-    [FBSession class];
+//    [FBLoginView class];
+//    [FBAppCall class];
+//    [FBSession class];
 
     // Attempt to start facebook session on launch
     [self checkForFacebookSession];
     
     return YES;
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    // Handles user leaving app while FB login dialog is being shown. Unresolved sessions are cleared on relaunch
+    [FBAppCall handleDidBecomeActive];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -61,10 +65,6 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Need to reset the contact queue
     [[NSNotificationCenter defaultCenter] postNotificationName:@"clearQueue" object:self];
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    [FBAppCall handleDidBecomeActiveWithSession:session];
 }
 
 // Save changes to contacts before closing app
@@ -87,15 +87,65 @@
     }
 }
 
-// Handle Facebook app response
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    BOOL handled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
-    return handled;
+// Handle session information 
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+    return [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
 }
 
-// Handle session state changes
-- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)status error:(NSError *)error {
+// Handle session state changes -- for now just prints errors and state
+- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)state error:(NSError *)error {
+    // Session opened success
+    if (!error && state == FBSessionStateOpen) {
+        [DebugLogger log:@"FB session opened" withPriority:appDelegatePriority];
+        return;
+    }
     
+    // Session closed
+    if (state == FBSessionStateClosed || state == FBSessionStateClosedLoginFailed) {
+        [DebugLogger log:@"FB session closed or closed with login fail" withPriority:appDelegatePriority];
+    }
+    
+    // Handle any errors
+    if (error) {
+        [DebugLogger log:@"FB session error" withPriority:appDelegatePriority];
+
+        // If error requires users to do something outside of the app
+        if ([FBErrorUtility shouldNotifyUserForError:error]) {
+            [self showAlertViewWithTitle:@"Something went wrong"
+                                 message:[FBErrorUtility userMessageForError:error]];
+        } else {
+            // Do nothing if user cancelled login
+            if ([FBErrorUtility errorCategoryForError:error] ==  FBErrorCategoryUserCancelled) {
+                [DebugLogger log:@"User cancelled FB login -- no action" withPriority:appDelegatePriority];
+            }
+            
+            // Handle session closures that occured outside of app
+            else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryAuthenticationReopenSession) {
+                [self showAlertViewWithTitle:@"Facebook session error"
+                                     message:@"Your current session is no longer valid. Please login again"];
+            }
+            
+            // Handle generic errors
+            else {
+                // Get more information on error
+                NSDictionary *errorInformation = [[[[error userInfo]
+                                                    objectForKey:@"com.facebook.sdk:ParsedJSONResponseKey"]
+                                                   objectForKey:@"body"] objectForKey:@"error"];
+                [self showAlertViewWithTitle:@"Oops something went wrong!"
+                                     message:[NSString stringWithFormat:@"Please retry. \n\n If the problem persists contact us and mention this error code: %@", [errorInformation objectForKey:@"message"]]];
+            }
+        }        
+    }
+}
+
+- (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message {
+    UIAlertView *alertView = [[UIAlertView alloc] init];
+    [alertView setTitle:title];
+    [alertView setMessage:message];
+    [alertView show];
 }
 
 #pragma mark - Core Data

@@ -93,7 +93,8 @@
         [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
                                            allowLoginUI:YES
                                       completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-//                                          [[UIApplication sharedApplication] delegate]
+                                          AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+                                          [delegate sessionStateChanged:session state:status error:error];
                                       }];
     }
     
