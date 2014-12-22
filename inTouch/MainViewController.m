@@ -10,9 +10,6 @@
 #import "ContactViewController.h"
 #import "PickerViewController.h"
 
-#import "DebugConstants.h"
-#import "DebugLogger.h"
-
 @interface MainViewController () {
     NSMutableArray *photoQueue;
     NSMutableArray *currentQueue;

@@ -4,9 +4,6 @@
 #import "ContactInformationTableViewController.h"
 #import "ContactManager.h"
 
-#import "DebugConstants.h"
-#import "DebugLogger.h"
-
 @interface ContactInformationTableViewController () {
     NSInteger newFrequency;
 }

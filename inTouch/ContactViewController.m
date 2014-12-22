@@ -9,9 +9,6 @@
 #import "ContactMetadata.h"
 #import "ContactViewController.h"
 
-#import "DebugConstants.h"
-#import "DebugLogger.h"
-
 @interface ContactViewController () <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
 
 @end

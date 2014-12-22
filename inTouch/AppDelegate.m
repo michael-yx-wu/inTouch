@@ -4,9 +4,6 @@
 #import "ContactManager.h"
 #import "GlobalData.h"
 
-#import "DebugConstants.h"
-#import "DebugLogger.h"
-
 @implementation AppDelegate
 
 @synthesize window;

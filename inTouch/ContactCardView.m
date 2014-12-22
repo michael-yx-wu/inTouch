@@ -1,8 +1,5 @@
 #import "ContactCardView.h"
 
-#import "DebugLogger.h"
-#import "DebugConstants.h"
-
 #define ACTION_MARGIN 100
 #define OVERLAY_STRENGTH 0.75
 #define ROTATION_ANGLE M_PI/8

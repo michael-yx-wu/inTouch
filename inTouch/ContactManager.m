@@ -6,9 +6,6 @@
 #import "Contact.h"
 #import "ContactMetadata.h"
 
-#import "DebugConstants.h"
-#import "DebugLogger.h"
-
 @implementation ContactManager
 
 NSInteger kFacebookRequestBegin = 1;

@@ -4,9 +4,6 @@
 #import "ContactMetadata.h"
 #import "EditContactsTableViewController.h"
 
-#import "DebugLogger.h"
-#import "DebugConstants.h"
-
 @interface EditContactsTableViewController () {
     Contact *selectedContact;
 }

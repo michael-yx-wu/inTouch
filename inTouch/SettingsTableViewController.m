@@ -1,10 +1,8 @@
 #import <MessageUI/MessageUI.h>
 
+#import "AppDelegate.h"
 #import "ContactManager.h"
 #import "SettingsTableViewController.h"
-
-#import "DebugConstants.h"
-#import "DebugLogger.h"
 
 @interface SettingsTableViewController () <MFMailComposeViewControllerDelegate>
 @end
@@ -82,6 +80,23 @@
             [self performSegueWithIdentifier:@"facebook" sender:self];
         }
     }
+}
+
+- (void)facebookLogin {
+    // If session state is open then close the session and remove access token from cache
+    if ([[FBSession activeSession] state] == FBSessionStateOpen ||
+        [[FBSession activeSession] state] == FBSessionStateOpenTokenExtended) {
+        [[FBSession activeSession] closeAndClearTokenInformation];
+    }
+    // If session state is closed then open session showing the login UI.
+    else {
+        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
+                                           allowLoginUI:YES
+                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+//                                          [[UIApplication sharedApplication] delegate]
+                                      }];
+    }
+    
 }
 
 // Sync contacts and show busy indicator
