@@ -323,7 +323,7 @@
 - (void)updateFacebookFriends:(NSNotification *)notification {
     [DebugLogger log:@"Got new facebook friend list" withPriority:mainViewControllerPriority];
     facebookFriends = [[notification userInfo] valueForKey:@"data"];
-    [self updateUI];
+    [self reloadFacebookPhotos];
 }
 
 // Asynchronously attempts to download a facebook photo for the contact
@@ -514,8 +514,8 @@
     [metadata setNumTimesAppeared:[NSNumber numberWithInt:([[metadata numTimesAppeared] intValue] + 1)]];
     
     // Delete photo information to save space
-    //    [currentContact setFacebookPhoto:nil];
-    //    [currentContact setLinkedinPhoto:nil];
+    [currentContact setFacebookPhoto:nil];
+    [currentContact setLinkedinPhoto:nil];
     [self save];
     
     [self dismissContact];
