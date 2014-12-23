@@ -4,6 +4,7 @@
 #import "Contact.h"
 #import "ContactMetadata.h"
 #import "ContactManager.h"
+#import "FacebookManager.h"
 #import "GlobalData.h"
 
 #import "MainViewController.h"
@@ -41,7 +42,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	// Load in background image
+    // Load in background image
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
     
     // Add the references to the contact queue
@@ -57,7 +58,7 @@
     
     // Initialize the queues
     contactAppearedQueue = [[NSMutableArray alloc] initWithCapacity:5];
-    contactNeverAppearedQueue = [[NSMutableArray alloc] initWithCapacity:5];    
+    contactNeverAppearedQueue = [[NSMutableArray alloc] initWithCapacity:5];
     
     // Initialize the contact queue with at most 5 urgent contacts - load appeared queue on default
     currentQueue = contactAppearedQueue;
@@ -67,7 +68,7 @@
     currentQueue = contactAppearedQueue;
     [self getNextContactFromQueue];
     [self updateUI];
-
+    
     
     // Listen for notification to replace facebook friend list with new list
     // Notification from ContactManager
@@ -75,7 +76,7 @@
                                              selector:@selector(updateFacebookFriends:)
                                                  name:@"facebookFriends"
                                                object:nil];
-
+    
     // Listen for notification to redraw profile photos when downloads finish. Photos can take several seconds to load.
     // Notification from self (background process)
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -103,6 +104,12 @@
                                              selector:@selector(pickerViewCancel:)
                                                  name:@"pickerViewCancel"
                                                object:nil];
+    
+    // Listen for notifications (from other threads) to merge moc changes
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(mergeChanges:)
+                                                 name:NSManagedObjectContextDidSaveNotification
+                                               object:[self managedObjectContext]];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -135,31 +142,7 @@
     }
     
     // Attempt to get list of facebook friends
-    // This will fail gracefully if user is not logged in
-    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(400).height(400)"
-                          completionHandler:^(FBRequestConnection *connection,
-                                              id result, NSError
-                                              *error) {
-                              NSMutableDictionary *fbFriends = [[NSMutableDictionary alloc] init];
-                              if (error) {
-                                  [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]]
-                                      withPriority:contactManagerPriority];
-                              }
-                              // Process facebook json object
-                              NSArray *taggableFriends = [result objectForKey:@"data"];
-                              for (NSDictionary *friend in taggableFriends) {
-                                  NSString *name = [friend valueForKey:@"name"];
-                                  NSArray *url = [[[friend valueForKey:@"picture"] valueForKey:@"data"]
-                                                  valueForKey:@"url"];
-                                  [fbFriends setValue:url forKey:name];
-                              }
-                              
-                              // Post notification for MainViewController
-                              NSDictionary *notificationData = @{@"data": fbFriends};
-                              [[NSNotificationCenter defaultCenter] postNotificationName:@"facebookFriends"
-                                                                                  object:self
-                                                                                userInfo:notificationData];
-                          }];
+    [FacebookManager getFriendsList];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -244,8 +227,8 @@
     PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
     [pvc setShouldHideCancelButton:YES];
     [pvc setPostponingContact:NO];
-    [pvc setDaysSinceLastReminder:[[(ContactMetadata *)[currentContact metadata] daysSinceLastReminder]
-                                  unsignedIntegerValue]];
+    [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
+                                 unsignedIntegerValue]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -257,8 +240,8 @@
     [pvc setShouldHideCancelButton:NO];
     [pvc setPostponingContact:YES];
     [pvc setPostponingContactFromButton:NO];
-    [pvc setDaysSinceLastReminder:[[(ContactMetadata *)[currentContact metadata] daysSinceLastReminder]
-                                   unsignedIntegerValue]];
+    [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
+                                 unsignedIntegerValue]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -268,48 +251,56 @@
     [self dismissViewControllerAnimated:YES completion:^{
         NSDictionary *dict = [notification userInfo];
         NSNumber *daysToPostpone = [dict valueForKey:@"days"];
-        ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
-        
         BOOL postponingContact = [[dict valueForKey:@"postponingContact"] boolValue];
         BOOL postponingContactFromButton = [[dict valueForKey:@"postponingContactFromButton"] boolValue];
-
+        
+        // Remember days to postpone as user preference
+        ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
+        [metadata setDaysBetweenReminder:daysToPostpone];
+        
         // We finished contacting a contact
         if (!postponingContact) {
-            [metadata setDaysSinceLastReminder:daysToPostpone];
-            [contactCard slideContactCardUp:[daysToPostpone unsignedIntegerValue]];
-
+            [contactCard slideContactCardUp:[daysToPostpone unsignedIntegerValue]];            
         }
         // We are postponing from a button
         else if (postponingContactFromButton) {
-            [metadata setDaysSinceLastReminder:daysToPostpone];
-            [contactCard rightActionFromButton:YES];
+            [contactCard rightActionFromButton:[daysToPostpone integerValue]];
         }
         // We are postponing from a swipe -- this is a little hairy
         else {
-            [metadata setDaysSinceLastReminder:daysToPostpone];
-            [contactCard returnToOriginalPositions];
+            // Contact is already off the screen. We just need to update photos and return to original positions
             [self dismissContactAndSetReminder:[daysToPostpone unsignedIntegerValue]];
+            [contactCard returnToOriginalPositions];
             [contactCard showNameLabel];
         }
-        
     }];
 }
 
 // Dismiss the picker view and move cards back to original positions if necessary
 - (void)pickerViewCancel:(NSNotification *)notification {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [UIView animateWithDuration:0.3 animations:^{
-        [contactCard returnToOriginalPositions];
-    } completion:^(BOOL finished) {
-        [contactCard showNameLabel];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [UIView animateWithDuration:0.3 animations:^{
+            [contactCard returnToOriginalPositions];
+        } completion:^(BOOL finished) {
+            [contactCard showNameLabel];
+        }];        
     }];
 }
 
+// 1. Remove the contact from the current queue
+// 2. Update the current queue
+// 3. Repoint the current contact
+// 4. Redraw photos
+- (void)dismissContact {
+    [currentQueue removeObjectAtIndex:0];
+    [self getNextContactFromQueue];
+    [self updateQueue];
+    [self updateUI];
+    [self printQueue];
+}
+
 // 1. Set the remindOnDate metadata property and remind in some number of days
-// 2. Remove the contact from the current queue
-// 3. Update the current queue
-// 4. Reset the current contact
-// 5. Redraw photos
+// 2. Dismiss contact called when done
 - (void)dismissContactAndSetReminder:(NSUInteger)days {
     [self printQueue];
     NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
@@ -320,11 +311,7 @@
     ContactMetadata *contactMetadata = (ContactMetadata *)[currentContact metadata];
     [contactMetadata setNumTimesAppeared:[NSNumber numberWithInt:([[contactMetadata numTimesAppeared] intValue] + 1)]];
     [contactMetadata setRemindOnDate:remindDate];
-    [currentQueue removeObjectAtIndex:0];
-    [self getNextContactFromQueue];
-    [self updateQueue];
-    [self updateUI];
-    [self printQueue];
+    [self dismissContact];
 }
 
 // Helper method that returns true if the specified queue contains a copy of the contact
@@ -340,10 +327,46 @@
 #pragma mark - Facebook methods
 
 - (void)updateFacebookFriends:(NSNotification *)notification {
-    NSLog(@"got new friend list");
+    [DebugLogger log:@"Got new facebook friend list" withPriority:mainViewControllerPriority];
     facebookFriends = [[notification userInfo] valueForKey:@"data"];
-    
-    // Try again to download facebook photos for all contacts that don't have facebook photos in currentQueue
+    [self reloadFacebookPhotos];
+    [self updateUI];
+}
+
+// Asynchronously attempts to download a facebook photo for the contact
+- (void)downloadFbPhotoForContact:(Contact *)contact {
+    NSManagedObjectID *contactID = [contact objectID];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        @try {
+            // Use a reference to app delegate's moc
+            NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] init];
+            AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+            [moc setPersistentStoreCoordinator:[appDelegate persistentStoreCoordinator]];
+            Contact *someContact = (Contact *)[moc objectWithID:contactID];
+            
+            NSString *fullName = [NSString stringWithFormat:@"%@ %@", [someContact nameFirst], [someContact nameLast]];
+            NSString *url = [facebookFriends valueForKey:fullName];
+            if (url) {
+                [DebugLogger log:[NSString stringWithFormat:@"Downloading photo for %@", fullName]
+                    withPriority:mainViewControllerPriority];
+                NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
+                [someContact setFacebookPhoto:imageData];
+                NSError *error;
+                if ([moc hasChanges]) {
+                    [moc save:&error]; // this will cause main thread to merge changes
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"photoDownloaded" object:nil];
+                }
+            }
+        }
+        @catch (NSException *exception) {
+            [DebugLogger log:@"Facebook photo download error: thread probably temrinated mid execution"
+                withPriority:mainViewControllerPriority];
+        }
+    });
+}
+
+// Attempt to download facebook profile pictures for all contacts in current contact and redraw
+- (void)reloadFacebookPhotos {
     for (Contact *contact in currentQueue) {
         if (![contact facebookPhoto]) {
             [self downloadFbPhotoForContact:contact];
@@ -351,51 +374,9 @@
     }
 }
 
-// Asynchronously attempts to download a facebook photo for the contact
-- (void)downloadFbPhotoForContact:(Contact *)contact {
-    NSManagedObjectID *contactID = [contact objectID];
-    MainViewController *thisController = self;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        @try {
-            NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] init];
-            AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-            [moc setPersistentStoreCoordinator:[appDelegate persistentStoreCoordinator]];
-            Contact *someContact = (Contact *)[moc objectWithID:contactID];
-            
-            // Dynamically add an observer to this controller to listen for context merge requests from other threads
-            [[NSNotificationCenter defaultCenter] addObserver:thisController
-                                                     selector:@selector(mergeChanges:)
-                                                         name:NSManagedObjectContextDidSaveNotification
-                                                       object:moc];
-            
-            NSString *fullName = [NSString stringWithFormat:@"%@ %@", [someContact nameFirst], [someContact nameLast]];
-            NSString *url = [facebookFriends valueForKey:fullName];
-            NSLog(@"%@", url);
-            if (url) {
-                NSLog(@"Downloading photo for contact: %@", fullName);
-                NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
-                [someContact setFacebookPhoto:imageData];
-                NSError *error;
-                if ([moc hasChanges]) {
-                    [moc save:&error];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"photoDownloaded" object:nil];
-                }
-            }
-            
-            // Remove the observer we just added -- we no longer need it
-            [[NSNotificationCenter defaultCenter] removeObserver:thisController
-                                                            name:NSManagedObjectContextDidSaveNotification
-                                                          object:moc];
-        }
-        @catch (NSException *exception) {
-            NSLog(@"error: thread probably terminated mid execution");
-        }
-    });
-}
-
 #pragma mark - UI upating
 
-// Place photos for contacts in the correct position
+// Display photos for contacts in the current queue
 - (void)updateUI {
     [self mergeChanges:nil];
     // If the current queue is empty
@@ -437,7 +418,7 @@
             // Use found data if resolution sufficiently high
             img = [[UIImage alloc] initWithData:photoData];
             NSInteger resolution = [img size].width * [img scale] + [img size].height * [img scale];
-            if (resolution < 600) {
+            if (resolution < 300) {
                 shouldUseDefaultPhoto = YES;
             }
         }
@@ -461,6 +442,7 @@
     [contactActionButtonsView setHidden:NO];
 }
 
+// Helper method to retrieve photo data for a contact. Preference is facebook > linkedin > contact book
 - (NSData *)getPhotoDataForContact:(Contact *)contact {
     NSData *photoData;
     NSData *facebookPhoto = [contact facebookPhoto];
@@ -498,53 +480,38 @@
 
 - (IBAction)postponeContactButton:(id)sender {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"test"];
+    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
     [pvc setShouldHideCancelButton:NO];
     [pvc setPostponingContact:YES];
     [pvc setPostponingContactFromButton:YES];
-    [pvc setDaysSinceLastReminder:[[(ContactMetadata *)[currentContact metadata] daysSinceLastReminder]
-                                   unsignedIntegerValue]];
+    [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
+                                 unsignedIntegerValue]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
 
-// Delete the current contact
+// Delete the current contact and refresh the queue 
 - (void)deleteContact {
     [DebugLogger log:@"Delete" withPriority:mainViewControllerPriority];
     ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
     NSDate *today = [NSDate date];
     [metadata setNoInterestDate:today];
     [metadata setInterest:[NSNumber numberWithBool:NO]];
+    [metadata setNumTimesAppeared:[NSNumber numberWithInt:([[metadata numTimesAppeared] intValue] + 1)]];
+    
+    // Delete photo information to save space
+    [currentContact setFacebookPhoto:nil];
+    [currentContact setLinkedinPhoto:nil];
     [self save];
     
-    [deletedView setAlpha:0];
-    [self dismissContactAndSetReminder:5];
-    [contactCard returnToOriginalPositions];
-    [contactCard showNameLabel];
-}
-
-// Postpone the current contact
-- (void)postponeContact {
-    [DebugLogger log:@"Postpone" withPriority:2];
-    [DebugLogger log:[NSString stringWithFormat:@"%@ %@ postponed", [currentContact nameFirst], [currentContact nameLast]] withPriority:mainViewControllerPriority];
-    ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
-    NSDate *today = [NSDate date];
-    NSNumber *timesPostponed = [NSNumber numberWithInteger:[[metadata numTimesPostponed] integerValue]+1];
-    [metadata setLastPostponedDate:today];
-    [metadata setNumTimesPostponed:timesPostponed];
-    [self save];
-    
-    [postponedView setAlpha:0];
-    [self dismissContactAndSetReminder:5];
-    [contactCard returnToOriginalPositions];
-    [contactCard showNameLabel];
+    [self dismissContact];
 }
 
 // Switch between "appeared" and "never appeared queues
 // When switching, we need to add the current contact back to the queue
 - (IBAction)switchQueue:(id)sender {
     [DebugLogger log:@"Switching Queues" withPriority:mainViewControllerPriority];
-
+    
     // Switch queue
     UIButton *switchQueueButton = (UIButton *)sender;
     if (currentQueue == contactAppearedQueue) {
@@ -554,10 +521,12 @@
         currentQueue = contactAppearedQueue;
         [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
     }
-
+    
     // Redraw the UI with information from the current queue
     [contactCard showAndEnableInteraction];
     [self getNextContactFromQueue];
+    [self updateUI];
+    [self reloadFacebookPhotos];
     [self updateUI];
     [self printQueue];
 }

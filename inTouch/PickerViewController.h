@@ -8,8 +8,9 @@
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
 
-// Days passed since last reminder of this contact
-@property NSUInteger daysSinceLastReminder;
+// Set to the daysBetweenReminder value of current contact. Represents user specified days to wait in between reminders
+@property NSUInteger daysBetweenReminder;
+
 @property BOOL shouldHideCancelButton;
 @property BOOL postponingContact;
 @property BOOL postponingContactFromButton;

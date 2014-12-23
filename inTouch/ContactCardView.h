@@ -2,8 +2,7 @@
 
 @protocol MainViewDelegate <NSObject>
 
-- (IBAction)deleteContact;
-- (IBAction)postponeContact;
+- (void)deleteContact;
 - (void)performSegueWithIdentifier:(NSString *)string sender:(id)sender;
 - (void)dismissContactAndSetReminder:(NSUInteger)days;
 - (void)showPickerView;
@@ -35,7 +34,7 @@
 
 - (void)setImageCentersAndMasks;
 - (void)leftAction;
-- (void)rightActionFromButton:(BOOL)fromButton;
+- (void)rightActionFromButton:(NSInteger)days;
 - (void)slideContactCardUp:(NSUInteger)days;
 - (void)showNameLabel;
 - (void)returnToOriginalPositions;

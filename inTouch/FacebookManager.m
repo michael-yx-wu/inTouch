@@ -10,6 +10,10 @@
 }
 
 + (void)getFriendsList {
+    // Fail gracefully if no open session
+    if (![self sessionOpen]) {
+        return;
+    }
     [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(400).height(400)"
                           completionHandler:^(FBRequestConnection *connection,
                                               id result, NSError
@@ -36,7 +40,6 @@
                           }];
 }
 
-// Log in to facebook
 + (void)login {
     [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
                                        allowLoginUI:YES
@@ -46,7 +49,6 @@
                                   }];
 }
 
-// Attempts to login using cached token. Does nothing on failure
 + (void)loginSilently {
     if ([[FBSession activeSession] state] == FBSessionStateCreatedTokenLoaded) {
         // Do not show login UI on fail
@@ -59,12 +61,10 @@
     }
 }
 
-// Clear token information and log out
 + (void)logout {
     [[FBSession activeSession] closeAndClearTokenInformation];
 }
 
-// Handle changed session states
 + (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)status error:(NSError *)error {
     // Session opened success
     if (!error && (status == FBSessionStateOpen || status == FBSessionStateOpenTokenExtended)) {

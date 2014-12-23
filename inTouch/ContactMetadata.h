@@ -2,7 +2,7 @@
 
 @interface ContactMetadata : NSManagedObject
 
-@property (nonatomic, retain) NSNumber *daysSinceLastReminder;
+@property (nonatomic, retain) NSNumber *daysBetweenReminder;
 @property (nonatomic, retain) NSNumber *interest;
 @property (nonatomic, retain) NSDate *lastContactedDate;
 @property (nonatomic, retain) NSDate *lastPostponedDate;

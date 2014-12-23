@@ -25,6 +25,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self updateFacebookNameLabel];
 }
 
@@ -40,24 +41,14 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     // Section 0
-    if ([indexPath section] == 0) {
-        // Display help
-        if ([indexPath row] == 0) {
-            [self performSegueWithIdentifier:@"help" sender:self];
-        }
-        
-        // Edit contacts
-        if ([indexPath row] == 1) {
-            [self performSegueWithIdentifier:@"editContacts" sender:self];
-        }
-        
+    if ([indexPath section] == 0) {       
         // Sync contacts
         if ([indexPath row] == 2) {
             [self syncContacts];
         }
         
         // Feedback
-        if ([indexPath row] == 3) {
+        else if ([indexPath row] == 3) {
             if ([MFMailComposeViewController canSendMail]) {
                 MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
                 [mailViewController setToRecipients:@[@"help@intouchapp.io"]];
@@ -86,7 +77,6 @@
 // Sync contacts and show busy indicator
 - (void)syncContacts {
     [DebugLogger log:@"Syncing Contacts" withPriority:settingsTableViewControllerPriority];
-    
     [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         // Disable interaction while syncing
         [[self view] setUserInteractionEnabled:NO];

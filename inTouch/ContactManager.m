@@ -72,7 +72,6 @@ NSInteger kFacebookRequestFinish = 0;
             [contact setNameLast:lastName];
             [contact setCategory:nil];
             
-            [metaData setDaysSinceLastReminder:[NSNumber numberWithInt:0]];
             [metaData setInterest:[NSNumber numberWithBool:YES]];
             [metaData setNumTimesAppeared:[NSNumber numberWithInt:0]];
             [metaData setNumTimesCalled:[NSNumber numberWithInt:0]];

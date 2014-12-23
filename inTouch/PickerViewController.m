@@ -12,7 +12,7 @@ enum {
 @synthesize remindDate;
 @synthesize remindDatePickerView;
 @synthesize toolbar, cancelButton;
-@synthesize daysSinceLastReminder;
+@synthesize daysBetweenReminder;
 @synthesize shouldHideCancelButton;
 @synthesize postponingContact;
 @synthesize postponingContactFromButton;
@@ -33,8 +33,8 @@ enum {
 
 // Determine the correct rows to highlight on load
 - (void)configureRows {
-    NSUInteger weeks = daysSinceLastReminder/7;
-    NSUInteger days = daysSinceLastReminder%7;
+    NSUInteger weeks = daysBetweenReminder/7;
+    NSUInteger days = daysBetweenReminder%7;
     [remindDatePickerView selectRow:weeks inComponent:weeksComponent animated:YES];
     [remindDatePickerView selectRow:days inComponent:daysComponent animated:YES];
     [self pickerView:remindDatePickerView didSelectRow:days inComponent:1];
@@ -70,17 +70,11 @@ enum {
     return [[self view] bounds].size.width/3;
 }
 
-//- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-//    return [NSString stringWithFormat:@"%ld", (long)row];
-//}
-
 -(NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component {
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     if (component == weeksComponent) {
         [paragraphStyle setAlignment:NSTextAlignmentRight];
-//        [paragraphStyle setTailIndent:10];
     } else {
-//        [paragraphStyle setHeadIndent:10];
         [paragraphStyle setAlignment:NSTextAlignmentLeft];
     }
     return [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%ld", (long)row]

@@ -42,7 +42,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <segue destination="5WZ-iW-IZ3" kind="presentation" id="wpb-Am-hZc"/>
+                                    <segue destination="5WZ-iW-IZ3" kind="presentation" identifier="settings" id="wpb-Am-hZc"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleAspectFit" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q08-uQ-aoQ" userLabel="Change Queues Button">
@@ -759,7 +759,7 @@
         <!--Picker View Controller-->
         <scene sceneID="uZn-wT-bQd">
             <objects>
-                <viewController storyboardIdentifier="picker" id="xcv-zm-cgR" customClass="PickerViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="picker" useStoryboardIdentifierAsRestorationIdentifier="YES" id="xcv-zm-cgR" customClass="PickerViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="TmN-35-KFv"/>
                         <viewControllerLayoutGuide type="bottom" id="Kn4-08-SDc"/>
@@ -1543,6 +1543,9 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="5sW-QD-Z4q" kind="show" id="vbh-cB-4H6"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="Dao-Ub-5AM" style="IBUITableViewCellStyleDefault" id="dvr-Mp-MCO">
                                         <rect key="frame" x="0.0" y="187" width="320" height="44"/>
@@ -1560,6 +1563,9 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="bnF-JX-c3G" kind="show" identifier="allContacts" id="YXL-et-T2O"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="3RL-oj-QLY">
                                         <rect key="frame" x="0.0" y="231" width="320" height="44"/>
@@ -1634,21 +1640,18 @@
                                             </variation>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="nmd-Wb-jd0" style="IBUITableViewCellStyleDefault" id="Xwz-fT-XZF">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="2iN-Bq-Pgd" style="IBUITableViewCellStyleDefault" id="Xwz-fT-XZF">
                                         <rect key="frame" x="0.0" y="275" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Xwz-fT-XZF" id="i3h-J8-l8K">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nmd-Wb-jd0">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Feedback" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2iN-Bq-Pgd">
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
-                                                    <variation key="heightClass=regular-widthClass=compact">
-                                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    </variation>
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1705,8 +1708,6 @@
                         <outlet property="facebookCell" destination="mms-mv-eXV" id="02X-f0-3vo"/>
                         <outlet property="facebookCellDetailLabel" destination="dRv-rB-rNQ" id="L3n-Tf-5lt"/>
                         <outlet property="syncingContactsActivityIndicator" destination="pi9-dl-VNf" id="YGB-cD-0f2"/>
-                        <segue destination="5sW-QD-Z4q" kind="show" identifier="help" id="Fr9-bp-PSb"/>
-                        <segue destination="bnF-JX-c3G" kind="show" identifier="editContacts" id="hMQ-2r-cqA"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nDM-zN-dyS" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1720,10 +1721,10 @@
             </objects>
             <point key="canvasLocation" x="837" y="-1145.25"/>
         </scene>
-        <!--Edit Contacts-->
+        <!--All Contacts-->
         <scene sceneID="1Xx-Ms-at9">
             <objects>
-                <tableViewController id="bnF-JX-c3G" customClass="EditContactsTableViewController" sceneMemberID="viewController">
+                <tableViewController id="bnF-JX-c3G" userLabel="All Contacts" customClass="AllContactsTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="sAZ-pW-gpk">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1743,7 +1744,7 @@
                             <outlet property="delegate" destination="bnF-JX-c3G" id="0S1-40-gU6"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Edit Contacts" id="Trm-Ka-SgA">
+                    <navigationItem key="navigationItem" title="All Contacts" id="Trm-Ka-SgA">
                         <barButtonItem key="backBarButtonItem" title=" " id="T9Z-gA-UDy"/>
                     </navigationItem>
                     <connections>

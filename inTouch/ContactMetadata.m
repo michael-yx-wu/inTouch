@@ -10,7 +10,7 @@
 
 @implementation ContactMetadata
 
-@dynamic daysSinceLastReminder;
+@dynamic daysBetweenReminder;
 @dynamic interest;
 @dynamic lastContactedDate;
 @dynamic lastPostponedDate;

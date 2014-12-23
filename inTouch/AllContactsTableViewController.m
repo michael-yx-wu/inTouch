@@ -2,15 +2,15 @@
 #import "Contact.h"
 #import "ContactInformationTableViewController.h"
 #import "ContactMetadata.h"
-#import "EditContactsTableViewController.h"
+#import "AllContactsTableViewController.h"
 
-@interface EditContactsTableViewController () {
+@interface AllContactsTableViewController () {
     Contact *selectedContact;
 }
 
 @end
 
-@implementation EditContactsTableViewController
+@implementation AllContactsTableViewController
 
 @synthesize contactIDs;
 @synthesize contacts;

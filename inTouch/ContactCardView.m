@@ -66,7 +66,6 @@
     [[contactPhotoAnchor layer] setMasksToBounds:YES];
 }
 
-
 // Called when contact card is being dragged. Called many times per second
 -(void)beingDragged:(UIPanGestureRecognizer *)gestureRecognizer {
     // Determine where we are dragging the card
@@ -205,7 +204,7 @@
     if (xFromCenter < -ACTION_MARGIN) {
         [self leftAction];
     } else if (xFromCenter > ACTION_MARGIN) {
-        [self rightActionFromButton:NO];
+        [self rightActionFromButton:-1];
     } else {
         // Reset the card and overlays
         [UIView animateWithDuration:0.3 animations:^{
@@ -216,7 +215,8 @@
     }
 }
 
-// Move card to left and alert MainViewController to show next contact
+// Handles the animation aspect of deleting a contact. Invokes MainViewController's deleteContact method to handle the
+// logic of refreshing the contact queue
 - (void)leftAction {
     [UIView animateWithDuration:0.15 animations:^{
         [contactName setAlpha:0.0];
@@ -231,14 +231,17 @@
                              [deletedView setAlpha:1];
                          } completion:^(BOOL finished) {
                              [self setAlpha:1.0];
+                             [deletedView setAlpha:0];
                              [delegate deleteContact];
+                             [self returnToOriginalPositions];
                              [self resetTranslation];
+                             [self showNameLabel];
                          }];
     }];
 }
 
 // Move card to top and alert MainViewController to show next contact
-- (void)rightActionFromButton:(BOOL)fromButton {
+- (void)rightActionFromButton:(NSInteger)days {
     [UIView animateWithDuration:0.15 animations:^{
         [contactName setAlpha:0.0];
     } completion:^(BOOL finished) {
@@ -251,13 +254,15 @@
                              [self slideUp];
                              [postponedView setAlpha:1];
                          } completion:^(BOOL finished) {
-                             if (fromButton) {
+                             if (days >= 0) {
                                  [self setAlpha:1.0];
-                                 [delegate postponeContact];
+                                 [delegate dismissContactAndSetReminder:days];
                                  [self returnToOriginalPositions];
                                  [self resetTranslation];
+                                 [self showNameLabel];
                              } else {
-                                 // Postponing via swipe -- need to show picker view 
+                                 // Postponing via swipe -- need to show picker view
+                                 // Main view controller will handle picker view done notifications
                                  [delegate showPickerView];
                              }
                          }];
