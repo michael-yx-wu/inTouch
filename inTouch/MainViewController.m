@@ -323,7 +323,6 @@
 - (void)updateFacebookFriends:(NSNotification *)notification {
     [DebugLogger log:@"Got new facebook friend list" withPriority:mainViewControllerPriority];
     facebookFriends = [[notification userInfo] valueForKey:@"data"];
-    [self reloadFacebookPhotos];
 }
 
 // Asynchronously attempts to download a facebook photo for the contact
@@ -352,21 +351,16 @@
                 NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
                 [someContact setFacebookPhoto:imageData];
                 NSError *error;
-                @try {
-                    if ([moc hasChanges]) {
-                        [moc save:&error]; // this will cause main thread to merge changes
-                        [DebugLogger log:[NSString stringWithFormat:@"Got photo for %@", fullName]
-                            withPriority:mainViewControllerPriority];
-                        [[NSNotificationCenter defaultCenter] postNotificationName:photoDownloadedNotification object:nil];
-                    }
-                    if (error) {
-                        [DebugLogger log:[NSString stringWithFormat:@"Facebook downlad error: %@", [error userInfo]]
-                            withPriority:mainViewControllerPriority];
-                        abort();
-                    }
+                if ([moc hasChanges]) {
+                    [moc save:&error]; // this will cause main thread to merge changes
+                    [DebugLogger log:[NSString stringWithFormat:@"Got photo for %@", fullName]
+                        withPriority:mainViewControllerPriority];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:photoDownloadedNotification object:nil];
                 }
-                @catch (NSException *exception) {
-                    NSLog(@"%@", [exception userInfo]);
+                if (error) {
+                    [DebugLogger log:[NSString stringWithFormat:@"Facebook downlad error: %@", [error userInfo]]
+                        withPriority:mainViewControllerPriority];
+                    abort();
                 }
             }
             
@@ -380,15 +374,6 @@
                 withPriority:mainViewControllerPriority];
         }
     });
-}
-
-// Attempt to download facebook profile pictures for all contacts in current contact and redraw
-- (void)reloadFacebookPhotos {
-    for (Contact *contact in currentQueue) {
-        if (![contact facebookPhoto]) {
-            [self downloadFbPhotoForContact:contact];
-        }
-    }
 }
 
 #pragma mark - UI upating
@@ -411,7 +396,6 @@
         
         // Hide the buttons
         [contactActionButtonsView setHidden:YES];
-        
         return;
     }
     
@@ -507,17 +491,19 @@
 // Delete the current contact and refresh the queue
 - (void)deleteContact {
     [DebugLogger log:@"Delete" withPriority:mainViewControllerPriority];
+    
     ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
+    
+    // Update metadata for contact
     NSDate *today = [NSDate date];
     [metadata setNoInterestDate:today];
     [metadata setInterest:[NSNumber numberWithBool:NO]];
     [metadata setNumTimesAppeared:[NSNumber numberWithInt:([[metadata numTimesAppeared] intValue] + 1)]];
-    
-    // Delete photo information to save space
-    [currentContact setFacebookPhoto:nil];
-    [currentContact setLinkedinPhoto:nil];
     [self save];
     
+    // Delete photo information to save space before dismissing contact
+    [currentContact setFacebookPhoto:nil];
+    [currentContact setLinkedinPhoto:nil];
     [self dismissContact];
 }
 
