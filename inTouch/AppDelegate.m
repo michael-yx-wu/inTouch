@@ -66,19 +66,6 @@
     [FBAppCall handleDidBecomeActive];
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application {
-    // Need to reset the contact queue
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"clearQueue" object:self];
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    // Need to reset the contact queue
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"clearQueue" object:self];
-}
-
 // Save changes to contacts before closing app
 - (void)applicationWillTerminate:(UIApplication *)application {
     [self saveContext];
@@ -114,58 +101,7 @@
 
 // Handle session state changes -- for now just prints errors and state
 - (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)status error:(NSError *)error {
-//    // Session opened success
-//    if (!error && (status == FBSessionStateOpen || status == FBSessionStateOpenTokenExtended)) {
-//        [DebugLogger log:@"FB session opened" withPriority:appDelegatePriority];
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"fbSessionStateChanged" object:nil userInfo:nil];
-//        return;
-//    }
-//    
-//    // Session closed
-//    if (status == FBSessionStateClosed || status == FBSessionStateClosedLoginFailed) {
-//        [DebugLogger log:@"FB session closed or closed with login fail" withPriority:appDelegatePriority];
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"fbSessionStateChanged" object:nil userInfo:nil];
-//    }
-//    
-//    // Handle any errors
-//    if (error) {
-//        [DebugLogger log:@"FB session error" withPriority:appDelegatePriority];
-//
-//        // If error requires users to do something outside of the app
-//        if ([FBErrorUtility shouldNotifyUserForError:error]) {
-//            [self showAlertViewWithTitle:@"Something went wrong"
-//                                 message:[FBErrorUtility userMessageForError:error]];
-//        } else {
-//            // Do nothing if user cancelled login
-//            if ([FBErrorUtility errorCategoryForError:error] ==  FBErrorCategoryUserCancelled) {
-//                [DebugLogger log:@"User cancelled FB login -- no action" withPriority:appDelegatePriority];
-//            }
-//            
-//            // Handle session closures that occured outside of app
-//            else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryAuthenticationReopenSession) {
-//                [self showAlertViewWithTitle:@"Facebook session error"
-//                                     message:@"Your current session is no longer valid. Please login again"];
-//            }
-//            
-//            // Handle generic errors
-//            else {
-//                // Get more information on error
-//                NSDictionary *errorInformation = [[[[error userInfo]
-//                                                    objectForKey:@"com.facebook.sdk:ParsedJSONResponseKey"]
-//                                                   objectForKey:@"body"] objectForKey:@"error"];
-//                [self showAlertViewWithTitle:@"Oops something went wrong!"
-//                                     message:[NSString stringWithFormat:@"Please retry. \n\n If the problem persists contact us and mention this error code: %@", [errorInformation objectForKey:@"message"]]];
-//            }
-//        }
-//    }
     [FacebookManager sessionStateChanged:session state:status error:error];
-}
-
-- (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message {
-    UIAlertView *alertView = [[UIAlertView alloc] init];
-    [alertView setTitle:title];
-    [alertView setMessage:message];
-    [alertView show];
 }
 
 #pragma mark - Core Data

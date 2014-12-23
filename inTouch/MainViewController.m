@@ -6,6 +6,7 @@
 #import "ContactManager.h"
 #import "FacebookManager.h"
 #import "GlobalData.h"
+#import "NotificationStrings.h"
 
 #import "MainViewController.h"
 #import "ContactViewController.h"
@@ -74,42 +75,36 @@
     // Notification from ContactManager
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updateFacebookFriends:)
-                                                 name:@"facebookFriends"
+                                                 name:gotFacebookFriendsNotification
                                                object:nil];
     
     // Listen for notification to redraw profile photos when downloads finish. Photos can take several seconds to load.
     // Notification from self (background process)
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updateUI)
-                                                 name:@"photoDownloaded"
+                                                 name:photoDownloadedNotification
                                                object:nil];
     
     // Listen for notification to show picker view and select a remind date
     // Notification from ContactViewController
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(contactWasContacted:)
-                                                 name:@"contacted"
+                                                 name:contactedNotification
                                                object:nil];
     
     // Listen for notification to set the remind date and slide up
     // Notification from PickerViewController
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(pickerViewDone:)
-                                                 name:@"pickerViewDone"
+                                                 name:pickerViewDoneNotification
                                                object:nil];
     
     // Listen for notification to dismiss the picker view controller and do nothing
     // Notification from PickerViewController
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(pickerViewCancel:)
-                                                 name:@"pickerViewCancel"
+                                                 name:pickerViewCancelNotification
                                                object:nil];
-    
-    // Listen for notifications (from other threads) to merge moc changes
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(mergeChanges:)
-                                                 name:NSManagedObjectContextDidSaveNotification
-                                               object:[self managedObjectContext]];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -218,7 +213,6 @@
 - (void)mergeChanges:(NSNotification *)notification {
     NSLog(@"got merge notification");
     [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
-    
 }
 
 // Show the PickerViewController. Hide the cancel button
@@ -260,7 +254,7 @@
         
         // We finished contacting a contact
         if (!postponingContact) {
-            [contactCard slideContactCardUp:[daysToPostpone unsignedIntegerValue]];            
+            [contactCard slideContactCardUp:[daysToPostpone unsignedIntegerValue]];
         }
         // We are postponing from a button
         else if (postponingContactFromButton) {
@@ -283,7 +277,7 @@
             [contactCard returnToOriginalPositions];
         } completion:^(BOOL finished) {
             [contactCard showNameLabel];
-        }];        
+        }];
     }];
 }
 
@@ -329,13 +323,13 @@
 - (void)updateFacebookFriends:(NSNotification *)notification {
     [DebugLogger log:@"Got new facebook friend list" withPriority:mainViewControllerPriority];
     facebookFriends = [[notification userInfo] valueForKey:@"data"];
-    [self reloadFacebookPhotos];
     [self updateUI];
 }
 
 // Asynchronously attempts to download a facebook photo for the contact
 - (void)downloadFbPhotoForContact:(Contact *)contact {
     NSManagedObjectID *contactID = [contact objectID];
+    MainViewController *thisController = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         @try {
             // Use a reference to app delegate's moc
@@ -343,6 +337,12 @@
             AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
             [moc setPersistentStoreCoordinator:[appDelegate persistentStoreCoordinator]];
             Contact *someContact = (Contact *)[moc objectWithID:contactID];
+            
+            // Dynamically add an observer to this controller to listen for context merge requests from other threads
+            [[NSNotificationCenter defaultCenter] addObserver:thisController
+                                                     selector:@selector(mergeChanges:)
+                                                         name:NSManagedObjectContextDidSaveNotification
+                                                       object:moc];
             
             NSString *fullName = [NSString stringWithFormat:@"%@ %@", [someContact nameFirst], [someContact nameLast]];
             NSString *url = [facebookFriends valueForKey:fullName];
@@ -352,11 +352,28 @@
                 NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
                 [someContact setFacebookPhoto:imageData];
                 NSError *error;
-                if ([moc hasChanges]) {
-                    [moc save:&error]; // this will cause main thread to merge changes
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"photoDownloaded" object:nil];
+                @try {
+                    if ([moc hasChanges]) {
+                        [moc save:&error]; // this will cause main thread to merge changes
+                        [DebugLogger log:[NSString stringWithFormat:@"Got photo for %@", fullName]
+                            withPriority:mainViewControllerPriority];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:photoDownloadedNotification object:nil];
+                    }
+                    if (error) {
+                        [DebugLogger log:[NSString stringWithFormat:@"Facebook downlad error: %@", [error userInfo]]
+                            withPriority:mainViewControllerPriority];
+                        abort();
+                    }
+                }
+                @catch (NSException *exception) {
+                    NSLog(@"%@", [exception userInfo]);
                 }
             }
+            
+            // Remove the observer we just added -- we no longer need it
+            [[NSNotificationCenter defaultCenter] removeObserver:thisController
+                                                            name:NSManagedObjectContextDidSaveNotification
+                                                          object:moc];
         }
         @catch (NSException *exception) {
             [DebugLogger log:@"Facebook photo download error: thread probably temrinated mid execution"
@@ -378,7 +395,6 @@
 
 // Display photos for contacts in the current queue
 - (void)updateUI {
-    [self mergeChanges:nil];
     // If the current queue is empty
     if (!currentContact) {
         if (currentQueue == contactAppearedQueue) {
@@ -418,7 +434,7 @@
             // Use found data if resolution sufficiently high
             img = [[UIImage alloc] initWithData:photoData];
             NSInteger resolution = [img size].width * [img scale] + [img size].height * [img scale];
-            if (resolution < 300) {
+            if (resolution < 600) {
                 shouldUseDefaultPhoto = YES;
             }
         }
@@ -457,11 +473,9 @@
         ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
         if (ABPersonHasImageData(addressBookContact)) {
             photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(addressBookContact);
-            [DebugLogger log:@"Got contact photo" withPriority:mainViewControllerPriority];
         } else {
             UIImage *img = [UIImage imageNamed:@"default_profile_fade0.png"];
             photoData = UIImagePNGRepresentation(img);
-            [DebugLogger log:@"No contact photo" withPriority:mainViewControllerPriority];
         }
         CFRelease(addressBookRef);
     }
@@ -490,7 +504,7 @@
     [self presentViewController:pvc animated:YES completion:nil];
 }
 
-// Delete the current contact and refresh the queue 
+// Delete the current contact and refresh the queue
 - (void)deleteContact {
     [DebugLogger log:@"Delete" withPriority:mainViewControllerPriority];
     ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
@@ -500,8 +514,8 @@
     [metadata setNumTimesAppeared:[NSNumber numberWithInt:([[metadata numTimesAppeared] intValue] + 1)]];
     
     // Delete photo information to save space
-    [currentContact setFacebookPhoto:nil];
-    [currentContact setLinkedinPhoto:nil];
+    //    [currentContact setFacebookPhoto:nil];
+    //    [currentContact setLinkedinPhoto:nil];
     [self save];
     
     [self dismissContact];
@@ -525,8 +539,6 @@
     // Redraw the UI with information from the current queue
     [contactCard showAndEnableInteraction];
     [self getNextContactFromQueue];
-    [self updateUI];
-    [self reloadFacebookPhotos];
     [self updateUI];
     [self printQueue];
 }

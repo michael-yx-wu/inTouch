@@ -8,10 +8,20 @@
 #import "ContactManager.h"
 #import "ContactMetadata.h"
 #import "ContactViewController.h"
+#import "NotificationStrings.h"
 
 @interface ContactViewController () <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
 
 @end
+
+// Titles and identifier strings specific to this view controller -- not global constants
+static NSString *phoneActionSheetTitle = @"Which number to call?";
+static NSString *messageActionSheetTitle = @"Which number to text?";
+static NSString *emailActionSheetTitle = @"Which email?";
+static NSString *contactedCall = @"called";
+static NSString *contactedMessage = @"messaged";
+static NSString *contactedEmail = @"emailed";
+static NSString *contactedGeneric = @"generic";
 
 @implementation ContactViewController
 
@@ -392,7 +402,7 @@
     [self dismissViewControllerAnimated:NO completion:^{
         if (contacted) {
             // Alert the MainViewController that the contact was contacted
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"contacted" object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:contactedNotification object:self];
         }
     }];
 }

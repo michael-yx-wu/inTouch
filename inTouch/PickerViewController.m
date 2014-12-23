@@ -1,4 +1,7 @@
+#import "NotificationStrings.h"
+
 #import "PickerViewController.h"
+
 enum {
     weeksComponent,
     daysComponent
@@ -107,7 +110,7 @@ enum {
 
 // Cancel
 - (IBAction)cancel:(id)sender {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"pickerViewCancel" object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:pickerViewCancelNotification object:self];
 }
 
 // Done
@@ -121,7 +124,7 @@ enum {
                                                                     @"postponingContact",
                                                                     @"postponingContactFromButton"]];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"pickerViewDone"
+    [[NSNotificationCenter defaultCenter] postNotificationName:pickerViewDoneNotification
                                                         object:self
                                                       userInfo:userInfo];
 }

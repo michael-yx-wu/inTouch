@@ -275,7 +275,7 @@
     [UIView animateWithDuration:0.15 animations:^{
         [contactName setAlpha:0];
     } completion:^(BOOL finished) {
-        CGPoint finishPoint = CGPointMake(originalPoint.x, -150);
+        CGPoint finishPoint = CGPointMake(originalPoint.x, -200);
         [UIView animateWithDuration:0.15
                               delay:0
                             options:UIViewAnimationOptionCurveEaseIn

@@ -5,6 +5,7 @@
 #import "ContactManager.h"
 #import "Contact.h"
 #import "ContactMetadata.h"
+#import "NotificationStrings.h"
 
 @implementation ContactManager
 
@@ -36,7 +37,7 @@ NSInteger kFacebookRequestFinish = 0;
         
         // Post notification for mainViewController
         NSDictionary *notificationData = @{@"data": fbFriends};
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"facebookFriends" object:self userInfo:notificationData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:gotFacebookFriendsNotification object:self userInfo:notificationData];
     }];
      
     // Loop through contacts
@@ -60,7 +61,7 @@ NSInteger kFacebookRequestFinish = 0;
         // Create new contact if does not exist
         if ([[self fetchRequestWithFirstName:firstName LastName:lastName] count] == 0) {
             // Create Contact and ContactMetadata
-            contact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:[self managedObjectContext]];
+            contact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact"inManagedObjectContext:[self managedObjectContext]];
             metaData = [NSEntityDescription insertNewObjectForEntityForName:@"ContactMetadata" inManagedObjectContext:[self managedObjectContext]];
             
             // Relate contact and metadata

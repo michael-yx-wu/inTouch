@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4C03B9531906C70D003221EC /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D9918C175D3009A96D8 /* AddressBookUI.framework */; };
 		4C0ED67D1A2D8A3700718BE7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D7318C16FF7009A96D8 /* Main.storyboard */; };
+		4C28268B1A48FCC600DA6692 /* NotificationStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C28268A1A48FCC600DA6692 /* NotificationStrings.m */; };
 		4C340D6218C16FF7009A96D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6118C16FF7009A96D8 /* Foundation.framework */; };
 		4C340D6418C16FF7009A96D8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6318C16FF7009A96D8 /* CoreGraphics.framework */; };
 		4C340D6618C16FF7009A96D8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6518C16FF7009A96D8 /* UIKit.framework */; };
@@ -54,6 +55,8 @@
 
 /* Begin PBXFileReference section */
 		4C1C34C1192943C20003DB81 /* DebugConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DebugConstants.h; sourceTree = "<group>"; };
+		4C2826891A48FCC600DA6692 /* NotificationStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationStrings.h; sourceTree = "<group>"; };
+		4C28268A1A48FCC600DA6692 /* NotificationStrings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationStrings.m; sourceTree = "<group>"; };
 		4C340D5E18C16FF7009A96D8 /* inTouch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = inTouch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C340D6118C16FF7009A96D8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4C340D6318C16FF7009A96D8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -183,6 +186,8 @@
 				4C340DA018C17ACF009A96D8 /* DebugLogger.m */,
 				4CB4AA201A47E8400017EF9E /* FacebookManager.h */,
 				4CB4AA211A47E8400017EF9E /* FacebookManager.m */,
+				4C2826891A48FCC600DA6692 /* NotificationStrings.h */,
+				4C28268A1A48FCC600DA6692 /* NotificationStrings.m */,
 				4C42688A1915B4500014744F /* View Controllers */,
 				4C42688619158C8B0014744F /* Core Data Entities */,
 				4C340D7918C16FF7009A96D8 /* Images.xcassets */,
@@ -374,6 +379,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C340D7218C16FF7009A96D8 /* AppDelegate.m in Sources */,
+				4C28268B1A48FCC600DA6692 /* NotificationStrings.m in Sources */,
 				4CC73FD21906330900B932A7 /* ContactManager.m in Sources */,
 				4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */,
 				4C340D7818C16FF7009A96D8 /* MainViewController.m in Sources */,

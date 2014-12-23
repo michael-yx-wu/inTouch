@@ -174,42 +174,10 @@
         [[FBSession activeSession] state] == FBSessionStateOpenTokenExtended) {
         [facebookCell setAccessoryType:UITableViewCellAccessoryCheckmark];
         [facebookCellDetailLabel setText:@"Connected"];
-        
-        // Update the user's facebook friends list
-        [self getFacebookFriends];
     } else {
         [facebookCell setAccessoryType:UITableViewCellAccessoryNone];
         [facebookCellDetailLabel setText:@"Not Connected"];
     }
-}
-
-// Populate fbFriends with facebook friend names and url - this is so ugly right now (indentation is killing me)
-- (void)getFacebookFriends {
-    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(400).height(400)"
-                          completionHandler:^(FBRequestConnection *connection,
-                                              id result, NSError
-                                              *error) {
-                              NSMutableDictionary *fbFriends = [[NSMutableDictionary alloc] init];
-                              if (error) {
-                                  [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]]
-                                      withPriority:contactManagerPriority];
-                              }
-                              // Process facebook json object
-                              NSArray *taggableFriends = [result objectForKey:@"data"];
-                              for (NSDictionary *friend in taggableFriends) {
-                                  NSString *name = [friend valueForKey:@"name"];
-                                  NSArray *url = [[[friend valueForKey:@"picture"] valueForKey:@"data"]
-                                                  valueForKey:@"url"];
-                                  [fbFriends setValue:url forKey:name];
-                              }
-                              
-                              // Post notification for MainViewController
-                              NSDictionary *notificationData = @{@"data": fbFriends};
-                              [[NSNotificationCenter defaultCenter] postNotificationName:@"facebookFriends"
-                                                                                  object:self
-                                                                                userInfo:notificationData];
-                          }];
-    
 }
 
 @end

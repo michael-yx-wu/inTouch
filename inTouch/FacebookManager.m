@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 #import "FacebookManager.h"
+#import "NotificationStrings.h"
 
 @implementation FacebookManager
 
@@ -34,7 +35,7 @@
                               
                               // Post notification for MainViewController
                               NSDictionary *notificationData = @{@"data": fbFriends};
-                              [[NSNotificationCenter defaultCenter] postNotificationName:@"facebookFriends"
+                              [[NSNotificationCenter defaultCenter] postNotificationName:gotFacebookFriendsNotification
                                                                                   object:self
                                                                                 userInfo:notificationData];
                           }];
@@ -69,14 +70,14 @@
     // Session opened success
     if (!error && (status == FBSessionStateOpen || status == FBSessionStateOpenTokenExtended)) {
         [DebugLogger log:@"FB session opened" withPriority:appDelegatePriority];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"fbSessionStateChanged" object:nil userInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:facebookSessionStateChanged object:nil userInfo:nil];
         return;
     }
     
     // Session closed
     if (status == FBSessionStateClosed || status == FBSessionStateClosedLoginFailed) {
         [DebugLogger log:@"FB session closed or closed with login fail" withPriority:appDelegatePriority];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"fbSessionStateChanged" object:nil userInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:facebookSessionStateChanged object:nil userInfo:nil];
     }
     
     // Handle any errors
