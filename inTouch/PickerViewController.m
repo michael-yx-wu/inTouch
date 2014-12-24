@@ -20,6 +20,8 @@ enum {
 @synthesize postponingContact;
 @synthesize postponingContactFromButton;
 
+#pragma mark - Initialization
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [remindDatePickerView setDataSource:self];
@@ -30,8 +32,11 @@ enum {
     }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
+- (void)viewDidAppear:(BOOL)animated {
+    // Give the appearance of a modal-like dialog
+    [UIView animateWithDuration:0.30 animations:^{
+       [[self view] setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
+    }];
 }
 
 // Determine the correct rows to highlight on load
@@ -108,12 +113,15 @@ enum {
     }
 }
 
-// Cancel
 - (IBAction)cancel:(id)sender {
-    [[NSNotificationCenter defaultCenter] postNotificationName:pickerViewCancelNotification object:self];
+    // Fade out the background before sending the cancel notification
+    [UIView animateWithDuration:0.30 animations:^{
+        [[self view] setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0]];
+    } completion:^(BOOL finished) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:pickerViewCancelNotification object:self];
+    }];
 }
 
-// Done
 - (IBAction)done:(id)sender {
     NSInteger daysToPostpone = [remindDatePickerView selectedRowInComponent:weeksComponent]*30 +
     [remindDatePickerView selectedRowInComponent:daysComponent];
