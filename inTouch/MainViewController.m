@@ -137,7 +137,8 @@
     }
     
     // Attempt to get list of facebook friends
-    [FacebookManager getFriendsList];
+//    NSLog(@"Fetching friends");
+//    [FacebookManager getFriendsList];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -330,6 +331,8 @@
     facebookFriends = [[notification userInfo] valueForKey:@"data"];
 }
 
+
+
 // Asynchronously attempts to download a facebook photo for the contact
 - (void)downloadFbPhotoForContact:(Contact *)contact {
     NSManagedObjectID *contactID = [contact objectID];
@@ -363,7 +366,7 @@
                     [[NSNotificationCenter defaultCenter] postNotificationName:photoDownloadedNotification object:nil];
                 }
                 if (error) {
-                    [DebugLogger log:[NSString stringWithFormat:@"Facebook downlad error: %@", [error userInfo]]
+                    [DebugLogger log:[NSString stringWithFormat:@"Facebook download error: %@", [error userInfo]]
                         withPriority:mainViewControllerPriority];
                     abort();
                 }

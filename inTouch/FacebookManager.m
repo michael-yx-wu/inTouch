@@ -70,14 +70,13 @@
     // Session opened success
     if (!error && (status == FBSessionStateOpen || status == FBSessionStateOpenTokenExtended)) {
         [DebugLogger log:@"FB session opened" withPriority:facebookManagerPriority];
-        [[NSNotificationCenter defaultCenter] postNotificationName:facebookSessionStateChanged object:nil userInfo:nil];
+        [self getFriendsList];
         return;
     }
     
     // Session closed
     if (status == FBSessionStateClosed || status == FBSessionStateClosedLoginFailed) {
         [DebugLogger log:@"FB session closed or closed with login fail" withPriority:facebookManagerPriority];
-        [[NSNotificationCenter defaultCenter] postNotificationName:facebookSessionStateChanged object:nil userInfo:nil];
     }
     
     // Handle any errors
