@@ -6,8 +6,7 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
-// Facebook methods
-- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)status error:(NSError *)error;
+// Save managed object context state if it has changed
 - (void)saveContext;
 
 @end

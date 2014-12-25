@@ -8,5 +8,5 @@
 #define settingsTableViewControllerPriority 1
 #define editContactsTableViewControllerPriority 2
 #define contactInformationTableViewControllerPriority 2
-#define facebookLoginViewControllerPriority 1
 #define contactCardViewPriority 3
+#define facebookManagerPriority 3

@@ -21,8 +21,9 @@
                                               *error) {
                               NSMutableDictionary *fbFriends = [[NSMutableDictionary alloc] init];
                               if (error) {
-                                  [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]]
+                                  [DebugLogger log:[NSString stringWithFormat:@"Facebook friends request error: %@", [error userInfo]]
                                       withPriority:contactManagerPriority];
+                                  return;
                               }
                               // Process facebook json object
                               NSArray *taggableFriends = [result objectForKey:@"data"];
@@ -45,8 +46,7 @@
     [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
                                        allowLoginUI:YES
                                   completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                      AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
-                                      [delegate sessionStateChanged:session state:status error:error];
+                                      [self sessionStateChanged:session state:status error:error];
                                   }];
 }
 
@@ -69,20 +69,20 @@
 + (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)status error:(NSError *)error {
     // Session opened success
     if (!error && (status == FBSessionStateOpen || status == FBSessionStateOpenTokenExtended)) {
-        [DebugLogger log:@"FB session opened" withPriority:appDelegatePriority];
+        [DebugLogger log:@"FB session opened" withPriority:facebookManagerPriority];
         [[NSNotificationCenter defaultCenter] postNotificationName:facebookSessionStateChanged object:nil userInfo:nil];
         return;
     }
     
     // Session closed
     if (status == FBSessionStateClosed || status == FBSessionStateClosedLoginFailed) {
-        [DebugLogger log:@"FB session closed or closed with login fail" withPriority:appDelegatePriority];
+        [DebugLogger log:@"FB session closed or closed with login fail" withPriority:facebookManagerPriority];
         [[NSNotificationCenter defaultCenter] postNotificationName:facebookSessionStateChanged object:nil userInfo:nil];
     }
     
     // Handle any errors
     if (error) {
-        [DebugLogger log:@"FB session error" withPriority:appDelegatePriority];
+        [DebugLogger log:@"FB session error" withPriority:facebookManagerPriority];
         
         // If error requires users to do something outside of the app
         if ([FBErrorUtility shouldNotifyUserForError:error]) {
@@ -91,7 +91,7 @@
         } else {
             // Do nothing if user cancelled login
             if ([FBErrorUtility errorCategoryForError:error] ==  FBErrorCategoryUserCancelled) {
-                [DebugLogger log:@"User cancelled FB login -- no action" withPriority:appDelegatePriority];
+                [DebugLogger log:@"User cancelled FB login -- no action" withPriority:facebookManagerPriority];
             }
             
             // Handle session closures that occured outside of app

@@ -223,6 +223,8 @@
     [pvc setPostponingContact:NO];
     [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
                                  unsignedIntegerValue]];
+    [pvc setContact:currentContact];
+    [pvc setContactPhoto:[contactPhotoFront image]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -236,6 +238,8 @@
     [pvc setPostponingContactFromButton:NO];
     [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
                                  unsignedIntegerValue]];
+    [pvc setContact:currentContact];
+    [pvc setContactPhoto:[contactPhotoFront image]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -305,6 +309,7 @@
     ContactMetadata *contactMetadata = (ContactMetadata *)[currentContact metadata];
     [contactMetadata setNumTimesAppeared:[NSNumber numberWithInt:([[contactMetadata numTimesAppeared] intValue] + 1)]];
     [contactMetadata setRemindOnDate:remindDate];
+    [self save];
     [self dismissContact];
 }
 
@@ -484,6 +489,8 @@
     [pvc setPostponingContactFromButton:YES];
     [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
                                  unsignedIntegerValue]];
+    [pvc setContact:currentContact];
+    [pvc setContactPhoto:[contactPhotoFront image]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -523,6 +530,7 @@
     }
     
     // Redraw the UI with information from the current queue
+    [self updateQueue];
     [contactCard showAndEnableInteraction];
     [self getNextContactFromQueue];
     [self updateUI];

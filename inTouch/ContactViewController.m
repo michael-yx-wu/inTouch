@@ -84,9 +84,17 @@ static NSString *contactedGeneric = @"generic";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    // Make contact photo ronud
+    // Make contact photo round
     [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
     [[contactPhoto layer] setMasksToBounds:YES];
+    [contactPhoto setAlpha:1];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // Hide photo until we round it
+    [contactPhoto setAlpha:0];
 }
 
 #pragma mark - Getting contact information

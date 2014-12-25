@@ -56,7 +56,7 @@
     }
 
     // Attempt to start facebook session on launch
-    [self checkForFacebookSession];
+    [FacebookManager loginSilently];
     
     return YES;
 }
@@ -73,19 +73,6 @@
 
 #pragma mark - Facebook
 
-// Attempt to use cached facebook section
-- (void)checkForFacebookSession {
-    if ([[FBSession activeSession] state] == FBSessionStateCreatedTokenLoaded) {
-        // Open silently
-        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
-                                           allowLoginUI:NO
-                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                          // Handler for state changes
-                                          [self sessionStateChanged:session state:status error:error];
-                                      }];
-    }
-}
-
 // Handle session information 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
@@ -94,14 +81,9 @@
     // Handler block may be lost when app terminated due to low memory -- must explicitly set block
     // This will produce a log message saying that the handler is being overwritten. 
     [[FBSession activeSession] setStateChangeHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-        [self sessionStateChanged:session state:status error:error];
+        [FacebookManager sessionStateChanged:session state:status error:error];
     }];
     return [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
-}
-
-// Handle session state changes -- for now just prints errors and state
-- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)status error:(NSError *)error {
-    [FacebookManager sessionStateChanged:session state:status error:error];
 }
 
 #pragma mark - Core Data

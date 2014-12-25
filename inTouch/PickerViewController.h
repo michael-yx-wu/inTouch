@@ -1,8 +1,14 @@
-#import <UIKit/UIKit.h>
+#import "Contact.h"
 
 @interface PickerViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate>
 
+@property (weak, nonatomic) Contact *contact;
+@property (weak, nonatomic) UIImage *contactPhoto;
+
 // UI elements
+@property (weak, nonatomic) IBOutlet UIImageView *contactPhotoView;
+@property (weak, nonatomic) IBOutlet UILabel *contactNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *remindDateHelpText;
 @property (weak, nonatomic) IBOutlet UILabel *remindDate;
 @property (weak, nonatomic) IBOutlet UIPickerView *remindDatePickerView;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
