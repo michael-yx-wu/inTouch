@@ -9,7 +9,7 @@
         <attribute name="nameLast" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="metadata" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ContactMetadata" inverseName="contact" inverseEntity="ContactMetadata" syncable="YES"/>
     </entity>
-    <entity name="ContactMetadata" representedClassName="ContactMetadata" parentEntity="Contact" syncable="YES">
+    <entity name="ContactMetadata" representedClassName="ContactMetadata" syncable="YES">
         <attribute name="daysBetweenReminder" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="interest" optional="YES" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
         <attribute name="lastContactedDate" optional="YES" attributeType="Date" syncable="YES"/>

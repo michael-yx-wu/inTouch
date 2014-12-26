@@ -66,11 +66,6 @@
     alphabetIndices = [self createAlphabetArray];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (NSArray *)createAlphabetArray {
     NSMutableDictionary *firstLetters = [[NSMutableDictionary alloc] init];
     for (id key in [contacts allKeys]) {
