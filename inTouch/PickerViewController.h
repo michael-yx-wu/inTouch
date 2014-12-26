@@ -3,7 +3,6 @@
 @interface PickerViewController : UIViewController <UIPickerViewDataSource, UIPickerViewDelegate>
 
 @property (weak, nonatomic) Contact *contact;
-@property (weak, nonatomic) UIImage *contactPhoto;
 
 // UI elements
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhotoView;

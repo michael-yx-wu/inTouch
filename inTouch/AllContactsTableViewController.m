@@ -137,7 +137,7 @@
 
 // Show detailed contact information
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//    // Get contact/metadata by looking up associated abrecordid
+    // Get contact/metadata by looking up associated abrecordid
     NSInteger row  = [indexPath row];
     NSString *contactID = [NSString stringWithFormat:@"%@", [contactIDs objectAtIndex:row]];
     selectedContact = [contacts valueForKey:contactID];

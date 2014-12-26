@@ -15,7 +15,7 @@ enum {
 
 @implementation PickerViewController
 
-@synthesize contact, contactPhoto, contactPhotoView, contactNameLabel;
+@synthesize contact, contactPhotoView, contactNameLabel;
 @synthesize remindDateHelpText;
 @synthesize remindDate;
 @synthesize remindDatePickerView;
@@ -60,7 +60,7 @@ enum {
     
     NSString *fullName = [NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]];
     [contactNameLabel setText:fullName];
-    [contactPhotoView setImage:contactPhoto];
+    [contactPhotoView setImage:[UIImage imageWithData:[contact getPhotoData]]];
 }
 
 // Determine the correct rows to highlight on load

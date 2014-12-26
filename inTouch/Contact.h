@@ -10,4 +10,6 @@
 @property (nonatomic, retain) NSString * nameLast;
 @property (nonatomic, retain) NSManagedObject *metadata;
 
+- (NSData *)getPhotoData;
+
 @end

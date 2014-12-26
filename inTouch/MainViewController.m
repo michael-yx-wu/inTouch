@@ -220,7 +220,6 @@
     [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
                                  unsignedIntegerValue]];
     [pvc setContact:currentContact];
-    [pvc setContactPhoto:[contactPhotoFront image]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -235,7 +234,6 @@
     [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
                                  unsignedIntegerValue]];
     [pvc setContact:currentContact];
-    [pvc setContactPhoto:[contactPhotoFront image]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -451,7 +449,7 @@
     for (i = 0; i < [currentQueue count] && i < 4; i++) {
         // Get queued contact id
         Contact *queuedContact = [currentQueue objectAtIndex:i];
-        NSData *photoData = [self getPhotoDataForContact:queuedContact];
+        NSData *photoData = [queuedContact getPhotoData];
         UIImageView *queuedPhoto = [photoQueue objectAtIndex:i];
         UIImage *img;
         bool shouldUseDefaultPhoto = NO;
@@ -485,30 +483,6 @@
     [contactActionButtonsView setHidden:NO];
 }
 
-// Helper method to retrieve photo data for a contact. Preference is facebook > linkedin > contact book
-- (NSData *)getPhotoDataForContact:(Contact *)contact {
-    NSData *photoData;
-    NSData *facebookPhoto = [contact facebookPhoto];
-    NSData *linkedinPhoto = [contact linkedinPhoto];
-    if (facebookPhoto != NULL) {
-        photoData = facebookPhoto;
-    } else if (linkedinPhoto != NULL) {
-        photoData = linkedinPhoto;
-    } else {
-        int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
-        ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-        ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
-        if (ABPersonHasImageData(addressBookContact)) {
-            photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(addressBookContact);
-        } else {
-            UIImage *img = [UIImage imageNamed:@"default_profile_fade0.png"];
-            photoData = UIImagePNGRepresentation(img);
-        }
-        CFRelease(addressBookRef);
-    }
-    return photoData;
-}
-
 #pragma mark - Tap Gestures
 
 - (IBAction)deleteContactButton:(id)sender {
@@ -528,7 +502,6 @@
     [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
                                  unsignedIntegerValue]];
     [pvc setContact:currentContact];
-    [pvc setContactPhoto:[contactPhotoFront image]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
