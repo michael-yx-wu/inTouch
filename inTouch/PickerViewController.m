@@ -40,6 +40,8 @@ enum {
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
     // Give the appearance of a modal-like dialog
     [UIView animateWithDuration:0.30 animations:^{
        [[self view] setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
@@ -54,6 +56,8 @@ enum {
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
     NSString *fullName = [NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]];
     [contactNameLabel setText:fullName];
     [contactPhotoView setImage:contactPhoto];

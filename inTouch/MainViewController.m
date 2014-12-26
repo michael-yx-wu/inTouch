@@ -15,6 +15,7 @@
 @interface MainViewController () {
     NSMutableArray *photoQueue;
     NSMutableArray *currentQueue;
+    NSMutableDictionary *fbDownloadStatus;
     Contact *currentContact;
 }
 @end
@@ -70,6 +71,8 @@
     [self getNextContactFromQueue];
     [self updateUI];
     
+    // Track current facebook downloads
+    fbDownloadStatus = [[NSMutableDictionary alloc] init];
     
     // Listen for notification to replace facebook friend list with new list
     // Notification from ContactManager
@@ -137,8 +140,6 @@
     }
     
     // Attempt to get list of facebook friends
-//    NSLog(@"Fetching friends");
-//    [FacebookManager getFriendsList];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -208,12 +209,6 @@
         abort();
     }
     return results;
-}
-
-// Merge NSManagedObjectContext changes across two different threads
-- (void)mergeChanges:(NSNotification *)notification {
-    NSLog(@"got merge notification");
-    [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
 }
 
 // Show the PickerViewController. Hide the cancel button
@@ -286,12 +281,15 @@
     }];
 }
 
-// 1. Remove the contact from the current queue
+// 1. Remove the contact from the current queue and the download status dictionary
 // 2. Update the current queue
 // 3. Repoint the current contact
 // 4. Redraw photos
 - (void)dismissContact {
     [currentQueue removeObjectAtIndex:0];
+    @synchronized(fbDownloadStatus) {
+        [fbDownloadStatus removeObjectForKey:[currentContact objectID]];
+    }
     [self getNextContactFromQueue];
     [self updateQueue];
     [self updateUI];
@@ -329,9 +327,18 @@
 - (void)updateFacebookFriends:(NSNotification *)notification {
     [DebugLogger log:@"Got new facebook friend list" withPriority:mainViewControllerPriority];
     facebookFriends = [[notification userInfo] valueForKey:@"data"];
+    [self reloadAllFacebookPhotos];
+    [self updateUI];
 }
 
-
+- (void)reloadAllFacebookPhotos {
+    for (Contact *contact in contactAppearedQueue) {
+        [self downloadFbPhotoForContact:contact];
+    }
+    for (Contact *contact in contactNeverAppearedQueue) {
+        [self downloadFbPhotoForContact:contact];
+    }
+}
 
 // Asynchronously attempts to download a facebook photo for the contact
 - (void)downloadFbPhotoForContact:(Contact *)contact {
@@ -345,24 +352,52 @@
             [moc setPersistentStoreCoordinator:[appDelegate persistentStoreCoordinator]];
             Contact *someContact = (Contact *)[moc objectWithID:contactID];
             
-            // Dynamically add an observer to this controller to listen for context merge requests from other threads
-            [[NSNotificationCenter defaultCenter] addObserver:thisController
-                                                     selector:@selector(mergeChanges:)
-                                                         name:NSManagedObjectContextDidSaveNotification
-                                                       object:moc];
-            
             NSString *fullName = [NSString stringWithFormat:@"%@ %@", [someContact nameFirst], [someContact nameLast]];
-            NSString *url = [facebookFriends valueForKey:fullName];
+            NSString *url = [facebookFriends objectForKey:fullName];
+            
+            // Got a profile picture url for friend -- begin downloading
             if (url) {
+                @synchronized(fbDownloadStatus) {
+                    // Abort download for contact if there is already a download in progress
+                    NSNumber *downloadStatus = [fbDownloadStatus objectForKeyedSubscript:[contact objectID]];
+                    if ([downloadStatus boolValue]) {
+                        [DebugLogger log:[NSString stringWithFormat:@"Already downloading photo for %@", fullName]
+                            withPriority:mainViewControllerPriority];
+                        return;
+                    }
+                    // Prevent other threads beginning a download while a download is in progress
+                    else {
+                        [fbDownloadStatus setObject:[NSNumber numberWithBool:YES] forKey:[contact objectID]];
+                    }
+                }
+                
+                // Dynamically add an observer to this controller to listen for context merge requests from other threads
+                [[NSNotificationCenter defaultCenter] addObserver:thisController
+                                                         selector:@selector(mergeChanges:)
+                                                             name:NSManagedObjectContextDidSaveNotification
+                                                           object:moc];
+                
                 [DebugLogger log:[NSString stringWithFormat:@"Downloading photo for %@", fullName]
                     withPriority:mainViewControllerPriority];
                 NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
                 [someContact setFacebookPhoto:imageData];
+                [DebugLogger log:[NSString stringWithFormat:@"Got photo for %@", fullName]
+                    withPriority:mainViewControllerPriority];
+
                 NSError *error;
                 if ([moc hasChanges]) {
-                    [moc save:&error]; // this will cause main thread to merge changes
-                    [DebugLogger log:[NSString stringWithFormat:@"Got photo for %@", fullName]
-                        withPriority:mainViewControllerPriority];
+                    @synchronized(fbDownloadStatus) {
+                        [moc save:&error]; // this will cause main thread to merge changes
+                        
+                        // Allow other threads to begin downloads after our save complete
+                        [fbDownloadStatus setObject:[NSNumber numberWithBool:NO] forKey:[contact objectID]];
+                        
+                        // Remove the key-value pair if contact has been dismissed
+                        if (![self queue:contactAppearedQueue ContainsContact:contact] &&
+                            ![self queue:contactNeverAppearedQueue ContainsContact:contact]) {
+                            [fbDownloadStatus removeObjectForKey:[contact objectID]];
+                        }
+                    }
                     [[NSNotificationCenter defaultCenter] postNotificationName:photoDownloadedNotification object:nil];
                 }
                 if (error) {
@@ -370,12 +405,12 @@
                         withPriority:mainViewControllerPriority];
                     abort();
                 }
+
+                // Remove the observer we just added -- we no longer need it
+                [[NSNotificationCenter defaultCenter] removeObserver:thisController
+                                                                name:NSManagedObjectContextDidSaveNotification
+                                                              object:moc];
             }
-            
-            // Remove the observer we just added -- we no longer need it
-            [[NSNotificationCenter defaultCenter] removeObserver:thisController
-                                                            name:NSManagedObjectContextDidSaveNotification
-                                                          object:moc];
         }
         @catch (NSException *exception) {
             [DebugLogger log:@"Facebook photo download error: thread probably temrinated mid execution"
@@ -649,6 +684,12 @@
     }
     
     CFRelease(addressBookRef);
+}
+
+// Merge NSManagedObjectContext changes across two different threads
+- (void)mergeChanges:(NSNotification *)notification {
+    [DebugLogger log:@"Got merge notification" withPriority:mainViewControllerPriority];
+    [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
 }
 
 // Save current context

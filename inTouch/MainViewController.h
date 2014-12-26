@@ -7,7 +7,12 @@
 @property (weak, nonatomic) IBOutlet UILabel *contactName;
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhotoFront;
 
-// Queue photos
+// Contact queues
+@property (strong, nonatomic) NSMutableArray *contactNeverAppearedQueue;
+@property (strong, nonatomic) NSMutableArray *contactAppearedQueue;
+@property (strong, nonatomic) NSMutableDictionary *facebookFriends;
+
+// Queue photos placeholders
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhotoMiddle;
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhotoBottom;
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhotoAnchor;
@@ -21,10 +26,5 @@
 
 // Gesture recognizers
 @property (weak, nonatomic) IBOutlet UITapGestureRecognizer *tapRecognizer;
-
-// Contact queue stuff
-@property (strong, nonatomic) NSMutableArray *contactNeverAppearedQueue;
-@property (strong, nonatomic) NSMutableArray *contactAppearedQueue;
-@property (strong, nonatomic) NSMutableDictionary *facebookFriends;
 
 @end

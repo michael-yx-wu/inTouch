@@ -3,6 +3,7 @@
 #import "AppDelegate.h"
 #import "ContactManager.h"
 #import "FacebookManager.h"
+#import "NotificationStrings.h"
 #import "SettingsTableViewController.h"
 
 @interface SettingsTableViewController () <MFMailComposeViewControllerDelegate>
@@ -20,7 +21,7 @@
     // Listen for fb session state changed notifications from app delegate
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updateFacebookNameLabel)
-                                                 name:@"fbSessionStateChanged"
+                                                 name:facebookSessionStateChanged
                                                object:nil];
 }
 
