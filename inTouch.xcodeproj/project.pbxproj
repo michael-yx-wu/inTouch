@@ -245,20 +245,28 @@
 			children = (
 				4C340D7618C16FF7009A96D8 /* MainViewController.h */,
 				4C340D7718C16FF7009A96D8 /* MainViewController.m */,
-				4CF6E18B1A243BC90056B1B9 /* PickerViewController.h */,
-				4CF6E18C1A243BC90056B1B9 /* PickerViewController.m */,
-				4CF7B3021984BB4A00F10889 /* ContactInformationTableViewController.h */,
-				4CF7B3031984BB4A00F10889 /* ContactInformationTableViewController.m */,
 				4C47934B18E0EB2900A408AB /* ContactViewController.h */,
 				4C47934C18E0EB2900A408AB /* ContactViewController.m */,
+				4CF6E18B1A243BC90056B1B9 /* PickerViewController.h */,
+				4CF6E18C1A243BC90056B1B9 /* PickerViewController.m */,
+				4C9B508B1A4F64F9002BC2CA /* Settings */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		4C9B508B1A4F64F9002BC2CA /* Settings */ = {
+			isa = PBXGroup;
+			children = (
 				4CB107E41934362E00BB853C /* SettingsTableViewController.h */,
 				4CB107E51934362E00BB853C /* SettingsTableViewController.m */,
 				4C357F8A19839ECF00A64C44 /* AllContactsTableViewController.h */,
 				4C357F8B19839ECF00A64C44 /* AllContactsTableViewController.m */,
 				4C96311418CB71CB002D05A6 /* HelpViewController.h */,
 				4C96311518CB71CB002D05A6 /* HelpViewController.m */,
+				4CF7B3021984BB4A00F10889 /* ContactInformationTableViewController.h */,
+				4CF7B3031984BB4A00F10889 /* ContactInformationTableViewController.m */,
 			);
-			name = "View Controllers";
+			name = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

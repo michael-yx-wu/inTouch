@@ -12,6 +12,8 @@
 #import "ContactViewController.h"
 #import "PickerViewController.h"
 
+#define RESOLUTION_THRESHOLD 0
+
 @interface MainViewController () {
     NSMutableArray *photoQueue;
     NSMutableArray *currentQueue;
@@ -217,8 +219,7 @@
     PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
     [pvc setShouldHideCancelButton:YES];
     [pvc setPostponingContact:NO];
-    [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
-                                 unsignedIntegerValue]];
+    [pvc setDisplayedInMainView:YES];
     [pvc setContact:currentContact];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
@@ -231,8 +232,7 @@
     [pvc setShouldHideCancelButton:NO];
     [pvc setPostponingContact:YES];
     [pvc setPostponingContactFromButton:NO];
-    [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
-                                 unsignedIntegerValue]];
+    [pvc setDisplayedInMainView:YES];
     [pvc setContact:currentContact];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
@@ -252,7 +252,7 @@
         
         // We finished contacting a contact
         if (!postponingContact) {
-            [contactCard slideContactCardUp:[daysToPostpone unsignedIntegerValue]];
+            [contactCard slideContactCardUp:[daysToPostpone integerValue]];
         }
         // We are postponing from a button
         else if (postponingContactFromButton) {
@@ -299,7 +299,13 @@
 - (void)dismissContactAndSetReminder:(NSUInteger)days {
     [self printQueue];
     NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
-    NSDate *today = [NSDate date];
+    NSDateComponents *todaysComponents = [calendar components:(NSCalendarUnitYear|
+                                                               NSCalendarUnitMonth|
+                                                               NSCalendarUnitDay|
+                                                               NSCalendarUnitTimeZone|
+                                                               NSCalendarUnitCalendar)
+                                                     fromDate:[NSDate date]];
+    NSDate *today = [todaysComponents date];
     NSDateComponents *futureComponents = [[NSDateComponents alloc] init];
     [futureComponents setDay:days];
     NSDate *remindDate = [calendar dateByAddingComponents:futureComponents toDate:today options:0];
@@ -459,7 +465,7 @@
             // Use found data if resolution sufficiently high
             img = [[UIImage alloc] initWithData:photoData];
             NSInteger resolution = [img size].width * [img scale] + [img size].height * [img scale];
-            if (resolution < 600) {
+            if (resolution < RESOLUTION_THRESHOLD) {
                 shouldUseDefaultPhoto = YES;
             }
         }
@@ -499,8 +505,7 @@
     [pvc setShouldHideCancelButton:NO];
     [pvc setPostponingContact:YES];
     [pvc setPostponingContactFromButton:YES];
-    [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
-                                 unsignedIntegerValue]];
+    [pvc setDisplayedInMainView:YES];
     [pvc setContact:currentContact];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
@@ -616,7 +621,6 @@
         [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:mainViewControllerPriority];
         ContactViewController *destViewController = [segue destinationViewController];
         [destViewController setContact:currentContact];
-        [destViewController setPhotoData:[contactPhotoFront image]];
     }
 }
 

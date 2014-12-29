@@ -3,6 +3,6 @@
 @interface ContactManager : NSObject
 
 + (void)updateInformation;
-+ (int)verifyABRecordID:(int)abrecordid forContact:(NSManagedObject*)contact;
++ (int)verifyABRecordIDForContact:(Contact *)contact;
 
 @end

@@ -1,118 +1,73 @@
 #import <AddressBookUI/AddressBookUI.h>
 
 #import "AppDelegate.h"
+#import "Contact.h"
 #import "ContactInformationTableViewController.h"
 #import "ContactManager.h"
+#import "NotificationStrings.h"
+#import "PickerViewController.h"
+
+#define NAME_SECTION 0
+#define REMINDERS_SECTION 1
+#define REMINDERS_ON_OFF 0
+#define REMINDERS_DATE 1
+#define PHONES_SECTION 2
+#define EMAILS_SECTION 3
 
 @interface ContactInformationTableViewController () {
-    NSInteger newFrequency;
+    NSString *nameCellIdentifier,
+        *remindSwitchCellIdentifier,
+        *remindDateCellIdentifier,
+        *phoneCellIdentifier,
+        *emailCellIdentifier;
+    NSDictionary *allPhoneNumbers, *allEmailAddresses;
+    NSArray *phoneLabels, *emailLabels;
+    BOOL hasPhoneSection, hasEmailSection;
+    UISwitch *reminderSwitch;
 }
 
 @end
 
 @implementation ContactInformationTableViewController
 
-@synthesize nameLabel;
-@synthesize phoneHomeLabel;
-@synthesize phoneMobileLabel;
-@synthesize phoneWorkLabel;
-@synthesize emailHomeLabel;
-@synthesize emailOtherLabel;
-@synthesize emailWorkLabel;
-@synthesize interestCell;
-@synthesize interestLabel;
-@synthesize frequencyLabel;
-@synthesize frequencySlider;
 @synthesize contact;
-
-- (id)initWithStyle:(UITableViewStyle)style {
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Get key contact info
-    NSString *fullName = [NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]];
-    [nameLabel setText:fullName];
-    int abrecordid = [[contact abrecordid] intValue];
+    // Get numbers and emails and determine whether we need to have phone/email sections
+    [self loadContactData];
     
-    // Verify contact ID
-    abrecordid = [ContactManager verifyABRecordID:abrecordid forContact:contact];
+    // Set the cell identifiers
+    nameCellIdentifier = @"name";
+    remindSwitchCellIdentifier = @"remindSwitch";
+    remindDateCellIdentifier = @"remindDate";
+    phoneCellIdentifier = @"phone";
+    emailCellIdentifier = @"email";
     
-    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-    ABRecordRef currentContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
-    
-    // Get home, mobile, and work phone numbers
-    ABMultiValueRef phoneNumbers = ABRecordCopyValue(currentContact, kABPersonPhoneProperty);
-    NSString *phoneLabel, *phoneNumber;
-    CFStringRef label;
-    for (int j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
-        // Get label for current phone number
-        label = ABMultiValueCopyLabelAtIndex(phoneNumbers, j);
-        phoneLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
-        
-        if ([phoneLabel isEqualToString:@"home"]) {
-            phoneNumber = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [phoneHomeLabel setText:phoneNumber];
-        } else if ([phoneLabel isEqualToString:@"mobile"] || [phoneLabel isEqualToString:@"iPhone"]) {
-            phoneNumber = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [phoneMobileLabel setText:phoneNumber];
-        } else if ([phoneLabel isEqualToString:@"work"]) {
-            phoneNumber = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [phoneWorkLabel setText:phoneNumber];
-        }
-        CFRelease(label);
-    }
-    
-    // Get home, other, and work emails
-    ABMultiValueRef emails = ABRecordCopyValue(currentContact, kABPersonEmailProperty);
-    NSString *emailLabel, *email;
-    for (int j = 0; j < ABMultiValueGetCount(emails); j++) {
-        // Get label for current email
-        label = ABMultiValueCopyLabelAtIndex(emails, j);
-        emailLabel = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel(label);
-        
-        if ([emailLabel isEqualToString:@"home"]) {
-            email = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            [emailHomeLabel setText:email];
-        } else if ([emailLabel isEqualToString:@"other"]) {
-            email = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            [emailOtherLabel setText:email];
-        } else if ([emailLabel isEqualToString:@"work"]) {
-            email = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            [emailWorkLabel setText:email];
-        }
-        CFRelease(label);
-    }
-    
-    // Set appropriate value for "interested cell"
-    ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
-    if ([[contactMetadata interest] intValue]) {
-        [interestLabel setText:@"Interested"];
-        [interestCell setAccessoryType:UITableViewCellAccessoryCheckmark];
+    reminderSwitch = [[UISwitch alloc] init];
+    [reminderSwitch addTarget:self action:@selector(reminderSwitchFlipped) forControlEvents:UIControlEventValueChanged];
+    if ([[(ContactMetadata *)[contact metadata] interest] boolValue]) {
+        [reminderSwitch setOn:YES];
     } else {
-        [interestLabel setText:@"Not interested"];
-        [interestCell setAccessoryType:UITableViewCellAccessoryNone];
+        [reminderSwitch setOn:NO];
     }
     
-    // Resize labels to fit
-    [nameLabel sizeToFit];
-    [phoneHomeLabel sizeToFit];
-    [phoneMobileLabel sizeToFit];
-    [phoneWorkLabel sizeToFit];
-    [emailHomeLabel sizeToFit];
-    [emailOtherLabel sizeToFit];
-    [emailWorkLabel sizeToFit];
-    [interestLabel sizeToFit];
-    
-    CFRelease(addressBookRef);
-    CFRelease(phoneNumbers);
-    CFRelease(emails);
+    // Listen for reminder switch changess
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateRemindDateCell)
+                                                 name:pickerViewDoneFromSettingsNotification
+                                               object:nil];
+}
+
+- (void)loadContactData {
+    // Get phones and emails from contact and sort the labels into nsarrays
+    allPhoneNumbers = [contact getPhoneNumbers];
+    allEmailAddresses = [contact getEmails];
+    phoneLabels = [[allPhoneNumbers allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    emailLabels = [[allEmailAddresses allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+    hasPhoneSection = [phoneLabels count] != 0 ? YES : NO;
+    hasEmailSection = [emailLabels count] != 0 ? YES : NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -120,106 +75,170 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)positionFrequencySlider:(NSInteger)freq {
-    // Set appropriate value for slider
-    // Set frequency slider value and text
-    NSString *message;
-    if (freq == 1) {
-        [frequencySlider setValue:[frequencySlider minimumValue]];
-        message = @"Daily";
-    }
-    else if (freq < 30) {
-        [frequencySlider setValue:freq*10];
-        message = [NSString stringWithFormat:@"%ld days", (long)freq];
-    } else if (freq < 365) {
-        [frequencySlider setValue:(freq/30-1)*60+300];
-        message = [NSString stringWithFormat:@"%ld months", (long)freq/30];
+#pragma mark - Reminders
+
+- (void)reminderSwitchFlipped {
+    ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
+    if ([reminderSwitch isOn]) {
+        [contactMetadata setInterest:[NSNumber numberWithBool:YES
+                                      ]];
     } else {
-        [frequencySlider setValue:[frequencySlider maximumValue]];
-        message = @"Yearly";
+        [contactMetadata setInterest:[NSNumber numberWithBool:NO]];
     }
-    [frequencyLabel setText:message];
+    [self save];
+    [self updateRemindDateCell];
 }
 
-// Slider to adjust the frequency of desired contact
-// Does not save until user hits "save"
-- (IBAction)changeFrequency:(id)sender {
-    // Map slider value to remind frequency (in days because of eventual CoreData entry)
-    NSInteger frequency;
-    NSInteger sliderValue = [frequencySlider value];
-    if (sliderValue <= 300) {
-        frequency = sliderValue/10;
-    } else if (sliderValue <= 625) {
-        frequency = ((sliderValue-300)/60+1)*30;
-    } else {
-        frequency = 365;
-    }
-    newFrequency = frequency;
+- (void)setReminder {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
+    [pvc setShouldHideCancelButton:NO];
+    [pvc setPostponingContact:NO];
+    [pvc setPostponingContactFromButton:NO];
+    [pvc setDisplayedInMainView:NO];
+    [pvc setContact:contact];
     
-    // Map frequency to user friendly display text
-    NSString *message;
-    if (frequency == 1) {
-        message = @"Daily";
-    } else if (frequency <= 30) {
-        message = [NSString stringWithFormat:@"Every %ld days", (long)frequency];
-    } else if (frequency < 365) {
-        NSInteger months = frequency/30;
-        message = [NSString stringWithFormat:@"Every %ld months", (long)months];
-    } else {
-        message = @"Yearly";
-    }
-    [frequencyLabel setText:message];
+    [[self navigationController] setProvidesPresentationContextTransitionStyle:YES];
+    [[self navigationController] setDefinesPresentationContext:YES];
+    [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    [[self navigationController] presentViewController:pvc animated:YES completion:nil];
 }
 
-// Handle cell selection
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+// Refresh the remind date cell's detail text
+- (void)updateRemindDateCell {
+    [[self tableView] beginUpdates];
+    [[self tableView] reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:REMINDERS_DATE inSection:REMINDERS_SECTION]]
+                            withRowAnimation:UITableViewRowAnimationAutomatic];
+    [[self tableView] endUpdates];
+}
+#pragma mark - Contacting
+
+#pragma mark - Tableview delegate methods
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:indexPath {
+    NSInteger section = [indexPath section];
     NSInteger row = [indexPath row];
-    NSLog(@"%ld", (long)row);
     
-    // Frequency section
-    if ([indexPath section] == 1) {
-        // Interested cell
-        if (row == 0) {
-            UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-            if ([cell accessoryType] == UITableViewCellAccessoryNone) {
-                [interestLabel setText:@"Interested"];
-                [interestCell setAccessoryType:UITableViewCellAccessoryCheckmark];
-            } else {
-                [interestLabel setText:@"Not interested"];
-                [cell setAccessoryType:UITableViewCellAccessoryNone];
+    if (section == REMINDERS_SECTION && row == REMINDERS_DATE) {
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        [cell setSelected:NO];
+        [self setReminder];
+    }
+}
+
+// Dynamically set the number of sections to be displayed
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    NSInteger numberOfSections = 2;
+    if (hasPhoneSection) {
+        numberOfSections += 1;
+    }
+    if (hasEmailSection) {
+        numberOfSections += 1;
+    }
+    return numberOfSections;
+}
+
+// Name and Reminders section have constant row counts. Phone and Email sections may or may not exist and have variable
+// row counts.
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (section == NAME_SECTION) {
+        return 1;
+    } else if (section == REMINDERS_SECTION) {
+        return 2;
+    } else {
+        if (hasPhoneSection) {
+            if (section == PHONES_SECTION) {
+                return [phoneLabels count];
+            } else if (section == EMAILS_SECTION) {
+                return [emailLabels count];
             }
+        } else {
+            return [emailLabels count];
         }
     }
-    [tableView reloadData];
+    return 0;
 }
 
-- (IBAction)saveEdits {
-    // save contact information -- to be implemented later
-    
-    // Update interest
-    ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
-    if ([interestCell accessoryType] == UITableViewCellAccessoryCheckmark) {
-        [metadata setInterest:[NSNumber numberWithBool:YES]];
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == NAME_SECTION) {
+        return @"";
+    }
+    else if (section == REMINDERS_SECTION) {
+        return @"Reminders";
+    }
+    else if (hasPhoneSection) {
+        if (section == PHONES_SECTION) {
+            return @"Numbers";
+        } else if (section == EMAILS_SECTION) {
+            return @"Emails";
+        }
     } else {
-        [metadata setInterest:[NSNumber numberWithBool:NO]];
+        return @"";
+    }
+    return @"";
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell;
+    // Determine which section we are looking at
+    if ([indexPath section] == NAME_SECTION) {
+        cell = [tableView dequeueReusableCellWithIdentifier:nameCellIdentifier forIndexPath:indexPath];
+        [[cell detailTextLabel] setText:[NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]]];
+    } else if ([indexPath section] == REMINDERS_SECTION) {
+        ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
+        if ([indexPath row] == REMINDERS_ON_OFF) {
+            cell = [tableView dequeueReusableCellWithIdentifier:remindSwitchCellIdentifier forIndexPath:indexPath];
+            [cell setAccessoryView:reminderSwitch];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        }
+        if ([indexPath row] == REMINDERS_DATE) {
+            cell = [tableView dequeueReusableCellWithIdentifier:remindDateCellIdentifier forIndexPath:indexPath];
+            // Set enabled status
+            if ([[contactMetadata interest] boolValue]) {
+                cell.userInteractionEnabled = cell.textLabel.enabled = cell.detailTextLabel.enabled = YES;
+            } else {
+                cell.userInteractionEnabled = cell.textLabel.enabled = cell.detailTextLabel.enabled = NO;
+            }
+            
+            // Set the text
+            NSDate *remindDate = [contactMetadata remindOnDate];
+            if (remindDate) {
+                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+                [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
+                [[cell detailTextLabel] setText:[dateFormatter stringFromDate:remindDate]];
+            } else {
+                [[cell detailTextLabel] setText:@"Not set"];
+            }
+        }
+    } else if (hasPhoneSection) {
+        if ([indexPath section] == PHONES_SECTION) {
+            cell = [tableView dequeueReusableCellWithIdentifier:phoneCellIdentifier forIndexPath:indexPath];
+            NSString *phoneLabel = [phoneLabels objectAtIndex:[indexPath row]];
+            [[cell textLabel] setText:phoneLabel];
+            NSLog(@"%@", phoneLabel);
+            [[cell detailTextLabel] setText:[allPhoneNumbers objectForKey:phoneLabel]];
+        }
+        if ([indexPath section] == EMAILS_SECTION) {
+            cell = [tableView dequeueReusableCellWithIdentifier:emailCellIdentifier forIndexPath:indexPath];
+            NSString *emailLabel = [emailLabels objectAtIndex:[indexPath row]];
+            [[cell textLabel] setText:emailLabel];
+            [[cell detailTextLabel] setText:[allEmailAddresses objectForKey:emailLabel]];
+        }
+    } else {
+        if (hasEmailSection) {
+            cell = [tableView dequeueReusableCellWithIdentifier:emailCellIdentifier forIndexPath:indexPath];
+            NSString *emailLabel = [emailLabels objectAtIndex:[indexPath row]];
+            [[cell textLabel] setText:emailLabel];
+            [[cell detailTextLabel] setText:[allEmailAddresses objectForKey:emailLabel]];
+        }
     }
     
-    [self save];
-    
-    // Return to previous screen
-    [[self navigationController] popViewControllerAnimated:YES];
-}
-
-/*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
     // Configure the cell...
-    
+    [cell layoutSubviews];
     return cell;
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.

@@ -11,5 +11,7 @@
 @property (nonatomic, retain) NSManagedObject *metadata;
 
 - (NSData *)getPhotoData;
+- (NSDictionary *)getPhoneNumbers;
+- (NSDictionary *)getEmails;
 
 @end

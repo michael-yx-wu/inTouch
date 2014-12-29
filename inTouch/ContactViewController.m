@@ -33,9 +33,6 @@ static NSString *contactedGeneric = @"generic";
 @synthesize emailButton;
 
 @synthesize contact;
-@synthesize photoData;
-@synthesize firstName;
-@synthesize lastName;
 @synthesize allEmailAddresses;
 @synthesize allPhoneNumbers;
 
@@ -55,10 +52,11 @@ static NSString *contactedGeneric = @"generic";
     allPhoneNumbers = [[NSMutableDictionary alloc] init];
 
     // Get necessary information from contact
-    [self setName];
-    [contactPhoto setImage:photoData];
-    [self getNumbers];
-    [self getEmails];
+    NSString *name = [NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]];
+    [contactName setText:name];
+    [contactPhoto setImage:[UIImage imageWithData:[contact getPhotoData]]];
+    allPhoneNumbers = [contact getPhoneNumbers];
+    allEmailAddresses = [contact getEmails];
     
     // Disable buttons if needed
     if ([allPhoneNumbers count] == 0 || ![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tel://"]]) {
@@ -95,73 +93,6 @@ static NSString *contactedGeneric = @"generic";
     
     // Hide photo until we round it
     [contactPhoto setAlpha:0];
-}
-
-#pragma mark - Getting contact information
-
-- (void)setName {
-    NSString *name = [NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]];
-    [contactName setText:name];
-}
-
-- (void)getNumbers {
-    [DebugLogger log:@"Getting all linked numbers" withPriority:contactCardViewPriority];
-    int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
-    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-    ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
-    CFArrayRef linkedAddressBookContacts = ABPersonCopyArrayOfAllLinkedPeople(addressBookContact);
-    
-    ABRecordRef linkedAddressBookContact;
-    ABMultiValueRef phoneNumbers;
-    for (CFIndex i = 0; i < CFArrayGetCount(linkedAddressBookContacts); i++) {
-        linkedAddressBookContact = CFArrayGetValueAtIndex(linkedAddressBookContacts, i);
-        phoneNumbers = ABRecordCopyValue(linkedAddressBookContact, kABPersonPhoneProperty);
-        
-        // Loop through linked contact's phone numbers and add everything to allPhoneNumbers
-        for (CFIndex j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
-            NSString *label = (__bridge_transfer NSString*)ABMultiValueCopyLabelAtIndex(phoneNumbers, j);
-            label = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label);
-            if ([label isEqualToString:@""]) {
-                label = @"other";
-            }
-            NSString *phoneNumber = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [allPhoneNumbers setObject:phoneNumber forKey:label];
-        }
-        CFRelease(phoneNumbers);
-    }
-    CFRelease(linkedAddressBookContacts);
-    CFRelease(addressBookRef);
-}
-
-- (void)getEmails {
-    [DebugLogger log:@"Getting all linked emails" withPriority:contactCardViewPriority];
-    int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
-    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-    ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
-    CFArrayRef linkedAddressBookContacts = ABPersonCopyArrayOfAllLinkedPeople(addressBookContact);
-    
-    ABRecordRef linkedAddressBookContact;
-    ABMultiValueRef emails;
-    for (CFIndex i = 0; i < CFArrayGetCount(linkedAddressBookContacts); i++) {
-        linkedAddressBookContact = CFArrayGetValueAtIndex(linkedAddressBookContacts, i);
-        emails = ABRecordCopyValue(linkedAddressBookContact, kABPersonEmailProperty);
-        
-        // Loop through linked contact's phone numbers and add everything to allPhoneNumbers
-        for (CFIndex j = 0; j < ABMultiValueGetCount(emails); j++) {
-            NSString *label = (__bridge_transfer NSString*)ABMultiValueCopyLabelAtIndex(emails, j);
-            label = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label);
-            NSString *email = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            if ([label isEqualToString:@""]) {
-                label = @"other";
-            }
-            [allEmailAddresses setObject:email forKey:label];
-        }
-        
-        // Release if not null
-        CFRelease(emails);
-    }
-    CFRelease(linkedAddressBookContacts);
-    CFRelease(addressBookRef);
 }
 
 #pragma mark - Button Actions

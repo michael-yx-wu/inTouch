@@ -16,14 +16,6 @@
 @synthesize contacts;
 @synthesize alphabetIndices;
 
-- (id)initWithStyle:(UITableViewStyle)style {
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -178,31 +170,6 @@
         withPriority:allContactsTableViewControllerPriority];
 }
 
-// Toggle interest on accessory select -- this will only work after we throw a transparent uiview on top of the
-// tableview to intercept touch events. This is messy, but the only way we can have this custom functionality 
-//- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-//    NSLog(@"Accessory tapped");
-//    // Get contact/metadata by looking up associated abrecordid
-//    NSInteger row  = [indexPath row];
-//    NSString *contactID = [NSString stringWithFormat:@"%@", [contactIDs objectAtIndex:row]];
-//    Contact *contact = [contacts valueForKey:contactID];
-//    ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
-//    
-//    // Toggle contact interest
-//    if ([[contactMetadata interest] boolValue]) {
-//        NSDate *today = [NSDate date];
-//        [contactMetadata setInterest:[NSNumber numberWithBool:NO]];
-//        [contactMetadata setNoInterestDate:today];
-//    } else {
-//        [contactMetadata setInterest:[NSNumber numberWithBool:YES]];
-//        [contactMetadata setNoInterestDate:NULL];
-//    }
-//    
-//    // Save change to database and refresh table
-//    [self save];
-//    [tableView reloadData];
-//}
-
 # pragma mark - Navigation
 
 // Passing selectedContact to ContactViewController before segueing
@@ -215,44 +182,6 @@
         [destViewController setContact:selectedContact];
     }
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Core Data Methods
 

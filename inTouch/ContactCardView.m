@@ -271,7 +271,7 @@
 
 // When the contact has been contacted, slide card upwards and off the screen
 // The main view controller will handle getting the next contact
-- (void)slideContactCardUp:(NSUInteger)days {
+- (void)slideContactCardUp:(NSInteger)days {
     [UIView animateWithDuration:0.15 animations:^{
         [contactName setAlpha:0];
     } completion:^(BOOL finished) {

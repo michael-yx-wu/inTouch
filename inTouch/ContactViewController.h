@@ -14,11 +14,8 @@
 
 // Contact Data
 @property (nonatomic, strong) Contact *contact;
-@property (nonatomic, strong) UIImage *photoData;
-@property (nonatomic, strong) NSString *firstName;
-@property (nonatomic, strong) NSString *lastName;
-@property (nonatomic, strong) NSMutableDictionary *allEmailAddresses;
-@property (nonatomic, strong) NSMutableDictionary *allPhoneNumbers;
+@property (nonatomic, strong) NSDictionary *allEmailAddresses;
+@property (nonatomic, strong) NSDictionary *allPhoneNumbers;
 
 // Call center
 @property (nonatomic, strong) CTCallCenter *callCenter;
