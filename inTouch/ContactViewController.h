@@ -1,8 +1,10 @@
+#import <CoreTelephony/CTCall.h>
 #import <CoreTelephony/CTCallCenter.h>
+#import <MessageUI/MessageUI.h>
 
 #import "Contact.h"
 
-@interface ContactViewController : UIViewController
+@interface ContactViewController : UIViewController <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
 
 // Display
 @property (weak, nonatomic) IBOutlet UIView *contactCard;

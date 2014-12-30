@@ -1,3 +1,4 @@
+#import <CoreTelephony/CTCall.h>
 #import <AddressBookUI/AddressBookUI.h>
 
 #import "AppDelegate.h"
@@ -58,6 +59,12 @@
                                              selector:@selector(updateRemindDateCell)
                                                  name:pickerViewDoneFromSettingsNotification
                                                object:nil];
+    
+    // Listen for call end events
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(callEnded)
+                                                 name:CTCallStateDisconnected
+                                               object:nil];
 }
 
 - (void)loadContactData {
@@ -89,7 +96,7 @@
     [self updateRemindDateCell];
 }
 
-- (void)setReminder {
+- (void)showReminderDatePicker {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
     [pvc setShouldHideCancelButton:NO];
@@ -111,18 +118,177 @@
                             withRowAnimation:UITableViewRowAnimationAutomatic];
     [[self tableView] endUpdates];
 }
+
 #pragma mark - Contacting
+
+// Here, index is the row selected in the phones section of the table
+- (void)showCallTextActionSheet:(NSInteger)index {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Call or Message?"
+                                                                             message:@""
+                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Call"
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction *action) {
+                                                          NSString *number = [allPhoneNumbers objectForKey:[phoneLabels objectAtIndex:index]];
+                                                          number = [number stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                                                          number = [NSString stringWithFormat:@"telprompt:%@", number];
+                                                          NSURL *phoneURL = [NSURL URLWithString:number];
+                                                          [[UIApplication sharedApplication] openURL:phoneURL];
+                                                      }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Message"
+                                                        style:UIAlertActionStyleDefault
+                                                      handler:^(UIAlertAction *action) {
+                                                          [self displayMessageViewController:index];
+                                                      }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel
+                                                      handler:^(UIAlertAction *action) {
+//                                                          [self dismissViewControllerAnimated:YES completion:nil];
+                                                      }]];
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+// Executed upon receiving a call ended notification
+- (void)callEnded {
+    [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByCall];
+}
+
+- (void)displayMessageViewController:(NSInteger)index {
+    MFMessageComposeViewController *messageViewController = [[MFMessageComposeViewController alloc] init];
+    [messageViewController setRecipients:@[[allPhoneNumbers objectForKey:[phoneLabels objectAtIndex:index]]]];
+    [messageViewController setMessageComposeDelegate:self];
+    [self presentViewController:messageViewController animated:YES completion:nil];
+}
+
+// Handle message controller being dismissed
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
+                 didFinishWithResult:(MessageComposeResult)result {
+    switch (result) {
+        case MessageComposeResultCancelled: {
+            [DebugLogger log:@"Message cancelled" withPriority:contactInformationTableViewControllerPriority];
+            break;
+        }
+            
+        case MessageComposeResultFailed: {
+            [DebugLogger log:@"Message failed" withPriority:contactInformationTableViewControllerPriority];
+            break;
+        }
+            
+        case MessageComposeResultSent: {
+            [DebugLogger log:@"Message sent" withPriority:contactInformationTableViewControllerPriority];
+            [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByMessage];
+        }
+            
+        default: {
+            break;
+        }
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+- (void)displayMailViewController:(NSInteger)index {
+    MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
+    [mailViewController setToRecipients:@[[allEmailAddresses objectForKey:[emailLabels objectAtIndex:index]]]];
+    [mailViewController setMailComposeDelegate:self];
+    [self presentViewController:mailViewController animated:YES completion:nil];
+}
+
+
+// Handle email controller being dismissed
+- (void)mailComposeController:(MFMailComposeViewController *)controller
+          didFinishWithResult:(MFMailComposeResult)result
+                        error:(NSError *)error {
+    switch (result) {
+        case MFMailComposeResultCancelled: {
+            [DebugLogger log:@"Mail cancelled" withPriority:contactInformationTableViewControllerPriority];
+            break;
+        }
+        
+        case MFMailComposeResultFailed: {
+            [DebugLogger log:@"Mail compose failed" withPriority:contactInformationTableViewControllerPriority];
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                                     message:@"Message compose failed"
+                                                                              preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:nil]];
+            [self presentViewController:alertController animated:YES completion:nil];
+            break;
+        }
+            
+        case MFMailComposeResultSaved: {
+            [DebugLogger log:@"Mail saved" withPriority:contactInformationTableViewControllerPriority];
+            break;
+        }
+        
+        case MFMailComposeResultSent: {
+            [DebugLogger log:@"Mail sent" withPriority:contactInformationTableViewControllerPriority];
+            [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByEmail];
+            break;
+        }
+            
+        default: {
+            break;
+        }
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+
+
+//}
+//
+//
+//- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result {
+//    switch (result) {
+//        case MessageComposeResultCancelled: {
+//            [DebugLogger log:@"Message compose cancelled" withPriority:contactViewControllerPriority];
+//            [self dismissViewControllerAnimated:YES completion:nil];
+//            break;
+//        }
+//        case MessageComposeResultFailed: {
+//            [DebugLogger log:@"Message failed to send" withPriority:contactViewControllerPriority];
+//            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Messaged failed to send!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//            [warningAlert show];
+//            [self dismissViewControllerAnimated:YES completion:nil];
+//            break;
+//        }
+//        case MessageComposeResultSent: {
+//            [DebugLogger log:@"Message sent!" withPriority:contactViewControllerPriority];
+//            [self dismissViewControllerAnimated:YES completion:nil];
+//            [self performSelector:@selector(dismissMessage) withObject:nil afterDelay:1];
+//        }
+//        default: {
+//            break;
+//        }
+//    }
+//}
 
 #pragma mark - Tableview delegate methods
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:indexPath {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    [cell setSelected:NO];
+
     NSInteger section = [indexPath section];
-    NSInteger row = [indexPath row];
-    
-    if (section == REMINDERS_SECTION && row == REMINDERS_DATE) {
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        [cell setSelected:NO];
-        [self setReminder];
+    NSInteger row = [indexPath row];    
+    if (section == NAME_SECTION) {
+        // no op
+    } else if (section == REMINDERS_SECTION && row == REMINDERS_DATE) {
+        [self showReminderDatePicker];
+        return;
+    } else if (section >= 2) {
+        if (hasPhoneSection) {
+            if (section == PHONES_SECTION) {
+                [self showCallTextActionSheet:row];
+            } else if (section == EMAILS_SECTION) {
+                [self displayMailViewController:row];
+            }
+        } else {
+            [self displayMailViewController:row];
+        }
     }
 }
 

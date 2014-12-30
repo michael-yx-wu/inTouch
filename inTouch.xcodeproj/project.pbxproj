@@ -226,6 +226,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		4C36D21E1A5207260015EF1B /* Main View */ = {
+			isa = PBXGroup;
+			children = (
+				4C340D7618C16FF7009A96D8 /* MainViewController.h */,
+				4C340D7718C16FF7009A96D8 /* MainViewController.m */,
+				4C47934B18E0EB2900A408AB /* ContactViewController.h */,
+				4C47934C18E0EB2900A408AB /* ContactViewController.m */,
+			);
+			name = "Main View";
+			sourceTree = "<group>";
+		};
 		4C42688619158C8B0014744F /* Core Data Entities */ = {
 			isa = PBXGroup;
 			children = (
@@ -243,13 +254,10 @@
 		4C42688A1915B4500014744F /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				4C340D7618C16FF7009A96D8 /* MainViewController.h */,
-				4C340D7718C16FF7009A96D8 /* MainViewController.m */,
-				4C47934B18E0EB2900A408AB /* ContactViewController.h */,
-				4C47934C18E0EB2900A408AB /* ContactViewController.m */,
+				4C36D21E1A5207260015EF1B /* Main View */,
+				4C9B508B1A4F64F9002BC2CA /* Settings */,
 				4CF6E18B1A243BC90056B1B9 /* PickerViewController.h */,
 				4CF6E18C1A243BC90056B1B9 /* PickerViewController.m */,
-				4C9B508B1A4F64F9002BC2CA /* Settings */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";

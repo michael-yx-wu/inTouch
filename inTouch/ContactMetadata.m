@@ -1,11 +1,3 @@
-//
-//  ContactMetadata.m
-//  inTouch
-//
-//  Created by Michael Wu on 5/3/14.
-//  Copyright (c) 2014 inTouch Team. All rights reserved.
-//
-
 #import "ContactMetadata.h"
 
 @implementation ContactMetadata
@@ -25,5 +17,16 @@
 @dynamic remindOnDate;
 @dynamic timezone;
 @dynamic contact;
+
+- (void)incrementTimesContacted:(NSInteger)contactMethod {
+    if (contactMethod == contactedByCall) {
+        [self setNumTimesCalled:[NSNumber numberWithInt:[[self numTimesCalled] intValue]+1]];
+    } else if (contactMethod == contactedByMessage) {
+        [self setNumTimesMessaged:[NSNumber numberWithInt:[[self numTimesMessaged] intValue]+1]];
+    } else if (contactMethod == contactedByEmail) {
+        [self setNumTimesEmailed:[NSNumber numberWithInt:[[self numTimesEmailed] intValue]+1]];
+    }
+    [self setNumTimesContacted:[NSNumber numberWithInt:[[self numTimesContacted] intValue]+1]];
+}
 
 @end
