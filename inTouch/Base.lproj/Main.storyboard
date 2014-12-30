@@ -1302,7 +1302,6 @@
                                         <state key="normal" image="message_icon_ok">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
-                                        <state key="disabled" image="message_icon"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="o1S-BQ-6fN"/>
@@ -1325,7 +1324,6 @@
                                         <state key="normal" image="mail_icon_ok">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
-                                        <state key="disabled" image="mail_icon"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="81O-k1-6dY"/>
@@ -1348,7 +1346,6 @@
                                         <state key="normal" image="phone_icon_ok">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
-                                        <state key="disabled" image="phone_icon"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="Aqi-ic-jTU"/>
@@ -1425,9 +1422,11 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cPN-Kg-Njz" userLabel="Check Button">
                                                 <rect key="frame" x="180" y="481" width="40" height="40"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="50" id="LCp-Y8-myf"/>
+                                                    <constraint firstAttribute="width" constant="50" id="LCp-Y8-myf">
+                                                        <variation key="heightClass=regular-widthClass=compact" constant="40"/>
+                                                    </constraint>
                                                     <constraint firstAttribute="height" constant="50" id="jx2-5N-1hQ">
-                                                        <variation key="heightClass=regular-widthClass=compact" constant="50"/>
+                                                        <variation key="heightClass=regular-widthClass=compact" constant="40"/>
                                                     </constraint>
                                                     <constraint firstAttribute="width" secondItem="cPN-Kg-Njz" secondAttribute="height" multiplier="1:1" id="mYm-oR-YT0"/>
                                                 </constraints>
@@ -1445,7 +1444,7 @@
                                                     <mask key="constraints">
                                                         <include reference="LCp-Y8-myf"/>
                                                         <include reference="jx2-5N-1hQ"/>
-                                                        <include reference="mYm-oR-YT0"/>
+                                                        <exclude reference="mYm-oR-YT0"/>
                                                     </mask>
                                                 </variation>
                                                 <connections>
@@ -1455,9 +1454,13 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hay-uN-S6J" userLabel="Back Button">
                                                 <rect key="frame" x="100" y="481" width="40" height="40"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="50" id="7Bg-O6-vwh"/>
+                                                    <constraint firstAttribute="height" constant="50" id="7Bg-O6-vwh">
+                                                        <variation key="heightClass=regular-widthClass=compact" constant="40"/>
+                                                    </constraint>
                                                     <constraint firstAttribute="width" secondItem="hay-uN-S6J" secondAttribute="height" multiplier="1:1" id="F9b-0j-wkz"/>
-                                                    <constraint firstAttribute="width" constant="50" id="jhb-Kg-Rvt"/>
+                                                    <constraint firstAttribute="width" constant="50" id="jhb-Kg-Rvt">
+                                                        <variation key="heightClass=regular-widthClass=compact" constant="40"/>
+                                                    </constraint>
                                                 </constraints>
                                                 <state key="normal" image="back_icon_40">
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -1472,7 +1475,7 @@
                                                 <variation key="heightClass=regular-widthClass=compact">
                                                     <mask key="constraints">
                                                         <include reference="7Bg-O6-vwh"/>
-                                                        <include reference="F9b-0j-wkz"/>
+                                                        <exclude reference="F9b-0j-wkz"/>
                                                         <include reference="jhb-Kg-Rvt"/>
                                                     </mask>
                                                 </variation>
@@ -2212,11 +2215,8 @@
         <image name="default_profile_fade2" width="512" height="512"/>
         <image name="default_profile_fade3" width="512" height="512"/>
         <image name="eye_queue_open" width="121" height="80"/>
-        <image name="mail_icon" width="400" height="400"/>
         <image name="mail_icon_ok" width="400" height="400"/>
-        <image name="message_icon" width="400" height="400"/>
         <image name="message_icon_ok" width="400" height="400"/>
-        <image name="phone_icon" width="400" height="400"/>
         <image name="phone_icon_ok" width="400" height="400"/>
         <image name="postpone_icon" width="612" height="612"/>
         <image name="postpone_icon_overlay" width="612" height="612"/>
