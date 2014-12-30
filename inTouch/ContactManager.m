@@ -73,6 +73,7 @@ NSInteger kFacebookRequestFinish = 0;
             [contact setNameLast:lastName];
             [contact setCategory:nil];
             
+            [metaData setDaysBetweenReminder:[NSNumber numberWithInt:0]];
             [metaData setInterest:[NSNumber numberWithBool:YES]];
             [metaData setNumTimesAppeared:[NSNumber numberWithInt:0]];
             [metaData setNumTimesCalled:[NSNumber numberWithInt:0]];
@@ -136,11 +137,11 @@ NSInteger kFacebookRequestFinish = 0;
 }
 
 // Return the correct ABRecordID for the contact
-+ (int)verifyABRecordID:(int)abrecordid forContact:(NSManagedObject*)contact {
++ (int)verifyABRecordIDForContact:(Contact *)contact {
     ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
     
     // Get name
-    ABRecordRef currentContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
+    ABRecordRef currentContact = ABAddressBookGetPersonWithRecordID(addressBookRef, [[contact abrecordid] intValue]);
     NSString *firstName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonFirstNameProperty);
     NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonLastNameProperty);
     if (firstName == nil) firstName = @"";
@@ -169,7 +170,7 @@ NSInteger kFacebookRequestFinish = 0;
         abort();
     } else {
         CFRelease(addressBookRef);
-        return abrecordid;
+        return [[contact abrecordid] intValue];
     }
 }
 

@@ -12,6 +12,8 @@
 #import "ContactViewController.h"
 #import "PickerViewController.h"
 
+#define RESOLUTION_THRESHOLD 0
+
 @interface MainViewController () {
     NSMutableArray *photoQueue;
     NSMutableArray *currentQueue;
@@ -217,10 +219,8 @@
     PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
     [pvc setShouldHideCancelButton:YES];
     [pvc setPostponingContact:NO];
-    [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
-                                 unsignedIntegerValue]];
+    [pvc setDisplayedInMainView:YES];
     [pvc setContact:currentContact];
-    [pvc setContactPhoto:[contactPhotoFront image]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -232,10 +232,8 @@
     [pvc setShouldHideCancelButton:NO];
     [pvc setPostponingContact:YES];
     [pvc setPostponingContactFromButton:NO];
-    [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
-                                 unsignedIntegerValue]];
+    [pvc setDisplayedInMainView:YES];
     [pvc setContact:currentContact];
-    [pvc setContactPhoto:[contactPhotoFront image]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -254,7 +252,7 @@
         
         // We finished contacting a contact
         if (!postponingContact) {
-            [contactCard slideContactCardUp:[daysToPostpone unsignedIntegerValue]];
+            [contactCard slideContactCardUp:[daysToPostpone integerValue]];
         }
         // We are postponing from a button
         else if (postponingContactFromButton) {
@@ -301,7 +299,13 @@
 - (void)dismissContactAndSetReminder:(NSUInteger)days {
     [self printQueue];
     NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
-    NSDate *today = [NSDate date];
+    NSDateComponents *todaysComponents = [calendar components:(NSCalendarUnitYear|
+                                                               NSCalendarUnitMonth|
+                                                               NSCalendarUnitDay|
+                                                               NSCalendarUnitTimeZone|
+                                                               NSCalendarUnitCalendar)
+                                                     fromDate:[NSDate date]];
+    NSDate *today = [todaysComponents date];
     NSDateComponents *futureComponents = [[NSDateComponents alloc] init];
     [futureComponents setDay:days];
     NSDate *remindDate = [calendar dateByAddingComponents:futureComponents toDate:today options:0];
@@ -451,7 +455,7 @@
     for (i = 0; i < [currentQueue count] && i < 4; i++) {
         // Get queued contact id
         Contact *queuedContact = [currentQueue objectAtIndex:i];
-        NSData *photoData = [self getPhotoDataForContact:queuedContact];
+        NSData *photoData = [queuedContact getPhotoData];
         UIImageView *queuedPhoto = [photoQueue objectAtIndex:i];
         UIImage *img;
         bool shouldUseDefaultPhoto = NO;
@@ -461,7 +465,7 @@
             // Use found data if resolution sufficiently high
             img = [[UIImage alloc] initWithData:photoData];
             NSInteger resolution = [img size].width * [img scale] + [img size].height * [img scale];
-            if (resolution < 600) {
+            if (resolution < RESOLUTION_THRESHOLD) {
                 shouldUseDefaultPhoto = YES;
             }
         }
@@ -485,30 +489,6 @@
     [contactActionButtonsView setHidden:NO];
 }
 
-// Helper method to retrieve photo data for a contact. Preference is facebook > linkedin > contact book
-- (NSData *)getPhotoDataForContact:(Contact *)contact {
-    NSData *photoData;
-    NSData *facebookPhoto = [contact facebookPhoto];
-    NSData *linkedinPhoto = [contact linkedinPhoto];
-    if (facebookPhoto != NULL) {
-        photoData = facebookPhoto;
-    } else if (linkedinPhoto != NULL) {
-        photoData = linkedinPhoto;
-    } else {
-        int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
-        ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-        ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
-        if (ABPersonHasImageData(addressBookContact)) {
-            photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(addressBookContact);
-        } else {
-            UIImage *img = [UIImage imageNamed:@"default_profile_fade0.png"];
-            photoData = UIImagePNGRepresentation(img);
-        }
-        CFRelease(addressBookRef);
-    }
-    return photoData;
-}
-
 #pragma mark - Tap Gestures
 
 - (IBAction)deleteContactButton:(id)sender {
@@ -525,10 +505,8 @@
     [pvc setShouldHideCancelButton:NO];
     [pvc setPostponingContact:YES];
     [pvc setPostponingContactFromButton:YES];
-    [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
-                                 unsignedIntegerValue]];
+    [pvc setDisplayedInMainView:YES];
     [pvc setContact:currentContact];
-    [pvc setContactPhoto:[contactPhotoFront image]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -643,7 +621,6 @@
         [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:mainViewControllerPriority];
         ContactViewController *destViewController = [segue destinationViewController];
         [destViewController setContact:currentContact];
-        [destViewController setPhotoData:[contactPhotoFront image]];
     }
 }
 

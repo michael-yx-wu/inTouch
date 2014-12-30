@@ -10,4 +10,8 @@
 @property (nonatomic, retain) NSString * nameLast;
 @property (nonatomic, retain) NSManagedObject *metadata;
 
+- (NSData *)getPhotoData;
+- (NSDictionary *)getPhoneNumbers;
+- (NSDictionary *)getEmails;
+
 @end

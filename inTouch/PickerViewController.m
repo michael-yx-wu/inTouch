@@ -1,3 +1,4 @@
+#import "AppDelegate.h"
 #import "NotificationStrings.h"
 #import "PickerViewController.h"
 
@@ -15,15 +16,15 @@ enum {
 
 @implementation PickerViewController
 
-@synthesize contact, contactPhoto, contactPhotoView, contactNameLabel;
+@synthesize contact, contactPhotoView, contactNameLabel;
 @synthesize remindDateHelpText;
 @synthesize remindDate;
 @synthesize remindDatePickerView;
 @synthesize toolbar, cancelButton;
-@synthesize daysBetweenReminder;
 @synthesize shouldHideCancelButton;
 @synthesize postponingContact;
 @synthesize postponingContactFromButton;
+@synthesize displayedInMainView;
 
 #pragma mark - Initialization
 
@@ -33,7 +34,6 @@ enum {
     [remindDatePickerView setDelegate:self];
     [contactNameLabel setAdjustsFontSizeToFitWidth:YES];
     [self setRemindHelpText];
-    [self configureRows];
     if (shouldHideCancelButton) {
         [self hideCancelButton];
     }
@@ -44,7 +44,7 @@ enum {
     
     // Give the appearance of a modal-like dialog
     [UIView animateWithDuration:0.30 animations:^{
-       [[self view] setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
+        [[self view] setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]];
     }];
 }
 
@@ -60,16 +60,50 @@ enum {
     
     NSString *fullName = [NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]];
     [contactNameLabel setText:fullName];
-    [contactPhotoView setImage:contactPhoto];
+    [contactPhotoView setImage:[UIImage imageWithData:[contact getPhotoData]]];
+    
+    // Set weeks/days right before appearing to allow time to set the displayedInMainView variable
+    [self configureRows];
 }
 
 // Determine the correct rows to highlight on load
 - (void)configureRows {
-    NSUInteger weeks = daysBetweenReminder/7;
-    NSUInteger days = daysBetweenReminder%7;
-    [remindDatePickerView selectRow:weeks inComponent:weeksComponent animated:YES];
-    [remindDatePickerView selectRow:days inComponent:daysComponent animated:YES];
-    [self pickerView:remindDatePickerView didSelectRow:days inComponent:1];
+    NSUInteger weeks = 0;
+    NSUInteger days = 0;
+    
+    // Different behavior when not being displayed after contacting or postponing
+    if (!displayedInMainView) {
+        // Attempt to set picker date to correct number of weeks and days to match the current remind date
+        NSDate *oldRemindDate = [(ContactMetadata *)[contact metadata] remindOnDate];
+        if (oldRemindDate) {
+            NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
+            NSDateComponents *todaysComponents = [calendar components:(NSCalendarUnitYear|
+                                                                       NSCalendarUnitMonth|
+                                                                       NSCalendarUnitDay|
+                                                                       NSCalendarUnitTimeZone|
+                                                                       NSCalendarUnitCalendar)
+                                                             fromDate:[NSDate date]];
+            NSDate *today = [todaysComponents date];
+            NSDateComponents *diff = [calendar components:NSDayCalendarUnit fromDate:today toDate:oldRemindDate options:0];
+            
+            // If remind date is already past, default to 0 weeks, 0 days
+            if ([diff day] >= 0) {
+                weeks = [diff day]/7;
+                days = [diff day]%7;
+            }
+        }
+    } else {
+        NSInteger daysBetweenReminder = [[(ContactMetadata *)[contact metadata] daysBetweenReminder] integerValue];
+        weeks = daysBetweenReminder/7;
+        days = daysBetweenReminder%7;
+    }
+    
+    // Scroll to components to correct rows
+    [remindDatePickerView selectRow:weeks inComponent:weeksComponent animated:NO];
+    [remindDatePickerView selectRow:days inComponent:daysComponent animated:NO];
+    
+    // Force an update of remindDateLabel
+    [self pickerView:remindDatePickerView didSelectRow:days inComponent:daysComponent];
 }
 
 - (void)hideCancelButton {
@@ -80,10 +114,14 @@ enum {
 
 // Display different help text depending on the action associated with the picker
 - (void)setRemindHelpText {
-    if (postponingContact) {
-        [remindDateHelpText setText:@"Postpone until:"];
+    if (displayedInMainView) {
+        if (postponingContact) {
+            [remindDateHelpText setText:@"Postpone until:"];
+        } else {
+            [remindDateHelpText setText:@"Remind me on:"];
+        }
     } else {
-        [remindDateHelpText setText:@"Remind me on:"];
+        [remindDateHelpText setText:@"Set reminder for:"];
     }
 }
 
@@ -105,7 +143,7 @@ enum {
                                              CGRectGetMinY(currentPhotoFrame),
                                              CGRectGetWidth(currentPhotoFrame),
                                              CGRectGetHeight(currentPhotoFrame));
-
+    
     
     [contactNameLabel setFrame:newContactNameLabelFrame];
     [contactPhotoView setFrame:newContactPhotoFrame];
@@ -122,7 +160,7 @@ enum {
                                              CGRectGetMinY(currentPhotoFrame),
                                              CGRectGetWidth(currentPhotoFrame),
                                              CGRectGetHeight(currentPhotoFrame));
-
+    
     [contactPhotoView setFrame:newContactPhotoFrame];
 }
 
@@ -158,29 +196,51 @@ enum {
                                            attributes:@{NSParagraphStyleAttributeName:paragraphStyle}];
 }
 
+#pragma mark - Setting the remind text
+
 // Update the remindDate label text
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    // Get the remind date
+    NSInteger totalDays = [self convertSelectionToDays];
+    NSDate *remindOnDate = [self calculateRemindDateFromSelection:totalDays];
+    [self setRemindText:remindOnDate daysFromNow:totalDays];
+}
+
+- (NSInteger)convertSelectionToDays {
     // Convert picker rows to days
-    NSUInteger weeks = [pickerView selectedRowInComponent:weeksComponent];
-    NSUInteger days = [pickerView selectedRowInComponent:daysComponent];
-    NSUInteger totalDays = weeks * 7 + days;
-    
+    NSInteger weeks = [remindDatePickerView selectedRowInComponent:weeksComponent];
+    NSInteger days = [remindDatePickerView selectedRowInComponent:daysComponent];
+    return weeks * 7 + days;
+}
+
+- (NSDate *)calculateRemindDateFromSelection:(NSInteger)totalDays {
     // Add days to current date and set the label text
     NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
-    NSDate *today = [NSDate date];
+    NSDateComponents *todaysComponents = [calendar components:(NSCalendarUnitYear|
+                                                               NSCalendarUnitMonth|
+                                                               NSCalendarUnitDay|
+                                                               NSCalendarUnitTimeZone|
+                                                               NSCalendarUnitCalendar)
+                                                     fromDate:[NSDate date]];
+    NSDate *today = [todaysComponents date];
     NSDateComponents *futureComponents = [[NSDateComponents alloc] init];
     [futureComponents setDay:totalDays];
-    NSDate *remindOnDate = [calendar dateByAddingComponents:futureComponents toDate:today options:0];
+    return [calendar dateByAddingComponents:futureComponents toDate:today options:0];
+}
+
+- (void)setRemindText:(NSDate*)date daysFromNow:(NSInteger)daysFromNow {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-    
-    if (totalDays == 0) {
+    if (daysFromNow == 0) {
         [remindDate setText:@" later today"];
     } else {
-            [remindDate setText:[NSString stringWithFormat:@" %@", [dateFormatter stringFromDate:remindOnDate]]];
+        [remindDate setText:[NSString stringWithFormat:@" %@", [dateFormatter stringFromDate:date]]];
     }
 }
+
+
+#pragma mark - Dismissing the view
 
 - (void)fadeOutWithAction:(void (^)(void))actionBlock {
     [UIView animateWithDuration:0.30
@@ -195,24 +255,41 @@ enum {
 - (IBAction)cancel:(id)sender {
     // Fade out the background before sending the cancel notification
     [self fadeOutWithAction:^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:pickerViewCancelNotification object:self];
+        if (displayedInMainView) {
+            // Send notification to main view controller to dismiss and begin custom animations
+            [[NSNotificationCenter defaultCenter] postNotificationName:pickerViewCancelNotification object:self];
+        } else {
+            // In the settings menu, we can safely dismiss within this view controller
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
     }];
 }
 
 - (IBAction)done:(id)sender {
     [self fadeOutWithAction:^{
-        NSInteger daysToPostpone = [remindDatePickerView selectedRowInComponent:weeksComponent]*30 +
-        [remindDatePickerView selectedRowInComponent:daysComponent];
-        NSDictionary *userInfo =  [NSDictionary dictionaryWithObjects:@[[NSNumber numberWithInteger:daysToPostpone],
-                                                                        [NSNumber numberWithBool:postponingContact],
-                                                                        [NSNumber numberWithBool:postponingContactFromButton]]
-                                                              forKeys:@[@"days",
-                                                                        @"postponingContact",
-                                                                        @"postponingContactFromButton"]];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:pickerViewDoneNotification
-                                                            object:self
-                                                          userInfo:userInfo];
+        if (displayedInMainView) {
+            NSInteger daysToPostpone = [remindDatePickerView selectedRowInComponent:weeksComponent]*30 +
+            [remindDatePickerView selectedRowInComponent:daysComponent];
+            NSDictionary *userInfo =  [NSDictionary dictionaryWithObjects:@[[NSNumber numberWithInteger:daysToPostpone],
+                                                                            [NSNumber numberWithBool:postponingContact],
+                                                                            [NSNumber numberWithBool:postponingContactFromButton]]
+                                                                  forKeys:@[@"days",
+                                                                            @"postponingContact",
+                                                                            @"postponingContactFromButton"]];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:pickerViewDoneNotification
+                                                                object:self
+                                                              userInfo:userInfo];
+        } else {
+            // In the settings menu, we have to set the reminder and dismiss within this view controller
+            NSInteger daysFromNow = [self convertSelectionToDays];
+            [(ContactMetadata *)[contact metadata] setRemindOnDate:[self calculateRemindDateFromSelection:daysFromNow]];
+            AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+            [delegate saveContext];
+            [[NSNotificationCenter defaultCenter] postNotificationName:pickerViewDoneFromSettingsNotification
+                                                                object:self];
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
     }];
 }
 
