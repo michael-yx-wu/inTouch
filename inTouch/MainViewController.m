@@ -652,12 +652,11 @@
         [self displaySyncingViewAndSyncContacts];
     }
     else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
-        UIAlertView *deniedMessage = [[UIAlertView alloc] initWithTitle:@"Access to Contacts"
-                                                                message:@"Go to 'Settings > Privacy > Contacts' to change."
-                                                               delegate:self
-                                                      cancelButtonTitle:@"Ok"
-                                                      otherButtonTitles:nil];
-        [deniedMessage show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Approve access to contacts"
+                                                                                 message:@"Go to 'Settings > Privacy > Contacts' to change"
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+        [self presentViewController:alertController animated:YES completion:nil];
     }
     
     CFRelease(addressBookRef);

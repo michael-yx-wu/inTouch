@@ -10,8 +10,7 @@
 #import "ContactViewController.h"
 #import "NotificationStrings.h"
 
-@interface ContactViewController () <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
-
+@interface ContactViewController ()
 @end
 
 // Titles and identifier strings specific to this view controller -- not global constants
@@ -75,7 +74,11 @@ static NSString *contactedGeneric = @"generic";
                                                     initWithTarget:self action:@selector(wasTapped:)];
     [contactCard addGestureRecognizer:tapGestureRecognizer];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissCall) name:CTCallStateDisconnected object:nil];
+    // Listen for call end notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(dismissCall)
+                                                 name:CTCallStateDisconnected
+                                               object:nil];
 }
 
 // Set mask only after view appears because it is screen width dependent
@@ -166,57 +169,73 @@ static NSString *contactedGeneric = @"generic";
 }
 
 // Handle message sent/cancelled events
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result {
-    switch (result) {
-        case MessageComposeResultCancelled: {
-            [DebugLogger log:@"Message compose cancelled" withPriority:contactViewControllerPriority];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            break;
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
+                 didFinishWithResult:(MessageComposeResult) result {
+    [self dismissViewControllerAnimated:YES completion:^{
+        switch (result) {
+            case MessageComposeResultCancelled: {
+                [DebugLogger log:@"Message compose cancelled" withPriority:contactViewControllerPriority];
+                break;
+            }
+            case MessageComposeResultFailed: {
+                [DebugLogger log:@"Message failed to send" withPriority:contactViewControllerPriority];
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                                         message:@"Message failed to send"
+                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                                    style:UIAlertActionStyleDefault
+                                                                  handler:nil]];
+                [self presentViewController:alertController animated:YES completion:nil];
+                break;
+            }
+            case MessageComposeResultSent: {
+                [DebugLogger log:@"Message sent!" withPriority:contactViewControllerPriority];
+                [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByMessage];
+                [self dismissViewController:YES];
+            }
+            default: {
+                break;
+            }
         }
-        case MessageComposeResultFailed: {
-            [DebugLogger log:@"Message failed to send" withPriority:contactViewControllerPriority];
-            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Messaged failed to send!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [warningAlert show];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            break;
-        }
-        case MessageComposeResultSent: {
-            [DebugLogger log:@"Message sent!" withPriority:contactViewControllerPriority];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            [self performSelector:@selector(dismissMessage) withObject:nil afterDelay:1];
-        }
-        default: {
-            break;
-        }
-    }
+    }];
 }
 
 // Handle email sent/cancelled events
-- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
-    switch (result) {
-        case MFMailComposeResultCancelled: {
-            [DebugLogger log:@"Email compose cancelled" withPriority:contactViewControllerPriority];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            break;
+- (void)mailComposeController:(MFMailComposeViewController *)controller
+          didFinishWithResult:(MFMailComposeResult)result
+                        error:(NSError *)error {
+    [self dismissViewControllerAnimated:YES completion:^{
+        switch (result) {
+            case MFMailComposeResultCancelled: {
+                [DebugLogger log:@"Email compose cancelled" withPriority:contactViewControllerPriority];
+                break;
+            }
+            case MFMailComposeResultFailed: {
+                [DebugLogger log:@"Email failed to save/send" withPriority:contactViewControllerPriority];
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                                         message:@"Mail failed to send or save"
+                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                                   style:UIAlertActionStyleDefault
+                                                                  handler:nil]];
+                [self presentViewController:alertController animated:YES completion:nil];
+                break;
+            }
+            case MFMailComposeResultSaved: {
+                [DebugLogger log:@"Email saved" withPriority:contactViewControllerPriority];
+                break;
+            }
+            case MFMailComposeResultSent: {
+                [DebugLogger log:@"Message sent" withPriority:contactViewControllerPriority];
+                [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByEmail];
+                [self dismissViewController:YES];
+                break;
+            }
+            default: {
+                break;
+            }
         }
-        case MFMailComposeResultFailed: {
-            [DebugLogger log:@"Email failed to save/send" withPriority:contactViewControllerPriority];
-            break;
-        }
-        case MFMailComposeResultSaved: {
-            [DebugLogger log:@"Email saved" withPriority:contactViewControllerPriority];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            break;
-        }
-        case MFMailComposeResultSent: {
-            [DebugLogger log:@"Message sent" withPriority:contactViewControllerPriority];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            [self performSelector:@selector(dismissEmail) withObject:nil afterDelay:1];
-            break;
-        }
-        default:
-            break;
-    }
+    }];
 }
 
 // Handle phone number/email selection from UIActionSheet
@@ -259,51 +278,10 @@ static NSString *contactedGeneric = @"generic";
     }
 }
 
-#pragma mark - Coredata updating
-
-// Update ContactMetadata before dismissing
-- (void)incrementNumberTimesContacted:(NSString *)medium {
-    ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
-    
-    // Get timesContacted info
-    NSNumber *numTimesContacted, *numTimesCalled, *numTimesMessaged, *numTimesEmailed, *timesContacted;
-    numTimesContacted = [metadata numTimesContacted];
-    numTimesCalled = [metadata numTimesCalled];
-    numTimesMessaged = [metadata numTimesMessaged];
-    numTimesEmailed = [metadata numTimesEmailed];
-    
-    // Increment times contacted
-    timesContacted = [NSNumber numberWithInt:[numTimesContacted intValue]+1];
-    [metadata setNumTimesContacted:timesContacted];
-    [DebugLogger log:[NSString stringWithFormat:@"Times contacted: %d", [timesContacted intValue]] withPriority:contactViewControllerPriority];
-    
-    // Increment times contacted based on medium
-    if ([medium isEqualToString:contactedCall]) {
-        timesContacted = [NSNumber numberWithInt:[numTimesCalled intValue]+1];
-        [metadata setNumTimesCalled:timesContacted];
-        [DebugLogger log:[NSString stringWithFormat:@"Times called: %d", [timesContacted intValue]] withPriority:contactViewControllerPriority];
-    } else if ([medium isEqualToString:contactedMessage]) {
-        timesContacted = [NSNumber numberWithInt:[numTimesMessaged intValue]+1];
-        [metadata setNumTimesMessaged:timesContacted];
-        [DebugLogger log:[NSString stringWithFormat:@"Times messaged: %d", [timesContacted intValue]] withPriority:contactViewControllerPriority];
-    } else if ([medium isEqualToString:contactedEmail]) {
-        timesContacted = [NSNumber numberWithInt:[numTimesEmailed intValue]+1];
-        [metadata setNumTimesEmailed:timesContacted];
-        [DebugLogger log:[NSString stringWithFormat:@"Times emailed: %d", [timesContacted intValue]] withPriority:contactViewControllerPriority];
-    } else if (![medium isEqualToString:contactedGeneric]){
-        [DebugLogger log:@"Error updating contact method frequency... please check spelling!" withPriority:contactViewControllerPriority];
-    }
-
-    // Set last contact date
-    NSDate *today = [NSDate date];
-    [metadata setLastContactedDate:today];
-}
-
 #pragma mark - Dismiss methods
 
 - (void)wasTapped:(UITapGestureRecognizer *)tapGestureRecognizer {
     // Tapped picture, dismiss controller
-    NSLog(@"tapped");
     [self dismissCancel:nil];
 }
 
@@ -314,26 +292,14 @@ static NSString *contactedGeneric = @"generic";
 
 - (IBAction)dismissContacted:(id)sender {
     // Generic contacted method
-    [self incrementNumberTimesContacted:contactedGeneric];
+    [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedManually];
     [self dismissViewController:YES];
 }
 
 - (void)dismissCall {
     // Record call click before dismissal
-    [self incrementNumberTimesContacted:contactedCall];
+    [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByCall];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CTCallStateDisconnected object:nil];
-    [self dismissViewController:YES];
-}
-
-- (void)dismissMessage {
-    // Record message click before dismissal
-    [self incrementNumberTimesContacted:contactedMessage];
-    [self dismissViewController:YES];
-}
-
-- (void)dismissEmail {
-    // Record email click before dismissal
-    [self incrementNumberTimesContacted:contactedEmail];
     [self dismissViewController:YES];
 }
 
@@ -345,7 +311,6 @@ static NSString *contactedGeneric = @"generic";
         }
     }];
 }
-
 
 #pragma mark - Core Data Accessor Methods
 

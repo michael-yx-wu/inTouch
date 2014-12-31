@@ -163,29 +163,26 @@
 // Handle message controller being dismissed
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller
                  didFinishWithResult:(MessageComposeResult)result {
-    switch (result) {
-        case MessageComposeResultCancelled: {
-            [DebugLogger log:@"Message cancelled" withPriority:contactInformationTableViewControllerPriority];
-            break;
+    [self dismissViewControllerAnimated:YES completion:^{
+        switch (result) {
+            case MessageComposeResultCancelled: {
+                [DebugLogger log:@"Message cancelled" withPriority:contactInformationTableViewControllerPriority];
+                break;
+            }
+            case MessageComposeResultFailed: {
+                [DebugLogger log:@"Message failed" withPriority:contactInformationTableViewControllerPriority];
+                break;
+            }
+            case MessageComposeResultSent: {
+                [DebugLogger log:@"Message sent" withPriority:contactInformationTableViewControllerPriority];
+                [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByMessage];
+            }
+            default: {
+                break;
+            }
         }
-            
-        case MessageComposeResultFailed: {
-            [DebugLogger log:@"Message failed" withPriority:contactInformationTableViewControllerPriority];
-            break;
-        }
-            
-        case MessageComposeResultSent: {
-            [DebugLogger log:@"Message sent" withPriority:contactInformationTableViewControllerPriority];
-            [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByMessage];
-        }
-            
-        default: {
-            break;
-        }
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
+    }];
 }
-
 
 - (void)displayMailViewController:(NSInteger)index {
     MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
@@ -199,72 +196,38 @@
 - (void)mailComposeController:(MFMailComposeViewController *)controller
           didFinishWithResult:(MFMailComposeResult)result
                         error:(NSError *)error {
-    switch (result) {
-        case MFMailComposeResultCancelled: {
-            [DebugLogger log:@"Mail cancelled" withPriority:contactInformationTableViewControllerPriority];
-            break;
+    [self dismissViewControllerAnimated:YES completion:^{
+        switch (result) {
+            case MFMailComposeResultCancelled: {
+                [DebugLogger log:@"Mail cancelled" withPriority:contactInformationTableViewControllerPriority];
+                break;
+            }
+            case MFMailComposeResultFailed: {
+                [DebugLogger log:@"Mail compose failed" withPriority:contactInformationTableViewControllerPriority];
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                                         message:@"Message compose failed"
+                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                                    style:UIAlertActionStyleDefault
+                                                                  handler:nil]];
+                [self presentViewController:alertController animated:YES completion:nil];
+                break;
+            }
+            case MFMailComposeResultSaved: {
+                [DebugLogger log:@"Mail saved" withPriority:contactInformationTableViewControllerPriority];
+                break;
+            }
+            case MFMailComposeResultSent: {
+                [DebugLogger log:@"Mail sent" withPriority:contactInformationTableViewControllerPriority];
+                [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByEmail];
+                break;
+            }
+            default: {
+                break;
+            }
         }
-        
-        case MFMailComposeResultFailed: {
-            [DebugLogger log:@"Mail compose failed" withPriority:contactInformationTableViewControllerPriority];
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error"
-                                                                                     message:@"Message compose failed"
-                                                                              preferredStyle:UIAlertControllerStyleAlert];
-            [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
-                                                                style:UIAlertActionStyleDefault
-                                                              handler:nil]];
-            [self presentViewController:alertController animated:YES completion:nil];
-            break;
-        }
-            
-        case MFMailComposeResultSaved: {
-            [DebugLogger log:@"Mail saved" withPriority:contactInformationTableViewControllerPriority];
-            break;
-        }
-        
-        case MFMailComposeResultSent: {
-            [DebugLogger log:@"Mail sent" withPriority:contactInformationTableViewControllerPriority];
-            [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByEmail];
-            break;
-        }
-            
-        default: {
-            break;
-        }
-    }
-    [self dismissViewControllerAnimated:YES completion:nil];
+    }];
 }
-
-
-
-
-//}
-//
-//
-//- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result {
-//    switch (result) {
-//        case MessageComposeResultCancelled: {
-//            [DebugLogger log:@"Message compose cancelled" withPriority:contactViewControllerPriority];
-//            [self dismissViewControllerAnimated:YES completion:nil];
-//            break;
-//        }
-//        case MessageComposeResultFailed: {
-//            [DebugLogger log:@"Message failed to send" withPriority:contactViewControllerPriority];
-//            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Messaged failed to send!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//            [warningAlert show];
-//            [self dismissViewControllerAnimated:YES completion:nil];
-//            break;
-//        }
-//        case MessageComposeResultSent: {
-//            [DebugLogger log:@"Message sent!" withPriority:contactViewControllerPriority];
-//            [self dismissViewControllerAnimated:YES completion:nil];
-//            [self performSelector:@selector(dismissMessage) withObject:nil afterDelay:1];
-//        }
-//        default: {
-//            break;
-//        }
-//    }
-//}
 
 #pragma mark - Tableview delegate methods
 

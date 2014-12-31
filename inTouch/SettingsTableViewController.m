@@ -57,11 +57,11 @@
                 [mailViewController setMailComposeDelegate:self];
                 [self presentViewController:mailViewController animated:YES completion:nil];
             } else {
-                UIAlertView *cannotSendMailAlert = [[UIAlertView alloc] initWithTitle:@"Cannot Send Feedback"
-                                                                              message:@"An email account has not been setup on this device."
-                                                                             delegate:self cancelButtonTitle:@"Okay"
-                                                                    otherButtonTitles:nil];
-                [cannotSendMailAlert show];
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Cannot send feedback"
+                                                                                         message:@"This device cannot send mail"
+                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+                [self presentViewController:alertController animated:YES completion:nil];
             }
         }
     }
