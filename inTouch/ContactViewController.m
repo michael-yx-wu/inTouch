@@ -100,72 +100,81 @@ static NSString *contactedGeneric = @"generic";
 
 #pragma mark - Button Actions
 
-// Phone or message button pressed. Show UIActionSheet with phone numbers for contact
+// Phone or message button pressed. Show phone numbers for contact
 - (IBAction)showNumbers:(id)sender {
     [DebugLogger log:@"Call button pressed" withPriority:contactViewControllerPriority];
 
-    // Set action sheet title based on sender
-    UIActionSheet *selectNumber;
+    // Alert controller title depends on which button was presses
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                             message:nil
+                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
     if (sender == callButton) {
-        selectNumber = [[UIActionSheet alloc] initWithTitle:phoneActionSheetTitle
-                                                   delegate:self
-                                          cancelButtonTitle:nil
-                                     destructiveButtonTitle:nil
-                                          otherButtonTitles:nil];
-    } else if (sender == messageButton) {
-        selectNumber = [[UIActionSheet alloc] initWithTitle:messageActionSheetTitle
-                                                   delegate:self
-                                          cancelButtonTitle:nil
-                                     destructiveButtonTitle:nil
-                                          otherButtonTitles:nil];
+        [alertController setTitle:phoneActionSheetTitle];
+    } else {
+        [alertController setTitle:messageActionSheetTitle];
     }
-    
-    // Add all numbers to action sheet
+
+    // Add all numbers
     NSArray *sortedLabels = [[allPhoneNumbers allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
     NSUInteger i;
     for (i = 0; i < [sortedLabels count]; i++) {
         NSString *numberWithLabel = [NSString stringWithFormat:@"%@: %@",
                                      [sortedLabels objectAtIndex:i],
                                      [allPhoneNumbers valueForKey:[sortedLabels objectAtIndex:i]]];
-        [selectNumber addButtonWithTitle:numberWithLabel];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:numberWithLabel
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction *action) {
+                                                           NSRange rangeOfColonSpace = [numberWithLabel rangeOfString:@": "];
+                                                           NSString *number = [numberWithLabel substringFromIndex:rangeOfColonSpace.location + rangeOfColonSpace.length];
+                                                           if (sender == callButton) {
+                                                               number = [number stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                                                               number = [NSString stringWithFormat:@"telprompt:%@", number];
+                                                               NSURL *url = [NSURL URLWithString:number];
+                                                               [[UIApplication sharedApplication] openURL:url];
+                                                           } else {
+                                                               MFMessageComposeViewController *messageViewController = [[MFMessageComposeViewController alloc] init];
+                                                               [messageViewController setRecipients:@[number]];
+                                                               [messageViewController setMessageComposeDelegate:self];
+                                                               [self presentViewController:messageViewController animated:YES completion:nil];
+                                                           }
+                                                       }];
+        [alertController addAction:action];
     }
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
     
-    // Add the cancel button at the bottom
-    [selectNumber addButtonWithTitle:@"Cancel"];
-    [selectNumber setCancelButtonIndex:i];
-    
-    // Show action sheet
-    [selectNumber showInView:[self view]];
+    // Present
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
-// Email button pressed. Show UIActionSheet with emails for contact
+// Email button pressed. Show emails for contact
 - (IBAction)showEmails:(id)sender {
     [DebugLogger log:@"Email button pressed" withPriority:contactViewControllerPriority];
     
-    // Set action sheet title based on sender
-    UIActionSheet *selectEmail;
-    selectEmail = [[UIActionSheet alloc] initWithTitle:emailActionSheetTitle
-                                               delegate:self
-                                      cancelButtonTitle:nil
-                                 destructiveButtonTitle:nil
-                                      otherButtonTitles:nil];
-    
-    // Add all numbers to action sheet
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:emailActionSheetTitle
+                                                                             message:nil
+                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
     NSArray *sortedLabels = [[allEmailAddresses allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-    NSUInteger i;
-    for (i = 0; i < [sortedLabels count]; i++) {
+    for (NSInteger i = 0; i < [sortedLabels count]; i++) {
         NSString *emailWithLabel = [NSString stringWithFormat:@"%@: %@",
-                                     [sortedLabels objectAtIndex:i],
-                                     [allEmailAddresses valueForKey:[sortedLabels objectAtIndex:i]]];
-        [selectEmail addButtonWithTitle:emailWithLabel];
+                                    [sortedLabels objectAtIndex:i],
+                                    [allEmailAddresses valueForKey:[sortedLabels objectAtIndex:i]]];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:emailWithLabel
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction *action) {
+                                                           NSRange rangeOfColonSpace = [emailWithLabel rangeOfString:@": "];
+                                                           NSString *email = [emailWithLabel substringFromIndex:rangeOfColonSpace.location + rangeOfColonSpace.length];
+                                                           NSArray *recipient = @[email];
+                                                           MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
+                                                           [mailViewController setToRecipients:recipient];
+                                                           [mailViewController setMailComposeDelegate:self];
+                                                           [self presentViewController:mailViewController animated:YES completion:nil];
+                                                       }];
+        [alertController addAction:action];
     }
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
     
-    // Add the cancel button at the bottom
-    [selectEmail addButtonWithTitle:@"Cancel"];
-    [selectEmail setCancelButtonIndex:i];
-    
-    // Show action sheet
-    [selectEmail showInView:[self view]];
+    // Present
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 // Handle message sent/cancelled events
@@ -236,46 +245,6 @@ static NSString *contactedGeneric = @"generic";
             }
         }
     }];
-}
-
-// Handle phone number/email selection from UIActionSheet
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    // Cancel
-    if (buttonIndex == [actionSheet cancelButtonIndex]) {
-        return;
-    }
-    
-    NSString *numberOrEmail = [actionSheet buttonTitleAtIndex:buttonIndex];
-    NSRange rangeOfColonSpace = [numberOrEmail rangeOfString:@": "];
-    numberOrEmail = [numberOrEmail substringFromIndex:rangeOfColonSpace.location + rangeOfColonSpace.length];
-    
-    // Phone Select
-    if ([[actionSheet title] isEqualToString:phoneActionSheetTitle]) {
-        // Create the phone URL before passing it off
-        numberOrEmail = [[numberOrEmail componentsSeparatedByCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"0123456789-+()"] invertedSet]] componentsJoinedByString:@""];
-        numberOrEmail = [numberOrEmail stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        NSString *phoneURLString = [NSString stringWithFormat:@"telprompt:%@", numberOrEmail];
-        NSURL *phoneURL = [NSURL URLWithString:phoneURLString];
-        [[UIApplication sharedApplication] openURL:phoneURL];
-    }
-    
-    // Message Select
-    else if ([[actionSheet title] isEqualToString:messageActionSheetTitle]) {
-        NSArray *recipient = @[numberOrEmail];
-        MFMessageComposeViewController *messageViewController = [[MFMessageComposeViewController alloc] init];
-        [messageViewController setRecipients:recipient];
-        [messageViewController setMessageComposeDelegate:self];
-        [self presentViewController:messageViewController animated:YES completion:nil];
-    }
-    
-    // Email select
-    else if ([[actionSheet title] isEqualToString:emailActionSheetTitle]) {
-        NSArray *recipient = @[numberOrEmail];
-        MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
-        [mailViewController setToRecipients:recipient];
-        [mailViewController setMailComposeDelegate:self];
-        [self presentViewController:mailViewController animated:YES completion:nil];
-    }
 }
 
 #pragma mark - Dismiss methods

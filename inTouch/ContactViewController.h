@@ -4,7 +4,7 @@
 
 #import "Contact.h"
 
-@interface ContactViewController : UIViewController <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UIActionSheetDelegate>
+@interface ContactViewController : UIViewController <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
 // Display
 @property (weak, nonatomic) IBOutlet UIView *contactCard;
