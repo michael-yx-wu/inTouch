@@ -5,6 +5,7 @@
 #import "ContactManager.h"
 #import "Contact.h"
 #import "ContactMetadata.h"
+#import "FacebookManager.h"
 #import "NotificationStrings.h"
 
 @implementation ContactManager
@@ -18,28 +19,6 @@ NSInteger kFacebookRequestFinish = 0;
     ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
     NSArray *allContacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(addressBookRef);
     
-    // Populate fbFriends with facebook friend names and url - this is so ugly right now (indentation is killing me)
-    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(500),picture.height(500)"                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-         NSMutableDictionary *fbFriends = [[NSMutableDictionary alloc] init];
-        if (error) {
-            [DebugLogger log:[NSString stringWithFormat:@"request error: %@", [error userInfo]] withPriority:contactManagerPriority];         
-        }
-        
-        // Process facebook json object
-        NSArray *taggableFriends = [result objectForKey:@"data"];
-        for (NSDictionary *friend in taggableFriends) {
-            NSString *name = [friend valueForKey:@"name"];
-            NSArray *picture = [friend valueForKey:@"picture"];
-            NSArray *pictureData = [picture valueForKey:@"data"];
-            NSString *url = [NSString stringWithString:[pictureData valueForKey:@"url"]];
-            [fbFriends setValue:url forKey:name];
-        }
-        
-        // Post notification for mainViewController
-        NSDictionary *notificationData = @{@"data": fbFriends};
-        [[NSNotificationCenter defaultCenter] postNotificationName:gotFacebookFriendsNotification object:self userInfo:notificationData];
-    }];
-     
     // Loop through contacts
     for (int i = 0; i < [allContacts count]; i++) {
         ABRecordRef currentContact = (__bridge ABRecordRef)[allContacts objectAtIndex:i];
@@ -107,6 +86,9 @@ NSInteger kFacebookRequestFinish = 0;
         [contact setAbrecordid:abrecordid];
     }
     [self save];
+    
+    // Attempt to refresh facebook friend list
+    [FacebookManager getFriendsList];
     
     // Clean up
     CFRelease(addressBookRef);
