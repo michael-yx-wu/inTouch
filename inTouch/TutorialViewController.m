@@ -4,19 +4,23 @@
 
 @implementation TutorialViewController
 
-@synthesize pageViewController;
 @synthesize viewControllers;
+@synthesize pageControl;
+@synthesize pageViewController;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [pageControl setUserInteractionEnabled:NO];
     viewControllers = [[NSMutableArray alloc] initWithCapacity:5];
     pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
                                                          navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
                                                                        options:nil];
     [pageViewController setDataSource:self];
+    [pageViewController setDelegate:self];
 }
 
 - (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
     CGRect frame = [[self view] frame];
     [[pageViewController view] setFrame:frame];
     
@@ -35,7 +39,9 @@
     [self addChildViewController:pageViewController];
     [[self view] addSubview:[pageViewController view]];
     [pageViewController didMoveToParentViewController:self];
+    [[self view] bringSubviewToFront:pageControl];
 }
+
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
       viewControllerBeforeViewController:(UIViewController *)viewController {
@@ -57,12 +63,12 @@
     }
 }
 
-- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
-    return NUM_TUTORIAL_PAGES;
-}
-
-- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
-    return 0;
+- (void)pageViewController:(UIPageViewController *)somePageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
+    if (completed) {
+        NSUInteger index = [viewControllers indexOfObject:[[somePageViewController viewControllers] objectAtIndex:0]];
+        [pageControl setCurrentPage:index];
+        [pageControl setNeedsDisplay];
+    }
 }
 
 @end

@@ -765,13 +765,62 @@
                         <viewControllerLayoutGuide type="bottom" id="ZAG-rl-KKg"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="QYE-Ey-CWN">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="5" translatesAutoresizingMaskIntoConstraints="NO" id="hFc-Md-2cY">
+                                <rect key="frame" x="-19" y="-18" width="39" height="37"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="37" id="lVZ-Vo-bnc"/>
+                                    <constraint firstAttribute="width" constant="107" id="wkV-Xh-zma"/>
+                                </constraints>
+                                <color key="pageIndicatorTintColor" white="0.33333333333333331" alpha="0.5" colorSpace="calibratedWhite"/>
+                                <color key="currentPageIndicatorTintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="lVZ-Vo-bnc"/>
+                                        <exclude reference="wkV-Xh-zma"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="lVZ-Vo-bnc"/>
+                                        <include reference="wkV-Xh-zma"/>
+                                    </mask>
+                                </variation>
+                            </pageControl>
+                        </subviews>
                         <color key="backgroundColor" red="0.12941176470588234" green="0.63137254901960782" blue="0.81568627450980391" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="ZAG-rl-KKg" firstAttribute="top" secondItem="hFc-Md-2cY" secondAttribute="bottom" constant="8" id="C3d-bX-iwU"/>
+                            <constraint firstAttribute="centerX" secondItem="hFc-Md-2cY" secondAttribute="centerX" id="KJg-U5-T6i"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="hFc-Md-2cY"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="KJg-U5-T6i"/>
+                                <exclude reference="C3d-bX-iwU"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="hFc-Md-2cY"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="KJg-U5-T6i"/>
+                                <include reference="C3d-bX-iwU"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <connections>
+                        <outlet property="pageControl" destination="hFc-Md-2cY" id="L7w-EL-nTv"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pes-J6-iWb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="0.0" y="348.75"/>
+            <point key="canvasLocation" x="-6" y="341.25"/>
         </scene>
         <!--Picker View Controller-->
         <scene sceneID="uZn-wT-bQd">
