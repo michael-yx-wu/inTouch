@@ -11,6 +11,7 @@
 #import "MainViewController.h"
 #import "ContactViewController.h"
 #import "PickerViewController.h"
+#import "TutorialViewController.h"
 
 #define RESOLUTION_THRESHOLD 0
 
@@ -132,13 +133,17 @@
     GlobalData *globalData = [results objectAtIndex:0];
     
     // Automatically sync contact info on first run only
-    NSDate *today = [NSDate date];
     bool firstRun = [[globalData firstRun] boolValue];
     if (firstRun) {
-        [DebugLogger log:@"First run today - syncing contacts" withPriority:mainViewControllerPriority];
-        [self requestContactsAccessAndSync];
-        [globalData setLastUpdatedInfo:today];
-        [globalData setFirstRun:[NSNumber numberWithBool:NO]];
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        TutorialViewController *tutorialController = [storyboard instantiateViewControllerWithIdentifier:@"tutorial"];
+        [tutorialController setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+        [self presentViewController:tutorialController animated:YES completion:nil];
+        
+//        [DebugLogger log:@"First run - syncing contacts" withPriority:mainViewControllerPriority];
+//        [self requestContactsAccessAndSync];
+//        [globalData setLastUpdatedInfo:[NSDate date]];
+//        [globalData setFirstRun:[NSNumber numberWithBool:NO]];
     }
     
     // Attempt to get list of facebook friends
