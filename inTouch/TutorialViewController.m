@@ -5,8 +5,8 @@
 @implementation TutorialViewController
 
 @synthesize viewControllers;
-@synthesize pageControl;
-@synthesize pageViewController;
+@synthesize doneButton;
+@synthesize pageControl, pageViewController;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -40,6 +40,7 @@
     [[self view] addSubview:[pageViewController view]];
     [pageViewController didMoveToParentViewController:self];
     [[self view] bringSubviewToFront:pageControl];
+    [[self view] bringSubviewToFront:doneButton];
 }
 
 
@@ -63,12 +64,26 @@
     }
 }
 
-- (void)pageViewController:(UIPageViewController *)somePageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
+- (void)pageViewController:(UIPageViewController *)somePageViewController
+        didFinishAnimating:(BOOL)finished
+   previousViewControllers:(NSArray *)previousViewControllers
+       transitionCompleted:(BOOL)completed {
     if (completed) {
         NSUInteger index = [viewControllers indexOfObject:[[somePageViewController viewControllers] objectAtIndex:0]];
         [pageControl setCurrentPage:index];
-        [pageControl setNeedsDisplay];
+        if (index == NUM_TUTORIAL_PAGES - 1) {
+            [UIView animateWithDuration:0.3
+                                  delay:0.0
+                                options:UIViewAnimationOptionCurveEaseIn
+                             animations:^{
+                                 [doneButton setAlpha:1];
+                             } completion:nil];
+        }
     }
+}
+
+- (IBAction)doneButtonClicked:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
