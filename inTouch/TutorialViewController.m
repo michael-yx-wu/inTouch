@@ -7,6 +7,7 @@
 @synthesize viewControllers;
 @synthesize doneButton;
 @synthesize pageControl, pageViewController;
+@synthesize mainViewController;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -82,8 +83,11 @@
     }
 }
 
+// Sync contacts when the tutorial is dismissed
 - (IBAction)doneButtonClicked:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [mainViewController requestContactsAccessAndSync];
+    }];
 }
 
 @end

@@ -135,18 +135,16 @@
     // Automatically sync contact info on first run only
     bool firstRun = [[globalData firstRun] boolValue];
     if (firstRun) {
+        // TutorialViewController will sync contacts on dismissal 
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         TutorialViewController *tutorialController = [storyboard instantiateViewControllerWithIdentifier:@"tutorial"];
         [tutorialController setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+        [tutorialController setMainViewController:self];
         [self presentViewController:tutorialController animated:YES completion:nil];
         
-//        [DebugLogger log:@"First run - syncing contacts" withPriority:mainViewControllerPriority];
-//        [self requestContactsAccessAndSync];
-//        [globalData setLastUpdatedInfo:[NSDate date]];
-//        [globalData setFirstRun:[NSNumber numberWithBool:NO]];
+        [globalData setLastUpdatedInfo:[NSDate date]];
+        [globalData setFirstRun:[NSNumber numberWithBool:NO]];
     }
-    
-    // Attempt to get list of facebook friends
 }
 
 - (void)didReceiveMemoryWarning {
