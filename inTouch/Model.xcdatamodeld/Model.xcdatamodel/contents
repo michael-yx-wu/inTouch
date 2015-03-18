@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14B25" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6751" systemVersion="14C1510" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Contact" representedClassName="Contact" syncable="YES">
         <attribute name="abrecordid" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -27,6 +27,10 @@
         <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="metadata" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <entity name="GlobalData" representedClassName="GlobalData" syncable="YES">
+        <attribute name="firstContactTap" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="firstLeftSwipe" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="firstQueueSwitch" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="firstRightSwipe" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="firstRun" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="lastUpdatedInfo" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="numContacts" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -58,7 +62,7 @@
     <elements>
         <element name="Contact" positionX="117" positionY="-115" width="128" height="148"/>
         <element name="ContactMetadata" positionX="-45" positionY="-117" width="128" height="268"/>
-        <element name="GlobalData" positionX="-198" positionY="192" width="128" height="120"/>
+        <element name="GlobalData" positionX="-198" positionY="192" width="128" height="178"/>
         <element name="Postpones" positionX="-198" positionY="90" width="128" height="75"/>
         <element name="Session" positionX="-198" positionY="-117" width="128" height="178"/>
     </elements>

@@ -434,7 +434,6 @@
     if (!currentContact) {
         if (currentQueue == contactAppearedQueue) {
             NSLog(@"No seen contacts");
-            //        [[self contactName] setText:@"No Urgent Contacts"];
             [contactName setText:@"No Urgent Contacts"];
         } else {
             NSLog(@"No new contacts");

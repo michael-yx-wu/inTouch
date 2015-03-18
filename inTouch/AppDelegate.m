@@ -49,6 +49,10 @@
     if ([results count] == 0) {
         GlobalData *globalData = [NSEntityDescription insertNewObjectForEntityForName:@"GlobalData" inManagedObjectContext:moc];
         [globalData setLastUpdatedInfo:nil];
+        [globalData setFirstContactTap:[NSNumber numberWithBool:YES]];
+        [globalData setFirstLeftSwipe:[NSNumber numberWithBool:YES]];
+        [globalData setFirstQueueSwitch:[NSNumber numberWithBool:YES]];
+        [globalData setFirstRightSwipe:[NSNumber numberWithBool:YES]];
         [globalData setFirstRun:[NSNumber numberWithBool:YES]];
         [globalData setNumContacts:0];
         [globalData setNumLogins:0];
