@@ -6,7 +6,7 @@
 #define contactViewControllerPriority 3
 #define helpViewControllerPriority 1
 #define settingsTableViewControllerPriority 1
-#define editContactsTableViewControllerPriority 2
+#define allContactsTableViewControllerPriority 2
 #define contactInformationTableViewControllerPriority 2
 #define contactCardViewPriority 3
 #define facebookManagerPriority 3

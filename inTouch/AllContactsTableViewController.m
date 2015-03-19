@@ -16,14 +16,6 @@
 @synthesize contacts;
 @synthesize alphabetIndices;
 
-- (id)initWithStyle:(UITableViewStyle)style {
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -64,11 +56,6 @@
     [super viewWillAppear:YES];
     [[self tableView] reloadData];
     alphabetIndices = [self createAlphabetArray];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (NSArray *)createAlphabetArray {
@@ -119,18 +106,25 @@
     [[cell textLabel] setText:name];
     
     // Get interest and set accessory appropriately
-    if ([[contactMetadata interest] intValue]) {
-        [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+    UIButton *interestButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    if ([[contactMetadata interest] boolValue]) {
+        
+        [interestButton setImage:[UIImage imageNamed:@"interest_icon"] forState:UIControlStateNormal];
     } else {
-        [cell setAccessoryType:UITableViewCellAccessoryNone];
+        [interestButton setImage:[UIImage imageWithData:nil] forState:UIControlStateNormal];
     }
-    
+    [interestButton addTarget:self
+                       action:@selector(interestButtonTapped:withEvent:)
+             forControlEvents:UIControlEventTouchUpInside];
+    [cell setAccessoryView:interestButton];
     return cell;
 }
 
+#pragma mark - Cell taps
+
 // Show detailed contact information
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//    // Get contact/metadata by looking up associated abrecordid
+    // Get contact/metadata by looking up associated abrecordid
     NSInteger row  = [indexPath row];
     NSString *contactID = [NSString stringWithFormat:@"%@", [contactIDs objectAtIndex:row]];
     selectedContact = [contacts valueForKey:contactID];
@@ -140,20 +134,23 @@
     // Save change to database and refresh table
     [self save];
     [tableView reloadData];
-    
 }
 
-// Toggle interest on accessory select -- this will only work after we throw a transparent uiview on top of the
-// tableview to intercept touch events. This is messy, but the only way we can have this custom functionality 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    // Get contact/metadata by looking up associated abrecordid
+- (void)interestButtonTapped:(id)sender withEvent:(UIEvent *)event {
+    UIButton *interestButton = sender;
+    NSIndexPath *indexPath = [[self tableView] indexPathForRowAtPoint:[[[event touchesForView:interestButton] anyObject] locationInView:[self tableView]]];
+    if (indexPath == nil) {
+        [DebugLogger log:@"nil index path" withPriority:allContactsTableViewControllerPriority];
+        return;
+    }
+    
     NSInteger row  = [indexPath row];
     NSString *contactID = [NSString stringWithFormat:@"%@", [contactIDs objectAtIndex:row]];
     Contact *contact = [contacts valueForKey:contactID];
     ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
     
     // Toggle contact interest
-    if ([[contactMetadata interest] intValue]) {
+    if ([[contactMetadata interest] boolValue]) {
         NSDate *today = [NSDate date];
         [contactMetadata setInterest:[NSNumber numberWithBool:NO]];
         [contactMetadata setNoInterestDate:today];
@@ -164,14 +161,20 @@
     
     // Save change to database and refresh table
     [self save];
-    [tableView reloadData];
+    [[self tableView] reloadData];
+    
+    [DebugLogger log:[NSString stringWithFormat:@"%@ %@ %@",
+                      [[contactMetadata interest] boolValue] ? @"Interested in" : @"Not interested in",
+                      [contact nameFirst],
+                      [contact nameLast]]
+        withPriority:allContactsTableViewControllerPriority];
 }
 
 # pragma mark - Navigation
 
 // Passing selectedContact to ContactViewController before segueing
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:editContactsTableViewControllerPriority];
+    [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:allContactsTableViewControllerPriority];
     
     // Pass contact information to the new view controller.
     if ([[segue identifier] isEqualToString:@"contactInformation"]) {
@@ -179,44 +182,6 @@
         [destViewController setContact:selectedContact];
     }
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Core Data Methods
 

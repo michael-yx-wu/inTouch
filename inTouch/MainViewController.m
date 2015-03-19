@@ -11,10 +11,14 @@
 #import "MainViewController.h"
 #import "ContactViewController.h"
 #import "PickerViewController.h"
+#import "TutorialViewController.h"
+
+#define RESOLUTION_THRESHOLD 0
 
 @interface MainViewController () {
     NSMutableArray *photoQueue;
     NSMutableArray *currentQueue;
+    NSMutableDictionary *fbDownloadStatus;
     Contact *currentContact;
 }
 @end
@@ -70,6 +74,8 @@
     [self getNextContactFromQueue];
     [self updateUI];
     
+    // Track current facebook downloads
+    fbDownloadStatus = [[NSMutableDictionary alloc] init];
     
     // Listen for notification to replace facebook friend list with new list
     // Notification from ContactManager
@@ -127,18 +133,18 @@
     GlobalData *globalData = [results objectAtIndex:0];
     
     // Automatically sync contact info on first run only
-    NSDate *today = [NSDate date];
     bool firstRun = [[globalData firstRun] boolValue];
     if (firstRun) {
-        [DebugLogger log:@"First run today - syncing contacts" withPriority:mainViewControllerPriority];
-        [self requestContactsAccessAndSync];
-        [globalData setLastUpdatedInfo:today];
+        // TutorialViewController will sync contacts on dismissal 
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        TutorialViewController *tutorialController = [storyboard instantiateViewControllerWithIdentifier:@"tutorial"];
+        [tutorialController setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+        [tutorialController setMainViewController:self];
+        [self presentViewController:tutorialController animated:YES completion:nil];
+        
+        [globalData setLastUpdatedInfo:[NSDate date]];
         [globalData setFirstRun:[NSNumber numberWithBool:NO]];
     }
-    
-    // Attempt to get list of facebook friends
-//    NSLog(@"Fetching friends");
-//    [FacebookManager getFriendsList];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -210,22 +216,14 @@
     return results;
 }
 
-// Merge NSManagedObjectContext changes across two different threads
-- (void)mergeChanges:(NSNotification *)notification {
-    NSLog(@"got merge notification");
-    [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
-}
-
 // Show the PickerViewController. Hide the cancel button
 - (void)contactWasContacted:(NSNotification *)notification {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
     [pvc setShouldHideCancelButton:YES];
     [pvc setPostponingContact:NO];
-    [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
-                                 unsignedIntegerValue]];
+    [pvc setDisplayedInMainView:YES];
     [pvc setContact:currentContact];
-    [pvc setContactPhoto:[contactPhotoFront image]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -237,10 +235,8 @@
     [pvc setShouldHideCancelButton:NO];
     [pvc setPostponingContact:YES];
     [pvc setPostponingContactFromButton:NO];
-    [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
-                                 unsignedIntegerValue]];
+    [pvc setDisplayedInMainView:YES];
     [pvc setContact:currentContact];
-    [pvc setContactPhoto:[contactPhotoFront image]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -259,7 +255,7 @@
         
         // We finished contacting a contact
         if (!postponingContact) {
-            [contactCard slideContactCardUp:[daysToPostpone unsignedIntegerValue]];
+            [contactCard slideContactCardUp:[daysToPostpone integerValue]];
         }
         // We are postponing from a button
         else if (postponingContactFromButton) {
@@ -286,12 +282,15 @@
     }];
 }
 
-// 1. Remove the contact from the current queue
+// 1. Remove the contact from the current queue and the download status dictionary
 // 2. Update the current queue
 // 3. Repoint the current contact
 // 4. Redraw photos
 - (void)dismissContact {
     [currentQueue removeObjectAtIndex:0];
+    @synchronized(fbDownloadStatus) {
+        [fbDownloadStatus removeObjectForKey:[currentContact objectID]];
+    }
     [self getNextContactFromQueue];
     [self updateQueue];
     [self updateUI];
@@ -303,7 +302,13 @@
 - (void)dismissContactAndSetReminder:(NSUInteger)days {
     [self printQueue];
     NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
-    NSDate *today = [NSDate date];
+    NSDateComponents *todaysComponents = [calendar components:(NSCalendarUnitYear|
+                                                               NSCalendarUnitMonth|
+                                                               NSCalendarUnitDay|
+                                                               NSCalendarUnitTimeZone|
+                                                               NSCalendarUnitCalendar)
+                                                     fromDate:[NSDate date]];
+    NSDate *today = [todaysComponents date];
     NSDateComponents *futureComponents = [[NSDateComponents alloc] init];
     [futureComponents setDay:days];
     NSDate *remindDate = [calendar dateByAddingComponents:futureComponents toDate:today options:0];
@@ -329,9 +334,18 @@
 - (void)updateFacebookFriends:(NSNotification *)notification {
     [DebugLogger log:@"Got new facebook friend list" withPriority:mainViewControllerPriority];
     facebookFriends = [[notification userInfo] valueForKey:@"data"];
+    [self reloadAllFacebookPhotos];
+    [self updateUI];
 }
 
-
+- (void)reloadAllFacebookPhotos {
+    for (Contact *contact in contactAppearedQueue) {
+        [self downloadFbPhotoForContact:contact];
+    }
+    for (Contact *contact in contactNeverAppearedQueue) {
+        [self downloadFbPhotoForContact:contact];
+    }
+}
 
 // Asynchronously attempts to download a facebook photo for the contact
 - (void)downloadFbPhotoForContact:(Contact *)contact {
@@ -345,24 +359,52 @@
             [moc setPersistentStoreCoordinator:[appDelegate persistentStoreCoordinator]];
             Contact *someContact = (Contact *)[moc objectWithID:contactID];
             
-            // Dynamically add an observer to this controller to listen for context merge requests from other threads
-            [[NSNotificationCenter defaultCenter] addObserver:thisController
-                                                     selector:@selector(mergeChanges:)
-                                                         name:NSManagedObjectContextDidSaveNotification
-                                                       object:moc];
-            
             NSString *fullName = [NSString stringWithFormat:@"%@ %@", [someContact nameFirst], [someContact nameLast]];
-            NSString *url = [facebookFriends valueForKey:fullName];
+            NSString *url = [facebookFriends objectForKey:fullName];
+            
+            // Got a profile picture url for friend -- begin downloading
             if (url) {
+                @synchronized(fbDownloadStatus) {
+                    // Abort download for contact if there is already a download in progress
+                    NSNumber *downloadStatus = [fbDownloadStatus objectForKeyedSubscript:[contact objectID]];
+                    if ([downloadStatus boolValue]) {
+                        [DebugLogger log:[NSString stringWithFormat:@"Already downloading photo for %@", fullName]
+                            withPriority:mainViewControllerPriority];
+                        return;
+                    }
+                    // Prevent other threads beginning a download while a download is in progress
+                    else {
+                        [fbDownloadStatus setObject:[NSNumber numberWithBool:YES] forKey:[contact objectID]];
+                    }
+                }
+                
+                // Dynamically add an observer to this controller to listen for context merge requests from other threads
+                [[NSNotificationCenter defaultCenter] addObserver:thisController
+                                                         selector:@selector(mergeChanges:)
+                                                             name:NSManagedObjectContextDidSaveNotification
+                                                           object:moc];
+                
                 [DebugLogger log:[NSString stringWithFormat:@"Downloading photo for %@", fullName]
                     withPriority:mainViewControllerPriority];
                 NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:url]];
                 [someContact setFacebookPhoto:imageData];
+                [DebugLogger log:[NSString stringWithFormat:@"Got photo for %@", fullName]
+                    withPriority:mainViewControllerPriority];
+
                 NSError *error;
                 if ([moc hasChanges]) {
-                    [moc save:&error]; // this will cause main thread to merge changes
-                    [DebugLogger log:[NSString stringWithFormat:@"Got photo for %@", fullName]
-                        withPriority:mainViewControllerPriority];
+                    @synchronized(fbDownloadStatus) {
+                        [moc save:&error]; // this will cause main thread to merge changes
+                        
+                        // Allow other threads to begin downloads after our save complete
+                        [fbDownloadStatus setObject:[NSNumber numberWithBool:NO] forKey:[contact objectID]];
+                        
+                        // Remove the key-value pair if contact has been dismissed
+                        if (![self queue:contactAppearedQueue ContainsContact:contact] &&
+                            ![self queue:contactNeverAppearedQueue ContainsContact:contact]) {
+                            [fbDownloadStatus removeObjectForKey:[contact objectID]];
+                        }
+                    }
                     [[NSNotificationCenter defaultCenter] postNotificationName:photoDownloadedNotification object:nil];
                 }
                 if (error) {
@@ -370,12 +412,12 @@
                         withPriority:mainViewControllerPriority];
                     abort();
                 }
+
+                // Remove the observer we just added -- we no longer need it
+                [[NSNotificationCenter defaultCenter] removeObserver:thisController
+                                                                name:NSManagedObjectContextDidSaveNotification
+                                                              object:moc];
             }
-            
-            // Remove the observer we just added -- we no longer need it
-            [[NSNotificationCenter defaultCenter] removeObserver:thisController
-                                                            name:NSManagedObjectContextDidSaveNotification
-                                                          object:moc];
         }
         @catch (NSException *exception) {
             [DebugLogger log:@"Facebook photo download error: thread probably temrinated mid execution"
@@ -392,7 +434,6 @@
     if (!currentContact) {
         if (currentQueue == contactAppearedQueue) {
             NSLog(@"No seen contacts");
-            //        [[self contactName] setText:@"No Urgent Contacts"];
             [contactName setText:@"No Urgent Contacts"];
         } else {
             NSLog(@"No new contacts");
@@ -416,7 +457,7 @@
     for (i = 0; i < [currentQueue count] && i < 4; i++) {
         // Get queued contact id
         Contact *queuedContact = [currentQueue objectAtIndex:i];
-        NSData *photoData = [self getPhotoDataForContact:queuedContact];
+        NSData *photoData = [queuedContact getPhotoData];
         UIImageView *queuedPhoto = [photoQueue objectAtIndex:i];
         UIImage *img;
         bool shouldUseDefaultPhoto = NO;
@@ -426,7 +467,7 @@
             // Use found data if resolution sufficiently high
             img = [[UIImage alloc] initWithData:photoData];
             NSInteger resolution = [img size].width * [img scale] + [img size].height * [img scale];
-            if (resolution < 600) {
+            if (resolution < RESOLUTION_THRESHOLD) {
                 shouldUseDefaultPhoto = YES;
             }
         }
@@ -450,30 +491,6 @@
     [contactActionButtonsView setHidden:NO];
 }
 
-// Helper method to retrieve photo data for a contact. Preference is facebook > linkedin > contact book
-- (NSData *)getPhotoDataForContact:(Contact *)contact {
-    NSData *photoData;
-    NSData *facebookPhoto = [contact facebookPhoto];
-    NSData *linkedinPhoto = [contact linkedinPhoto];
-    if (facebookPhoto != NULL) {
-        photoData = facebookPhoto;
-    } else if (linkedinPhoto != NULL) {
-        photoData = linkedinPhoto;
-    } else {
-        int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
-        ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-        ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
-        if (ABPersonHasImageData(addressBookContact)) {
-            photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(addressBookContact);
-        } else {
-            UIImage *img = [UIImage imageNamed:@"default_profile_fade0.png"];
-            photoData = UIImagePNGRepresentation(img);
-        }
-        CFRelease(addressBookRef);
-    }
-    return photoData;
-}
-
 #pragma mark - Tap Gestures
 
 - (IBAction)deleteContactButton:(id)sender {
@@ -490,10 +507,8 @@
     [pvc setShouldHideCancelButton:NO];
     [pvc setPostponingContact:YES];
     [pvc setPostponingContactFromButton:YES];
-    [pvc setDaysBetweenReminder:[[(ContactMetadata *)[currentContact metadata] daysBetweenReminder]
-                                 unsignedIntegerValue]];
+    [pvc setDisplayedInMainView:YES];
     [pvc setContact:currentContact];
-    [pvc setContactPhoto:[contactPhotoFront image]];
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -608,7 +623,6 @@
         [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:mainViewControllerPriority];
         ContactViewController *destViewController = [segue destinationViewController];
         [destViewController setContact:currentContact];
-        [destViewController setPhotoData:[contactPhotoFront image]];
     }
 }
 
@@ -640,15 +654,20 @@
         [self displaySyncingViewAndSyncContacts];
     }
     else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusDenied) {
-        UIAlertView *deniedMessage = [[UIAlertView alloc] initWithTitle:@"Access to Contacts"
-                                                                message:@"Go to 'Settings > Privacy > Contacts' to change."
-                                                               delegate:self
-                                                      cancelButtonTitle:@"Ok"
-                                                      otherButtonTitles:nil];
-        [deniedMessage show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Approve access to contacts"
+                                                                                 message:@"Go to 'Settings > Privacy > Contacts' to change"
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+        [self presentViewController:alertController animated:YES completion:nil];
     }
     
     CFRelease(addressBookRef);
+}
+
+// Merge NSManagedObjectContext changes across two different threads
+- (void)mergeChanges:(NSNotification *)notification {
+    [DebugLogger log:@"Got merge notification" withPriority:mainViewControllerPriority];
+    [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
 }
 
 // Save current context
