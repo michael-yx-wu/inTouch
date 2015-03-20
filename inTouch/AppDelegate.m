@@ -4,6 +4,8 @@
 #import "ContactManager.h"
 #import "FacebookManager.h"
 #import "GlobalData.h"
+
+#import "LoginViewController.h"
 #import "SettingsTableViewController.h"
 
 @implementation AppDelegate
@@ -18,20 +20,6 @@
     // Setting debug level to 1 (everything will be printed)
     [DebugLogger setDebugLevel:minimumPriorityThreshold];
     
-    // Set root view controller
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    MainViewController *mainViewController = [storyboard instantiateViewControllerWithIdentifier:@"main"];
-    [[self window] setRootViewController:mainViewController];
-    [[self window] makeKeyAndVisible];
-    
-    // Create a hidden window to allow us to display facebook login errors from any view
-    UIWindow *alertContainer = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [alertContainer setWindowLevel:UIWindowLevelStatusBar];
-    [alertContainer setBackgroundColor:[UIColor clearColor]];
-    [alertContainer setHidden:YES];
-    [self setAlertWindow:alertContainer];
-    [alertContainer setRootViewController:[[UIViewController alloc] init]];
-    
     // Check if global data entity exists
     NSManagedObjectContext *moc = [self managedObjectContext];
     NSManagedObjectModel *model = [self managedObjectModel];
@@ -45,9 +33,12 @@
         abort();
     }
     
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    
     // Create global data entity if does not exist
     if ([results count] == 0) {
         GlobalData *globalData = [NSEntityDescription insertNewObjectForEntityForName:@"GlobalData" inManagedObjectContext:moc];
+        [globalData setAccessToken:nil];
         [globalData setLastUpdatedInfo:nil];
         [globalData setFirstContactTap:[NSNumber numberWithBool:YES]];
         [globalData setFirstLeftSwipe:[NSNumber numberWithBool:YES]];
@@ -57,7 +48,28 @@
         [globalData setNumContacts:0];
         [globalData setNumLogins:0];
         [globalData setNumNotInterested:0];
+        
+        // Set the login view controller as entry point
+        LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"login"];
+        [[self window] setRootViewController:loginViewController];
+    } else if ([(GlobalData *)[results objectAtIndex:0] accessToken] == nil){
+        // Access token is not set
+        LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"login"];
+        [[self window] setRootViewController:loginViewController];
+    } else {
+        // Set main view as root view controller
+        MainViewController *mainViewController = [storyboard instantiateViewControllerWithIdentifier:@"main"];
+        [[self window] setRootViewController:mainViewController];
     }
+    [[self window] makeKeyAndVisible];
+    
+    // Create a hidden window to allow us to display facebook login errors from any view
+    UIWindow *alertContainer = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [alertContainer setWindowLevel:UIWindowLevelStatusBar];
+    [alertContainer setBackgroundColor:[UIColor clearColor]];
+    [alertContainer setHidden:YES];
+    [self setAlertWindow:alertContainer];
+    [alertContainer setRootViewController:[[UIViewController alloc] init]];
 
     // Attempt to start facebook session on launch
     [FacebookManager loginSilently];
