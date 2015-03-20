@@ -1,8 +1,8 @@
+#import "LoginViewController.h"
+
 #import "AppDelegate.h"
 #import "GlobalData.h"
-
-#import "LoginViewController.h"
-#import "MainViewController.h"
+#import "NotificationStrings.h"
 
 #define SHIFT_PIXELS 50
 
@@ -38,7 +38,7 @@
     } else if (textField == passwordField) {
         [self attemptLogin];
     }
-    return NO;
+    return YES;
 }
 
 - (void)attemptLogin {
@@ -74,12 +74,7 @@
         GlobalData *globalData = [results objectAtIndex:0];
         [globalData setAccessToken:[jsonDict valueForKey:@"message"]];
         [self save];
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        MainViewController *mainViewController = [storyboard instantiateViewControllerWithIdentifier:@"main"];
-        [mainViewController setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-        [self presentViewController:mainViewController animated:YES completion:nil];
-        
-        
+        [[NSNotificationCenter defaultCenter] postNotificationName:inTouchLoginSuccessfulNotification object:nil];
     }
 }
 

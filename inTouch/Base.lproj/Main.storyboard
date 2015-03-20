@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="fOB-fb-GfK">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -749,12 +749,75 @@
                         <outlet property="syncingView" destination="yVq-1z-7Dn" id="nJE-lo-jgg"/>
                         <outlet property="tapRecognizer" destination="96F-cS-sE5" id="bSW-ZP-TBW"/>
                         <segue destination="ost-IX-nwv" kind="presentation" identifier="contact" modalTransitionStyle="crossDissolve" animates="NO" id="gZA-OX-qSe"/>
+                        <segue destination="ykN-U9-pKt" kind="presentation" identifier="tutorial" modalTransitionStyle="coverVertical" id="2Gu-Am-4tM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="96F-cS-sE5"/>
             </objects>
             <point key="canvasLocation" x="-6" y="-300"/>
+        </scene>
+        <!--Root View Controller-->
+        <scene sceneID="kHe-uf-YCn">
+            <objects>
+                <viewController storyboardIdentifier="root" id="fOB-fb-GfK" customClass="RootViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="BK3-f8-9NT"/>
+                        <viewControllerLayoutGuide type="bottom" id="hvl-dp-yMG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="H9q-iI-cIV">
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="login_background" translatesAutoresizingMaskIntoConstraints="NO" id="hNR-EB-ZxK" userLabel="Background">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="hNR-EB-ZxK" firstAttribute="leading" secondItem="H9q-iI-cIV" secondAttribute="leadingMargin" constant="14" id="F3d-c7-9d6">
+                                <variation key="heightClass=regular-widthClass=compact" constant="-16"/>
+                            </constraint>
+                            <constraint firstItem="hvl-dp-yMG" firstAttribute="top" secondItem="hNR-EB-ZxK" secondAttribute="bottom" constant="48" id="Hvc-l2-0Qe">
+                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                            </constraint>
+                            <constraint firstAttribute="trailingMargin" secondItem="hNR-EB-ZxK" secondAttribute="trailing" constant="24" id="MuN-ek-F3K">
+                                <variation key="heightClass=regular-widthClass=compact" constant="-16"/>
+                            </constraint>
+                            <constraint firstItem="hNR-EB-ZxK" firstAttribute="top" secondItem="BK3-f8-9NT" secondAttribute="bottom" constant="8" id="eP6-Dv-3Hz">
+                                <variation key="heightClass=regular-widthClass=compact" constant="-20"/>
+                            </constraint>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="hNR-EB-ZxK"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="F3d-c7-9d6"/>
+                                <exclude reference="MuN-ek-F3K"/>
+                                <exclude reference="eP6-Dv-3Hz"/>
+                                <exclude reference="Hvc-l2-0Qe"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="hNR-EB-ZxK"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="F3d-c7-9d6"/>
+                                <include reference="MuN-ek-F3K"/>
+                                <include reference="eP6-Dv-3Hz"/>
+                                <include reference="Hvc-l2-0Qe"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <segue destination="QzX-XW-ZQZ" kind="presentation" identifier="login" modalTransitionStyle="crossDissolve" id="cwX-EM-IR7"/>
+                        <segue destination="vXZ-lx-hvc" kind="presentation" identifier="mainView" modalTransitionStyle="crossDissolve" id="db3-5H-qXl"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="afp-zI-4Bc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-783" y="-300"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="hg6-sK-EdG">
@@ -765,6 +828,7 @@
                         <viewControllerLayoutGuide type="bottom" id="zbe-HN-06Z"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="jEu-hr-z9m">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="login_background" translatesAutoresizingMaskIntoConstraints="NO" id="fFK-ov-3AX" userLabel="Background">
@@ -820,17 +884,17 @@
                                 <exclude reference="VK6-wY-v6m"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="AXH-jG-G77"/>
+                                <exclude reference="JxE-4m-jqr"/>
+                                <exclude reference="TPH-hP-bTe"/>
                                 <exclude reference="Coa-9F-K7J"/>
                                 <exclude reference="Eh5-l5-bkM"/>
                                 <exclude reference="fzB-LA-44z"/>
                                 <exclude reference="ozI-ws-e9x"/>
-                                <exclude reference="AXH-jG-G77"/>
-                                <exclude reference="JxE-4m-jqr"/>
-                                <exclude reference="TPH-hP-bTe"/>
+                                <exclude reference="lXZ-YR-9yh"/>
                                 <exclude reference="Pmp-UL-DrJ"/>
                                 <exclude reference="hJh-Z9-yGe"/>
                                 <exclude reference="hw0-nX-IWy"/>
-                                <exclude reference="lXZ-YR-9yh"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -840,17 +904,17 @@
                                 <include reference="VK6-wY-v6m"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="AXH-jG-G77"/>
+                                <include reference="JxE-4m-jqr"/>
+                                <include reference="TPH-hP-bTe"/>
                                 <include reference="Coa-9F-K7J"/>
                                 <include reference="Eh5-l5-bkM"/>
                                 <include reference="fzB-LA-44z"/>
                                 <include reference="ozI-ws-e9x"/>
-                                <include reference="AXH-jG-G77"/>
-                                <include reference="JxE-4m-jqr"/>
-                                <include reference="TPH-hP-bTe"/>
+                                <include reference="lXZ-YR-9yh"/>
                                 <include reference="Pmp-UL-DrJ"/>
                                 <include reference="hJh-Z9-yGe"/>
                                 <include reference="hw0-nX-IWy"/>
-                                <include reference="lXZ-YR-9yh"/>
                             </mask>
                         </variation>
                     </view>
@@ -861,7 +925,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NFs-45-EV1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-6" y="360.75"/>
+            <point key="canvasLocation" x="-783" y="362.25"/>
         </scene>
         <!--Tutorial View Controller-->
         <scene sceneID="aSC-Xw-qBg">
@@ -963,7 +1027,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pes-J6-iWb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="837" y="360.75"/>
+            <point key="canvasLocation" x="-6" y="362.25"/>
         </scene>
         <!--Picker View Controller-->
         <scene sceneID="uZn-wT-bQd">

@@ -10,6 +10,7 @@
 		4C03B9531906C70D003221EC /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D9918C175D3009A96D8 /* AddressBookUI.framework */; };
 		4C0ED67D1A2D8A3700718BE7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D7318C16FF7009A96D8 /* Main.storyboard */; };
 		4C28268B1A48FCC600DA6692 /* NotificationStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C28268A1A48FCC600DA6692 /* NotificationStrings.m */; };
+		4C2F32271ABC84C0004DF832 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F32261ABC84C0004DF832 /* RootViewController.m */; };
 		4C2FB7711ABB8BD600613D9A /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2FB7701ABB8BD600613D9A /* LoginViewController.m */; };
 		4C340D6218C16FF7009A96D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6118C16FF7009A96D8 /* Foundation.framework */; };
 		4C340D6418C16FF7009A96D8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6318C16FF7009A96D8 /* CoreGraphics.framework */; };
@@ -59,6 +60,8 @@
 		4C1C34C1192943C20003DB81 /* DebugConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DebugConstants.h; sourceTree = "<group>"; };
 		4C2826891A48FCC600DA6692 /* NotificationStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationStrings.h; sourceTree = "<group>"; };
 		4C28268A1A48FCC600DA6692 /* NotificationStrings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationStrings.m; sourceTree = "<group>"; };
+		4C2F32251ABC84C0004DF832 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		4C2F32261ABC84C0004DF832 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		4C2FB76F1ABB8BD600613D9A /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		4C2FB7701ABB8BD600613D9A /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		4C340D5E18C16FF7009A96D8 /* inTouch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = inTouch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -280,6 +283,8 @@
 		4C42688A1915B4500014744F /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				4C2F32251ABC84C0004DF832 /* RootViewController.h */,
+				4C2F32261ABC84C0004DF832 /* RootViewController.m */,
 				4C2FB7721ABB8BEA00613D9A /* inTouch API */,
 				4C36D21E1A5207260015EF1B /* Main View */,
 				4C9B508B1A4F64F9002BC2CA /* Settings */,
@@ -428,6 +433,7 @@
 				4C2FB7711ABB8BD600613D9A /* LoginViewController.m in Sources */,
 				4CF7B3041984BB4A00F10889 /* ContactInformationTableViewController.m in Sources */,
 				4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */,
+				4C2F32271ABC84C0004DF832 /* RootViewController.m in Sources */,
 				4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */,
 				4CB4AA221A47E8400017EF9E /* FacebookManager.m in Sources */,
 				4C357F8C19839ECF00A64C44 /* AllContactsTableViewController.m in Sources */,

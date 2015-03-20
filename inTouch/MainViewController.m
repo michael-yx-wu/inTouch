@@ -10,6 +10,7 @@
 
 #import "MainViewController.h"
 #import "ContactViewController.h"
+#import "LoginViewController.h"
 #import "PickerViewController.h"
 #import "TutorialViewController.h"
 
@@ -119,28 +120,12 @@
     // Save the original centers after main view has loaded -- method is screen width dependent
     [contactCard setImageCentersAndMasks];
     
-    // Determine last time we update contact info
-    NSManagedObjectContext *moc = [self managedObjectContext];
-    NSManagedObjectModel *model = [self managedObjectModel];
-    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"GlobalData" substitutionVariables:NULL];
-    
-    NSError *error;
-    NSArray *results = [moc executeFetchRequest:request error:&error];
-    if (results == nil) {
-        [DebugLogger log:@"Error getting globals" withPriority:mainViewControllerPriority];
-        abort();
-    }
-    GlobalData *globalData = [results objectAtIndex:0];
-    
     // Automatically sync contact info on first run only
+    GlobalData *globalData = [self getGlobalDataEntity];
     bool firstRun = [[globalData firstRun] boolValue];
     if (firstRun) {
-        // TutorialViewController will sync contacts on dismissal 
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        TutorialViewController *tutorialController = [storyboard instantiateViewControllerWithIdentifier:@"tutorial"];
-        [tutorialController setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-        [tutorialController setMainViewController:self];
-        [self presentViewController:tutorialController animated:YES completion:nil];
+        // TutorialViewController will sync contacts on dismissal
+        [self performSegueWithIdentifier:@"tutorial" sender:self];
         
         [globalData setLastUpdatedInfo:[NSDate date]];
         [globalData setFirstRun:[NSNumber numberWithBool:NO]];
@@ -624,9 +609,28 @@
         ContactViewController *destViewController = [segue destinationViewController];
         [destViewController setContact:currentContact];
     }
+    if ([[segue identifier] isEqualToString:@"tutorial"]) {
+        [DebugLogger log:@"Preparing for segue to TutorialViewController" withPriority:mainViewControllerPriority];
+        TutorialViewController *destViewController = [segue destinationViewController];
+        [destViewController setMainViewController:sender];
+    }
 }
 
 #pragma mark - Core Data Methods
+
+- (GlobalData *)getGlobalDataEntity {
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    NSManagedObjectModel *model = [self managedObjectModel];
+    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"GlobalData" substitutionVariables:NULL];
+    
+    NSError *error;
+    NSArray *results = [moc executeFetchRequest:request error:&error];
+    if (results == nil) {
+        [DebugLogger log:@"Error getting globals" withPriority:mainViewControllerPriority];
+        abort();
+    }
+    return [results objectAtIndex:0];
+}
 
 - (NSManagedObjectContext *)managedObjectContext {
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
