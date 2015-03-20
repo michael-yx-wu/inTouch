@@ -4,19 +4,75 @@
 #import "GlobalData.h"
 #import "NotificationStrings.h"
 
-#define SHIFT_PIXELS 50
+#define SHIFT_PIXELS 80
 
 @implementation LoginViewController
 
-@synthesize emailField, passwordField;
+@synthesize formHighlight, signUpButton, loginButton;
+@synthesize emailField, passwordField, verifyPasswordField;
+@synthesize signUpForm;
 
 - (void)viewDidLoad {
+    signUpForm = YES;
     [emailField setDelegate:self];
     [passwordField setDelegate:self];
+    [verifyPasswordField setDelegate:self];
+    [self setReturnKeyForPasswordField];
     [passwordField setSecureTextEntry:YES];
-    [emailField setReturnKeyType:UIReturnKeyNext];
-    [passwordField setReturnKeyType:UIReturnKeyDone];
+    [verifyPasswordField setSecureTextEntry:YES];
+    [verifyPasswordField setReturnKeyType:UIReturnKeyGo];
 }
+
+#pragma mark - Change forms
+
+- (IBAction)signUpTapped:(id)sender {
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [self moveFormHighlight:true];
+        [verifyPasswordField setAlpha:1];
+    } completion:^(BOOL finished) {
+        signUpForm = YES;
+        [self setReturnKeyForPasswordField];
+    }];
+}
+
+- (IBAction)loginTapped:(id)sender {
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [self moveFormHighlight:false];
+        [verifyPasswordField setAlpha:0];
+    } completion:^(BOOL finished) {
+        signUpForm = NO;
+        [self setReturnKeyForPasswordField];
+    }];
+}
+
+- (void)moveFormHighlight:(BOOL)signup {
+    CGRect highlightFrame = [formHighlight frame];
+    CGRect buttonFrame;
+    if (signup) {
+        buttonFrame = [signUpButton frame];
+    } else {
+        buttonFrame = [loginButton frame];
+    }
+    CGRect newHighlightFrame = CGRectMake(buttonFrame.origin.x - 8,
+                                          highlightFrame.origin.y,
+                                          highlightFrame.size.width,
+                                          highlightFrame.size.height);
+    [formHighlight setFrame:newHighlightFrame];
+}
+
+- (void)setReturnKeyForPasswordField {
+    if (signUpForm) {
+        [passwordField setReturnKeyType:UIReturnKeyNext];
+    } else {
+        [passwordField setReturnKeyType:UIReturnKeyGo];
+    }
+    if ([passwordField isFirstResponder]) {
+        [passwordField resignFirstResponder];
+        [passwordField becomeFirstResponder];
+    }
+}
+
+#pragma mark - Page shift
 
 // Shift view up when user taps either text field
 - (IBAction)shiftPageUp:(id)sender {
@@ -25,18 +81,41 @@
                         options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
                          CGRect currentFrame = [[self view] frame];
-                         [[self view] setFrame:CGRectMake(0, -SHIFT_PIXELS, currentFrame.size.width, currentFrame.size.height)];
+                         [[self view] setFrame:CGRectMake(0,
+                                                          -SHIFT_PIXELS,
+                                                          currentFrame.size.width,
+                                                          currentFrame.size.height)];
+                     } completion:nil];
+}
+
+- (void)shiftPageDown {
+    [UIView animateWithDuration:0.3
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         CGRect currentFrame = [[self view] frame];
+                         [[self view] setFrame:CGRectMake(0,
+                                                          SHIFT_PIXELS,
+                                                          currentFrame.size.width,
+                                                          currentFrame.size.height)];
                      } completion:^(BOOL finished) {
-                         
+                         [[NSNotificationCenter defaultCenter] postNotificationName:inTouchLoginSuccessfulNotification object:nil];
                      }];
 }
+
+#pragma mark - Login
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     if (textField == emailField) {
         [passwordField becomeFirstResponder];
         return YES;
     } else if (textField == passwordField) {
-        [self attemptLogin];
+        // Do not send a login request
+        if (signUpForm) {
+            [verifyPasswordField becomeFirstResponder];
+        } else {
+            [self attemptLogin];
+        }
     }
     return YES;
 }
@@ -74,7 +153,7 @@
         GlobalData *globalData = [results objectAtIndex:0];
         [globalData setAccessToken:[jsonDict valueForKey:@"message"]];
         [self save];
-        [[NSNotificationCenter defaultCenter] postNotificationName:inTouchLoginSuccessfulNotification object:nil];
+        [self shiftPageDown];
     }
 }
 
