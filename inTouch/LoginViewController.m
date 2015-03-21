@@ -21,27 +21,52 @@
     [passwordField setSecureTextEntry:YES];
     [verifyPasswordField setSecureTextEntry:YES];
     [verifyPasswordField setReturnKeyType:UIReturnKeyGo];
+    
+    // Set alpha to 0 for all UI elements
+    [formHighlight setAlpha:0];
+    [signUpButton setAlpha:0];
+    [loginButton setAlpha:0];
+    [emailField setAlpha:0];
+    [passwordField setAlpha:0];
+    [verifyPasswordField setAlpha:0];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [formHighlight setAlpha:1];
+        [signUpButton setAlpha:1];
+        [loginButton setAlpha:1];
+        [emailField setAlpha:1];
+        [passwordField setAlpha:1];
+        [verifyPasswordField setAlpha:1];
+    } completion:nil];
 }
 
 #pragma mark - Change forms
 
 - (IBAction)signUpTapped:(id)sender {
+    [emailField becomeFirstResponder];
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         [self moveFormHighlight:true];
         [verifyPasswordField setAlpha:1];
     } completion:^(BOOL finished) {
         signUpForm = YES;
         [self setReturnKeyForPasswordField];
+        [self clearFields];
     }];
 }
 
 - (IBAction)loginTapped:(id)sender {
+    [emailField becomeFirstResponder];
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         [self moveFormHighlight:false];
         [verifyPasswordField setAlpha:0];
     } completion:^(BOOL finished) {
         signUpForm = NO;
         [self setReturnKeyForPasswordField];
+        [self clearFields];
     }];
 }
 
@@ -72,6 +97,12 @@
     }
 }
 
+- (void)clearFields {
+    [emailField setText:nil];
+    [passwordField setText:nil];
+    [verifyPasswordField setText:nil];
+}
+
 #pragma mark - Page shift
 
 // Shift view up when user taps either text field
@@ -88,22 +119,21 @@
                      } completion:nil];
 }
 
-- (void)shiftPageDown {
+- (void)shiftPageDown:(id)textField {
+    [textField resignFirstResponder];
     [UIView animateWithDuration:0.3
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseIn
                      animations:^{
                          CGRect currentFrame = [[self view] frame];
                          [[self view] setFrame:CGRectMake(0,
-                                                          SHIFT_PIXELS,
+                                                          0,
                                                           currentFrame.size.width,
                                                           currentFrame.size.height)];
-                     } completion:^(BOOL finished) {
-                         [[NSNotificationCenter defaultCenter] postNotificationName:inTouchLoginSuccessfulNotification object:nil];
-                     }];
+                     } completion:nil];
 }
 
-#pragma mark - Login
+#pragma mark - Signup or Login
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     if (textField == emailField) {
@@ -114,14 +144,40 @@
         if (signUpForm) {
             [verifyPasswordField becomeFirstResponder];
         } else {
-            [self attemptLogin];
+            [self shiftPageDown:passwordField];
+            [self attemptLoginOrSignup];
         }
+    } else if (textField == verifyPasswordField) {
+        [self shiftPageDown:verifyPasswordField];
+        [self attemptLoginOrSignup];
     }
     return YES;
 }
 
-- (void)attemptLogin {
-    NSURL *url = [NSURL URLWithString:@"https://52.11.149.45:3000/users/sign_in"];
+- (BOOL)passwordsMatch {
+    if ([[passwordField text] isEqualToString:[verifyPasswordField text]]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)attemptLoginOrSignup {
+    NSURL *url;
+    if (signUpForm) {
+        if (![self passwordsMatch]) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Passwords do not match"
+                                                                                     message:@"Please try again"
+                                                                              preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"Ok"
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:nil]];
+            [self presentViewController:alertController animated:YES completion:nil];
+            return;
+        }
+        url = [NSURL URLWithString:@"https://52.11.149.45:3000/users/sign_up"];
+    } else {
+        url = [NSURL URLWithString:@"https://52.11.149.45:3000/users/sign_in"];
+    }
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     NSDictionary *requestData = [[NSDictionary alloc] initWithObjectsAndKeys:
                                  [emailField text], @"email",
@@ -139,7 +195,7 @@
     NSError *error;
     NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
     NSLog(@"%@", jsonDict);
-    if ([jsonDict valueForKey:@"success"]) {
+    if ([jsonDict valueForKey:@"success"] == [NSNumber numberWithBool:TRUE]) {
         NSManagedObjectContext *moc = [self managedObjectContext];
         NSManagedObjectModel *model = [self managedObjectModel];
         NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"GlobalData" substitutionVariables:NULL];
@@ -153,8 +209,37 @@
         GlobalData *globalData = [results objectAtIndex:0];
         [globalData setAccessToken:[jsonDict valueForKey:@"message"]];
         [self save];
-        [self shiftPageDown];
+        [self fadeOutAndPostSuccess];
+    } else {
+        NSString *message = [jsonDict valueForKey:@"message"];
+        NSString *title;
+        if (signUpForm) {
+            title = @"Could not sign up";
+        } else {
+            title = @"Could not log in";
+        }
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                                 message:message
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"Ok"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:nil]];
+        [self presentViewController:alertController animated:YES completion:nil];
     }
+}
+
+- (void)fadeOutAndPostSuccess {
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        // Fade all UI elements
+        [formHighlight setAlpha:0];
+        [signUpButton setAlpha:0];
+        [loginButton setAlpha:0];
+        [emailField setAlpha:0];
+        [passwordField setAlpha:0];
+        [verifyPasswordField setAlpha:0];
+    } completion:^(BOOL finished) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:inTouchLoginSuccessfulNotification object:nil];
+    }];
 }
 
 #pragma mark - Ignore self-signed cert

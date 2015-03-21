@@ -9,14 +9,16 @@
 
 @implementation RootViewController
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
+- (void)viewDidLoad {
     // Listener for successful login
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(loginSuccessful:)
                                                  name:inTouchLoginSuccessfulNotification
                                                object:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     
     // Check if global data entity exists
     NSManagedObjectContext *moc = [self managedObjectContext];
@@ -40,7 +42,7 @@
 
 // Listen for successful login notification to present main view
 - (void)loginSuccessful:(NSNotification *)notification {
-    [self dismissViewControllerAnimated:YES completion:^{
+    [self dismissViewControllerAnimated:NO completion:^{
         [self performSegueWithIdentifier:@"mainView" sender:self];
     }];
 }

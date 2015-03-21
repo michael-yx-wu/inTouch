@@ -812,7 +812,7 @@
                         </variation>
                     </view>
                     <connections>
-                        <segue destination="QzX-XW-ZQZ" kind="presentation" identifier="login" modalTransitionStyle="crossDissolve" id="cwX-EM-IR7"/>
+                        <segue destination="QzX-XW-ZQZ" kind="presentation" identifier="login" modalTransitionStyle="crossDissolve" animates="NO" id="cwX-EM-IR7"/>
                         <segue destination="vXZ-lx-hvc" kind="presentation" identifier="mainView" modalTransitionStyle="crossDissolve" id="db3-5H-qXl"/>
                     </connections>
                 </viewController>
@@ -843,7 +843,7 @@
                                     <action selector="shiftPageUp:" destination="QzX-XW-ZQZ" eventType="editingDidBegin" id="MTe-c0-HNH"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="VK6-wY-v6m">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VK6-wY-v6m">
                                 <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go"/>
@@ -851,7 +851,7 @@
                                     <action selector="shiftPageUp:" destination="QzX-XW-ZQZ" eventType="editingDidBegin" id="1r0-m2-imW"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="verify password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TTx-pM-l3H" userLabel="verify password">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="verify password" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TTx-pM-l3H" userLabel="verify password">
                                 <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1042,22 +1042,22 @@
                                 <exclude reference="Z3m-di-Hqc"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="Pmp-UL-DrJ"/>
-                                <exclude reference="hJh-Z9-yGe"/>
-                                <exclude reference="hw0-nX-IWy"/>
-                                <exclude reference="Lsr-yW-grl"/>
+                                <exclude reference="CJP-ar-42z"/>
+                                <exclude reference="IWZ-JN-8oD"/>
+                                <exclude reference="Xlh-RG-nAq"/>
+                                <exclude reference="9mw-2Z-uXy"/>
+                                <exclude reference="JxE-4m-jqr"/>
+                                <exclude reference="dLz-Yr-Nt7"/>
                                 <exclude reference="9JH-wa-I08"/>
                                 <exclude reference="Coa-9F-K7J"/>
                                 <exclude reference="Eh5-l5-bkM"/>
                                 <exclude reference="fzB-LA-44z"/>
                                 <exclude reference="ozI-ws-e9x"/>
-                                <exclude reference="9mw-2Z-uXy"/>
-                                <exclude reference="JxE-4m-jqr"/>
-                                <exclude reference="dLz-Yr-Nt7"/>
-                                <exclude reference="CJP-ar-42z"/>
-                                <exclude reference="IWZ-JN-8oD"/>
-                                <exclude reference="Xlh-RG-nAq"/>
                                 <exclude reference="lXZ-YR-9yh"/>
+                                <exclude reference="Pmp-UL-DrJ"/>
+                                <exclude reference="hJh-Z9-yGe"/>
+                                <exclude reference="hw0-nX-IWy"/>
+                                <exclude reference="Lsr-yW-grl"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -1069,22 +1069,22 @@
                                 <include reference="Z3m-di-Hqc"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="Pmp-UL-DrJ"/>
-                                <include reference="hJh-Z9-yGe"/>
-                                <include reference="hw0-nX-IWy"/>
-                                <include reference="Lsr-yW-grl"/>
+                                <include reference="CJP-ar-42z"/>
+                                <include reference="IWZ-JN-8oD"/>
+                                <include reference="Xlh-RG-nAq"/>
+                                <include reference="9mw-2Z-uXy"/>
+                                <include reference="JxE-4m-jqr"/>
+                                <include reference="dLz-Yr-Nt7"/>
                                 <include reference="9JH-wa-I08"/>
                                 <include reference="Coa-9F-K7J"/>
                                 <include reference="Eh5-l5-bkM"/>
                                 <include reference="fzB-LA-44z"/>
                                 <include reference="ozI-ws-e9x"/>
-                                <include reference="9mw-2Z-uXy"/>
-                                <include reference="JxE-4m-jqr"/>
-                                <include reference="dLz-Yr-Nt7"/>
-                                <include reference="CJP-ar-42z"/>
-                                <include reference="IWZ-JN-8oD"/>
-                                <include reference="Xlh-RG-nAq"/>
                                 <include reference="lXZ-YR-9yh"/>
+                                <include reference="Pmp-UL-DrJ"/>
+                                <include reference="hJh-Z9-yGe"/>
+                                <include reference="hw0-nX-IWy"/>
+                                <include reference="Lsr-yW-grl"/>
                             </mask>
                         </variation>
                     </view>
