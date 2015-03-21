@@ -1,15 +1,8 @@
-//
-//  GlobalData.h
-//  inTouch
-//
-//  Created by Michael Wu on 5/3/14.
-//  Copyright (c) 2014 inTouch Team. All rights reserved.
-//
-
 #import <CoreData/CoreData.h>
 
 @interface GlobalData : NSManagedObject
 
+@property (nonatomic, retain) NSString *accessToken;
 @property (nonatomic, retain) NSNumber *firstContactTap;
 @property (nonatomic, retain) NSNumber *firstLeftSwipe;
 @property (nonatomic, retain) NSNumber *firstQueueSwitch;

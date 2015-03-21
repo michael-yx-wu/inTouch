@@ -27,6 +27,7 @@
         <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="metadata" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <entity name="GlobalData" representedClassName="GlobalData" syncable="YES">
+        <attribute name="accessToken" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="firstContactTap" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="firstLeftSwipe" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="firstQueueSwitch" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -62,7 +63,7 @@
     <elements>
         <element name="Contact" positionX="117" positionY="-115" width="128" height="148"/>
         <element name="ContactMetadata" positionX="-45" positionY="-117" width="128" height="268"/>
-        <element name="GlobalData" positionX="-198" positionY="192" width="128" height="178"/>
+        <element name="GlobalData" positionX="-198" positionY="192" width="128" height="195"/>
         <element name="Postpones" positionX="-198" positionY="90" width="128" height="75"/>
         <element name="Session" positionX="-198" positionY="-117" width="128" height="178"/>
     </elements>

@@ -1,5 +1,8 @@
 #import "NotificationStrings.h"
 
+// inTouch API
+NSString *const inTouchLoginSuccessfulNotification = @"intouchLoginSuccessful";
+
 // Facebook
 NSString *const gotFacebookFriendsNotification = @"facebookFriends";
 NSString *const facebookSessionStateChanged = @"fbSessionStateChanged";
