@@ -115,11 +115,13 @@
                                                object:nil];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
+- (void)viewDidLayoutSubviews {
     // Save the original centers after main view has loaded -- method is screen width dependent
     [contactCard setImageCentersAndMasks];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     
     // Automatically sync contact info on first run only
     GlobalData *globalData = [self getGlobalDataEntity];
