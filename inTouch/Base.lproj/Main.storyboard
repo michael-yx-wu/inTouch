@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="fOB-fb-GfK">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="fOB-fb-GfK">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -172,7 +172,8 @@
                                                                 <exclude reference="6aw-Lk-9FQ"/>
                                                             </mask>
                                                         </variation>
-                                                        <variation key="heightClass=regular-widthClass=compact">
+                                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                            <rect key="frame" x="33" y="17" width="40" height="39"/>
                                                             <mask key="constraints">
                                                                 <include reference="6aw-Lk-9FQ"/>
                                                             </mask>
@@ -253,7 +254,8 @@
                                                                 <exclude reference="Pmf-QM-aMU"/>
                                                             </mask>
                                                         </variation>
-                                                        <variation key="heightClass=regular-widthClass=compact">
+                                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                            <rect key="frame" x="10" y="10" width="86" height="86"/>
                                                             <mask key="constraints">
                                                                 <include reference="Pmf-QM-aMU"/>
                                                             </mask>
@@ -297,7 +299,8 @@
                                                                 <exclude reference="aA9-4C-EVD"/>
                                                             </mask>
                                                         </variation>
-                                                        <variation key="heightClass=regular-widthClass=compact">
+                                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                            <rect key="frame" x="10" y="10" width="86" height="86"/>
                                                             <mask key="constraints">
                                                                 <include reference="aA9-4C-EVD"/>
                                                             </mask>
@@ -491,7 +494,8 @@
                                                 <exclude reference="kB6-UC-bMM"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular-widthClass=compact">
+                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="0.0" y="11" width="82" height="82"/>
                                             <mask key="constraints">
                                                 <exclude reference="271-Zm-1FL"/>
                                                 <exclude reference="OSV-y9-AB7"/>
@@ -517,7 +521,8 @@
                                                 <exclude reference="ClJ-r3-UXI"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular-widthClass=compact">
+                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="108" y="11" width="82" height="82"/>
                                             <mask key="constraints">
                                                 <include reference="2h1-S3-bGD"/>
                                                 <exclude reference="6oW-xg-2zp"/>
@@ -546,7 +551,8 @@
                                                 <exclude reference="35t-u4-JeO"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular-widthClass=compact">
+                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="216" y="11" width="82" height="82"/>
                                             <mask key="constraints">
                                                 <include reference="0bL-Fp-e5x"/>
                                                 <exclude reference="35t-u4-JeO"/>
@@ -843,7 +849,7 @@
                                     <action selector="shiftPageUp:" destination="QzX-XW-ZQZ" eventType="editingDidBegin" id="MTe-c0-HNH"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VK6-wY-v6m">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VK6-wY-v6m">
                                 <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go"/>
@@ -851,7 +857,7 @@
                                     <action selector="shiftPageUp:" destination="QzX-XW-ZQZ" eventType="editingDidBegin" id="1r0-m2-imW"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="verify password" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TTx-pM-l3H" userLabel="verify password">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="verify password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TTx-pM-l3H" userLabel="verify password">
                                 <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>

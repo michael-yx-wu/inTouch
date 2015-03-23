@@ -47,6 +47,9 @@
 #pragma mark - Change forms
 
 - (IBAction)signUpTapped:(id)sender {
+    if (signUpForm) {
+        return;
+    }
     [emailField becomeFirstResponder];
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         [self moveFormHighlight:true];
@@ -54,11 +57,13 @@
     } completion:^(BOOL finished) {
         signUpForm = YES;
         [self setReturnKeyForPasswordField];
-        [self clearFields];
     }];
 }
 
 - (IBAction)loginTapped:(id)sender {
+    if (!signUpForm) {
+        return;
+    }
     [emailField becomeFirstResponder];
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         [self moveFormHighlight:false];
@@ -66,7 +71,7 @@
     } completion:^(BOOL finished) {
         signUpForm = NO;
         [self setReturnKeyForPasswordField];
-        [self clearFields];
+        [verifyPasswordField setText:nil];
     }];
 }
 
@@ -95,12 +100,6 @@
         [passwordField resignFirstResponder];
         [passwordField becomeFirstResponder];
     }
-}
-
-- (void)clearFields {
-    [emailField setText:nil];
-    [passwordField setText:nil];
-    [verifyPasswordField setText:nil];
 }
 
 #pragma mark - Page shift
