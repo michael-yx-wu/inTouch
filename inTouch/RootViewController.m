@@ -26,8 +26,11 @@
     }
     GlobalData *globalData = [results objectAtIndex:0];
     if ([globalData accessToken] == nil) {
+        [DebugLogger log:@"Not logged in: showing login view" withPriority:rootViewControllerPriority];
         [self performSegueWithIdentifier:@"login" sender:self];
     } else {
+        [DebugLogger log:[NSString stringWithFormat:@"Access token: %@", [globalData accessToken]]
+            withPriority:rootViewControllerPriority];
         [self performSegueWithIdentifier:@"mainView" sender:self];
     }
 }

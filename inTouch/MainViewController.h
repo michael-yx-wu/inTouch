@@ -11,6 +11,7 @@
 @property (strong, nonatomic) NSMutableArray *contactNeverAppearedQueue;
 @property (strong, nonatomic) NSMutableArray *contactAppearedQueue;
 @property (strong, nonatomic) NSMutableDictionary *facebookFriends;
+@property (weak, nonatomic) IBOutlet UIButton *switchQueueButton;
 
 // Queue photos placeholders
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhotoMiddle;

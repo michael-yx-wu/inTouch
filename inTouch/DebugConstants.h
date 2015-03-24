@@ -10,3 +10,5 @@
 #define contactInformationTableViewControllerPriority 2
 #define contactCardViewPriority 3
 #define facebookManagerPriority 3
+#define rootViewControllerPriority 3
+#define loginViewControllerPriority 3
