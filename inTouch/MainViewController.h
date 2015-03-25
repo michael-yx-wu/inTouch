@@ -3,6 +3,7 @@
 @interface MainViewController : UIViewController <MainViewDelegate>
 
 // Current contact name and photo
+@property (weak, nonatomic) IBOutlet UIView *contactQueueView;
 @property (weak, nonatomic) IBOutlet ContactCardView *contactCard;
 @property (weak, nonatomic) IBOutlet UILabel *contactName;
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhotoFront;

@@ -27,6 +27,7 @@
 @implementation MainViewController
 
 // Contact display variables
+@synthesize contactQueueView;
 @synthesize contactCard;
 @synthesize contactName;
 @synthesize contactPhotoFront;
@@ -133,16 +134,20 @@
     // Save the original centers after main view has loaded -- method is screen width dependent
     [contactCard setImageCentersAndMasks];
     
-    // Automatically sync contact info on first run only
-    GlobalData *globalData = [self getGlobalDataEntity];
-    bool firstRun = [[globalData firstRun] boolValue];
-    if (firstRun) {
-        // TutorialViewController will sync contacts on dismissal
-        [self performSegueWithIdentifier:@"tutorial" sender:self];
-        
-        [globalData setLastUpdatedInfo:[NSDate date]];
-        [globalData setFirstRun:[NSNumber numberWithBool:NO]];
-    }
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [contactQueueView setAlpha:1];
+    } completion:^(BOOL finished) {
+        // Automatically sync contact info on first run only
+        GlobalData *globalData = [self getGlobalDataEntity];
+        bool firstRun = [[globalData firstRun] boolValue];
+        if (firstRun) {
+            // TutorialViewController will sync contacts on dismissal
+            [self performSegueWithIdentifier:@"tutorial" sender:self];
+            
+            [globalData setLastUpdatedInfo:[NSDate date]];
+            [globalData setFirstRun:[NSNumber numberWithBool:NO]];
+        }
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
