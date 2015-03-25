@@ -208,7 +208,7 @@
         GlobalData *globalData = [results objectAtIndex:0];
         [globalData setAccessToken:[jsonDict valueForKey:@"message"]];
         [self save];
-        [self fadeOutAndPostSuccess];
+        [self fadeOutAndDismiss];
     } else {
         NSString *message = [jsonDict valueForKey:@"message"];
         NSString *title;
@@ -227,7 +227,7 @@
     }
 }
 
-- (void)fadeOutAndPostSuccess {
+- (void)fadeOutAndDismiss {
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         // Fade all UI elements
         [formHighlight setAlpha:0];
@@ -237,7 +237,7 @@
         [passwordField setAlpha:0];
         [verifyPasswordField setAlpha:0];
     } completion:^(BOOL finished) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:inTouchLoginSuccessfulNotification object:nil];
+        [self dismissViewControllerAnimated:NO completion:nil];
     }];
 }
 

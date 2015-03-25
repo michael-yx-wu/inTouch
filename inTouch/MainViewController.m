@@ -27,6 +27,7 @@
 @implementation MainViewController
 
 // Contact display variables
+@synthesize contactQueueView;
 @synthesize contactCard;
 @synthesize contactName;
 @synthesize contactPhotoFront;
@@ -45,6 +46,7 @@
 @synthesize contactAppearedQueue;
 @synthesize contactNeverAppearedQueue;
 @synthesize facebookFriends;
+@synthesize switchQueueButton;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -74,6 +76,17 @@
     [self updateQueue];
     currentQueue = contactAppearedQueue;
     [self getNextContactFromQueue];
+    
+    // Switch to new contact queue if no reminders have been set
+    if (!currentContact) {
+        [self switchQueue:nil];
+    }
+    
+    // Switch back to reminders queue if no new contacts
+    if (!currentContact) {
+        [self switchQueue:nil];
+    }
+    
     [self updateUI];
     
     // Track current facebook downloads
@@ -121,16 +134,20 @@
     // Save the original centers after main view has loaded -- method is screen width dependent
     [contactCard setImageCentersAndMasks];
     
-    // Automatically sync contact info on first run only
-    GlobalData *globalData = [self getGlobalDataEntity];
-    bool firstRun = [[globalData firstRun] boolValue];
-    if (firstRun) {
-        // TutorialViewController will sync contacts on dismissal
-        [self performSegueWithIdentifier:@"tutorial" sender:self];
-        
-        [globalData setLastUpdatedInfo:[NSDate date]];
-        [globalData setFirstRun:[NSNumber numberWithBool:NO]];
-    }
+    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        [contactQueueView setAlpha:1];
+    } completion:^(BOOL finished) {
+        // Automatically sync contact info on first run only
+        GlobalData *globalData = [self getGlobalDataEntity];
+        bool firstRun = [[globalData firstRun] boolValue];
+        if (firstRun) {
+            // TutorialViewController will sync contacts on dismissal
+            [self performSegueWithIdentifier:@"tutorial" sender:self];
+            
+            [globalData setLastUpdatedInfo:[NSDate date]];
+            [globalData setFirstRun:[NSNumber numberWithBool:NO]];
+        }
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -143,7 +160,7 @@
     if ([currentQueue count]) {
         currentContact = [currentQueue objectAtIndex:0];
     } else {
-        NSLog(@"No contacts left in queue");
+        [DebugLogger log:@"No contacts left in queue" withPriority:mainViewControllerPriority];
         currentContact = nil;
     }
 }
@@ -419,10 +436,10 @@
     // If the current queue is empty
     if (!currentContact) {
         if (currentQueue == contactAppearedQueue) {
-            NSLog(@"No seen contacts");
-            [contactName setText:@"No Urgent Contacts"];
+            [DebugLogger log:@"No reminders" withPriority:mainViewControllerPriority];
+            [contactName setText:@"No Reminders"];
         } else {
-            NSLog(@"No new contacts");
+            [DebugLogger log:@"No new contacts" withPriority:mainViewControllerPriority];
             [contactName setText:@"No New Contacts"];
         }
         
@@ -524,7 +541,6 @@
     [DebugLogger log:@"Switching Queues" withPriority:mainViewControllerPriority];
     
     // Switch queue
-    UIButton *switchQueueButton = (UIButton *)sender;
     if (currentQueue == contactAppearedQueue) {
         currentQueue = contactNeverAppearedQueue;
         [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];

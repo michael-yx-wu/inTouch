@@ -9,14 +9,6 @@
 
 @implementation RootViewController
 
-- (void)viewDidLoad {
-    // Listener for successful login
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(loginSuccessful:)
-                                                 name:inTouchLoginSuccessfulNotification
-                                               object:nil];
-}
-
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
@@ -34,17 +26,13 @@
     }
     GlobalData *globalData = [results objectAtIndex:0];
     if ([globalData accessToken] == nil) {
+        [DebugLogger log:@"Not logged in: showing login view" withPriority:rootViewControllerPriority];
         [self performSegueWithIdentifier:@"login" sender:self];
     } else {
+        [DebugLogger log:[NSString stringWithFormat:@"Access token: %@", [globalData accessToken]]
+            withPriority:rootViewControllerPriority];
         [self performSegueWithIdentifier:@"mainView" sender:self];
     }
-}
-
-// Listen for successful login notification to present main view
-- (void)loginSuccessful:(NSNotification *)notification {
-    [self dismissViewControllerAnimated:NO completion:^{
-        [self performSegueWithIdentifier:@"mainView" sender:self];
-    }];
 }
 
 #pragma mark - Core Data accessor methods
