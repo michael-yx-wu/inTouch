@@ -141,11 +141,11 @@
         GlobalData *globalData = [self getGlobalDataEntity];
         bool firstRun = [[globalData firstRun] boolValue];
         if (firstRun) {
-            // TutorialViewController will sync contacts on dismissal
-            [self performSegueWithIdentifier:@"tutorial" sender:self];
-            
             [globalData setLastUpdatedInfo:[NSDate date]];
             [globalData setFirstRun:[NSNumber numberWithBool:NO]];
+            
+            // TutorialViewController will sync contacts on dismissal
+            [self performSegueWithIdentifier:@"tutorial" sender:self];            
         }
     }];
 }
@@ -333,6 +333,30 @@
 }
 
 #pragma mark - Facebook methods
+
+// Request facebook login
+- (void)facebookLogin {
+    UIAlertController *notNow = [UIAlertController alertControllerWithTitle:@""
+                                                                    message:@"Facebook preferences can be changed in the settings menu"
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+    [notNow addAction:[UIAlertAction actionWithTitle:@"Ok" style:UIAlertActionStyleDefault handler:nil]];
+    UIAlertController *facebookLoginRequest = [UIAlertController alertControllerWithTitle:@"Connect to Facebook"
+                                                                                  message:@"Logging in will allow us to use Facebook profile photos for your contacts when available. We will never post to Facebook."
+                                                                           preferredStyle:UIAlertControllerStyleAlert];
+    [facebookLoginRequest addAction:[UIAlertAction actionWithTitle:@"Connect"
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction *action) {
+                                                               [FacebookManager login];
+                                                           }]];
+    [facebookLoginRequest addAction:[UIAlertAction actionWithTitle:@"Not now"
+                                                             style:UIAlertActionStyleCancel
+                                                           handler:^(UIAlertAction *action) {
+                                                               [self presentViewController:notNow
+                                                                                  animated:YES
+                                                                                completion:nil];
+                                                           }]];
+    [self presentViewController:facebookLoginRequest animated:YES completion:nil];
+}
 
 - (void)updateFacebookFriends:(NSNotification *)notification {
     [DebugLogger log:@"Got new facebook friend list" withPriority:mainViewControllerPriority];
@@ -540,6 +564,9 @@
 - (IBAction)switchQueue:(id)sender {
     [DebugLogger log:@"Switching Queues" withPriority:mainViewControllerPriority];
     
+    // Disable sliding cards while we change queues
+    [contactCard setUserInteractionEnabled:NO];
+    
     // Switch queue
     if (currentQueue == contactAppearedQueue) {
         currentQueue = contactNeverAppearedQueue;
@@ -581,7 +608,7 @@
         [syncingView setAlpha:1];
         [syncingActivityIndicator startAnimating];
     } completion:^(BOOL finished) {
-        [DebugLogger log:@"start updating..." withPriority:mainViewControllerPriority];
+        [DebugLogger log:@"Start updating contacts" withPriority:mainViewControllerPriority];
         [ContactManager updateInformation];
         [self save];
         [UIView animateWithDuration:0.3 delay:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -593,13 +620,13 @@
             currentQueue = contactAppearedQueue;
             [self updateQueue];
             [self printQueue];
-            currentQueue = contactNeverAppearedQueue;
-            [self updateQueue];
-            [self printQueue];
-            currentQueue = contactAppearedQueue;
-            [self getNextContactFromQueue];
-            [self updateUI];
+
+            // Switch to the unseen queue
+            [self switchQueue:nil];
+
+            // Request facebook access
             [self enableInteraction];
+            [self facebookLogin];
         }];
     }];
 }

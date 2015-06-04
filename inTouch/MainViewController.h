@@ -29,6 +29,7 @@
 // Gesture recognizers
 @property (weak, nonatomic) IBOutlet UITapGestureRecognizer *tapRecognizer;
 
+- (void)facebookLogin;
 - (void)requestContactsAccessAndSync;
 
 @end

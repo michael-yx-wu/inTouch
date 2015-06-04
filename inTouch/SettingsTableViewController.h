@@ -1,5 +1,3 @@
-#import <UIKit/UIKit.h>
-
 @interface SettingsTableViewController : UITableViewController
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *facebookCell;

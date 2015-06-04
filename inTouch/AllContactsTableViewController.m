@@ -6,23 +6,41 @@
 
 @interface AllContactsTableViewController () {
     Contact *selectedContact;
+    NSMutableDictionary *contacts;
+    NSMutableDictionary *contactIDs;
+    NSMutableDictionary *contactCounts;
+    NSMutableArray *sectionTitles;
 }
 
 @end
 
 @implementation AllContactsTableViewController
 
-@synthesize contactIDs;
-@synthesize contacts;
-@synthesize alphabetIndices;
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Initialize the arrays
-    contactIDs = [[NSMutableArray alloc] init];
     contacts = [[NSMutableDictionary alloc] init];
+    contactIDs = [[NSMutableDictionary alloc] init];
+    contactCounts = [[NSMutableDictionary alloc] init];
+    [[self tableView] registerClass:[UITableViewCell class] forCellReuseIdentifier:@"ContactCell"];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
     
+    // Refresh contact list each time view will appear
+    [self refreshContactList];
+    
+    // Get the section titles and manually put the hashtag sectino at the end
+    sectionTitles = [NSMutableArray arrayWithArray:[[contactCounts allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
+    if ([[sectionTitles objectAtIndex:0] isEqualToString:@"#"]) {
+        [sectionTitles removeObjectAtIndex:0];
+        [sectionTitles addObject:@"#"];
+    }
+    [[self tableView] reloadData];
+}
+
+- (void)refreshContactList {
     // Set up the request to retrieve all contacts
     NSManagedObjectContext *moc = [self managedObjectContext];
     NSManagedObjectModel *model = [self managedObjectModel];
@@ -42,73 +60,88 @@
         abort();
     }
     
+    // Sort by first letter of name
+    NSCharacterSet *alpha = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSZTUVWXYZ"];
     for (Contact *contact in results) {
-        [contactIDs addObject:[contact abrecordid]];
-        [contacts setValue:contact forKeyPath:[NSString stringWithFormat:@"%@", [contact abrecordid]]];
-    }
-
-    [[self tableView] registerClass:[UITableViewCell class] forCellReuseIdentifier:@"ContactCell"];
-
-    alphabetIndices = [self createAlphabetArray];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:YES];
-    [[self tableView] reloadData];
-    alphabetIndices = [self createAlphabetArray];
-}
-
-- (NSArray *)createAlphabetArray {
-    NSMutableDictionary *firstLetters = [[NSMutableDictionary alloc] init];
-    for (id key in [contacts allKeys]) {
-        Contact *contact = [contacts objectForKey:key];
         NSString *name = [NSString stringWithFormat:@"%@%@", [contact nameFirst], [contact nameLast]];
-        // Check for first letter only on non-empty strings
+        NSString *abrecordid = [NSString stringWithFormat:@"%@", [contact abrecordid]];
+        NSString *firstLetter;
         if (![name isEqualToString:@""]) {
-            NSString *firstLetter = [name substringToIndex:1];
-            if (![firstLetters objectForKey:firstLetter]) {
-                [firstLetters setValue:[NSNumber numberWithInt:1] forKey:firstLetter];
+            firstLetter = [[name substringToIndex:1] uppercaseString];
+            NSRange i = [firstLetter rangeOfCharacterFromSet:alpha];
+            if (i.location == NSNotFound) {
+                firstLetter = @"#";
             }
+        } else {
+            firstLetter = @"#";
         }
+        
+        // Create a abrecordid array under the letter if one does not already exist
+        if (![contactIDs objectForKey:firstLetter]) {
+            [contactIDs setValue:[[NSMutableArray alloc] init] forKey:firstLetter];
+        }
+        
+        // Add the contact
+        [contacts setValue:contact forKey:abrecordid];
+        NSMutableArray *nestedArray = [contactIDs valueForKey:firstLetter];
+        [nestedArray addObject:abrecordid];
     }
-    return [[firstLetters allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    
+    // Determine total number of rows needed for each section
+    for (NSString *firstLetter in [contactIDs allKeys]) {
+        [contactCounts setValue:[NSNumber numberWithInteger:[[contactIDs valueForKey:firstLetter] count]]
+                         forKey:firstLetter];
+    }
 }
 
 #pragma mark - Table view data source
 
-// Provide a localized table index
-//- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-//    return alphabetIndices;
-//}
-
 // Return the number of sections.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-//    return [alphabetIndices count];
-    return 1;
+    return [sectionTitles count];
 }
 
+// Return the title for each section
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return [sectionTitles objectAtIndex:section];
+}
+
+// Return the section index titles (right scroll)
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    return sectionTitles;
+}
+
+// Return the number of rows in a section
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [contacts count];
+    return [[contactCounts valueForKey:[sectionTitles objectAtIndex:section]] integerValue];
 }
 
-// Fill cell with user name
+// Return the index of the section to jump to
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    return index;
+}
+
+// Fill cell with user name -- need to redo this
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Get contact/metadata by looking up associated abrecordid
-    NSInteger row  = [indexPath row];
-    NSString *contactID = [NSString stringWithFormat:@"%@", [contactIDs objectAtIndex:row]];
+    // Get contact/metadata by retrieving abrecordid associated with the indexPath
+    NSString *sectionTitle = [sectionTitles objectAtIndex:[indexPath section]];
+    NSString *contactID = [[contactIDs objectForKey:sectionTitle] objectAtIndex:[indexPath row]];
     Contact *contact = [contacts valueForKey:contactID];
     ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
     
+
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactCell" forIndexPath:indexPath];
     
     // Update cell text with name
     NSString *name = [NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]];
+    if ([name isEqualToString:@" "]) {
+        name = @"No name";
+    }
     [[cell textLabel] setText:name];
     
     // Get interest and set accessory appropriately
     UIButton *interestButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     if ([[contactMetadata interest] boolValue]) {
-        
         [interestButton setImage:[UIImage imageNamed:@"interest_icon"] forState:UIControlStateNormal];
     } else {
         [interestButton setImage:[UIImage imageWithData:nil] forState:UIControlStateNormal];
@@ -125,8 +158,8 @@
 // Show detailed contact information
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // Get contact/metadata by looking up associated abrecordid
-    NSInteger row  = [indexPath row];
-    NSString *contactID = [NSString stringWithFormat:@"%@", [contactIDs objectAtIndex:row]];
+    NSString *sectionTitle = [sectionTitles objectAtIndex:[indexPath section]];
+    NSString *contactID = [[contactIDs objectForKey:sectionTitle] objectAtIndex:[indexPath row]];
     selectedContact = [contacts valueForKey:contactID];
 
     [self performSegueWithIdentifier:@"contactInformation" sender:self];    
@@ -144,8 +177,8 @@
         return;
     }
     
-    NSInteger row  = [indexPath row];
-    NSString *contactID = [NSString stringWithFormat:@"%@", [contactIDs objectAtIndex:row]];
+    NSString *sectionTitle = [sectionTitles objectAtIndex:[indexPath section]];
+    NSString *contactID = [[contactIDs objectForKey:sectionTitle] objectAtIndex:[indexPath row]];
     Contact *contact = [contacts valueForKey:contactID];
     ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
     
