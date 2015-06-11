@@ -150,6 +150,27 @@
     }];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    // Remove contacts that are marked as "not interested"
+    int i;
+    for (i = 0; i < [contactAppearedQueue count]; i++) {
+        ContactMetadata *metadata = (ContactMetadata *)[(Contact *)[contactAppearedQueue objectAtIndex:i] metadata];
+        if (![[metadata interest] boolValue]) {
+            [contactAppearedQueue removeObjectAtIndex:i];
+        }
+    }
+    for (i = 0; i < [contactNeverAppearedQueue count]; i++) {
+        ContactMetadata *metadata = (ContactMetadata *)[(Contact *)[contactNeverAppearedQueue objectAtIndex:i] metadata];
+        if (![[metadata interest] boolValue]) {
+            [contactNeverAppearedQueue removeObjectAtIndex:i];
+        }
+    }
+    [self getNextContactFromQueue];
+    [self updateQueue];
+    [self updateUI];
+    [self printQueue];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }

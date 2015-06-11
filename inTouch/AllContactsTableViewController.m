@@ -31,7 +31,7 @@
     // Refresh contact list each time view will appear
     [self refreshContactList];
     
-    // Get the section titles and manually put the hashtag sectino at the end
+    // Get the section titles and manually put the hashtag section at the end
     sectionTitles = [NSMutableArray arrayWithArray:[[contactCounts allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
     if ([[sectionTitles objectAtIndex:0] isEqualToString:@"#"]) {
         [sectionTitles removeObjectAtIndex:0];
@@ -163,6 +163,11 @@
     selectedContact = [contacts valueForKey:contactID];
 
     [self performSegueWithIdentifier:@"contactInformation" sender:self];    
+    
+    // Release contacts
+    contacts = [[NSMutableDictionary alloc] init];
+    contactIDs = [[NSMutableDictionary alloc] init];
+    contactCounts = [[NSMutableDictionary alloc] init];
     
     // Save change to database and refresh table
     [self save];
