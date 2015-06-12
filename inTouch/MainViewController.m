@@ -91,7 +91,7 @@
 //        [self switchQueue:nil];
 //    }
     
-    [self updateUI];
+    [self updatePhotosDisplayedInQueue];
     
     // Track current facebook downloads
     fbDownloadStatus = [[NSMutableDictionary alloc] init];
@@ -106,7 +106,7 @@
     // Listen for notification to redraw profile photos when downloads finish. Photos can take several seconds to load.
     // Notification from self (background process)
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateUI)
+                                             selector:@selector(updatePhotosDisplayedInQueue)
                                                  name:photoDownloadedNotification
                                                object:nil];
     
@@ -130,6 +130,11 @@
                                              selector:@selector(pickerViewCancel:)
                                                  name:pickerViewCancelNotification
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateUIForCurrentQueue:)
+                                                 name:queueSwitchingDoneNotification
+                                               object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -137,7 +142,7 @@
     
     // Save the original centers after main view has loaded -- method is screen width dependent
     [contactCard setImageCentersAndMasks];
-    [contactQueueView setImageCenters];
+    [contactQueueView setImageCenter];
     
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [contactQueueView setAlpha:1];
@@ -172,7 +177,7 @@
     }
     [self getNextContactFromQueue];
     [self updateQueue];
-    [self updateUI];
+    [self updatePhotosDisplayedInQueue];
     [self printQueue];
 }
 
@@ -322,7 +327,7 @@
     }
     [self getNextContactFromQueue];
     [self updateQueue];
-    [self updateUI];
+    [self updatePhotosDisplayedInQueue];
     [self printQueue];
 }
 
@@ -388,7 +393,7 @@
     [DebugLogger log:@"Got new facebook friend list" withPriority:mainViewControllerPriority];
     facebookFriends = [[notification userInfo] valueForKey:@"data"];
     [self reloadAllFacebookPhotos];
-    [self updateUI];
+    [self updatePhotosDisplayedInQueue];
 }
 
 - (void)reloadAllFacebookPhotos {
@@ -526,21 +531,42 @@
     [DebugLogger log:@"Switching Queues" withPriority:mainViewControllerPriority];
     
     // Disable sliding cards while we change queues
+    [self disableInteraction];
     [contactCard setUserInteractionEnabled:NO];
     
     // Switch queue
     if (currentQueue == contactAppearedQueue) {
         currentQueue = contactNeverAppearedQueue;
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];
         [contactQueueView dismissQueueLeft];
     } else {
         currentQueue = contactAppearedQueue;
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
         [contactQueueView dismissQueueRight];
     }
 }
 
 #pragma mark - UI upating
+
+// Show/hide the appropriate UI graphics depending on the current queue
+- (void)updateUIForCurrentQueue:(NSNotification *)notification {
+    if (currentQueue == contactAppearedQueue) {
+        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
+    } else {
+        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];
+    }
+    if (!currentContact) {
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             [contactActionButtonsView setAlpha:0];
+                         }];
+
+    } else {
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             [contactActionButtonsView setAlpha:1];
+                         }];
+    }
+    [self enableInteraction];
+}
 
 - (void)updateQueueWhileOffscreen {
     // Redraw the UI with information from the current queue
@@ -548,12 +574,12 @@
     [self updateQueue];
     [contactCard showAndEnableInteraction];
     [self getNextContactFromQueue];
-    [self updateUI];
+    [self updatePhotosDisplayedInQueue];
     [self printQueue];
 }
 
 // Display photos for contacts in the current queue
-- (void)updateUI {
+- (void)updatePhotosDisplayedInQueue {
     // If the current queue is empty
     if (!currentContact) {
         if (currentQueue == contactAppearedQueue) {
@@ -566,9 +592,6 @@
         
         // Hide the current queue
         [contactCard hideAndDisableInteraction];
-        
-        // Hide the buttons
-        [contactActionButtonsView setHidden:YES];
         return;
     }
     
@@ -610,9 +633,6 @@
         UIImageView *queuedPhoto = [photoQueue objectAtIndex:i];
         [queuedPhoto setAlpha:0];
     }
-    
-    // Make sure to make the action buttons are visible
-    [contactActionButtonsView setHidden:NO];
 }
 
 #pragma mark - Custom Animation

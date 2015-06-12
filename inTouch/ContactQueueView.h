@@ -16,7 +16,7 @@
 
 //@property (weak, no)
 
-- (void)setImageCenters;
+- (void)setImageCenter;
 - (void)dismissQueueLeft;
 - (void)dismissQueueRight;
 

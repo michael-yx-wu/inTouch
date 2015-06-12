@@ -4,7 +4,7 @@
 
 @implementation ContactQueueView {
     NSArray *visualElements;
-    NSMutableArray *visualElementCenters;
+    NSMutableArray *centers;
 }
 
 @synthesize delegate;
@@ -12,12 +12,13 @@
 @synthesize contactCard;
 
 - (void)awakeFromNib {
-    visualElements = @[photoAnchor, photoBottom, photoMiddle, contactCard];
+    centers = [[NSMutableArray alloc] initWithCapacity:4];
 }
 
-- (void)setImageCenters {
+- (void)setImageCenter {
+    visualElements = @[photoAnchor, photoBottom, photoMiddle, contactCard];
     for (UIView *view in visualElements) {
-        [visualElementCenters addObject:[NSValue valueWithCGPoint:[view center]]];
+        [centers addObject:[NSValue valueWithCGPoint:[view center]]];
     }
 }
 
@@ -58,8 +59,11 @@
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
-                         for (UIView *view in visualElements) {
-                             [view setCenter:CGPointMake([[UIScreen mainScreen] bounds].size.width/2, [view center].y)];
+//                         for (UIView *view in visualElements) {
+//                             [view setCenter:[visual]
+//                         }
+                         for (int i = 0; i < [visualElements count]; i++) {
+                             [[visualElements objectAtIndex:i] setCenter:[[centers objectAtIndex:i] CGPointValue]];
                          }
                      }
                      completion:^(BOOL finished) {
@@ -77,8 +81,8 @@
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
-                         for (UIView *view in visualElements) {
-                             [view setCenter:CGPointMake([[UIScreen mainScreen] bounds].size.width/2, [view center].y)];
+                         for (int i = 0; i < [visualElements count]; i++) {
+                             [[visualElements objectAtIndex:i] setCenter:[[centers objectAtIndex:i] CGPointValue]];
                          }
                      }
                      completion:^(BOOL finished) {
