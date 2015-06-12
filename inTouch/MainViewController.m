@@ -81,15 +81,18 @@
     currentQueue = contactAppearedQueue;
     [self getNextContactFromQueue];
     
-//    // Switch to new contact queue if no reminders have been set
-//    if (!currentContact) {
-//        [self switchQueue:nil];
-//    }
-//    
-//    // Switch back to reminders queue if no new contacts
-//    if (!currentContact) {
-//        [self switchQueue:nil];
-//    }
+    // Switch to new contact queue if no reminders have been set
+    if (!currentContact) {
+        currentQueue = contactNeverAppearedQueue;
+        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];
+        [self getNextContactFromQueue];
+    }
+    
+    // Switch back to reminders queue if no new contacts
+    if (!currentContact) {
+        currentQueue = contactAppearedQueue;
+        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
+    }
     
     [self updatePhotosDisplayedInQueue];
     
@@ -146,6 +149,7 @@
     
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [contactQueueView setAlpha:1];
+        [self updateUIForCurrentQueue:nil];
     } completion:^(BOOL finished) {
         // Automatically sync contact info on first run only
         GlobalData *globalData = [self getGlobalDataEntity];
@@ -565,7 +569,9 @@
                              [contactActionButtonsView setAlpha:1];
                          }];
     }
-    [self enableInteraction];
+    if ([[UIApplication sharedApplication] isIgnoringInteractionEvents]) {
+        [self enableInteraction];
+    }
 }
 
 - (void)updateQueueWhileOffscreen {
