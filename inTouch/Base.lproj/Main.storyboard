@@ -70,7 +70,7 @@
                                     <action selector="switchQueue:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="dRb-zS-Ldz"/>
                                 </connections>
                             </button>
-                            <view alpha="0.0" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lwa-de-2St" userLabel="Contact Queue">
+                            <view alpha="0.0" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lwa-de-2St" userLabel="Contact Queue" customClass="ContactQueueView">
                                 <rect key="frame" x="160" y="56" width="280" height="277"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="default_profile_fade3" translatesAutoresizingMaskIntoConstraints="NO" id="xvG-Uz-HjS" userLabel="Contact Photo Anchor">
@@ -472,6 +472,12 @@
                                         <include reference="sCE-cE-2tW"/>
                                     </mask>
                                 </variation>
+                                <connections>
+                                    <outlet property="contactCard" destination="dqC-Xd-Jnt" id="bxh-cU-s7g"/>
+                                    <outlet property="photoAnchor" destination="xvG-Uz-HjS" id="cHI-9H-vnW"/>
+                                    <outlet property="photoBottom" destination="dvT-RX-nVs" id="8CW-2t-ruQ"/>
+                                    <outlet property="photoMiddle" destination="pdc-uE-fOz" id="9PH-sp-3mb"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fX2-aQ-ian" userLabel="Contact Action Buttons View">
                                 <rect key="frame" x="185" y="356" width="230" height="79"/>

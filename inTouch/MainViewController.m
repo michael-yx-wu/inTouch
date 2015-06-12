@@ -61,9 +61,11 @@
     [photoQueue addObject:contactPhotoBottom];
     [photoQueue addObject:contactPhotoAnchor];
     
-    // Add contact card as subview
+    // Add contact card and queues as subviews
     [[self view] addSubview:contactCard];
+    [[self view] addSubview:contactQueueView];
     [contactCard setDelegate:self];
+    [contactQueueView setDelegate:self];
     
     // Initialize the queues
     contactAppearedQueue = [[NSMutableArray alloc] initWithCapacity:5];
@@ -72,20 +74,22 @@
     // Initialize the contact queue with at most 5 urgent contacts - load appeared queue on default
     currentQueue = contactAppearedQueue;
     [self updateQueue];
+    [self printQueue];
     currentQueue = contactNeverAppearedQueue;
     [self updateQueue];
+    [self printQueue];
     currentQueue = contactAppearedQueue;
     [self getNextContactFromQueue];
     
-    // Switch to new contact queue if no reminders have been set
-    if (!currentContact) {
-        [self switchQueue:nil];
-    }
-    
-    // Switch back to reminders queue if no new contacts
-    if (!currentContact) {
-        [self switchQueue:nil];
-    }
+//    // Switch to new contact queue if no reminders have been set
+//    if (!currentContact) {
+//        [self switchQueue:nil];
+//    }
+//    
+//    // Switch back to reminders queue if no new contacts
+//    if (!currentContact) {
+//        [self switchQueue:nil];
+//    }
     
     [self updateUI];
     
@@ -133,6 +137,7 @@
     
     // Save the original centers after main view has loaded -- method is screen width dependent
     [contactCard setImageCentersAndMasks];
+    [contactQueueView setImageCenters];
     
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [contactQueueView setAlpha:1];
@@ -474,7 +479,78 @@
     });
 }
 
+#pragma mark - Tap Gestures
+
+- (IBAction)deleteContactButton:(id)sender {
+    [contactCard leftAction];
+}
+
+- (IBAction)checkContactButton:(id)sender {
+    [self performSegueWithIdentifier:@"contact" sender:sender];
+}
+
+- (IBAction)postponeContactButton:(id)sender {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
+    [pvc setShouldHideCancelButton:NO];
+    [pvc setPostponingContact:YES];
+    [pvc setPostponingContactFromButton:YES];
+    [pvc setDisplayedInMainView:YES];
+    [pvc setContact:currentContact];
+    [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
+    [self presentViewController:pvc animated:YES completion:nil];
+}
+
+// Delete the current contact and refresh the queue
+- (void)deleteContact {
+    [DebugLogger log:@"Delete" withPriority:mainViewControllerPriority];
+    
+    ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
+    
+    // Update metadata for contact
+    NSDate *today = [NSDate date];
+    [metadata setNoInterestDate:today];
+    [metadata setInterest:[NSNumber numberWithBool:NO]];
+    [metadata setNumTimesAppeared:[NSNumber numberWithInt:([[metadata numTimesAppeared] intValue] + 1)]];
+    [self save];
+    
+    // Delete photo information to save space before dismissing contact
+    [currentContact setFacebookPhoto:nil];
+    [currentContact setLinkedinPhoto:nil];
+    [self dismissContact];
+}
+
+// Switch between "appeared" and "never appeared queues
+// When switching, we need to add the current contact back to the queue
+- (IBAction)switchQueue:(id)sender {
+    [DebugLogger log:@"Switching Queues" withPriority:mainViewControllerPriority];
+    
+    // Disable sliding cards while we change queues
+    [contactCard setUserInteractionEnabled:NO];
+    
+    // Switch queue
+    if (currentQueue == contactAppearedQueue) {
+        currentQueue = contactNeverAppearedQueue;
+        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];
+        [contactQueueView dismissQueueLeft];
+    } else {
+        currentQueue = contactAppearedQueue;
+        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
+        [contactQueueView dismissQueueRight];
+    }
+}
+
 #pragma mark - UI upating
+
+- (void)updateQueueWhileOffscreen {
+    // Redraw the UI with information from the current queue
+    [DebugLogger log:@"updating while offscreen" withPriority:mainViewControllerPriority];
+    [self updateQueue];
+    [contactCard showAndEnableInteraction];
+    [self getNextContactFromQueue];
+    [self updateUI];
+    [self printQueue];
+}
 
 // Display photos for contacts in the current queue
 - (void)updateUI {
@@ -537,72 +613,6 @@
     
     // Make sure to make the action buttons are visible
     [contactActionButtonsView setHidden:NO];
-}
-
-#pragma mark - Tap Gestures
-
-- (IBAction)deleteContactButton:(id)sender {
-    [contactCard leftAction];
-}
-
-- (IBAction)checkContactButton:(id)sender {
-    [self performSegueWithIdentifier:@"contact" sender:sender];
-}
-
-- (IBAction)postponeContactButton:(id)sender {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
-    [pvc setShouldHideCancelButton:NO];
-    [pvc setPostponingContact:YES];
-    [pvc setPostponingContactFromButton:YES];
-    [pvc setDisplayedInMainView:YES];
-    [pvc setContact:currentContact];
-    [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-    [self presentViewController:pvc animated:YES completion:nil];
-}
-
-// Delete the current contact and refresh the queue
-- (void)deleteContact {
-    [DebugLogger log:@"Delete" withPriority:mainViewControllerPriority];
-    
-    ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
-    
-    // Update metadata for contact
-    NSDate *today = [NSDate date];
-    [metadata setNoInterestDate:today];
-    [metadata setInterest:[NSNumber numberWithBool:NO]];
-    [metadata setNumTimesAppeared:[NSNumber numberWithInt:([[metadata numTimesAppeared] intValue] + 1)]];
-    [self save];
-    
-    // Delete photo information to save space before dismissing contact
-    [currentContact setFacebookPhoto:nil];
-    [currentContact setLinkedinPhoto:nil];
-    [self dismissContact];
-}
-
-// Switch between "appeared" and "never appeared queues
-// When switching, we need to add the current contact back to the queue
-- (IBAction)switchQueue:(id)sender {
-    [DebugLogger log:@"Switching Queues" withPriority:mainViewControllerPriority];
-    
-    // Disable sliding cards while we change queues
-    [contactCard setUserInteractionEnabled:NO];
-    
-    // Switch queue
-    if (currentQueue == contactAppearedQueue) {
-        currentQueue = contactNeverAppearedQueue;
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];
-    } else {
-        currentQueue = contactAppearedQueue;
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
-    }
-    
-    // Redraw the UI with information from the current queue
-    [self updateQueue];
-    [contactCard showAndEnableInteraction];
-    [self getNextContactFromQueue];
-    [self updateUI];
-    [self printQueue];
 }
 
 #pragma mark - Custom Animation
