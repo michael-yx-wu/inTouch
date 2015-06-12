@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C03B9531906C70D003221EC /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D9918C175D3009A96D8 /* AddressBookUI.framework */; };
+		4C0A59C61B2B39A600D33B43 /* ContactQueueView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0A59C51B2B39A600D33B43 /* ContactQueueView.m */; };
 		4C0ED67D1A2D8A3700718BE7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D7318C16FF7009A96D8 /* Main.storyboard */; };
 		4C28268B1A48FCC600DA6692 /* NotificationStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C28268A1A48FCC600DA6692 /* NotificationStrings.m */; };
 		4C2F32271ABC84C0004DF832 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F32261ABC84C0004DF832 /* RootViewController.m */; };
@@ -57,6 +58,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4C0A59C41B2B39A600D33B43 /* ContactQueueView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactQueueView.h; sourceTree = "<group>"; };
+		4C0A59C51B2B39A600D33B43 /* ContactQueueView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactQueueView.m; sourceTree = "<group>"; };
+		4C0A59C71B2B3FCA00D33B43 /* MainViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewDelegate.h; sourceTree = "<group>"; };
 		4C1C34C1192943C20003DB81 /* DebugConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DebugConstants.h; sourceTree = "<group>"; };
 		4C2826891A48FCC600DA6692 /* NotificationStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationStrings.h; sourceTree = "<group>"; };
 		4C28268A1A48FCC600DA6692 /* NotificationStrings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationStrings.m; sourceTree = "<group>"; };
@@ -211,6 +215,8 @@
 				4CC73FD11906330900B932A7 /* ContactManager.m */,
 				4CC61A9B19AA74EC00FF7118 /* ContactCardView.h */,
 				4CC61A9C19AA74EC00FF7118 /* ContactCardView.m */,
+				4C0A59C41B2B39A600D33B43 /* ContactQueueView.h */,
+				4C0A59C51B2B39A600D33B43 /* ContactQueueView.m */,
 				4C340D9F18C17ACF009A96D8 /* DebugLogger.h */,
 				4C340DA018C17ACF009A96D8 /* DebugLogger.m */,
 				4CB4AA201A47E8400017EF9E /* FacebookManager.h */,
@@ -260,6 +266,7 @@
 			children = (
 				4C340D7618C16FF7009A96D8 /* MainViewController.h */,
 				4C340D7718C16FF7009A96D8 /* MainViewController.m */,
+				4C0A59C71B2B3FCA00D33B43 /* MainViewDelegate.h */,
 				4C47934B18E0EB2900A408AB /* ContactViewController.h */,
 				4C47934C18E0EB2900A408AB /* ContactViewController.m */,
 			);
@@ -426,6 +433,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C340D7218C16FF7009A96D8 /* AppDelegate.m in Sources */,
+				4C0A59C61B2B39A600D33B43 /* ContactQueueView.m in Sources */,
 				4C28268B1A48FCC600DA6692 /* NotificationStrings.m in Sources */,
 				4CC73FD21906330900B932A7 /* ContactManager.m in Sources */,
 				4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */,

@@ -12,3 +12,6 @@ extern NSString *const contactedNotification;
 extern NSString *const pickerViewDoneNotification;
 extern NSString *const pickerViewDoneFromSettingsNotification;
 extern NSString *const pickerViewCancelNotification;
+
+// Queue switching
+extern NSString *const queueSwitchingDoneNotification;

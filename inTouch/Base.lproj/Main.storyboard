@@ -70,7 +70,7 @@
                                     <action selector="switchQueue:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="dRb-zS-Ldz"/>
                                 </connections>
                             </button>
-                            <view alpha="0.0" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lwa-de-2St" userLabel="Contact Queue">
+                            <view alpha="0.0" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lwa-de-2St" userLabel="Contact Queue" customClass="ContactQueueView">
                                 <rect key="frame" x="160" y="56" width="280" height="277"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="default_profile_fade3" translatesAutoresizingMaskIntoConstraints="NO" id="xvG-Uz-HjS" userLabel="Contact Photo Anchor">
@@ -472,6 +472,12 @@
                                         <include reference="sCE-cE-2tW"/>
                                     </mask>
                                 </variation>
+                                <connections>
+                                    <outlet property="contactCard" destination="dqC-Xd-Jnt" id="bxh-cU-s7g"/>
+                                    <outlet property="photoAnchor" destination="xvG-Uz-HjS" id="cHI-9H-vnW"/>
+                                    <outlet property="photoBottom" destination="dvT-RX-nVs" id="8CW-2t-ruQ"/>
+                                    <outlet property="photoMiddle" destination="pdc-uE-fOz" id="9PH-sp-3mb"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fX2-aQ-ian" userLabel="Contact Action Buttons View">
                                 <rect key="frame" x="185" y="356" width="230" height="79"/>
@@ -2179,25 +2185,40 @@
                                                     <rect key="frame" x="292" y="12" width="20" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="HWz-qm-3oU"/>
+                                                        <constraint firstAttribute="height" constant="20" id="Q1M-6h-mxD"/>
+                                                        <constraint firstAttribute="width" constant="20" id="Xyk-k8-pjd"/>
                                                         <constraint firstAttribute="width" constant="20" id="cZE-qJ-v0E"/>
+                                                        <constraint firstAttribute="width" secondItem="pi9-dl-VNf" secondAttribute="height" multiplier="1:1" id="sth-cs-ohd"/>
                                                     </constraints>
                                                     <variation key="default">
                                                         <mask key="constraints">
                                                             <exclude reference="HWz-qm-3oU"/>
+                                                            <exclude reference="Q1M-6h-mxD"/>
+                                                            <exclude reference="Xyk-k8-pjd"/>
                                                             <exclude reference="cZE-qJ-v0E"/>
+                                                            <exclude reference="sth-cs-ohd"/>
                                                         </mask>
                                                     </variation>
                                                     <variation key="heightClass=regular-widthClass=compact">
                                                         <mask key="constraints">
-                                                            <include reference="HWz-qm-3oU"/>
-                                                            <include reference="cZE-qJ-v0E"/>
+                                                            <exclude reference="HWz-qm-3oU"/>
+                                                            <include reference="Q1M-6h-mxD"/>
+                                                            <include reference="Xyk-k8-pjd"/>
+                                                            <exclude reference="cZE-qJ-v0E"/>
+                                                            <exclude reference="sth-cs-ohd"/>
                                                         </mask>
                                                     </variation>
                                                 </activityIndicatorView>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="pi9-dl-VNf" secondAttribute="bottom" constant="3.5" id="OKy-0N-0IB">
+                                                    <variation key="heightClass=regular-widthClass=compact" constant="4"/>
+                                                </constraint>
                                                 <constraint firstAttribute="centerY" secondItem="pi9-dl-VNf" secondAttribute="centerY" id="Oq1-K8-qdx"/>
-                                                <constraint firstItem="Aso-ni-3jn" firstAttribute="leading" secondItem="abE-n6-6B1" secondAttribute="leadingMargin" constant="6" id="WMs-Et-yXi"/>
+                                                <constraint firstItem="Aso-ni-3jn" firstAttribute="leading" secondItem="abE-n6-6B1" secondAttribute="leadingMargin" constant="6" id="WMs-Et-yXi">
+                                                    <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                                                </constraint>
+                                                <constraint firstItem="pi9-dl-VNf" firstAttribute="top" secondItem="abE-n6-6B1" secondAttribute="topMargin" constant="4" id="dm2-6o-T8d"/>
                                                 <constraint firstAttribute="centerY" secondItem="Aso-ni-3jn" secondAttribute="centerY" id="sVP-Ar-ZLD"/>
                                                 <constraint firstItem="pi9-dl-VNf" firstAttribute="trailing" secondItem="abE-n6-6B1" secondAttribute="trailingMargin" id="tNl-hD-pl7"/>
                                             </constraints>
@@ -2205,7 +2226,9 @@
                                                 <mask key="constraints">
                                                     <exclude reference="WMs-Et-yXi"/>
                                                     <exclude reference="sVP-Ar-ZLD"/>
+                                                    <exclude reference="OKy-0N-0IB"/>
                                                     <exclude reference="Oq1-K8-qdx"/>
+                                                    <exclude reference="dm2-6o-T8d"/>
                                                     <exclude reference="tNl-hD-pl7"/>
                                                 </mask>
                                             </variation>
@@ -2213,7 +2236,9 @@
                                                 <mask key="constraints">
                                                     <include reference="WMs-Et-yXi"/>
                                                     <include reference="sVP-Ar-ZLD"/>
+                                                    <exclude reference="OKy-0N-0IB"/>
                                                     <include reference="Oq1-K8-qdx"/>
+                                                    <exclude reference="dm2-6o-T8d"/>
                                                     <include reference="tNl-hD-pl7"/>
                                                 </mask>
                                             </variation>

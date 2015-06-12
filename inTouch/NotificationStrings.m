@@ -14,3 +14,6 @@ NSString *const contactedNotification = @"contacted";
 NSString *const pickerViewDoneNotification = @"pickerViewDone";
 NSString *const pickerViewDoneFromSettingsNotification = @"pickerViewDoneSettings";
 NSString *const pickerViewCancelNotification = @"pickerViewCancel";
+
+// Queue switching
+NSString *const queueSwitchingDoneNotification = @"queueSwitchingDone";

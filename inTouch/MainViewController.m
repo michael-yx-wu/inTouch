@@ -61,9 +61,11 @@
     [photoQueue addObject:contactPhotoBottom];
     [photoQueue addObject:contactPhotoAnchor];
     
-    // Add contact card as subview
+    // Add contact card and queues as subviews
     [[self view] addSubview:contactCard];
+    [[self view] addSubview:contactQueueView];
     [contactCard setDelegate:self];
+    [contactQueueView setDelegate:self];
     
     // Initialize the queues
     contactAppearedQueue = [[NSMutableArray alloc] initWithCapacity:5];
@@ -72,22 +74,24 @@
     // Initialize the contact queue with at most 5 urgent contacts - load appeared queue on default
     currentQueue = contactAppearedQueue;
     [self updateQueue];
+    [self printQueue];
     currentQueue = contactNeverAppearedQueue;
     [self updateQueue];
+    [self printQueue];
     currentQueue = contactAppearedQueue;
     [self getNextContactFromQueue];
     
-    // Switch to new contact queue if no reminders have been set
-    if (!currentContact) {
-        [self switchQueue:nil];
-    }
+//    // Switch to new contact queue if no reminders have been set
+//    if (!currentContact) {
+//        [self switchQueue:nil];
+//    }
+//    
+//    // Switch back to reminders queue if no new contacts
+//    if (!currentContact) {
+//        [self switchQueue:nil];
+//    }
     
-    // Switch back to reminders queue if no new contacts
-    if (!currentContact) {
-        [self switchQueue:nil];
-    }
-    
-    [self updateUI];
+    [self updatePhotosDisplayedInQueue];
     
     // Track current facebook downloads
     fbDownloadStatus = [[NSMutableDictionary alloc] init];
@@ -102,7 +106,7 @@
     // Listen for notification to redraw profile photos when downloads finish. Photos can take several seconds to load.
     // Notification from self (background process)
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateUI)
+                                             selector:@selector(updatePhotosDisplayedInQueue)
                                                  name:photoDownloadedNotification
                                                object:nil];
     
@@ -126,6 +130,11 @@
                                              selector:@selector(pickerViewCancel:)
                                                  name:pickerViewCancelNotification
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateUIForCurrentQueue:)
+                                                 name:queueSwitchingDoneNotification
+                                               object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -133,6 +142,7 @@
     
     // Save the original centers after main view has loaded -- method is screen width dependent
     [contactCard setImageCentersAndMasks];
+    [contactQueueView setImageCenter];
     
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [contactQueueView setAlpha:1];
@@ -167,7 +177,7 @@
     }
     [self getNextContactFromQueue];
     [self updateQueue];
-    [self updateUI];
+    [self updatePhotosDisplayedInQueue];
     [self printQueue];
 }
 
@@ -317,7 +327,7 @@
     }
     [self getNextContactFromQueue];
     [self updateQueue];
-    [self updateUI];
+    [self updatePhotosDisplayedInQueue];
     [self printQueue];
 }
 
@@ -383,7 +393,7 @@
     [DebugLogger log:@"Got new facebook friend list" withPriority:mainViewControllerPriority];
     facebookFriends = [[notification userInfo] valueForKey:@"data"];
     [self reloadAllFacebookPhotos];
-    [self updateUI];
+    [self updatePhotosDisplayedInQueue];
 }
 
 - (void)reloadAllFacebookPhotos {
@@ -474,71 +484,6 @@
     });
 }
 
-#pragma mark - UI upating
-
-// Display photos for contacts in the current queue
-- (void)updateUI {
-    // If the current queue is empty
-    if (!currentContact) {
-        if (currentQueue == contactAppearedQueue) {
-            [DebugLogger log:@"No reminders" withPriority:mainViewControllerPriority];
-            [contactName setText:@"No Reminders"];
-        } else {
-            [DebugLogger log:@"No new contacts" withPriority:mainViewControllerPriority];
-            [contactName setText:@"No New Contacts"];
-        }
-        
-        // Hide the current queue
-        [contactCard hideAndDisableInteraction];
-        
-        // Hide the buttons
-        [contactActionButtonsView setHidden:YES];
-        return;
-    }
-    
-    // Set display name
-    NSString *name = [NSString stringWithFormat:@"%@ %@", [currentContact nameFirst], [currentContact nameLast]];
-    [contactName setText:name];
-    
-    // Draw the queue photos
-    int i;
-    for (i = 0; i < [currentQueue count] && i < 4; i++) {
-        // Get queued contact id
-        Contact *queuedContact = [currentQueue objectAtIndex:i];
-        NSData *photoData = [queuedContact getPhotoData];
-        UIImageView *queuedPhoto = [photoQueue objectAtIndex:i];
-        UIImage *img;
-        bool shouldUseDefaultPhoto = NO;
-        if (!photoData) {
-            shouldUseDefaultPhoto = YES;
-        } else {
-            // Use found data if resolution sufficiently high
-            img = [[UIImage alloc] initWithData:photoData];
-            NSInteger resolution = [img size].width * [img scale] + [img size].height * [img scale];
-            if (resolution < RESOLUTION_THRESHOLD) {
-                shouldUseDefaultPhoto = YES;
-            }
-        }
-        
-        // Set appropriate photo
-        if (shouldUseDefaultPhoto) {
-            NSString *defaultPhoto = [NSString stringWithFormat:@"default_profile_fade%d.png", i];
-            img = [UIImage imageNamed:defaultPhoto];
-        }
-        [queuedPhoto setImage:img];
-        [queuedPhoto setAlpha:1];
-    }
-    
-    // In cases where we don't have a contact to put in the queue position, hide the photo all together
-    for (; i < [photoQueue count]; i++) {
-        UIImageView *queuedPhoto = [photoQueue objectAtIndex:i];
-        [queuedPhoto setAlpha:0];
-    }
-    
-    // Make sure to make the action buttons are visible
-    [contactActionButtonsView setHidden:NO];
-}
-
 #pragma mark - Tap Gestures
 
 - (IBAction)deleteContactButton:(id)sender {
@@ -586,23 +531,108 @@
     [DebugLogger log:@"Switching Queues" withPriority:mainViewControllerPriority];
     
     // Disable sliding cards while we change queues
+    [self disableInteraction];
     [contactCard setUserInteractionEnabled:NO];
     
     // Switch queue
     if (currentQueue == contactAppearedQueue) {
         currentQueue = contactNeverAppearedQueue;
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];
+        [contactQueueView dismissQueueLeft];
     } else {
         currentQueue = contactAppearedQueue;
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
+        [contactQueueView dismissQueueRight];
     }
-    
+}
+
+#pragma mark - UI upating
+
+// Show/hide the appropriate UI graphics depending on the current queue
+- (void)updateUIForCurrentQueue:(NSNotification *)notification {
+    if (currentQueue == contactAppearedQueue) {
+        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
+    } else {
+        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];
+    }
+    if (!currentContact) {
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             [contactActionButtonsView setAlpha:0];
+                         }];
+
+    } else {
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             [contactActionButtonsView setAlpha:1];
+                         }];
+    }
+    [self enableInteraction];
+}
+
+- (void)updateQueueWhileOffscreen {
     // Redraw the UI with information from the current queue
+    [DebugLogger log:@"updating while offscreen" withPriority:mainViewControllerPriority];
     [self updateQueue];
     [contactCard showAndEnableInteraction];
     [self getNextContactFromQueue];
-    [self updateUI];
+    [self updatePhotosDisplayedInQueue];
     [self printQueue];
+}
+
+// Display photos for contacts in the current queue
+- (void)updatePhotosDisplayedInQueue {
+    // If the current queue is empty
+    if (!currentContact) {
+        if (currentQueue == contactAppearedQueue) {
+            [DebugLogger log:@"No reminders" withPriority:mainViewControllerPriority];
+            [contactName setText:@"No Reminders"];
+        } else {
+            [DebugLogger log:@"No new contacts" withPriority:mainViewControllerPriority];
+            [contactName setText:@"No New Contacts"];
+        }
+        
+        // Hide the current queue
+        [contactCard hideAndDisableInteraction];
+        return;
+    }
+    
+    // Set display name
+    NSString *name = [NSString stringWithFormat:@"%@ %@", [currentContact nameFirst], [currentContact nameLast]];
+    [contactName setText:name];
+    
+    // Draw the queue photos
+    int i;
+    for (i = 0; i < [currentQueue count] && i < 4; i++) {
+        // Get queued contact id
+        Contact *queuedContact = [currentQueue objectAtIndex:i];
+        NSData *photoData = [queuedContact getPhotoData];
+        UIImageView *queuedPhoto = [photoQueue objectAtIndex:i];
+        UIImage *img;
+        bool shouldUseDefaultPhoto = NO;
+        if (!photoData) {
+            shouldUseDefaultPhoto = YES;
+        } else {
+            // Use found data if resolution sufficiently high
+            img = [[UIImage alloc] initWithData:photoData];
+            NSInteger resolution = [img size].width * [img scale] + [img size].height * [img scale];
+            if (resolution < RESOLUTION_THRESHOLD) {
+                shouldUseDefaultPhoto = YES;
+            }
+        }
+        
+        // Set appropriate photo
+        if (shouldUseDefaultPhoto) {
+            NSString *defaultPhoto = [NSString stringWithFormat:@"default_profile_fade%d.png", i];
+            img = [UIImage imageNamed:defaultPhoto];
+        }
+        [queuedPhoto setImage:img];
+        [queuedPhoto setAlpha:1];
+    }
+    
+    // In cases where we don't have a contact to put in the queue position, hide the photo all together
+    for (; i < [photoQueue count]; i++) {
+        UIImageView *queuedPhoto = [photoQueue objectAtIndex:i];
+        [queuedPhoto setAlpha:0];
+    }
 }
 
 #pragma mark - Custom Animation
