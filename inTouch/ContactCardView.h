@@ -1,13 +1,6 @@
 #import "Contact.h"
 
-@protocol MainViewDelegate <NSObject>
-
-- (void)deleteContact;
-- (void)performSegueWithIdentifier:(NSString *)string sender:(id)sender;
-- (void)dismissContactAndSetReminder:(NSUInteger)days;
-- (void)showPickerView;
-
-@end
+#import "MainViewDelegate.h"
 
 @interface ContactCardView : UIView
 
@@ -35,7 +28,7 @@
 - (void)setImageCentersAndMasks;
 - (void)leftAction;
 - (void)rightActionFromButton:(NSInteger)days;
-- (void)slideContactCardUp:(NSUInteger)days;
+- (void)slideContactCardUp:(NSInteger)days;
 - (void)showNameLabel;
 - (void)returnToOriginalPositions;
 - (void)hideAndDisableInteraction;

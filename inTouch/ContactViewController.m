@@ -10,8 +10,7 @@
 #import "ContactViewController.h"
 #import "NotificationStrings.h"
 
-@interface ContactViewController () <MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate>
-
+@interface ContactViewController ()
 @end
 
 // Titles and identifier strings specific to this view controller -- not global constants
@@ -33,9 +32,6 @@ static NSString *contactedGeneric = @"generic";
 @synthesize emailButton;
 
 @synthesize contact;
-@synthesize photoData;
-@synthesize firstName;
-@synthesize lastName;
 @synthesize allEmailAddresses;
 @synthesize allPhoneNumbers;
 
@@ -55,10 +51,11 @@ static NSString *contactedGeneric = @"generic";
     allPhoneNumbers = [[NSMutableDictionary alloc] init];
 
     // Get necessary information from contact
-    [self setName];
-    [contactPhoto setImage:photoData];
-    [self getNumbers];
-    [self getEmails];
+    NSString *name = [NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]];
+    [contactName setText:name];
+    [contactPhoto setImage:[UIImage imageWithData:[contact getPhotoData]]];
+    allPhoneNumbers = [contact getPhoneNumbers];
+    allEmailAddresses = [contact getEmails];
     
     // Disable buttons if needed
     if ([allPhoneNumbers count] == 0 || ![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tel://"]]) {
@@ -77,7 +74,11 @@ static NSString *contactedGeneric = @"generic";
                                                     initWithTarget:self action:@selector(wasTapped:)];
     [contactCard addGestureRecognizer:tapGestureRecognizer];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissCall) name:CTCallStateDisconnected object:nil];
+    // Listen for call end notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(dismissCall)
+                                                 name:CTCallStateDisconnected
+                                               object:nil];
 }
 
 // Set mask only after view appears because it is screen width dependent
@@ -97,282 +98,159 @@ static NSString *contactedGeneric = @"generic";
     [contactPhoto setAlpha:0];
 }
 
-#pragma mark - Getting contact information
-
-- (void)setName {
-    NSString *name = [NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]];
-    [contactName setText:name];
-}
-
-- (void)getNumbers {
-    [DebugLogger log:@"Getting all linked numbers" withPriority:contactCardViewPriority];
-    int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
-    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-    ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
-    CFArrayRef linkedAddressBookContacts = ABPersonCopyArrayOfAllLinkedPeople(addressBookContact);
-    
-    ABRecordRef linkedAddressBookContact;
-    ABMultiValueRef phoneNumbers;
-    for (CFIndex i = 0; i < CFArrayGetCount(linkedAddressBookContacts); i++) {
-        linkedAddressBookContact = CFArrayGetValueAtIndex(linkedAddressBookContacts, i);
-        phoneNumbers = ABRecordCopyValue(linkedAddressBookContact, kABPersonPhoneProperty);
-        
-        // Loop through linked contact's phone numbers and add everything to allPhoneNumbers
-        for (CFIndex j = 0; j < ABMultiValueGetCount(phoneNumbers); j++) {
-            NSString *label = (__bridge_transfer NSString*)ABMultiValueCopyLabelAtIndex(phoneNumbers, j);
-            label = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label);
-            if ([label isEqualToString:@""]) {
-                label = @"other";
-            }
-            NSString *phoneNumber = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(phoneNumbers, j);
-            [allPhoneNumbers setObject:phoneNumber forKey:label];
-        }
-        CFRelease(phoneNumbers);
-    }
-    CFRelease(linkedAddressBookContacts);
-    CFRelease(addressBookRef);
-}
-
-- (void)getEmails {
-    [DebugLogger log:@"Getting all linked emails" withPriority:contactCardViewPriority];
-    int abrecordid = [ContactManager verifyABRecordID:[[contact abrecordid] intValue] forContact:contact];
-    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
-    ABRecordRef addressBookContact = ABAddressBookGetPersonWithRecordID(addressBookRef, abrecordid);
-    CFArrayRef linkedAddressBookContacts = ABPersonCopyArrayOfAllLinkedPeople(addressBookContact);
-    
-    ABRecordRef linkedAddressBookContact;
-    ABMultiValueRef emails;
-    for (CFIndex i = 0; i < CFArrayGetCount(linkedAddressBookContacts); i++) {
-        linkedAddressBookContact = CFArrayGetValueAtIndex(linkedAddressBookContacts, i);
-        emails = ABRecordCopyValue(linkedAddressBookContact, kABPersonEmailProperty);
-        
-        // Loop through linked contact's phone numbers and add everything to allPhoneNumbers
-        for (CFIndex j = 0; j < ABMultiValueGetCount(emails); j++) {
-            NSString *label = (__bridge_transfer NSString*)ABMultiValueCopyLabelAtIndex(emails, j);
-            label = (__bridge_transfer NSString*)ABAddressBookCopyLocalizedLabel((__bridge CFStringRef)label);
-            NSString *email = (__bridge_transfer NSString*)ABMultiValueCopyValueAtIndex(emails, j);
-            if ([label isEqualToString:@""]) {
-                label = @"other";
-            }
-            [allEmailAddresses setObject:email forKey:label];
-        }
-        
-        // Release if not null
-        CFRelease(emails);
-    }
-    CFRelease(linkedAddressBookContacts);
-    CFRelease(addressBookRef);
-}
-
 #pragma mark - Button Actions
 
-// Phone or message button pressed. Show UIActionSheet with phone numbers for contact
+// Phone or message button pressed. Show phone numbers for contact
 - (IBAction)showNumbers:(id)sender {
     [DebugLogger log:@"Call button pressed" withPriority:contactViewControllerPriority];
 
-    // Set action sheet title based on sender
-    UIActionSheet *selectNumber;
+    // Alert controller title depends on which button was presses
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                             message:nil
+                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
     if (sender == callButton) {
-        selectNumber = [[UIActionSheet alloc] initWithTitle:phoneActionSheetTitle
-                                                   delegate:self
-                                          cancelButtonTitle:nil
-                                     destructiveButtonTitle:nil
-                                          otherButtonTitles:nil];
-    } else if (sender == messageButton) {
-        selectNumber = [[UIActionSheet alloc] initWithTitle:messageActionSheetTitle
-                                                   delegate:self
-                                          cancelButtonTitle:nil
-                                     destructiveButtonTitle:nil
-                                          otherButtonTitles:nil];
+        [alertController setTitle:phoneActionSheetTitle];
+    } else {
+        [alertController setTitle:messageActionSheetTitle];
     }
-    
-    // Add all numbers to action sheet
+
+    // Add all numbers
     NSArray *sortedLabels = [[allPhoneNumbers allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
     NSUInteger i;
     for (i = 0; i < [sortedLabels count]; i++) {
         NSString *numberWithLabel = [NSString stringWithFormat:@"%@: %@",
                                      [sortedLabels objectAtIndex:i],
                                      [allPhoneNumbers valueForKey:[sortedLabels objectAtIndex:i]]];
-        [selectNumber addButtonWithTitle:numberWithLabel];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:numberWithLabel
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction *action) {
+                                                           NSRange rangeOfColonSpace = [numberWithLabel rangeOfString:@": "];
+                                                           NSString *number = [numberWithLabel substringFromIndex:rangeOfColonSpace.location + rangeOfColonSpace.length];
+                                                           if (sender == callButton) {
+                                                               number = [number stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                                                               number = [NSString stringWithFormat:@"telprompt:%@", number];
+                                                               NSURL *url = [NSURL URLWithString:number];
+                                                               [[UIApplication sharedApplication] openURL:url];
+                                                           } else {
+                                                               MFMessageComposeViewController *messageViewController = [[MFMessageComposeViewController alloc] init];
+                                                               [messageViewController setRecipients:@[number]];
+                                                               [messageViewController setMessageComposeDelegate:self];
+                                                               [self presentViewController:messageViewController animated:YES completion:nil];
+                                                           }
+                                                       }];
+        [alertController addAction:action];
     }
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
     
-    // Add the cancel button at the bottom
-    [selectNumber addButtonWithTitle:@"Cancel"];
-    [selectNumber setCancelButtonIndex:i];
-    
-    // Show action sheet
-    [selectNumber showInView:[self view]];
+    // Present
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
-// Email button pressed. Show UIActionSheet with emails for contact
+// Email button pressed. Show emails for contact
 - (IBAction)showEmails:(id)sender {
     [DebugLogger log:@"Email button pressed" withPriority:contactViewControllerPriority];
     
-    // Set action sheet title based on sender
-    UIActionSheet *selectEmail;
-    selectEmail = [[UIActionSheet alloc] initWithTitle:emailActionSheetTitle
-                                               delegate:self
-                                      cancelButtonTitle:nil
-                                 destructiveButtonTitle:nil
-                                      otherButtonTitles:nil];
-    
-    // Add all numbers to action sheet
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:emailActionSheetTitle
+                                                                             message:nil
+                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
     NSArray *sortedLabels = [[allEmailAddresses allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-    NSUInteger i;
-    for (i = 0; i < [sortedLabels count]; i++) {
+    for (NSInteger i = 0; i < [sortedLabels count]; i++) {
         NSString *emailWithLabel = [NSString stringWithFormat:@"%@: %@",
-                                     [sortedLabels objectAtIndex:i],
-                                     [allEmailAddresses valueForKey:[sortedLabels objectAtIndex:i]]];
-        [selectEmail addButtonWithTitle:emailWithLabel];
+                                    [sortedLabels objectAtIndex:i],
+                                    [allEmailAddresses valueForKey:[sortedLabels objectAtIndex:i]]];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:emailWithLabel
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction *action) {
+                                                           NSRange rangeOfColonSpace = [emailWithLabel rangeOfString:@": "];
+                                                           NSString *email = [emailWithLabel substringFromIndex:rangeOfColonSpace.location + rangeOfColonSpace.length];
+                                                           NSArray *recipient = @[email];
+                                                           MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
+                                                           [mailViewController setToRecipients:recipient];
+                                                           [mailViewController setMailComposeDelegate:self];
+                                                           [self presentViewController:mailViewController animated:YES completion:nil];
+                                                       }];
+        [alertController addAction:action];
     }
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
     
-    // Add the cancel button at the bottom
-    [selectEmail addButtonWithTitle:@"Cancel"];
-    [selectEmail setCancelButtonIndex:i];
-    
-    // Show action sheet
-    [selectEmail showInView:[self view]];
+    // Present
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 // Handle message sent/cancelled events
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult) result {
-    switch (result) {
-        case MessageComposeResultCancelled: {
-            [DebugLogger log:@"Message compose cancelled" withPriority:contactViewControllerPriority];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            break;
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
+                 didFinishWithResult:(MessageComposeResult) result {
+    [self dismissViewControllerAnimated:YES completion:^{
+        switch (result) {
+            case MessageComposeResultCancelled: {
+                [DebugLogger log:@"Message compose cancelled" withPriority:contactViewControllerPriority];
+                break;
+            }
+            case MessageComposeResultFailed: {
+                [DebugLogger log:@"Message failed to send" withPriority:contactViewControllerPriority];
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                                         message:@"Message failed to send"
+                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                                    style:UIAlertActionStyleDefault
+                                                                  handler:nil]];
+                [self presentViewController:alertController animated:YES completion:nil];
+                break;
+            }
+            case MessageComposeResultSent: {
+                [DebugLogger log:@"Message sent!" withPriority:contactViewControllerPriority];
+                [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByMessage];
+                [self dismissViewController:YES];
+            }
+            default: {
+                break;
+            }
         }
-        case MessageComposeResultFailed: {
-            [DebugLogger log:@"Message failed to send" withPriority:contactViewControllerPriority];
-            UIAlertView *warningAlert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Messaged failed to send!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [warningAlert show];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            break;
-        }
-        case MessageComposeResultSent: {
-            [DebugLogger log:@"Message sent!" withPriority:contactViewControllerPriority];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            [self performSelector:@selector(dismissMessage) withObject:nil afterDelay:1];
-        }
-        default: {
-            break;
-        }
-    }
+    }];
 }
 
 // Handle email sent/cancelled events
-- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
-    switch (result) {
-        case MFMailComposeResultCancelled: {
-            [DebugLogger log:@"Email compose cancelled" withPriority:contactViewControllerPriority];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            break;
+- (void)mailComposeController:(MFMailComposeViewController *)controller
+          didFinishWithResult:(MFMailComposeResult)result
+                        error:(NSError *)error {
+    [self dismissViewControllerAnimated:YES completion:^{
+        switch (result) {
+            case MFMailComposeResultCancelled: {
+                [DebugLogger log:@"Email compose cancelled" withPriority:contactViewControllerPriority];
+                break;
+            }
+            case MFMailComposeResultFailed: {
+                [DebugLogger log:@"Email failed to save/send" withPriority:contactViewControllerPriority];
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                                         message:@"Mail failed to send or save"
+                                                                                  preferredStyle:UIAlertControllerStyleAlert];
+                [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                                   style:UIAlertActionStyleDefault
+                                                                  handler:nil]];
+                [self presentViewController:alertController animated:YES completion:nil];
+                break;
+            }
+            case MFMailComposeResultSaved: {
+                [DebugLogger log:@"Email saved" withPriority:contactViewControllerPriority];
+                break;
+            }
+            case MFMailComposeResultSent: {
+                [DebugLogger log:@"Message sent" withPriority:contactViewControllerPriority];
+                [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByEmail];
+                [self dismissViewController:YES];
+                break;
+            }
+            default: {
+                break;
+            }
         }
-        case MFMailComposeResultFailed: {
-            [DebugLogger log:@"Email failed to save/send" withPriority:contactViewControllerPriority];
-            break;
-        }
-        case MFMailComposeResultSaved: {
-            [DebugLogger log:@"Email saved" withPriority:contactViewControllerPriority];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            break;
-        }
-        case MFMailComposeResultSent: {
-            [DebugLogger log:@"Message sent" withPriority:contactViewControllerPriority];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            [self performSelector:@selector(dismissEmail) withObject:nil afterDelay:1];
-            break;
-        }
-        default:
-            break;
-    }
-}
-
-// Handle phone number/email selection from UIActionSheet
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    // Cancel
-    if (buttonIndex == [actionSheet cancelButtonIndex]) {
-        return;
-    }
-    
-    NSString *numberOrEmail = [actionSheet buttonTitleAtIndex:buttonIndex];
-    NSRange rangeOfColonSpace = [numberOrEmail rangeOfString:@": "];
-    numberOrEmail = [numberOrEmail substringFromIndex:rangeOfColonSpace.location + rangeOfColonSpace.length];
-    
-    // Phone Select
-    if ([[actionSheet title] isEqualToString:phoneActionSheetTitle]) {
-        // Create the phone URL before passing it off
-        numberOrEmail = [[numberOrEmail componentsSeparatedByCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"0123456789-+()"] invertedSet]] componentsJoinedByString:@""];
-        numberOrEmail = [numberOrEmail stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        NSString *phoneURLString = [NSString stringWithFormat:@"telprompt:%@", numberOrEmail];
-        NSURL *phoneURL = [NSURL URLWithString:phoneURLString];
-        [[UIApplication sharedApplication] openURL:phoneURL];
-    }
-    
-    // Message Select
-    else if ([[actionSheet title] isEqualToString:messageActionSheetTitle]) {
-        NSArray *recipient = @[numberOrEmail];
-        MFMessageComposeViewController *messageViewController = [[MFMessageComposeViewController alloc] init];
-        [messageViewController setRecipients:recipient];
-        [messageViewController setMessageComposeDelegate:self];
-        [self presentViewController:messageViewController animated:YES completion:nil];
-    }
-    
-    // Email select
-    else if ([[actionSheet title] isEqualToString:emailActionSheetTitle]) {
-        NSArray *recipient = @[numberOrEmail];
-        MFMailComposeViewController *mailViewController = [[MFMailComposeViewController alloc] init];
-        [mailViewController setToRecipients:recipient];
-        [mailViewController setMailComposeDelegate:self];
-        [self presentViewController:mailViewController animated:YES completion:nil];
-    }
-}
-
-#pragma mark - Coredata updating
-
-// Update ContactMetadata before dismissing
-- (void)incrementNumberTimesContacted:(NSString *)medium {
-    ContactMetadata *metadata = (ContactMetadata *)[contact metadata];
-    
-    // Get timesContacted info
-    NSNumber *numTimesContacted, *numTimesCalled, *numTimesMessaged, *numTimesEmailed, *timesContacted;
-    numTimesContacted = [metadata numTimesContacted];
-    numTimesCalled = [metadata numTimesCalled];
-    numTimesMessaged = [metadata numTimesMessaged];
-    numTimesEmailed = [metadata numTimesEmailed];
-    
-    // Increment times contacted
-    timesContacted = [NSNumber numberWithInt:[numTimesContacted intValue]+1];
-    [metadata setNumTimesContacted:timesContacted];
-    [DebugLogger log:[NSString stringWithFormat:@"Times contacted: %d", [timesContacted intValue]] withPriority:contactViewControllerPriority];
-    
-    // Increment times contacted based on medium
-    if ([medium isEqualToString:contactedCall]) {
-        timesContacted = [NSNumber numberWithInt:[numTimesCalled intValue]+1];
-        [metadata setNumTimesCalled:timesContacted];
-        [DebugLogger log:[NSString stringWithFormat:@"Times called: %d", [timesContacted intValue]] withPriority:contactViewControllerPriority];
-    } else if ([medium isEqualToString:contactedMessage]) {
-        timesContacted = [NSNumber numberWithInt:[numTimesMessaged intValue]+1];
-        [metadata setNumTimesMessaged:timesContacted];
-        [DebugLogger log:[NSString stringWithFormat:@"Times messaged: %d", [timesContacted intValue]] withPriority:contactViewControllerPriority];
-    } else if ([medium isEqualToString:contactedEmail]) {
-        timesContacted = [NSNumber numberWithInt:[numTimesEmailed intValue]+1];
-        [metadata setNumTimesEmailed:timesContacted];
-        [DebugLogger log:[NSString stringWithFormat:@"Times emailed: %d", [timesContacted intValue]] withPriority:contactViewControllerPriority];
-    } else if (![medium isEqualToString:contactedGeneric]){
-        [DebugLogger log:@"Error updating contact method frequency... please check spelling!" withPriority:contactViewControllerPriority];
-    }
-
-    // Set last contact date
-    NSDate *today = [NSDate date];
-    [metadata setLastContactedDate:today];
+    }];
 }
 
 #pragma mark - Dismiss methods
 
 - (void)wasTapped:(UITapGestureRecognizer *)tapGestureRecognizer {
     // Tapped picture, dismiss controller
-    NSLog(@"tapped");
     [self dismissCancel:nil];
 }
 
@@ -383,26 +261,14 @@ static NSString *contactedGeneric = @"generic";
 
 - (IBAction)dismissContacted:(id)sender {
     // Generic contacted method
-    [self incrementNumberTimesContacted:contactedGeneric];
+    [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedManually];
     [self dismissViewController:YES];
 }
 
 - (void)dismissCall {
     // Record call click before dismissal
-    [self incrementNumberTimesContacted:contactedCall];
+    [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByCall];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:CTCallStateDisconnected object:nil];
-    [self dismissViewController:YES];
-}
-
-- (void)dismissMessage {
-    // Record message click before dismissal
-    [self incrementNumberTimesContacted:contactedMessage];
-    [self dismissViewController:YES];
-}
-
-- (void)dismissEmail {
-    // Record email click before dismissal
-    [self incrementNumberTimesContacted:contactedEmail];
     [self dismissViewController:YES];
 }
 
@@ -414,7 +280,6 @@ static NSString *contactedGeneric = @"generic";
         }
     }];
 }
-
 
 #pragma mark - Core Data Accessor Methods
 

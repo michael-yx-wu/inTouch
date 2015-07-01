@@ -6,31 +6,41 @@
 
 @interface AllContactsTableViewController () {
     Contact *selectedContact;
+    NSMutableDictionary *contacts;
+    NSMutableDictionary *contactIDs;
+    NSMutableDictionary *contactCounts;
+    NSMutableArray *sectionTitles;
 }
 
 @end
 
 @implementation AllContactsTableViewController
 
-@synthesize contactIDs;
-@synthesize contacts;
-@synthesize alphabetIndices;
-
-- (id)initWithStyle:(UITableViewStyle)style {
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Initialize the arrays
-    contactIDs = [[NSMutableArray alloc] init];
     contacts = [[NSMutableDictionary alloc] init];
+    contactIDs = [[NSMutableDictionary alloc] init];
+    contactCounts = [[NSMutableDictionary alloc] init];
+    [[self tableView] registerClass:[UITableViewCell class] forCellReuseIdentifier:@"ContactCell"];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
     
+    // Refresh contact list each time view will appear
+    [self refreshContactList];
+    
+    // Get the section titles and manually put the hashtag section at the end
+    sectionTitles = [NSMutableArray arrayWithArray:[[contactCounts allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
+    if ([[sectionTitles objectAtIndex:0] isEqualToString:@"#"]) {
+        [sectionTitles removeObjectAtIndex:0];
+        [sectionTitles addObject:@"#"];
+    }
+    [[self tableView] reloadData];
+}
+
+- (void)refreshContactList {
     // Set up the request to retrieve all contacts
     NSManagedObjectContext *moc = [self managedObjectContext];
     NSManagedObjectModel *model = [self managedObjectModel];
@@ -50,110 +60,135 @@
         abort();
     }
     
+    // Sort by first letter of name
+    NSCharacterSet *alpha = [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSZTUVWXYZ"];
     for (Contact *contact in results) {
-        [contactIDs addObject:[contact abrecordid]];
-        [contacts setValue:contact forKeyPath:[NSString stringWithFormat:@"%@", [contact abrecordid]]];
-    }
-
-    [[self tableView] registerClass:[UITableViewCell class] forCellReuseIdentifier:@"ContactCell"];
-
-    alphabetIndices = [self createAlphabetArray];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:YES];
-    [[self tableView] reloadData];
-    alphabetIndices = [self createAlphabetArray];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (NSArray *)createAlphabetArray {
-    NSMutableDictionary *firstLetters = [[NSMutableDictionary alloc] init];
-    for (id key in [contacts allKeys]) {
-        Contact *contact = [contacts objectForKey:key];
         NSString *name = [NSString stringWithFormat:@"%@%@", [contact nameFirst], [contact nameLast]];
-        // Check for first letter only on non-empty strings
+        NSString *abrecordid = [NSString stringWithFormat:@"%@", [contact abrecordid]];
+        NSString *firstLetter;
         if (![name isEqualToString:@""]) {
-            NSString *firstLetter = [name substringToIndex:1];
-            if (![firstLetters objectForKey:firstLetter]) {
-                [firstLetters setValue:[NSNumber numberWithInt:1] forKey:firstLetter];
+            firstLetter = [[name substringToIndex:1] uppercaseString];
+            NSRange i = [firstLetter rangeOfCharacterFromSet:alpha];
+            if (i.location == NSNotFound) {
+                firstLetter = @"#";
             }
+        } else {
+            firstLetter = @"#";
         }
+        
+        // Create a abrecordid array under the letter if one does not already exist
+        if (![contactIDs objectForKey:firstLetter]) {
+            [contactIDs setValue:[[NSMutableArray alloc] init] forKey:firstLetter];
+        }
+        
+        // Add the contact
+        [contacts setValue:contact forKey:abrecordid];
+        NSMutableArray *nestedArray = [contactIDs valueForKey:firstLetter];
+        [nestedArray addObject:abrecordid];
     }
-    return [[firstLetters allKeys] sortedArrayUsingSelector:@selector(compare:)];
+    
+    // Determine total number of rows needed for each section
+    for (NSString *firstLetter in [contactIDs allKeys]) {
+        [contactCounts setValue:[NSNumber numberWithInteger:[[contactIDs valueForKey:firstLetter] count]]
+                         forKey:firstLetter];
+    }
 }
 
 #pragma mark - Table view data source
 
-// Provide a localized table index
-//- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-//    return alphabetIndices;
-//}
-
 // Return the number of sections.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-//    return [alphabetIndices count];
-    return 1;
+    return [sectionTitles count];
 }
 
+// Return the title for each section
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return [sectionTitles objectAtIndex:section];
+}
+
+// Return the section index titles (right scroll)
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    return sectionTitles;
+}
+
+// Return the number of rows in a section
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [contacts count];
+    return [[contactCounts valueForKey:[sectionTitles objectAtIndex:section]] integerValue];
 }
 
-// Fill cell with user name
+// Return the index of the section to jump to
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    return index;
+}
+
+// Fill cell with user name -- need to redo this
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Get contact/metadata by looking up associated abrecordid
-    NSInteger row  = [indexPath row];
-    NSString *contactID = [NSString stringWithFormat:@"%@", [contactIDs objectAtIndex:row]];
+    // Get contact/metadata by retrieving abrecordid associated with the indexPath
+    NSString *sectionTitle = [sectionTitles objectAtIndex:[indexPath section]];
+    NSString *contactID = [[contactIDs objectForKey:sectionTitle] objectAtIndex:[indexPath row]];
     Contact *contact = [contacts valueForKey:contactID];
     ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
     
+
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ContactCell" forIndexPath:indexPath];
     
     // Update cell text with name
     NSString *name = [NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]];
+    if ([name isEqualToString:@" "]) {
+        name = @"No name";
+    }
     [[cell textLabel] setText:name];
     
     // Get interest and set accessory appropriately
-    if ([[contactMetadata interest] intValue]) {
-        [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+    UIButton *interestButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    if ([[contactMetadata interest] boolValue]) {
+        [interestButton setImage:[UIImage imageNamed:@"interest_icon"] forState:UIControlStateNormal];
     } else {
-        [cell setAccessoryType:UITableViewCellAccessoryNone];
+        [interestButton setImage:[UIImage imageWithData:nil] forState:UIControlStateNormal];
     }
-    
+    [interestButton addTarget:self
+                       action:@selector(interestButtonTapped:withEvent:)
+             forControlEvents:UIControlEventTouchUpInside];
+    [cell setAccessoryView:interestButton];
     return cell;
 }
 
+#pragma mark - Cell taps
+
 // Show detailed contact information
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//    // Get contact/metadata by looking up associated abrecordid
-    NSInteger row  = [indexPath row];
-    NSString *contactID = [NSString stringWithFormat:@"%@", [contactIDs objectAtIndex:row]];
+    // Get contact/metadata by looking up associated abrecordid
+    NSString *sectionTitle = [sectionTitles objectAtIndex:[indexPath section]];
+    NSString *contactID = [[contactIDs objectForKey:sectionTitle] objectAtIndex:[indexPath row]];
     selectedContact = [contacts valueForKey:contactID];
 
     [self performSegueWithIdentifier:@"contactInformation" sender:self];    
     
+    // Release contacts
+    contacts = [[NSMutableDictionary alloc] init];
+    contactIDs = [[NSMutableDictionary alloc] init];
+    contactCounts = [[NSMutableDictionary alloc] init];
+    
     // Save change to database and refresh table
     [self save];
     [tableView reloadData];
-    
 }
 
-// Toggle interest on accessory select -- this will only work after we throw a transparent uiview on top of the
-// tableview to intercept touch events. This is messy, but the only way we can have this custom functionality 
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    // Get contact/metadata by looking up associated abrecordid
-    NSInteger row  = [indexPath row];
-    NSString *contactID = [NSString stringWithFormat:@"%@", [contactIDs objectAtIndex:row]];
+- (void)interestButtonTapped:(id)sender withEvent:(UIEvent *)event {
+    UIButton *interestButton = sender;
+    NSIndexPath *indexPath = [[self tableView] indexPathForRowAtPoint:[[[event touchesForView:interestButton] anyObject] locationInView:[self tableView]]];
+    if (indexPath == nil) {
+        [DebugLogger log:@"nil index path" withPriority:allContactsTableViewControllerPriority];
+        return;
+    }
+    
+    NSString *sectionTitle = [sectionTitles objectAtIndex:[indexPath section]];
+    NSString *contactID = [[contactIDs objectForKey:sectionTitle] objectAtIndex:[indexPath row]];
     Contact *contact = [contacts valueForKey:contactID];
     ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
     
     // Toggle contact interest
-    if ([[contactMetadata interest] intValue]) {
+    if ([[contactMetadata interest] boolValue]) {
         NSDate *today = [NSDate date];
         [contactMetadata setInterest:[NSNumber numberWithBool:NO]];
         [contactMetadata setNoInterestDate:today];
@@ -164,14 +199,20 @@
     
     // Save change to database and refresh table
     [self save];
-    [tableView reloadData];
+    [[self tableView] reloadData];
+    
+    [DebugLogger log:[NSString stringWithFormat:@"%@ %@ %@",
+                      [[contactMetadata interest] boolValue] ? @"Interested in" : @"Not interested in",
+                      [contact nameFirst],
+                      [contact nameLast]]
+        withPriority:allContactsTableViewControllerPriority];
 }
 
 # pragma mark - Navigation
 
 // Passing selectedContact to ContactViewController before segueing
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:editContactsTableViewControllerPriority];
+    [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:allContactsTableViewControllerPriority];
     
     // Pass contact information to the new view controller.
     if ([[segue identifier] isEqualToString:@"contactInformation"]) {
@@ -179,44 +220,6 @@
         [destViewController setContact:selectedContact];
     }
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Core Data Methods
 

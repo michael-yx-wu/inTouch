@@ -18,4 +18,14 @@
 @property (nonatomic, retain) NSString *timezone;
 @property (nonatomic, retain) NSManagedObject *contact;
 
+typedef enum : NSInteger {
+    contactedByCall,
+    contactedByMessage,
+    contactedByEmail,
+    contactedManually
+} contactedByMethod;
+
+// Increment the number of times contacted by the specified method
+- (void)incrementTimesContacted:(NSInteger)contactMethod;
+
 @end

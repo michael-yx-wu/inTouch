@@ -1,13 +1,21 @@
 #import "ContactCardView.h"
+#import "ContactQueueView.h"
 
 @interface MainViewController : UIViewController <MainViewDelegate>
 
 // Current contact name and photo
+@property (weak, nonatomic) IBOutlet ContactQueueView *contactQueueView;
 @property (weak, nonatomic) IBOutlet ContactCardView *contactCard;
 @property (weak, nonatomic) IBOutlet UILabel *contactName;
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhotoFront;
 
-// Queue photos
+// Contact queues
+@property (strong, nonatomic) NSMutableArray *contactNeverAppearedQueue;
+@property (strong, nonatomic) NSMutableArray *contactAppearedQueue;
+@property (strong, nonatomic) NSMutableDictionary *facebookFriends;
+@property (weak, nonatomic) IBOutlet UIButton *switchQueueButton;
+
+// Queue photos placeholders
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhotoMiddle;
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhotoBottom;
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhotoAnchor;
@@ -22,9 +30,7 @@
 // Gesture recognizers
 @property (weak, nonatomic) IBOutlet UITapGestureRecognizer *tapRecognizer;
 
-// Contact queue stuff
-@property (strong, nonatomic) NSMutableArray *contactNeverAppearedQueue;
-@property (strong, nonatomic) NSMutableArray *contactAppearedQueue;
-@property (strong, nonatomic) NSMutableDictionary *facebookFriends;
+- (void)facebookLogin;
+- (void)requestContactsAccessAndSync;
 
 @end

@@ -10,6 +10,11 @@
 
 @implementation GlobalData
 
+@dynamic accessToken;
+@dynamic firstContactTap;
+@dynamic firstLeftSwipe;
+@dynamic firstQueueSwitch;
+@dynamic firstRightSwipe;
 @dynamic firstRun;
 @dynamic lastUpdatedInfo;
 @dynamic numContacts;

@@ -4,24 +4,22 @@
 #import "ContactManager.h"
 #import "FacebookManager.h"
 #import "GlobalData.h"
-#import "SettingsTableViewController.h"
+
+#import "RootViewController.h"
 
 @implementation AppDelegate
 
 @synthesize window;
 @synthesize alertWindow;
-@synthesize persistentStoreCoordinator;
-@synthesize managedObjectModel;
-@synthesize managedObjectContext;
+@synthesize persistentStoreCoordinator, managedObjectModel, managedObjectContext;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Setting debug level to 1 (everything will be printed)
     [DebugLogger setDebugLevel:minimumPriorityThreshold];
     
-    // Set root view controller
+    // Set the root view controller
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    MainViewController *mainViewController = [storyboard instantiateViewControllerWithIdentifier:@"main"];
-    [[self window] setRootViewController:mainViewController];
+    RootViewController *rootViewController = [storyboard instantiateViewControllerWithIdentifier:@"root"];
+    [[self window] setRootViewController:rootViewController];
     [[self window] makeKeyAndVisible];
     
     // Create a hidden window to allow us to display facebook login errors from any view
@@ -31,6 +29,9 @@
     [alertContainer setHidden:YES];
     [self setAlertWindow:alertContainer];
     [alertContainer setRootViewController:[[UIViewController alloc] init]];
+
+    // Attempt to start facebook session on launch
+    [FacebookManager loginSilently];
     
     // Check if global data entity exists
     NSManagedObjectContext *moc = [self managedObjectContext];
@@ -48,15 +49,17 @@
     // Create global data entity if does not exist
     if ([results count] == 0) {
         GlobalData *globalData = [NSEntityDescription insertNewObjectForEntityForName:@"GlobalData" inManagedObjectContext:moc];
+        [globalData setAccessToken:nil];
         [globalData setLastUpdatedInfo:nil];
+        [globalData setFirstContactTap:[NSNumber numberWithBool:YES]];
+        [globalData setFirstLeftSwipe:[NSNumber numberWithBool:YES]];
+        [globalData setFirstQueueSwitch:[NSNumber numberWithBool:YES]];
+        [globalData setFirstRightSwipe:[NSNumber numberWithBool:YES]];
         [globalData setFirstRun:[NSNumber numberWithBool:YES]];
         [globalData setNumContacts:0];
         [globalData setNumLogins:0];
         [globalData setNumNotInterested:0];
     }
-
-    // Attempt to start facebook session on launch
-    [FacebookManager loginSilently];
     
     return YES;
 }
