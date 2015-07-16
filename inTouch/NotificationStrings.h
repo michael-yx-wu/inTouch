@@ -15,3 +15,6 @@ extern NSString *const pickerViewCancelNotification;
 
 // Queue switching
 extern NSString *const queueSwitchingDoneNotification;
+
+// Local notification
+extern NSString *const registeredForNotifications;

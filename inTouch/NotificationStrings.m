@@ -17,3 +17,6 @@ NSString *const pickerViewCancelNotification = @"pickerViewCancel";
 
 // Queue switching
 NSString *const queueSwitchingDoneNotification = @"queueSwitchingDone";
+
+// Local notifications
+NSString *const registeredForNotifications = @"registeredForNotifications";

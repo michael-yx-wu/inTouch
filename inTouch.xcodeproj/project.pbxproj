@@ -36,6 +36,7 @@
 		4C4305E81AB3FF9000F1B6B8 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4305E71AB3FF9000F1B6B8 /* TutorialViewController.m */; };
 		4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C47934C18E0EB2900A408AB /* ContactViewController.m */; };
 		4C85E5E21A339F6900FEC472 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
+		4C87A4801B5495C0008BE5D0 /* NotificationScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C87A47F1B5495C0008BE5D0 /* NotificationScheduler.m */; };
 		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
 		4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107E51934362E00BB853C /* SettingsTableViewController.m */; };
 		4CB4AA221A47E8400017EF9E /* FacebookManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB4AA211A47E8400017EF9E /* FacebookManager.m */; };
@@ -104,6 +105,8 @@
 		4C4305E71AB3FF9000F1B6B8 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		4C47934B18E0EB2900A408AB /* ContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactViewController.h; sourceTree = "<group>"; };
 		4C47934C18E0EB2900A408AB /* ContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactViewController.m; sourceTree = "<group>"; };
+		4C87A47E1B5495C0008BE5D0 /* NotificationScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationScheduler.h; sourceTree = "<group>"; };
+		4C87A47F1B5495C0008BE5D0 /* NotificationScheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationScheduler.m; sourceTree = "<group>"; };
 		4C96311418CB71CB002D05A6 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
 		4C96311518CB71CB002D05A6 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
 		4CB107E41934362E00BB853C /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
@@ -211,18 +214,13 @@
 				4C340D7318C16FF7009A96D8 /* Main.storyboard */,
 				4C340D7018C16FF7009A96D8 /* AppDelegate.h */,
 				4C340D7118C16FF7009A96D8 /* AppDelegate.m */,
-				4CC73FD01906330900B932A7 /* ContactManager.h */,
-				4CC73FD11906330900B932A7 /* ContactManager.m */,
 				4CC61A9B19AA74EC00FF7118 /* ContactCardView.h */,
 				4CC61A9C19AA74EC00FF7118 /* ContactCardView.m */,
 				4C0A59C41B2B39A600D33B43 /* ContactQueueView.h */,
 				4C0A59C51B2B39A600D33B43 /* ContactQueueView.m */,
-				4C340D9F18C17ACF009A96D8 /* DebugLogger.h */,
-				4C340DA018C17ACF009A96D8 /* DebugLogger.m */,
 				4CB4AA201A47E8400017EF9E /* FacebookManager.h */,
 				4CB4AA211A47E8400017EF9E /* FacebookManager.m */,
-				4C2826891A48FCC600DA6692 /* NotificationStrings.h */,
-				4C28268A1A48FCC600DA6692 /* NotificationStrings.m */,
+				4C87A4811B5495D6008BE5D0 /* Utility */,
 				4C42688A1915B4500014744F /* View Controllers */,
 				4C42688619158C8B0014744F /* Core Data Entities */,
 				4C340D7918C16FF7009A96D8 /* Images.xcassets */,
@@ -235,7 +233,11 @@
 			isa = PBXGroup;
 			children = (
 				4C1C34C1192943C20003DB81 /* DebugConstants.h */,
+				4C340D9F18C17ACF009A96D8 /* DebugLogger.h */,
+				4C340DA018C17ACF009A96D8 /* DebugLogger.m */,
 				4C340D6F18C16FF7009A96D8 /* inTouch-Prefix.pch */,
+				4C2826891A48FCC600DA6692 /* NotificationStrings.h */,
+				4C28268A1A48FCC600DA6692 /* NotificationStrings.m */,
 				4C340D6918C16FF7009A96D8 /* inTouch-Info.plist */,
 				4C340D6A18C16FF7009A96D8 /* InfoPlist.strings */,
 				4C340D6D18C16FF7009A96D8 /* main.m */,
@@ -298,6 +300,17 @@
 				4C2FB7731ABB8C0700613D9A /* Miscellaneous */,
 			);
 			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		4C87A4811B5495D6008BE5D0 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				4CC73FD01906330900B932A7 /* ContactManager.h */,
+				4CC73FD11906330900B932A7 /* ContactManager.m */,
+				4C87A47E1B5495C0008BE5D0 /* NotificationScheduler.h */,
+				4C87A47F1B5495C0008BE5D0 /* NotificationScheduler.m */,
+			);
+			name = Utility;
 			sourceTree = "<group>";
 		};
 		4C9B508B1A4F64F9002BC2CA /* Settings */ = {
@@ -441,6 +454,7 @@
 				4C2FB7711ABB8BD600613D9A /* LoginViewController.m in Sources */,
 				4CF7B3041984BB4A00F10889 /* ContactInformationTableViewController.m in Sources */,
 				4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */,
+				4C87A4801B5495C0008BE5D0 /* NotificationScheduler.m in Sources */,
 				4C2F32271ABC84C0004DF832 /* RootViewController.m in Sources */,
 				4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */,
 				4CB4AA221A47E8400017EF9E /* FacebookManager.m in Sources */,

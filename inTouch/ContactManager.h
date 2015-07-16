@@ -1,4 +1,4 @@
-#import "MainViewController.h"
+#import "Contact.h"
 
 @interface ContactManager : NSObject
 

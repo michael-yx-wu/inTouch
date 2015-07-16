@@ -12,9 +12,9 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [self performSegueWithIdentifier:@"mainView" sender:self];
     
     /* Hotfix: disable login screen until we have account-specific content  */
+    [self performSegueWithIdentifier:@"mainView" sender:self];
     
 //    // Check if global data entity exists
 //    NSManagedObjectContext *moc = [self managedObjectContext];

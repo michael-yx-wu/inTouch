@@ -12,3 +12,4 @@
 #define facebookManagerPriority 3
 #define rootViewControllerPriority 3
 #define loginViewControllerPriority 3
+#define notificationSchedulerPriority 3
