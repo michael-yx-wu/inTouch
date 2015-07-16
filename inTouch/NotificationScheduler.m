@@ -35,11 +35,11 @@
                                                      fromDate:[NSDate date]];
     today = [todaysComponents date];
     
-    // Using 10PM as the notification time -- subject to change in future versions
+    // Using 10AM as the notification time -- subject to change in future versions
     NSDateComponents *notificationTime = [[NSDateComponents alloc] init];
     [notificationTime setHour:10];
     
-    // Sort all contacts in to date "buckets"
+    // Sort all contacts into date "buckets"
     for (ContactMetadata *metadata in results) {
         remindDate = [metadata remindOnDate];
         NSComparisonResult dateCompare = [remindDate compare:today];
@@ -63,7 +63,12 @@
     NSDate *date;
     NSNumber *contactsForDate;
     for (int i = 0; i < [dates count]; i++) {
+        // Skip notification scheduling for today's scheduled contacts if it is past 10AM
         date = [dates objectAtIndex:i];
+        if ([date compare:[NSDate date]] == NSOrderedAscending) {
+            continue;
+        }
+        
         contactsForDate = [notificationDates objectForKey:date];
 
         // Create the notification
@@ -88,11 +93,7 @@
         
         // Schedule notification
         [[UIApplication sharedApplication] scheduleLocalNotification:notification];
-        
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss z"];
-        NSLog(@"%@: %@", [formatter stringFromDate:date], [notificationDates objectForKey:date]);
-    }    
+    }
 }
 
 // Helper method to increment the NSNumber value associated with a date in the specified dictionary. Create the entry if
@@ -108,6 +109,7 @@
 
 + (void)dismissNotifications {
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 }
 
 #pragma mark - Core Data Accessor Methods

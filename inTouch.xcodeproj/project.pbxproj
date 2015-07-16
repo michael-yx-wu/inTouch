@@ -214,12 +214,6 @@
 				4C340D7318C16FF7009A96D8 /* Main.storyboard */,
 				4C340D7018C16FF7009A96D8 /* AppDelegate.h */,
 				4C340D7118C16FF7009A96D8 /* AppDelegate.m */,
-				4CC61A9B19AA74EC00FF7118 /* ContactCardView.h */,
-				4CC61A9C19AA74EC00FF7118 /* ContactCardView.m */,
-				4C0A59C41B2B39A600D33B43 /* ContactQueueView.h */,
-				4C0A59C51B2B39A600D33B43 /* ContactQueueView.m */,
-				4CB4AA201A47E8400017EF9E /* FacebookManager.h */,
-				4CB4AA211A47E8400017EF9E /* FacebookManager.m */,
 				4C87A4811B5495D6008BE5D0 /* Utility */,
 				4C42688A1915B4500014744F /* View Controllers */,
 				4C42688619158C8B0014744F /* Core Data Entities */,
@@ -266,6 +260,10 @@
 		4C36D21E1A5207260015EF1B /* Main View */ = {
 			isa = PBXGroup;
 			children = (
+				4CC61A9B19AA74EC00FF7118 /* ContactCardView.h */,
+				4CC61A9C19AA74EC00FF7118 /* ContactCardView.m */,
+				4C0A59C41B2B39A600D33B43 /* ContactQueueView.h */,
+				4C0A59C51B2B39A600D33B43 /* ContactQueueView.m */,
 				4C340D7618C16FF7009A96D8 /* MainViewController.h */,
 				4C340D7718C16FF7009A96D8 /* MainViewController.m */,
 				4C0A59C71B2B3FCA00D33B43 /* MainViewDelegate.h */,
@@ -307,6 +305,8 @@
 			children = (
 				4CC73FD01906330900B932A7 /* ContactManager.h */,
 				4CC73FD11906330900B932A7 /* ContactManager.m */,
+				4CB4AA201A47E8400017EF9E /* FacebookManager.h */,
+				4CB4AA211A47E8400017EF9E /* FacebookManager.m */,
 				4C87A47E1B5495C0008BE5D0 /* NotificationScheduler.h */,
 				4C87A47F1B5495C0008BE5D0 /* NotificationScheduler.m */,
 			);
@@ -597,8 +597,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Michael Wu (98YW2GG2M7)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Michael Wu (98YW2GG2M7)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/Michael/Documents/FacebookSDK,
@@ -620,8 +620,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Michael Wu (QUF4M7QXQP)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Michael Wu (QUF4M7QXQP)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/Michael/Documents/FacebookSDK,
@@ -632,7 +632,7 @@
 				INFOPLIST_FILE = "inTouch/inTouch-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "45252fc7-e14e-4459-843e-46fcfb792361";
+				PROVISIONING_PROFILE = "93805a84-6804-4fc8-9add-1960da3f0880";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
