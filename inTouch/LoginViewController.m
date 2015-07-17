@@ -13,6 +13,7 @@
 @synthesize signUpForm;
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
     signUpForm = YES;
     [emailField setDelegate:self];
     [passwordField setDelegate:self];

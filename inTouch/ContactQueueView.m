@@ -59,9 +59,6 @@
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
-//                         for (UIView *view in visualElements) {
-//                             [view setCenter:[visual]
-//                         }
                          for (int i = 0; i < [visualElements count]; i++) {
                              [[visualElements objectAtIndex:i] setCenter:[[centers objectAtIndex:i] CGPointValue]];
                          }

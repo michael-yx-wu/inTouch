@@ -134,9 +134,16 @@
                                                  name:pickerViewCancelNotification
                                                object:nil];
     
+    // Listen for notifications to update the UI for the current queue after a queue switch
+    // Notifications from ContactQueueView
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updateUIForCurrentQueue:)
                                                  name:queueSwitchingDoneNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(facebookLogin:)
+                                                 name:registeredForNotifications
                                                object:nil];
 }
 
@@ -165,6 +172,8 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
     // Remove contacts that are marked as "not interested"
     int i;
     for (i = 0; i < [contactAppearedQueue count]; i++) {
@@ -213,7 +222,7 @@
         
         // Set the sort descriptor to sort by descending urgency and execute
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"remindOnDate" ascending:false];
-        NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+        NSArray *sortDescriptors = @[sortDescriptor];
         [request setSortDescriptors:sortDescriptors];
     }
     else {
@@ -370,7 +379,7 @@
 #pragma mark - Facebook methods
 
 // Request facebook login
-- (void)facebookLogin {
+- (void)facebookLogin:(NSNotification *)notification {
     UIAlertController *notNow = [UIAlertController alertControllerWithTitle:@""
                                                                     message:@"Facebook preferences can be changed in the settings menu"
                                                              preferredStyle:UIAlertControllerStyleAlert];
@@ -486,6 +495,15 @@
                 withPriority:mainViewControllerPriority];
         }
     });
+}
+
+#pragma mark - Registering for Notifications
+
+- (void)registerForNotifications {
+    UIUserNotificationType types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types
+                                                                             categories:nil];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
 }
 
 #pragma mark - Tap Gestures
@@ -683,7 +701,7 @@
 
             // Request facebook access
             [self enableInteraction];
-            [self facebookLogin];
+            [self registerForNotifications];
         }];
     }];
 }

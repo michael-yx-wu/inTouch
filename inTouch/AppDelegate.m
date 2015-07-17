@@ -1,11 +1,10 @@
-#import <AddressBookUI/AddressBookUI.h>
-
 #import "AppDelegate.h"
 #import "ContactManager.h"
 #import "FacebookManager.h"
 #import "GlobalData.h"
-
 #import "RootViewController.h"
+#import "NotificationScheduler.h"
+#import "NotificationStrings.h"
 
 @implementation AppDelegate
 
@@ -64,13 +63,22 @@
     return YES;
 }
 
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+    // Post notification letting the mainViewController know that we finished registering for local notifications
+    [[NSNotificationCenter defaultCenter] postNotificationName:registeredForNotifications object:nil];
+}
+
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Handles user leaving app while FB login dialog is being shown. Unresolved sessions are cleared on relaunch
     [FBAppCall handleDidBecomeActive];
+    
+    // Dismiss all notifications (reschedule when resigning active)
+    [NotificationScheduler dismissNotifications];
 }
 
-// Save changes to contacts before closing app
-- (void)applicationWillTerminate:(UIApplication *)application {
+// Schedule notifications and save changes
+- (void)applicationWillResignActive:(UIApplication *)application {
+    [NotificationScheduler scheduleNotifications];
     [self saveContext];
 }
 
@@ -133,7 +141,7 @@
     return managedObjectModel;
 }
 
-// Creaes if necessary and returns the persistent store coordinator
+// Creates if necessary and returns the persistent store coordinator
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
     if (persistentStoreCoordinator != nil) {
         return persistentStoreCoordinator;

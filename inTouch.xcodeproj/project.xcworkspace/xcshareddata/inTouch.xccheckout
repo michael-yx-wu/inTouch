@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>64F1B7B7-2C38-4EC6-B87C-1306EE75CF27</string>
 	<key>IDESourceControlProjectName</key>
-	<string>inTouch</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>945C1D2BD4205C03C501D31BEC43CF57038F8164</key>
 		<string>https://github.com/Intactu/inTouch.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>inTouch.xcodeproj</string>
+	<string>inTouch.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>945C1D2BD4205C03C501D31BEC43CF57038F8164</key>
