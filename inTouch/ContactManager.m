@@ -40,7 +40,7 @@ NSInteger kFacebookRequestFinish = 0;
         // Create new contact if does not exist
         if ([[self fetchRequestWithFirstName:firstName LastName:lastName] count] == 0) {
             // Create Contact and ContactMetadata
-            contact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact"inManagedObjectContext:[self managedObjectContext]];
+            contact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:[self managedObjectContext]];
             metaData = [NSEntityDescription insertNewObjectForEntityForName:@"ContactMetadata" inManagedObjectContext:[self managedObjectContext]];
             
             // Relate contact and metadata

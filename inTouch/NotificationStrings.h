@@ -1,5 +1,5 @@
 // inTouch API
-NSString *const inTouchLoginSuccessfulNotification;
+extern NSString *const inTouchLoginSuccessfulNotification;
 
 // Facebook
 extern NSString *const gotFacebookFriendsNotification;
