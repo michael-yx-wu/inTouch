@@ -1,6 +1,7 @@
 #import <XCTest/XCTest.h>
 
 #import "Contact.h"
+#import "FetchRequestStrings.h"
 
 @interface ContactTests : XCTestCase {
     NSManagedObjectContext *moc;
@@ -42,6 +43,11 @@
     [contact setCategory:nil];
     [contact setMetadata:nil];
     [self save];
+    
+    NSFetchRequest *request = [mom fetchRequestTemplateForName:allContacts];
+    NSArray *results = [moc executeFetchRequest:request error:NULL];
+    XCTAssertNotNil(results, @"Fetch failed");
+    XCTAssertEqual([results count], 1, @"Size of fetch result should be 1");
 }
 
 @end
