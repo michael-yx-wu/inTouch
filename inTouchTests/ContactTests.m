@@ -40,14 +40,22 @@
     Contact *contact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:moc];
     [contact setNameFirst:@"firstname"];
     [contact setNameLast:@"lastname"];
-    [contact setCategory:nil];
+    [contact setCategory:[NSNumber numberWithInt:1]];
     [contact setMetadata:nil];
     [self save];
     
+    // Verify number of contacts increased by 1
     NSFetchRequest *request = [mom fetchRequestTemplateForName:allContacts];
     NSArray *results = [moc executeFetchRequest:request error:NULL];
     XCTAssertNotNil(results, @"Fetch failed");
-    XCTAssertEqual([results count], 1, @"Size of fetch result should be 1");
+    XCTAssertTrue([results count] == 1, @"Size of fetch result should be 1");
+    
+    // Verify details have been correctly saved
+    Contact *fetchedContact = [results objectAtIndex:0];
+    XCTAssertTrue([[fetchedContact nameFirst] isEqualToString:@"firstname"], @"First name incorrect");
+    XCTAssertTrue([[fetchedContact nameLast] isEqualToString:@"lastname"], @"Last name incorrect");
+    XCTAssertTrue([[fetchedContact category] intValue] == 1, @"Category incorrect");
+    XCTAssertNil([fetchedContact metadata], @"Metadata should be nil");
 }
 
 @end
