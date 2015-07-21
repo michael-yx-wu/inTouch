@@ -1,3 +1,5 @@
+// The headers listed below are automatically included at the beginning of each file in the project.
+
 #import <Availability.h>
 
 #ifndef __IPHONE_5_0
