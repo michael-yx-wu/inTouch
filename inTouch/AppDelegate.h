@@ -1,7 +1,7 @@
 /*!
  @header AppDelegate.h
  
- @brief Contains the AppDelegate class
+ @brief Contains the AppDelegate class.
  
  @author Michael Wu
  @copyright 2015 Intactu

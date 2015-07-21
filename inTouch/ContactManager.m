@@ -14,7 +14,7 @@ NSInteger kFacebookRequestBegin = 1;
 NSInteger kFacebookRequestFinish = 0;
 
 + (void)updateInformation{
-    [DebugLogger log:@"Updating Contacts..." withPriority:1];
+    [DebugLogger log:@"Updating Contacts..." withPriority:contactManagerPriority];
     // Open contacts
     ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
     NSArray *allContacts = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(addressBookRef);
@@ -129,8 +129,8 @@ NSInteger kFacebookRequestFinish = 0;
     if (firstName == nil) firstName = @"";
     if (lastName == nil) lastName = @"";
     
-    NSString *fname = [contact valueForKey:@"nameFirst"];
-    NSString *lname = [contact valueForKey:@"nameLast"];
+    NSString *fname = [contact nameFirst];
+    NSString *lname = [contact nameLast];
     
     // Verify name match
     if (![firstName isEqualToString:fname] || ![lastName isEqualToString:lname]) {
@@ -143,7 +143,7 @@ NSInteger kFacebookRequestFinish = 0;
             NSString *someLastName = (__bridge_transfer NSString*)ABRecordCopyValue(potentialMatch, kABPersonLastNameProperty);
             if ([someFirstName isEqualToString:fname] && [someLastName isEqualToString:lname]) {
                 newID = [NSNumber numberWithInt:ABRecordGetRecordID(potentialMatch)];
-                [contact setValue:newID forKey:@"abrecorid"];
+                [contact setAbrecordid:newID];
             }            
             CFRelease(addressBookRef);
             return [newID intValue];
