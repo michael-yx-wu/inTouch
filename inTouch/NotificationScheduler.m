@@ -82,7 +82,7 @@
         [notification setAlertAction:@"View Queue"];
         if ([contactsForDate intValue] == 1) {
             [notification setAlertBody:@"You have 1 new contact in your queue"];
-            [notification setAlertTitle:@"New contact in queue"];
+            [notification setAlertTitle:@"inTouch"];
         } else {
             [notification setAlertBody:[NSString stringWithFormat:@"You have %@ new contacts in your queue",
                                         contactsForDate]];

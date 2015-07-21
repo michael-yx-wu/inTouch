@@ -1,14 +1,15 @@
 /*!
  @header Contact.h
  
- @brief Subclass for the Contact entity in Core Data.
+ @brief Contains the subclass for the Contact entity in Core Data.
  
- @discussion This subclass makes it easier to interact with the Contact entity in Core Data.
+ @discussion The subclass below makes it easier to interact with the Contact entity in Core Data.
  
  @author Michael Wu
  @copyright 2015 Intactu
  @version 1.1
  */
+
 #import "ContactMetadata.h"
 
 /*!
