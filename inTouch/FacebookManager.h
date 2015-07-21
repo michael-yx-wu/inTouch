@@ -25,13 +25,6 @@
 @interface FacebookManager : NSObject
 
 /*!
- @brief Check if the current session is in one of two states: FBSessionStateOpen or FBSessionStateTokenExtended
- 
- @return Return true if the current session is in the FBSessionStateOpen or FBSessionStateTokenExtended states.
- */
-+ (BOOL)sessionOpen;
-
-/*!
  @brief Use the taggable_friends Graph API endpoint to get a list of the user's friends. 
  
  @discussion Depending on a user's friends' privacy settings, this list may not be comprehensive.
@@ -54,6 +47,13 @@
  @brief Clear token information and logout.
  */
 + (void)logout;
+
+/*!
+ @brief Check if the current session is in one of two states: FBSessionStateOpen or FBSessionStateTokenExtended
+ 
+ @return Return true if the current session is in the FBSessionStateOpen or FBSessionStateTokenExtended states.
+ */
++ (BOOL)sessionOpen;
 
 /*!
  @brief Handle Facebook session state changes.
