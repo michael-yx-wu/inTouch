@@ -1,4 +1,5 @@
 #import <XCTest/XCTest.h>
+#import <CoreData/CoreData.h>
 
 #import "Contact.h"
 #import "FetchRequestStrings.h"

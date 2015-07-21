@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C027AFC1B5EEC300024B8B4 /* ContactTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C027AFB1B5EEC300024B8B4 /* ContactTests.m */; };
 		4C03B9531906C70D003221EC /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D9918C175D3009A96D8 /* AddressBookUI.framework */; };
 		4C0A59C61B2B39A600D33B43 /* ContactQueueView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0A59C51B2B39A600D33B43 /* ContactQueueView.m */; };
 		4C0ED67D1A2D8A3700718BE7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D7318C16FF7009A96D8 /* Main.storyboard */; };
@@ -21,9 +22,6 @@
 		4C340D7218C16FF7009A96D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340D7118C16FF7009A96D8 /* AppDelegate.m */; };
 		4C340D7818C16FF7009A96D8 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340D7718C16FF7009A96D8 /* MainViewController.m */; };
 		4C340D7A18C16FF7009A96D8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D7918C16FF7009A96D8 /* Images.xcassets */; };
-		4C340D8218C16FF8009A96D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6118C16FF7009A96D8 /* Foundation.framework */; };
-		4C340D8318C16FF8009A96D8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D6518C16FF7009A96D8 /* UIKit.framework */; };
-		4C340D8B18C16FF8009A96D8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4C340D8918C16FF8009A96D8 /* InfoPlist.strings */; };
 		4C340DA118C17ACF009A96D8 /* DebugLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C340DA018C17ACF009A96D8 /* DebugLogger.m */; };
 		4C340DA318C18D91009A96D8 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340DA218C18D91009A96D8 /* CoreData.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		4C340DA618C18DBD009A96D8 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C340DA418C18DBD009A96D8 /* Model.xcdatamodeld */; };
@@ -37,10 +35,8 @@
 		4C85E5E21A339F6900FEC472 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
 		4C87A4801B5495C0008BE5D0 /* NotificationScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C87A47F1B5495C0008BE5D0 /* NotificationScheduler.m */; };
 		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
-		4CA0E6DC1B5AFBE000069109 /* ContactTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA0E6DB1B5AFBE000069109 /* ContactTests.m */; };
 		4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107E51934362E00BB853C /* SettingsTableViewController.m */; };
 		4CB4AA221A47E8400017EF9E /* FacebookManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB4AA211A47E8400017EF9E /* FacebookManager.m */; };
-		4CB6256B1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB625691932CDCC009335E6 /* FacebookSDK.framework */; };
 		4CBA95AD1B5C2C4600E1C39D /* FetchRequestStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA95AC1B5C2C4600E1C39D /* FetchRequestStrings.m */; };
 		4CC61A9D19AA74EC00FF7118 /* ContactCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC61A9C19AA74EC00FF7118 /* ContactCardView.m */; };
 		4CC73FD21906330900B932A7 /* ContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC73FD11906330900B932A7 /* ContactManager.m */; };
@@ -50,7 +46,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4C340D8418C16FF8009A96D8 /* PBXContainerItemProxy */ = {
+		4C4D2E2A1B5EA3A600FE6B5E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4C340D5618C16FF7009A96D8 /* Project object */;
 			proxyType = 1;
@@ -60,6 +56,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4C027AFB1B5EEC300024B8B4 /* ContactTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactTests.m; sourceTree = "<group>"; };
 		4C0A59C41B2B39A600D33B43 /* ContactQueueView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactQueueView.h; sourceTree = "<group>"; };
 		4C0A59C51B2B39A600D33B43 /* ContactQueueView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactQueueView.m; sourceTree = "<group>"; };
 		4C0A59C71B2B3FCA00D33B43 /* MainViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewDelegate.h; sourceTree = "<group>"; };
@@ -84,9 +81,6 @@
 		4C340D7618C16FF7009A96D8 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		4C340D7718C16FF7009A96D8 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		4C340D7918C16FF7009A96D8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = inTouch/Images.xcassets; sourceTree = "<group>"; };
-		4C340D7F18C16FF8009A96D8 /* inTouchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = inTouchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C340D8818C16FF8009A96D8 /* inTouchTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "inTouchTests-Info.plist"; sourceTree = "<group>"; };
-		4C340D8A18C16FF8009A96D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4C340D9918C175D3009A96D8 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		4C340D9F18C17ACF009A96D8 /* DebugLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugLogger.h; sourceTree = "<group>"; };
 		4C340DA018C17ACF009A96D8 /* DebugLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugLogger.m; sourceTree = "<group>"; };
@@ -105,11 +99,12 @@
 		4C4305E71AB3FF9000F1B6B8 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		4C47934B18E0EB2900A408AB /* ContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactViewController.h; sourceTree = "<group>"; };
 		4C47934C18E0EB2900A408AB /* ContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactViewController.m; sourceTree = "<group>"; };
+		4C4D2E241B5EA3A600FE6B5E /* inTouch Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "inTouch Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C4D2E271B5EA3A600FE6B5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C87A47E1B5495C0008BE5D0 /* NotificationScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationScheduler.h; sourceTree = "<group>"; };
 		4C87A47F1B5495C0008BE5D0 /* NotificationScheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationScheduler.m; sourceTree = "<group>"; };
 		4C96311418CB71CB002D05A6 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
 		4C96311518CB71CB002D05A6 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
-		4CA0E6DB1B5AFBE000069109 /* ContactTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactTests.m; sourceTree = "<group>"; };
 		4CB107E41934362E00BB853C /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
 		4CB107E51934362E00BB853C /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		4CB4AA201A47E8400017EF9E /* FacebookManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacebookManager.h; sourceTree = "<group>"; };
@@ -144,13 +139,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C340D7C18C16FF8009A96D8 /* Frameworks */ = {
+		4C4D2E211B5EA3A600FE6B5E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CB6256B1932CDCC009335E6 /* FacebookSDK.framework in Frameworks */,
-				4C340D8318C16FF8009A96D8 /* UIKit.framework in Frameworks */,
-				4C340D8218C16FF8009A96D8 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,7 +174,7 @@
 			children = (
 				4C340D6718C16FF7009A96D8 /* inTouch */,
 				4C340D7918C16FF7009A96D8 /* Images.xcassets */,
-				4C340D8618C16FF8009A96D8 /* inTouchTests */,
+				4C4D2E251B5EA3A600FE6B5E /* inTouch Tests */,
 				4C340D6018C16FF7009A96D8 /* Frameworks */,
 				4C340D5F18C16FF7009A96D8 /* Products */,
 			);
@@ -192,7 +184,7 @@
 			isa = PBXGroup;
 			children = (
 				4C340D5E18C16FF7009A96D8 /* inTouch.app */,
-				4C340D7F18C16FF8009A96D8 /* inTouchTests.xctest */,
+				4C4D2E241B5EA3A600FE6B5E /* inTouch Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -244,24 +236,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		4C340D8618C16FF8009A96D8 /* inTouchTests */ = {
-			isa = PBXGroup;
-			children = (
-				4CA0E6DB1B5AFBE000069109 /* ContactTests.m */,
-				4C340D8718C16FF8009A96D8 /* Supporting Files */,
-			);
-			path = inTouchTests;
-			sourceTree = "<group>";
-		};
-		4C340D8718C16FF8009A96D8 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				4C340D8818C16FF8009A96D8 /* inTouchTests-Info.plist */,
-				4C340D8918C16FF8009A96D8 /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		4C36D21E1A5207260015EF1B /* Main View */ = {
 			isa = PBXGroup;
 			children = (
@@ -303,6 +277,23 @@
 				4C2FB7731ABB8C0700613D9A /* Miscellaneous */,
 			);
 			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		4C4D2E251B5EA3A600FE6B5E /* inTouch Tests */ = {
+			isa = PBXGroup;
+			children = (
+				4C027AFB1B5EEC300024B8B4 /* ContactTests.m */,
+				4C4D2E261B5EA3A600FE6B5E /* Supporting Files */,
+			);
+			path = "inTouch Tests";
+			sourceTree = "<group>";
+		};
+		4C4D2E261B5EA3A600FE6B5E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4C4D2E271B5EA3A600FE6B5E /* Info.plist */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		4C87A4811B5495D6008BE5D0 /* Utility */ = {
@@ -354,22 +345,22 @@
 			productReference = 4C340D5E18C16FF7009A96D8 /* inTouch.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4C340D7E18C16FF8009A96D8 /* inTouchTests */ = {
+		4C4D2E231B5EA3A600FE6B5E /* inTouch Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4C340D9318C16FF8009A96D8 /* Build configuration list for PBXNativeTarget "inTouchTests" */;
+			buildConfigurationList = 4C4D2E2C1B5EA3A600FE6B5E /* Build configuration list for PBXNativeTarget "inTouch Tests" */;
 			buildPhases = (
-				4C340D7B18C16FF8009A96D8 /* Sources */,
-				4C340D7C18C16FF8009A96D8 /* Frameworks */,
-				4C340D7D18C16FF8009A96D8 /* Resources */,
+				4C4D2E201B5EA3A600FE6B5E /* Sources */,
+				4C4D2E211B5EA3A600FE6B5E /* Frameworks */,
+				4C4D2E221B5EA3A600FE6B5E /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4C340D8518C16FF8009A96D8 /* PBXTargetDependency */,
+				4C4D2E2B1B5EA3A600FE6B5E /* PBXTargetDependency */,
 			);
-			name = inTouchTests;
-			productName = inTouchTests;
-			productReference = 4C340D7F18C16FF8009A96D8 /* inTouchTests.xctest */;
+			name = "inTouch Tests";
+			productName = "inTouch Tests";
+			productReference = 4C4D2E241B5EA3A600FE6B5E /* inTouch Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -384,7 +375,8 @@
 					4C340D5D18C16FF7009A96D8 = {
 						DevelopmentTeam = QUF4M7QXQP;
 					};
-					4C340D7E18C16FF8009A96D8 = {
+					4C4D2E231B5EA3A600FE6B5E = {
+						CreatedOnToolsVersion = 6.4;
 						TestTargetID = 4C340D5D18C16FF7009A96D8;
 					};
 				};
@@ -403,7 +395,7 @@
 			projectRoot = "";
 			targets = (
 				4C340D5D18C16FF7009A96D8 /* inTouch */,
-				4C340D7E18C16FF8009A96D8 /* inTouchTests */,
+				4C4D2E231B5EA3A600FE6B5E /* inTouch Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -419,11 +411,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C340D7D18C16FF8009A96D8 /* Resources */ = {
+		4C4D2E221B5EA3A600FE6B5E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C340D8B18C16FF8009A96D8 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -477,21 +468,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C340D7B18C16FF8009A96D8 /* Sources */ = {
+		4C4D2E201B5EA3A600FE6B5E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CA0E6DC1B5AFBE000069109 /* ContactTests.m in Sources */,
+				4C027AFC1B5EEC300024B8B4 /* ContactTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4C340D8518C16FF8009A96D8 /* PBXTargetDependency */ = {
+		4C4D2E2B1B5EA3A600FE6B5E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4C340D5D18C16FF7009A96D8 /* inTouch */;
-			targetProxy = 4C340D8418C16FF8009A96D8 /* PBXContainerItemProxy */;
+			targetProxy = 4C4D2E2A1B5EA3A600FE6B5E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -510,14 +501,6 @@
 				4C340D7418C16FF7009A96D8 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		4C340D8918C16FF8009A96D8 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4C340D8A18C16FF8009A96D8 /* en */,
-			);
-			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -646,45 +629,52 @@
 			};
 			name = Release;
 		};
-		4C340D9418C16FF8009A96D8 /* Debug */ = {
+		4C4D2E2D1B5EA3A600FE6B5E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/inTouch.app/inTouch";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(PROJECT_DIR)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "inTouch/inTouch-Prefix.pch";
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "inTouchTests/inTouchTests-Info.plist";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "inTouch Tests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/inTouch.app/inTouch";
 			};
 			name = Debug;
 		};
-		4C340D9518C16FF8009A96D8 /* Release */ = {
+		4C4D2E2E1B5EA3A600FE6B5E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/inTouch.app/inTouch";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(PROJECT_DIR)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "inTouch/inTouch-Prefix.pch";
-				INFOPLIST_FILE = "inTouchTests/inTouchTests-Info.plist";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "inTouch Tests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/inTouch.app/inTouch";
 			};
 			name = Release;
 		};
@@ -709,11 +699,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4C340D9318C16FF8009A96D8 /* Build configuration list for PBXNativeTarget "inTouchTests" */ = {
+		4C4D2E2C1B5EA3A600FE6B5E /* Build configuration list for PBXNativeTarget "inTouch Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4C340D9418C16FF8009A96D8 /* Debug */,
-				4C340D9518C16FF8009A96D8 /* Release */,
+				4C4D2E2D1B5EA3A600FE6B5E /* Debug */,
+				4C4D2E2E1B5EA3A600FE6B5E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

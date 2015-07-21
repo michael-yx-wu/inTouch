@@ -104,12 +104,14 @@
     NSError *error;
     NSManagedObjectContext *moc = [self managedObjectContext];
     if (moc != nil) {
-        if ([moc hasChanges] && ![moc save:&error]) {
-            [DebugLogger log:[NSString stringWithFormat:@"Save error: %@, %@",
-                              error, [error userInfo]] withPriority:1];
-            
-            // Keep trying until we successfully save -- is this safe?
-            [self saveContext];
+        // Attempt to save at most twice. Break on successful save.
+        for (int i = 0; i < 2; i++) {
+            if ([moc hasChanges] && ![moc save:&error]) {
+                [DebugLogger log:[NSString stringWithFormat:@"Save error: %@, %@",
+                                  error, [error userInfo]] withPriority:appDelegatePriority];
+            } else {
+                break;
+            }
         }
         [DebugLogger log:@"Saved!" withPriority:appDelegatePriority];
     } else {
