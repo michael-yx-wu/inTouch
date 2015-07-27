@@ -16,7 +16,7 @@
                         <viewControllerLayoutGuide type="top" id="VEZ-gE-Y26"/>
                         <viewControllerLayoutGuide type="bottom" id="hKI-x5-1Ez"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
+                    <view key="view" alpha="0.0" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
@@ -70,7 +70,7 @@
                                     <action selector="switchQueue:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="dRb-zS-Ldz"/>
                                 </connections>
                             </button>
-                            <view alpha="0.0" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fX2-aQ-ian" userLabel="Contact Action Buttons View">
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fX2-aQ-ian" userLabel="Contact Action Buttons View">
                                 <rect key="frame" x="185" y="356" width="230" height="79"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jyx-J0-zs9" userLabel="Delete Button">
@@ -248,7 +248,7 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view alpha="0.0" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lwa-de-2St" userLabel="Contact Queue" customClass="ContactQueueView">
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lwa-de-2St" userLabel="Contact Queue" customClass="ContactQueueView">
                                 <rect key="frame" x="160" y="56" width="280" height="277"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="default_profile_fade3" translatesAutoresizingMaskIntoConstraints="NO" id="xvG-Uz-HjS" userLabel="Contact Photo Anchor">
@@ -752,6 +752,7 @@
                         <outlet property="contactQueueView" destination="lwa-de-2St" id="JZd-9w-uBa"/>
                         <outlet property="deletedView" destination="7Fn-GC-OVX" id="ryP-M4-fxK"/>
                         <outlet property="postponedView" destination="UeY-4j-wj1" id="cA3-yR-uAG"/>
+                        <outlet property="settingsButton" destination="qZM-ub-5jt" id="fST-eH-P0W"/>
                         <outlet property="switchQueueButton" destination="q08-uQ-aoQ" id="eGf-aS-V2F"/>
                         <outlet property="syncingActivityIndicator" destination="Gls-DL-Grs" id="8C7-5O-jFa"/>
                         <outlet property="syncingView" destination="yVq-1z-7Dn" id="nJE-lo-jgg"/>
@@ -1868,7 +1869,7 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YHe-YJ-Dol" userLabel="Manual Back Buttons View">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YHe-YJ-Dol" userLabel="Manual Buttons View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7LZ-Fr-NBn" userLabel="Two Buttons View">
@@ -2090,10 +2091,12 @@
                     </view>
                     <connections>
                         <outlet property="callButton" destination="lqK-Eh-GiI" id="ruv-Ba-pnf"/>
+                        <outlet property="contactButtonsView" destination="ZzW-lq-ByH" id="PHJ-HM-bbr"/>
                         <outlet property="contactCard" destination="FNw-ri-lTc" id="JcO-zN-YdX"/>
                         <outlet property="contactName" destination="eCc-mg-fOb" id="ywW-eZ-mNZ"/>
                         <outlet property="contactPhoto" destination="3C0-f2-7OB" id="HXS-vv-pTK"/>
                         <outlet property="emailButton" destination="I8L-OF-d3o" id="lag-go-0ZZ"/>
+                        <outlet property="manualButtonsView" destination="YHe-YJ-Dol" id="GgB-lO-08X"/>
                         <outlet property="messageButton" destination="2kq-BB-3yx" id="9ln-YT-Fr2"/>
                     </connections>
                 </viewController>

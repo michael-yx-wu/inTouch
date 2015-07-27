@@ -10,7 +10,10 @@
 #import "ContactViewController.h"
 #import "NotificationStrings.h"
 
-@interface ContactViewController ()
+@interface ContactViewController () {
+    __weak IBOutlet UIView *contactButtonsView;
+    __weak IBOutlet UIView *manualButtonsView;
+}
 @end
 
 // Titles and identifier strings specific to this view controller -- not global constants
@@ -83,6 +86,22 @@ static NSString *contactedGeneric = @"generic";
                                              selector:@selector(dismissCall)
                                                  name:CTCallStateDisconnected
                                                object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    // Hide UI elements
+    [self hideButtons];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    // Fade in UI elements
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         [self showButtons];
+                     }
+                     completion:nil];
 }
 
 #pragma mark - Button Actions
@@ -260,12 +279,33 @@ static NSString *contactedGeneric = @"generic";
 }
 
 - (void)dismissViewController:(BOOL)contacted {
-    [self dismissViewControllerAnimated:NO completion:^{
-        if (contacted) {
-            // Alert the MainViewController that the contact was contacted
-            [[NSNotificationCenter defaultCenter] postNotificationName:contactedNotification object:self];
-        }
-    }];
+    // Fade out buttons before dismissing
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         [self hideButtons];
+                     }
+                     completion:^(BOOL finished) {
+                         [self dismissViewControllerAnimated:NO completion:^{
+                             if (contacted) {
+                                 // Alert the MainViewController that the contact was contacted
+                                 [[NSNotificationCenter defaultCenter] postNotificationName:contactedNotification object:self];
+                             }
+                         }];
+                     }];
+}
+
+#pragma mark - UI
+
+- (void)hideButtons {
+    [contactButtonsView setAlpha:0];
+    [manualButtonsView setAlpha:0];
+}
+
+- (void)showButtons {
+    [contactButtonsView setAlpha:1];
+    [manualButtonsView setAlpha:1];
 }
 
 #pragma mark - Core Data Accessor Methods

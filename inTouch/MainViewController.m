@@ -22,6 +22,7 @@
     NSMutableDictionary *fbDownloadStatus;
     Contact *currentContact;
     CGFloat contactPhotoCornerRadius;
+    BOOL firstViewLoad;
 }
 @end
 
@@ -49,8 +50,14 @@
 @synthesize facebookFriends;
 @synthesize switchQueueButton;
 
+@synthesize settingsButton;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // This bool controls whether to set image masks/centers for the first time
+    firstViewLoad = YES;
+    [self hideUIElements];
     
     // Load in background image
     [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]]];
@@ -138,7 +145,7 @@
     // Listen for notifications to update the UI for the current queue after a queue switch
     // Notifications from ContactQueueView
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateUIForCurrentQueue:)
+                                             selector:@selector(animateQueueButtonImage:)
                                                  name:queueSwitchingDoneNotification
                                                object:nil];
     
@@ -150,27 +157,31 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    // Save the original centers after main view has loaded -- method is screen width dependent
-    [contactCard setImageCentersAndMasks];
-    [contactQueueView setImageCenter];
-    contactPhotoCornerRadius = [[contactPhotoFront layer] cornerRadius];
-    
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        [contactQueueView setAlpha:1];
-        [self updateUIForCurrentQueue:nil];
-    } completion:^(BOOL finished) {
-        // Automatically sync contact info on first run only
-        GlobalData *globalData = [self getGlobalDataEntity];
-        bool firstRun = [[globalData firstRun] boolValue];
-        if (firstRun) {
-            [globalData setLastUpdatedInfo:[NSDate date]];
-            [globalData setFirstRun:[NSNumber numberWithBool:NO]];
+    if (firstViewLoad) {
+        // Save the original centers after main view has loaded -- method is screen width dependent
+        [contactCard setImageCentersAndMasks];
+        [contactQueueView setImageCenter];
+        contactPhotoCornerRadius = [[contactPhotoFront layer] cornerRadius];
+        [self updateQueueButtonImage];
+        
+        // Animation to hide the image masking process from the user
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            [self showUIElements];
+        } completion:^(BOOL finished) {
+            firstViewLoad = NO;
             
-            // TutorialViewController will sync contacts on dismissal
-            [self performSegueWithIdentifier:@"tutorial" sender:self];            
-        }
-    }];
+            // Automatically sync contact info on first run only
+            GlobalData *globalData = [self getGlobalDataEntity];
+            bool firstRun = [[globalData firstRun] boolValue];
+            if (firstRun) {
+                [globalData setLastUpdatedInfo:[NSDate date]];
+                [globalData setFirstRun:[NSNumber numberWithBool:NO]];
+                
+                // TutorialViewController will sync contacts on dismissal
+                [self performSegueWithIdentifier:@"tutorial" sender:self];
+            }
+        }];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -463,7 +474,7 @@
                 [someContact setFacebookPhoto:imageData];
                 [DebugLogger log:[NSString stringWithFormat:@"Got photo for %@", fullName]
                     withPriority:mainViewControllerPriority];
-
+                
                 NSError *error;
                 if ([moc hasChanges]) {
                     @synchronized(fbDownloadStatus) {
@@ -485,7 +496,7 @@
                         withPriority:mainViewControllerPriority];
                     abort();
                 }
-
+                
                 // Remove the observer we just added -- we no longer need it
                 [[NSNotificationCenter defaultCenter] removeObserver:thisController
                                                                 name:NSManagedObjectContextDidSaveNotification
@@ -571,26 +582,11 @@
 #pragma mark - UI upating
 
 // Show/hide the appropriate UI graphics depending on the current queue
-- (void)updateUIForCurrentQueue:(NSNotification *)notification {
+- (void)updateQueueButtonImage {
     if (currentQueue == contactAppearedQueue) {
         [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
     } else {
         [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];
-    }
-    if (!currentContact) {
-        [UIView animateWithDuration:0.3
-                         animations:^{
-                             [contactActionButtonsView setAlpha:0];
-                         }];
-
-    } else {
-        [UIView animateWithDuration:0.3
-                         animations:^{
-                             [contactActionButtonsView setAlpha:1];
-                         }];
-    }
-    if ([[UIApplication sharedApplication] isIgnoringInteractionEvents]) {
-        [self enableInteraction];
     }
 }
 
@@ -663,6 +659,32 @@
 
 #pragma mark - Custom Animation
 
+- (void)animateQueueButtonImage:(NSNotification*)notification {
+    // Fade out the queue button
+    [UIView animateWithDuration:0.15
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         [switchQueueButton setAlpha:0];
+                     }
+                     completion:^(BOOL finished) {
+                         // Update the queue button image while hidden
+                         [self updateQueueButtonImage];
+                         
+                         // Fade in the queue button and enable user interactions
+                         [UIView animateWithDuration:0.15
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseIn
+                                          animations:^{
+                                              [switchQueueButton setAlpha:1];
+                                          }
+                                          completion:^(BOOL finished) {
+                                              [self enableInteraction];
+                                              [contactCard setUserInteractionEnabled:YES];
+                                          }];
+                     }];
+}
+
 - (void)displayContactedView {
     [self disableInteraction];
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
@@ -697,15 +719,29 @@
             currentQueue = contactAppearedQueue;
             [self updateQueue];
             [self printQueue];
-
+            
             // Switch to the unseen queue
             [self switchQueue:nil];
-
+            
             // Request facebook access
             [self enableInteraction];
             [self registerForNotifications];
         }];
     }];
+}
+
+- (void)hideUIElements {
+    [contactQueueView setAlpha:0];
+    [contactActionButtonsView setAlpha:0];
+    [switchQueueButton setAlpha:0];
+    [settingsButton setAlpha:0];
+}
+
+- (void)showUIElements {
+    [contactQueueView setAlpha:1];
+    [contactActionButtonsView setAlpha:1];
+    [switchQueueButton setAlpha:1];
+    [settingsButton setAlpha:1];
 }
 
 // Enable swiping/taping after animation ends
