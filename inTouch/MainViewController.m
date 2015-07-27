@@ -57,7 +57,7 @@
     
     // This bool controls whether to set image masks/centers for the first time
     firstViewLoad = YES;
-    [self hideUIElements];
+    [self hideAllButtons];
     
     // Load in background image
     [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]]];
@@ -166,7 +166,7 @@
         
         // Animation to hide the image masking process from the user
         [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-            [self showUIElements];
+            [self showAllButtons];
         } completion:^(BOOL finished) {
             firstViewLoad = NO;
             
@@ -181,6 +181,15 @@
                 [self performSegueWithIdentifier:@"tutorial" sender:self];
             }
         }];
+    } else {
+        [UIView animateWithDuration:0.3
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+                             [self showElementsOnReturnFromContactViewSegue];
+                             [self updatePhotosDisplayedInQueue];
+                         }
+                         completion:nil];
     }
 }
 
@@ -203,7 +212,6 @@
     }
     [self getNextContactFromQueue];
     [self updateQueue];
-    [self updatePhotosDisplayedInQueue];
     [self printQueue];
 }
 
@@ -526,7 +534,15 @@
 }
 
 - (IBAction)checkContactButton:(id)sender {
-    [self performSegueWithIdentifier:@"contact" sender:sender];
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         [self hideElementsForContactViewSegue];
+                     }
+                     completion:^(BOOL finished) {
+                         [self performSegueWithIdentifier:@"contact" sender:sender];
+                     }];
 }
 
 - (IBAction)postponeContactButton:(id)sender {
@@ -661,7 +677,7 @@
 
 - (void)animateQueueButtonImage:(NSNotification*)notification {
     // Fade out the queue button
-    [UIView animateWithDuration:0.15
+    [UIView animateWithDuration:0.3
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
@@ -672,7 +688,7 @@
                          [self updateQueueButtonImage];
                          
                          // Fade in the queue button and enable user interactions
-                         [UIView animateWithDuration:0.15
+                         [UIView animateWithDuration:0.3
                                                delay:0
                                              options:UIViewAnimationOptionCurveEaseIn
                                           animations:^{
@@ -730,18 +746,34 @@
     }];
 }
 
-- (void)hideUIElements {
+- (void)hideAllButtons {
     [contactQueueView setAlpha:0];
     [contactActionButtonsView setAlpha:0];
     [switchQueueButton setAlpha:0];
     [settingsButton setAlpha:0];
 }
 
-- (void)showUIElements {
+- (void)showAllButtons {
     [contactQueueView setAlpha:1];
     [contactActionButtonsView setAlpha:1];
     [switchQueueButton setAlpha:1];
     [settingsButton setAlpha:1];
+}
+
+// Hide the queue switch button, contact action buttons, and queue photos in preparation for a segue to the contact view
+- (void)hideElementsForContactViewSegue {
+    [switchQueueButton setAlpha:0];
+    [contactPhotoAnchor setAlpha:0];
+    [contactPhotoBottom setAlpha:0];
+    [contactPhotoMiddle setAlpha:0];
+    [contactActionButtonsView setAlpha:0];
+}
+
+// Show the queue switch button and contact action buttons. The queue photos alpha values are reset in the viewDidAppear
+// function
+- (void)showElementsOnReturnFromContactViewSegue {
+    [switchQueueButton setAlpha:1];
+    [contactActionButtonsView setAlpha:1];
 }
 
 // Enable swiping/taping after animation ends
