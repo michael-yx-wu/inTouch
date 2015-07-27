@@ -13,7 +13,7 @@
 @property (nonatomic, weak) IBOutlet UIButton *callButton;
 @property (nonatomic, weak) IBOutlet UIButton *messageButton;
 @property (nonatomic, weak) IBOutlet UIButton *emailButton;
-
+@property (nonatomic) CGFloat contactPhotoCornerRadius;
 // Contact Data
 @property (nonatomic, strong) Contact *contact;
 @property (nonatomic, strong) NSDictionary *allEmailAddresses;

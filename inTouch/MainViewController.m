@@ -21,6 +21,7 @@
     NSMutableArray *currentQueue;
     NSMutableDictionary *fbDownloadStatus;
     Contact *currentContact;
+    CGFloat contactPhotoCornerRadius;
 }
 @end
 
@@ -153,6 +154,7 @@
     // Save the original centers after main view has loaded -- method is screen width dependent
     [contactCard setImageCentersAndMasks];
     [contactQueueView setImageCenter];
+    contactPhotoCornerRadius = [[contactPhotoFront layer] cornerRadius];
     
     [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         [contactQueueView setAlpha:1];
@@ -727,6 +729,7 @@
         [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:mainViewControllerPriority];
         ContactViewController *destViewController = [segue destinationViewController];
         [destViewController setContact:currentContact];
+        [destViewController setContactPhotoCornerRadius:contactPhotoCornerRadius];
     }
     if ([[segue identifier] isEqualToString:@"tutorial"]) {
         [DebugLogger log:@"Preparing for segue to TutorialViewController" withPriority:mainViewControllerPriority];

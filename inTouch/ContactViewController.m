@@ -30,7 +30,7 @@ static NSString *contactedGeneric = @"generic";
 @synthesize callButton;
 @synthesize messageButton;
 @synthesize emailButton;
-
+@synthesize contactPhotoCornerRadius;
 @synthesize contact;
 @synthesize allEmailAddresses;
 @synthesize allPhoneNumbers;
@@ -57,6 +57,10 @@ static NSString *contactedGeneric = @"generic";
     allPhoneNumbers = [contact getPhoneNumbers];
     allEmailAddresses = [contact getEmails];
     
+    // Set photo mask
+    [[contactPhoto layer] setCornerRadius:contactPhotoCornerRadius];
+    [[contactPhoto layer] setMasksToBounds:YES];
+    
     // Disable buttons if needed
     if ([allPhoneNumbers count] == 0 || ![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tel://"]]) {
         [callButton setEnabled:NO];
@@ -79,23 +83,6 @@ static NSString *contactedGeneric = @"generic";
                                              selector:@selector(dismissCall)
                                                  name:CTCallStateDisconnected
                                                object:nil];
-}
-
-// Set mask only after view appears because it is screen width dependent
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    // Make contact photo round
-    [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
-    [[contactPhoto layer] setMasksToBounds:YES];
-    [contactPhoto setAlpha:1];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    // Hide photo until we round it
-    [contactPhoto setAlpha:0];
 }
 
 #pragma mark - Button Actions
