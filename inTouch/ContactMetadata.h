@@ -19,6 +19,8 @@
  
  @discussion This class makes it easier to interact with the ContactMetadata entity in Core Data.
  
+ @see Contact
+ 
  @superclass NSManagedObject
  */
 @interface ContactMetadata : NSManagedObject

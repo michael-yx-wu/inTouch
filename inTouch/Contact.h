@@ -19,6 +19,8 @@
  
  @discussion This subclass makes it easier to interact with the Contact entity in Core Data.
  
+ @see ContactMetadata
+ 
  @superclass NSManagedObject
  */
 @interface Contact : NSManagedObject
@@ -63,7 +65,7 @@
 @property (nonatomic, retain) NSString *nameLast;
 
 /*!
- @brief A pointer to the Metadata entity associated with this contact.
+ @brief A pointer to the @link ContactMetadata @/link entity associated with this contact.
  */
 @property (nonatomic, retain) NSManagedObject *metadata;
 
