@@ -20,6 +20,20 @@
                ReferencedContainer = "container:inTouch.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4C4D2E101B5EA2CF00FE6B5E"
+               BuildableName = "inTouch Tests.xctest"
+               BlueprintName = "inTouch Tests"
+               ReferencedContainer = "container:inTouch.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -32,9 +46,19 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4C340D7E18C16FF8009A96D8"
+               BlueprintIdentifier = "4C4D2E011B5EA1F300FE6B5E"
                BuildableName = "inTouchTests.xctest"
                BlueprintName = "inTouchTests"
+               ReferencedContainer = "container:inTouch.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4C4D2E101B5EA2CF00FE6B5E"
+               BuildableName = "inTouch Tests.xctest"
+               BlueprintName = "inTouch Tests"
                ReferencedContainer = "container:inTouch.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -58,7 +82,8 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4C340D5D18C16FF7009A96D8"
@@ -76,7 +101,8 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "4C340D5D18C16FF7009A96D8"

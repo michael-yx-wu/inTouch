@@ -594,7 +594,7 @@
 
 - (void)updateQueueWhileOffscreen {
     // Redraw the UI with information from the current queue
-    [DebugLogger log:@"updating while offscreen" withPriority:mainViewControllerPriority];
+    [DebugLogger log:@"Updating while offscreen" withPriority:mainViewControllerPriority];
     [self updateQueue];
     [contactCard showAndEnableInteraction];
     [self getNextContactFromQueue];
