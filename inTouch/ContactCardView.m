@@ -307,7 +307,7 @@
 // Was tapped, tell MainViewController to show the contact buttons
 - (void)wasTapped:(UITapGestureRecognizer *)tapGestureRecognizer {
     [DebugLogger log:@"Contact tapped" withPriority:contactCardViewPriority];
-    [delegate performSegueWithIdentifier:@"contact" sender:nil];
+    [delegate checkContactButton:nil];
 }
 
 - (void)resetTranslation {

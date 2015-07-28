@@ -53,4 +53,11 @@
  */
 - (void)updateQueueWhileOffscreen;
 
+/*!
+ @brief Manually call the checkContactButton method.
+ 
+ @discussion Allows classes that use the MainViewDelegate to mimic the check button being tapped.
+ */
+- (IBAction)checkContactButton:(id)sender;
+
 @end
