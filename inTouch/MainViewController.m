@@ -186,14 +186,7 @@
                                 }
                             }];
     } else {
-        [UIView animateWithDuration:0.3
-                              delay:0
-                            options:UIViewAnimationOptionCurveEaseIn
-                         animations:^{
-                             [self showElementsOnReturnFromContactViewSegue];
-                             [self updatePhotosDisplayedInQueue];
-                         }
-                         completion:nil];
+        [self showElementsOnReturnFromContactViewSegue];
     }
 }
 
@@ -563,14 +556,32 @@
 }
 
 - (IBAction)checkContactButton:(id)sender {
-    [UIView animateWithDuration:0.3
+    [UIView animateWithDuration:0.30
                           delay:0
-                        options:UIViewAnimationOptionCurveEaseIn
+                        options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
-                         [self hideElementsForContactViewSegue];
+                         [switchQueueButton setAlpha:0];
+                         [contactActionButtonsView setAlpha:0];
                      }
                      completion:^(BOOL finished) {
                          [self performSegueWithIdentifier:@"contact" sender:sender];
+                     }];
+
+    [contactPhotoAnchor setAlpha:0];
+    [UIView animateWithDuration:0.15
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         [contactPhotoBottom setAlpha:0];
+                     }
+                     completion:^(BOOL finished) {
+                         [UIView animateWithDuration:0.15
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseOut
+                                          animations:^{
+                                              [contactPhotoMiddle setAlpha:0];
+                                          }
+                                          completion:nil];
                      }];
 }
 
@@ -798,24 +809,42 @@
     [settingsButton setAlpha:1];
 }
 
-// Hide the queue switch button, contact action buttons, and queue photos in preparation for a segue to the contact view
-- (void)hideElementsForContactViewSegue {
-    [switchQueueButton setAlpha:0];
-    [contactPhotoAnchor setAlpha:0];
-    [contactPhotoBottom setAlpha:0];
-    [contactPhotoMiddle setAlpha:0];
-    [contactActionButtonsView setAlpha:0];
-}
-
 // Show the queue switch button and contact action buttons. The queue photos alpha values are reset in the viewDidAppear
 // function
 - (void)showElementsOnReturnFromContactViewSegue {
-    [switchQueueButton setAlpha:1];
-    if ([self queueEmpty]) {
-        [contactActionButtonsView setAlpha:0];
-    } else {
-        [contactActionButtonsView setAlpha:1];
-    }
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         [switchQueueButton setAlpha:1];
+                         if (![self queueEmpty]) {
+                             [contactActionButtonsView setAlpha:1];
+                         }
+                     }
+                     completion:nil];
+    [UIView animateWithDuration:0.15
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         if ([currentQueue count] > 1) {
+                             [contactPhotoMiddle setAlpha:1];
+                         }
+                     }
+                     completion:^(BOOL finished) {
+                         [UIView animateWithDuration:0.15
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseOut
+                                          animations:^{
+                                              if ([currentQueue count] > 2) {
+                                                  [contactPhotoBottom setAlpha:1];
+                                              }
+                                          }
+                                          completion:^(BOOL finished) {
+                                              if ([currentQueue count] > 3) {
+                                                  [contactPhotoAnchor setAlpha:1];
+                                              }
+                                          }];
+                     }];
 }
 
 - (void)hideContactActionButtonsView {

@@ -98,18 +98,20 @@
     
     // Create a recurring notification to remind people to come back to the app after notifications regarding new
     // contacts in the queue have stopped for 3 days
-    NSDateComponents *recurringNotificationOffset = [[NSDateComponents alloc] init];
-    [recurringNotificationOffset setDay:3];
-    NSDate *recurringReminder = [calendar dateByAddingComponents:recurringNotificationOffset toDate:date options:0];
-    notification = [[UILocalNotification alloc] init];
-    [notification setFireDate:recurringReminder];
-    [notification setRepeatInterval:NSCalendarUnitWeekOfMonth];
-    [notification setAlertAction:@"View Queue"];
-    [notification setAlertBody:@"You have contacts in your queue"];
-    [notification setAlertTitle:@"inTouch"];
-    [notification setSoundName:UILocalNotificationDefaultSoundName];
-    [notification setApplicationIconBadgeNumber:1];
-    [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+    if (date) {
+        NSDateComponents *recurringNotificationOffset = [[NSDateComponents alloc] init];
+        [recurringNotificationOffset setDay:3];
+        NSDate *recurringReminder = [calendar dateByAddingComponents:recurringNotificationOffset toDate:date options:0];
+        notification = [[UILocalNotification alloc] init];
+        [notification setFireDate:recurringReminder];
+        [notification setRepeatInterval:NSCalendarUnitWeekOfMonth];
+        [notification setAlertAction:@"View Queue"];
+        [notification setAlertBody:@"You have contacts in your queue"];
+        [notification setAlertTitle:@"inTouch"];
+        [notification setSoundName:UILocalNotificationDefaultSoundName];
+        [notification setApplicationIconBadgeNumber:1];
+        [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+    }
 }
 
 // Helper method to increment the NSNumber value associated with a date in the specified dictionary. Create the entry if

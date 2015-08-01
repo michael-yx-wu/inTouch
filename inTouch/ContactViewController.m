@@ -282,7 +282,7 @@ static NSString *contactedGeneric = @"generic";
     // Fade out buttons before dismissing
     [UIView animateWithDuration:0.3
                           delay:0
-                        options:UIViewAnimationOptionCurveEaseIn
+                        options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          [self hideButtons];
                      }
