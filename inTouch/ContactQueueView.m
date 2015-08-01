@@ -23,6 +23,7 @@
 }
 
 - (void)dismissQueueLeft {
+    [contactCard setUserInteractionEnabled:NO];
     [UIView animateWithDuration:0.3
                           delay:0
                         options:UIViewAnimationOptionCurveEaseIn
@@ -37,6 +38,7 @@
 }
 
 - (void)dismissQueueRight {
+    [contactCard setUserInteractionEnabled:NO];
     [UIView animateWithDuration:0.3
                           delay:0
                         options:UIViewAnimationOptionCurveEaseIn
@@ -64,6 +66,9 @@
                          }
                      }
                      completion:^(BOOL finished) {
+                         if (![delegate queueEmpty]) {
+                             [contactCard setUserInteractionEnabled:YES];
+                         }
                          [[NSNotificationCenter defaultCenter] postNotificationName:queueSwitchingDoneNotification
                                                                              object:nil];
                      }];
@@ -83,6 +88,9 @@
                          }
                      }
                      completion:^(BOOL finished) {
+                         if (![delegate queueEmpty]) {
+                             [contactCard setUserInteractionEnabled:YES];
+                         }
                          [[NSNotificationCenter defaultCenter] postNotificationName:queueSwitchingDoneNotification
                                                                              object:nil];
                      }];

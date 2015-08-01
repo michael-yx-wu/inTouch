@@ -35,11 +35,6 @@
 #pragma mark - Current Contact
 
 /*!
- @brief The current @link Contact @/link being displayed.
- */
-@property Contact *contact;
-
-/*!
  @brief A label for the current @link Contact @/link's name.
  */
 @property (weak, nonatomic) IBOutlet UILabel *contactName;

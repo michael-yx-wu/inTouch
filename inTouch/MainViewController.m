@@ -57,7 +57,6 @@
     
     // This bool controls whether to set image masks/centers for the first time
     firstViewLoad = YES;
-    [self hideAllButtons];
     
     // Load in background image
     [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]]];
@@ -145,7 +144,7 @@
     // Listen for notifications to update the UI for the current queue after a queue switch
     // Notifications from ContactQueueView
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(animateQueueButtonImage:)
+                                             selector:@selector(animateOnQueueSwitchCompletion:)
                                                  name:queueSwitchingDoneNotification
                                                object:nil];
     
@@ -165,22 +164,27 @@
         [self updateQueueButtonImage];
         
         // Animation to hide the image masking process from the user
-        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-            [self showAllButtons];
-        } completion:^(BOOL finished) {
-            firstViewLoad = NO;
-            
-            // Automatically sync contact info on first run only
-            GlobalData *globalData = [self getGlobalDataEntity];
-            bool firstRun = [[globalData firstRun] boolValue];
-            if (firstRun) {
-                [globalData setLastUpdatedInfo:[NSDate date]];
-                [globalData setFirstRun:[NSNumber numberWithBool:NO]];
-                
-                // TutorialViewController will sync contacts on dismissal
-                [self performSegueWithIdentifier:@"tutorial" sender:self];
-            }
-        }];
+        [UIView animateWithDuration:0.3
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseIn animations:^{
+                                [self showAllButtons];
+                                if ([self queueEmpty]) {
+                                    [self hideContactActionButtonsView];
+                                }                                
+                            } completion:^(BOOL finished) {
+                                firstViewLoad = NO;
+                                
+                                // Automatically sync contact info on first run only
+                                GlobalData *globalData = [self getGlobalDataEntity];
+                                bool firstRun = [[globalData firstRun] boolValue];
+                                if (firstRun) {
+                                    [globalData setLastUpdatedInfo:[NSDate date]];
+                                    [globalData setFirstRun:[NSNumber numberWithBool:NO]];
+                                    
+                                    // TutorialViewController will sync contacts on dismissal
+                                    [self performSegueWithIdentifier:@"tutorial" sender:self];
+                                }
+                            }];
     } else {
         [UIView animateWithDuration:0.3
                               delay:0
@@ -213,6 +217,10 @@
     [self getNextContactFromQueue];
     [self updateQueue];
     [self printQueue];
+    
+    if (firstViewLoad) {
+        [self hideAllButtons];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -224,9 +232,23 @@
 - (void)getNextContactFromQueue {
     if ([currentQueue count]) {
         currentContact = [currentQueue objectAtIndex:0];
+        [UIView animateWithDuration:0.3
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+                             [self showContactActionButtonsView];
+                             [contactCard setUserInteractionEnabled:YES];
+                         } completion:nil];
     } else {
         [DebugLogger log:@"No contacts left in queue" withPriority:mainViewControllerPriority];
         currentContact = nil;
+        [UIView animateWithDuration:0.3
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+                             [self hideContactActionButtonsView];
+                             [contactCard setUserInteractionEnabled:NO];
+                         } completion:nil];
     }
 }
 
@@ -393,6 +415,13 @@
         if([[[queuedContact objectID] URIRepresentation] isEqual:[[contact objectID] URIRepresentation]]) {
             return YES;
         }
+    }
+    return NO;
+}
+
+- (BOOL)queueEmpty {
+    if ([currentQueue count] == 0) {
+        return YES;
     }
     return NO;
 }
@@ -583,7 +612,6 @@
     
     // Disable sliding cards while we change queues
     [self disableInteraction];
-    [contactCard setUserInteractionEnabled:NO];
     
     // Switch queue
     if (currentQueue == contactAppearedQueue) {
@@ -610,7 +638,6 @@
     // Redraw the UI with information from the current queue
     [DebugLogger log:@"Updating while offscreen" withPriority:mainViewControllerPriority];
     [self updateQueue];
-    [contactCard showAndEnableInteraction];
     [self getNextContactFromQueue];
     [self updatePhotosDisplayedInQueue];
     [self printQueue];
@@ -675,9 +702,9 @@
 
 #pragma mark - Custom Animation
 
-- (void)animateQueueButtonImage:(NSNotification*)notification {
+- (void)animateOnQueueSwitchCompletion:(NSNotification*)notification {
     // Fade out the queue button
-    [UIView animateWithDuration:0.3
+    [UIView animateWithDuration:0.15
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
@@ -688,7 +715,7 @@
                          [self updateQueueButtonImage];
                          
                          // Fade in the queue button and enable user interactions
-                         [UIView animateWithDuration:0.3
+                         [UIView animateWithDuration:0.15
                                                delay:0
                                              options:UIViewAnimationOptionCurveEaseIn
                                           animations:^{
@@ -696,9 +723,20 @@
                                           }
                                           completion:^(BOOL finished) {
                                               [self enableInteraction];
-                                              [contactCard setUserInteractionEnabled:YES];
                                           }];
                      }];
+    
+    // Show or hide the contact action buttons depending on whether the current queue is empty
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         if ([self queueEmpty]) {
+                             [self hideContactActionButtonsView];
+                         } else {
+                             [self showContactActionButtonsView];
+                         }
+                     } completion:nil];
 }
 
 - (void)displayContactedView {
@@ -773,19 +811,19 @@
 // function
 - (void)showElementsOnReturnFromContactViewSegue {
     [switchQueueButton setAlpha:1];
+    if ([self queueEmpty]) {
+        [contactActionButtonsView setAlpha:0];
+    } else {
+        [contactActionButtonsView setAlpha:1];
+    }
+}
+
+- (void)hideContactActionButtonsView {
+    [contactActionButtonsView setAlpha:0];
+}
+
+- (void)showContactActionButtonsView {
     [contactActionButtonsView setAlpha:1];
-}
-
-// Enable swiping/taping after animation ends
-- (void)enableInteraction {
-    [DebugLogger log:@"Enabling interaction" withPriority:mainViewControllerPriority];
-    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-}
-
-// Disable swiping/taping during animation
-- (void)disableInteraction {
-    [DebugLogger log:@"Disabling interaction" withPriority:mainViewControllerPriority];
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 }
 
 #pragma mark - Navigation
@@ -868,6 +906,20 @@
 - (void)save {
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     [appDelegate saveContext];
+}
+
+#pragma mark - Other
+
+// Enable swiping/taping after animation ends
+- (void)enableInteraction {
+    [DebugLogger log:@"Enabling interaction -- MainViewController" withPriority:mainViewControllerPriority];
+    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+}
+
+// Disable swiping/taping during animation
+- (void)disableInteraction {
+    [DebugLogger log:@"Disabling interaction -- MainViewController" withPriority:mainViewControllerPriority];
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 }
 
 - (void)printQueue {
