@@ -2221,6 +2221,9 @@
                                                 <constraint firstItem="Aso-ni-3jn" firstAttribute="leading" secondItem="abE-n6-6B1" secondAttribute="leadingMargin" constant="6" id="WMs-Et-yXi">
                                                     <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
                                                 </constraint>
+                                                <constraint firstItem="Aso-ni-3jn" firstAttribute="leading" secondItem="abE-n6-6B1" secondAttribute="leadingMargin" id="YTY-Co-tg5">
+                                                    <variation key="heightClass=regular-widthClass=compact" constant="5"/>
+                                                </constraint>
                                                 <constraint firstItem="pi9-dl-VNf" firstAttribute="top" secondItem="abE-n6-6B1" secondAttribute="topMargin" constant="4" id="dm2-6o-T8d"/>
                                                 <constraint firstAttribute="centerY" secondItem="Aso-ni-3jn" secondAttribute="centerY" id="sVP-Ar-ZLD"/>
                                                 <constraint firstItem="pi9-dl-VNf" firstAttribute="trailing" secondItem="abE-n6-6B1" secondAttribute="trailingMargin" id="tNl-hD-pl7"/>
@@ -2228,6 +2231,7 @@
                                             <variation key="default">
                                                 <mask key="constraints">
                                                     <exclude reference="WMs-Et-yXi"/>
+                                                    <exclude reference="YTY-Co-tg5"/>
                                                     <exclude reference="sVP-Ar-ZLD"/>
                                                     <exclude reference="OKy-0N-0IB"/>
                                                     <exclude reference="Oq1-K8-qdx"/>
@@ -2237,7 +2241,8 @@
                                             </variation>
                                             <variation key="heightClass=regular-widthClass=compact">
                                                 <mask key="constraints">
-                                                    <include reference="WMs-Et-yXi"/>
+                                                    <exclude reference="WMs-Et-yXi"/>
+                                                    <include reference="YTY-Co-tg5"/>
                                                     <include reference="sVP-Ar-ZLD"/>
                                                     <exclude reference="OKy-0N-0IB"/>
                                                     <include reference="Oq1-K8-qdx"/>
