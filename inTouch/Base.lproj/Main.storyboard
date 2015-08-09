@@ -107,7 +107,7 @@
                                             <constraint firstAttribute="height" constant="60" id="ClJ-r3-UXI"/>
                                             <constraint firstAttribute="height" constant="60" id="dAn-F9-wDr"/>
                                         </constraints>
-                                        <state key="normal" image="check_icon"/>
+                                        <state key="normal" image="checkIcon"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="2h1-S3-bGD"/>
@@ -283,7 +283,7 @@
                                             </mask>
                                         </variation>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_profile_fade1" translatesAutoresizingMaskIntoConstraints="NO" id="pdc-uE-fOz" userLabel="Contact Photo Middle">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultMiddlePhoto" translatesAutoresizingMaskIntoConstraints="NO" id="pdc-uE-fOz" userLabel="Contact Photo Middle">
                                         <rect key="frame" x="30" y="52" width="220" height="220"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="pdc-uE-fOz" secondAttribute="height" multiplier="1:1" id="NIx-NO-5fJ"/>
@@ -302,7 +302,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dqC-Xd-Jnt" userLabel="Contact Card" customClass="ContactCardView">
                                         <rect key="frame" x="160" y="56" width="280" height="277"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_profile_fade0" translatesAutoresizingMaskIntoConstraints="NO" id="5DP-PC-WdX" userLabel="Contact Photo Front">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultTopPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="5DP-PC-WdX" userLabel="Contact Photo Front">
                                                 <rect key="frame" x="25" y="35" width="230" height="230"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="5DP-PC-WdX" secondAttribute="height" multiplier="1:1" id="yec-eL-JTk"/>
@@ -1344,7 +1344,7 @@
                                             </mask>
                                         </variation>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_profile_fade0" translatesAutoresizingMaskIntoConstraints="NO" id="wxG-nj-Bzo" userLabel="Contact picture">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultTopPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="wxG-nj-Bzo" userLabel="Contact picture">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="si2-bg-1lu"/>
@@ -1688,7 +1688,7 @@
                                             </mask>
                                         </variation>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="default_profile_fade0" translatesAutoresizingMaskIntoConstraints="NO" id="3C0-f2-7OB" userLabel="Contact Photo">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="defaultTopPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="3C0-f2-7OB" userLabel="Contact Photo">
                                         <rect key="frame" x="25" y="35" width="230" height="230"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -1755,7 +1755,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="2kq-BB-3yx" secondAttribute="height" multiplier="1:1" id="o1S-BQ-6fN"/>
                                         </constraints>
-                                        <state key="normal" image="message_icon_ok">
+                                        <state key="normal" image="messageIcon">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <variation key="default">
@@ -1777,7 +1777,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="I8L-OF-d3o" secondAttribute="height" multiplier="1:1" id="81O-k1-6dY"/>
                                         </constraints>
-                                        <state key="normal" image="mail_icon_ok">
+                                        <state key="normal" image="mailIcon">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <variation key="default">
@@ -1799,7 +1799,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="lqK-Eh-GiI" secondAttribute="height" multiplier="1:1" id="Aqi-ic-jTU"/>
                                         </constraints>
-                                        <state key="normal" image="phone_icon_ok">
+                                        <state key="normal" image="phoneIcon">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <variation key="default">
@@ -1886,7 +1886,7 @@
                                                     </constraint>
                                                     <constraint firstAttribute="width" secondItem="cPN-Kg-Njz" secondAttribute="height" multiplier="1:1" id="mYm-oR-YT0"/>
                                                 </constraints>
-                                                <state key="normal" image="check_icon_fill">
+                                                <state key="normal" image="manuallyContactedIcon">
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <variation key="default">
@@ -1918,7 +1918,7 @@
                                                         <variation key="heightClass=regular-widthClass=compact" constant="40"/>
                                                     </constraint>
                                                 </constraints>
-                                                <state key="normal" image="back_icon_40">
+                                                <state key="normal" image="backIcon">
                                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <variation key="default">
@@ -2773,7 +2773,7 @@
                                     </mask>
                                 </variation>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_icon" translatesAutoresizingMaskIntoConstraints="NO" id="l65-9d-8tj">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkIcon" translatesAutoresizingMaskIntoConstraints="NO" id="l65-9d-8tj">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="64" id="IFs-4A-K6H"/>
@@ -2830,7 +2830,7 @@
                                     </mask>
                                 </variation>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check_icon_fill" translatesAutoresizingMaskIntoConstraints="NO" id="JoU-w1-gh0">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="manuallyContactedIcon" translatesAutoresizingMaskIntoConstraints="NO" id="JoU-w1-gh0">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="64" id="DVB-6G-DM9"/>
@@ -3092,19 +3092,19 @@
         </scene>
     </scenes>
     <resources>
-        <image name="back_icon_40" width="520" height="520"/>
-        <image name="check_icon" width="800" height="800"/>
-        <image name="check_icon_fill" width="200" height="200"/>
-        <image name="default_profile_fade0" width="512" height="512"/>
-        <image name="default_profile_fade1" width="512" height="512"/>
+        <image name="backIcon" width="520" height="520"/>
+        <image name="checkIcon" width="800" height="800"/>
+        <image name="defaultMiddlePhoto" width="512" height="512"/>
+        <image name="defaultTopPhoto" width="512" height="512"/>
         <image name="default_profile_fade2" width="512" height="512"/>
         <image name="default_profile_fade3" width="512" height="512"/>
         <image name="eye_queue_closed" width="121" height="80"/>
         <image name="eye_queue_open" width="121" height="80"/>
         <image name="login_background" width="640" height="1136"/>
-        <image name="mail_icon_ok" width="400" height="400"/>
-        <image name="message_icon_ok" width="400" height="400"/>
-        <image name="phone_icon_ok" width="400" height="400"/>
+        <image name="mailIcon" width="400" height="400"/>
+        <image name="manuallyContactedIcon" width="200" height="200"/>
+        <image name="messageIcon" width="400" height="400"/>
+        <image name="phoneIcon" width="400" height="400"/>
         <image name="postpone_icon" width="612" height="612"/>
         <image name="postpone_icon_overlay" width="612" height="612"/>
         <image name="settings_icon" width="200" height="200"/>

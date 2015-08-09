@@ -6,6 +6,7 @@
 #import "ContactManager.h"
 #import "FacebookManager.h"
 #import "GlobalData.h"
+#import "ImageStrings.h"
 #import "NotificationStrings.h"
 
 #import "MainViewController.h"
@@ -59,7 +60,7 @@
     firstViewLoad = YES;
     
     // Load in background image
-    [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]]];
+    [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:backgroundImageName]]];
     
     // Add the references to the contact queue
     photoQueue = [[NSMutableArray alloc] initWithCapacity:4];
@@ -106,52 +107,7 @@
     // Track current facebook downloads
     fbDownloadStatus = [[NSMutableDictionary alloc] init];
     
-    // Listen for notification to replace facebook friend list with new list
-    // Notification from ContactManager
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateFacebookFriends:)
-                                                 name:gotFacebookFriendsNotification
-                                               object:nil];
-    
-    // Listen for notification to redraw profile photos when downloads finish. Photos can take several seconds to load.
-    // Notification from self (background process)
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updatePhotosDisplayedInQueue)
-                                                 name:photoDownloadedNotification
-                                               object:nil];
-    
-    // Listen for notification to show picker view and select a remind date
-    // Notification from ContactViewController
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(contactWasContacted:)
-                                                 name:contactedNotification
-                                               object:nil];
-    
-    // Listen for notification to set the remind date and slide up
-    // Notification from PickerViewController
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(pickerViewDone:)
-                                                 name:pickerViewDoneNotification
-                                               object:nil];
-    
-    // Listen for notification to dismiss the picker view controller and do nothing
-    // Notification from PickerViewController
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(pickerViewCancel:)
-                                                 name:pickerViewCancelNotification
-                                               object:nil];
-    
-    // Listen for notifications to update the UI for the current queue after a queue switch
-    // Notifications from ContactQueueView
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(animateOnQueueSwitchCompletion:)
-                                                 name:queueSwitchingDoneNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(facebookLogin:)
-                                                 name:registeredForNotifications
-                                               object:nil];
+    [self addNSNotificationOberservers];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -193,20 +149,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    // Remove contacts that are marked as "not interested"
-    int i;
-    for (i = 0; i < [contactAppearedQueue count]; i++) {
-        ContactMetadata *metadata = (ContactMetadata *)[(Contact *)[contactAppearedQueue objectAtIndex:i] metadata];
-        if (![[metadata interest] boolValue]) {
-            [contactAppearedQueue removeObjectAtIndex:i];
-        }
-    }
-    for (i = 0; i < [contactNeverAppearedQueue count]; i++) {
-        ContactMetadata *metadata = (ContactMetadata *)[(Contact *)[contactNeverAppearedQueue objectAtIndex:i] metadata];
-        if (![[metadata interest] boolValue]) {
-            [contactNeverAppearedQueue removeObjectAtIndex:i];
-        }
-    }
+    [self removeAllNotInterestedContactsFromQueues];
     [self getNextContactFromQueue];
     [self updateQueue];
     [self printQueue];
@@ -220,7 +163,64 @@
     [super didReceiveMemoryWarning];
 }
 
+#pragma mark - Set Up
+
+- (void)addNSNotificationOberservers {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateFacebookFriends:)
+                                                 name:gotFacebookFriendsNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updatePhotosDisplayedInQueue)
+                                                 name:photoDownloadedNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(contactWasContacted:)
+                                                 name:contactedNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pickerViewDone:)
+                                                 name:pickerViewDoneNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pickerViewCancel:)
+                                                 name:pickerViewCancelNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(animateOnQueueSwitchCompletion:)
+                                                 name:queueSwitchingDoneNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(facebookLogin:)
+                                                 name:registeredForNotifications
+                                               object:nil];
+}
+
+
+
 #pragma mark - Contact updating
+
+- (void)removeAllNotInterestedContactsFromQueues {
+    int i;
+    for (i = 0; i < [contactAppearedQueue count]; i++) {
+        ContactMetadata *metadata = (ContactMetadata *)[(Contact *)[contactAppearedQueue objectAtIndex:i] metadata];
+        if (![[metadata interest] boolValue]) {
+            [contactAppearedQueue removeObjectAtIndex:i];
+        }
+    }
+    for (i = 0; i < [contactNeverAppearedQueue count]; i++) {
+        ContactMetadata *metadata = (ContactMetadata *)[(Contact *)[contactNeverAppearedQueue objectAtIndex:i] metadata];
+        if (![[metadata interest] boolValue]) {
+            [contactNeverAppearedQueue removeObjectAtIndex:i];
+        }
+    }
+}
 
 - (void)getNextContactFromQueue {
     if ([currentQueue count]) {

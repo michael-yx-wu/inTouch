@@ -8,6 +8,7 @@
 #import "ContactManager.h"
 #import "ContactMetadata.h"
 #import "ContactViewController.h"
+#import "ImageStrings.h"
 #import "NotificationStrings.h"
 
 @interface ContactViewController () {
@@ -75,7 +76,7 @@ static NSString *contactedGeneric = @"generic";
         [emailButton setEnabled:NO];
     }
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:backgroundImageName]];
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]
                                                     initWithTarget:self action:@selector(wasTapped:)];
