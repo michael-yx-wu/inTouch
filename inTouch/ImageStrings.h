@@ -9,8 +9,6 @@
  */
 
 extern NSString *const backgroundImageName;
-extern NSString *const seenQueueImageName;
-extern NSString *const notSeenQueueImageName;
 
 #pragma mark - Contact View
 
@@ -24,5 +22,18 @@ extern NSString *const phoneIconImageName;
 
 extern NSString *const checkIconImageName;
 extern NSString *const checkIconOverlayImageName;
+extern NSString *const defaultAnchorPhotoImageName;
+extern NSString *const defaultBottomPhotoImageName;
 extern NSString *const defaultMiddlePhotoImageName;
 extern NSString *const defaultTopPhotoImageName;
+extern NSString *const deleteIconImageName;
+extern NSString *const deleteIconOverlayImageName;
+extern NSString *const seenQueueIconImageName;
+extern NSString *const notSeenQueueIconImageName;
+extern NSString *const postponeIconImageName;
+extern NSString *const postponeIconOverlayImageName;
+extern NSString *const settingsIconImageName;
+
+#pragma mark - Settings View
+
+extern NSString *const interestIconImageName;

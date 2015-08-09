@@ -92,14 +92,14 @@
     // Switch to new contact queue if no reminders have been set
     if (!currentContact) {
         currentQueue = contactNeverAppearedQueue;
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];
+        [switchQueueButton setImage:[UIImage imageNamed:notSeenQueueIconImageName] forState:UIControlStateNormal];
         [self getNextContactFromQueue];
     }
     
     // Switch back to reminders queue if no new contacts
     if (!currentContact) {
         currentQueue = contactAppearedQueue;
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
+        [switchQueueButton setImage:[UIImage imageNamed:seenQueueIconImageName] forState:UIControlStateNormal];
     }
     
     [self updatePhotosDisplayedInQueue];
@@ -639,9 +639,9 @@
 // Show/hide the appropriate UI graphics depending on the current queue
 - (void)updateQueueButtonImage {
     if (currentQueue == contactAppearedQueue) {
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
+        [switchQueueButton setImage:[UIImage imageNamed:seenQueueIconImageName] forState:UIControlStateNormal];
     } else {
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];
+        [switchQueueButton setImage:[UIImage imageNamed:notSeenQueueIconImageName] forState:UIControlStateNormal];
     }
 }
 
