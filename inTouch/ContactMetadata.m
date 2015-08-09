@@ -18,7 +18,7 @@
 @dynamic timezone;
 @dynamic contact;
 
-- (void)incrementTimesContacted:(NSInteger)contactMethod {
+- (void)incrementTimesContacted:(ContactMethod)contactMethod {
     if (contactMethod == contactedByCall) {
         [self setNumTimesCalled:[NSNumber numberWithInt:[[self numTimesCalled] intValue]+1]];
     } else if (contactMethod == contactedByMessage) {

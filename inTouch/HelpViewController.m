@@ -1,5 +1,7 @@
 #import "HelpViewController.h"
 
+#import "ImageStrings.h"
+
 @interface HelpViewController ()
 
 @end
@@ -18,7 +20,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:backgroundImageName]];
 }
 
 - (void)didReceiveMemoryWarning {

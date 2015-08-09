@@ -1,8 +1,10 @@
+#import "AllContactsTableViewController.h"
+
 #import "AppDelegate.h"
 #import "Contact.h"
 #import "ContactInformationTableViewController.h"
 #import "ContactMetadata.h"
-#import "AllContactsTableViewController.h"
+#import "ImageStrings.h"
 
 @interface AllContactsTableViewController () {
     Contact *selectedContact;
@@ -142,7 +144,7 @@
     // Get interest and set accessory appropriately
     UIButton *interestButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     if ([[contactMetadata interest] boolValue]) {
-        [interestButton setImage:[UIImage imageNamed:@"interest_icon"] forState:UIControlStateNormal];
+        [interestButton setImage:[UIImage imageNamed:interestIconImageName] forState:UIControlStateNormal];
     } else {
         [interestButton setImage:[UIImage imageWithData:nil] forState:UIControlStateNormal];
     }

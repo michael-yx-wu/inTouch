@@ -1,3 +1,17 @@
+/*!
+ @header DebugConstants.h
+ 
+ @brief Macros for debug priority constants.
+ 
+ @discussion Each file is assigned as an integer representing its debug priority. Higher numbers represent higher 
+             priority. Edit the contents of this file in conjunction with DebugLogger to change the debug output 
+             content.
+ 
+ @author Michael Wu
+ @copyright 2015 Intactu
+ @version 1.1
+ */
+
 #define minimumPriorityThreshold 1
 #define appDelegatePriority 1
 #define contactManagerPriority 2
@@ -12,3 +26,4 @@
 #define facebookManagerPriority 3
 #define rootViewControllerPriority 3
 #define loginViewControllerPriority 3
+#define notificationSchedulerPriority 3

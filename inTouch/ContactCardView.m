@@ -307,7 +307,7 @@
 // Was tapped, tell MainViewController to show the contact buttons
 - (void)wasTapped:(UITapGestureRecognizer *)tapGestureRecognizer {
     [DebugLogger log:@"Contact tapped" withPriority:contactCardViewPriority];
-    [delegate performSegueWithIdentifier:@"contact" sender:nil];
+    [delegate checkContactButton:nil];
 }
 
 - (void)resetTranslation {
@@ -316,6 +316,7 @@
 }
 
 - (void)hideAndDisableInteraction {
+    [DebugLogger log:@"Disabling interaction -- ContactCardView" withPriority:contactCardViewPriority];
     [self setUserInteractionEnabled:NO];
     [contactPhotoFront setAlpha:0];
     [contactPhotoMiddle setAlpha:0];
@@ -324,6 +325,7 @@
 }
 
 - (void)showAndEnableInteraction {
+    [DebugLogger log:@"Enabling interaction -- ContactCardView" withPriority:contactCardViewPriority];
     [self setUserInteractionEnabled:YES];
     [contactPhotoFront setAlpha:1];
     [contactPhotoMiddle setAlpha:1];

@@ -6,6 +6,7 @@
 #import "ContactManager.h"
 #import "FacebookManager.h"
 #import "GlobalData.h"
+#import "ImageStrings.h"
 #import "NotificationStrings.h"
 
 #import "MainViewController.h"
@@ -21,6 +22,8 @@
     NSMutableArray *currentQueue;
     NSMutableDictionary *fbDownloadStatus;
     Contact *currentContact;
+    CGFloat contactPhotoCornerRadius;
+    BOOL firstViewLoad;
 }
 @end
 
@@ -48,11 +51,16 @@
 @synthesize facebookFriends;
 @synthesize switchQueueButton;
 
+@synthesize settingsButton;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // This bool controls whether to set image masks/centers for the first time
+    firstViewLoad = YES;
+    
     // Load in background image
-    [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]]];
+    [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:backgroundImageName]]];
     
     // Add the references to the contact queue
     photoQueue = [[NSMutableArray alloc] initWithCapacity:4];
@@ -84,14 +92,14 @@
     // Switch to new contact queue if no reminders have been set
     if (!currentContact) {
         currentQueue = contactNeverAppearedQueue;
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];
+        [switchQueueButton setImage:[UIImage imageNamed:notSeenQueueIconImageName] forState:UIControlStateNormal];
         [self getNextContactFromQueue];
     }
     
     // Switch back to reminders queue if no new contacts
     if (!currentContact) {
         currentQueue = contactAppearedQueue;
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
+        [switchQueueButton setImage:[UIImage imageNamed:seenQueueIconImageName] forState:UIControlStateNormal];
     }
     
     [self updatePhotosDisplayedInQueue];
@@ -99,73 +107,106 @@
     // Track current facebook downloads
     fbDownloadStatus = [[NSMutableDictionary alloc] init];
     
-    // Listen for notification to replace facebook friend list with new list
-    // Notification from ContactManager
+    [self addNSNotificationOberservers];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if (firstViewLoad) {
+        // Save the original centers after main view has loaded -- method is screen width dependent
+        [contactCard setImageCentersAndMasks];
+        [contactQueueView setImageCenter];
+        contactPhotoCornerRadius = [[contactPhotoFront layer] cornerRadius];
+        [self updateQueueButtonImage];
+        
+        // Animation to hide the image masking process from the user
+        [UIView animateWithDuration:0.3
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseIn animations:^{
+                                [self showAllButtons];
+                                if ([self queueEmpty]) {
+                                    [self hideContactActionButtonsView];
+                                }                                
+                            } completion:^(BOOL finished) {
+                                firstViewLoad = NO;
+                                
+                                // Automatically sync contact info on first run only
+                                GlobalData *globalData = [self getGlobalDataEntity];
+                                bool firstRun = [[globalData firstRun] boolValue];
+                                if (firstRun) {
+                                    [globalData setLastUpdatedInfo:[NSDate date]];
+                                    [globalData setFirstRun:[NSNumber numberWithBool:NO]];
+                                    
+                                    // TutorialViewController will sync contacts on dismissal
+                                    [self performSegueWithIdentifier:@"tutorial" sender:self];
+                                }
+                            }];
+    } else {
+        [self showElementsOnReturnFromContactViewSegue];
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self removeAllNotInterestedContactsFromQueues];
+    [self getNextContactFromQueue];
+    [self updateQueue];
+    [self printQueue];
+    
+    if (firstViewLoad) {
+        [self hideAllButtons];
+    }
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
+
+#pragma mark - Set Up
+
+- (void)addNSNotificationOberservers {
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updateFacebookFriends:)
                                                  name:gotFacebookFriendsNotification
                                                object:nil];
     
-    // Listen for notification to redraw profile photos when downloads finish. Photos can take several seconds to load.
-    // Notification from self (background process)
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updatePhotosDisplayedInQueue)
                                                  name:photoDownloadedNotification
                                                object:nil];
     
-    // Listen for notification to show picker view and select a remind date
-    // Notification from ContactViewController
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(contactWasContacted:)
                                                  name:contactedNotification
                                                object:nil];
     
-    // Listen for notification to set the remind date and slide up
-    // Notification from PickerViewController
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(pickerViewDone:)
                                                  name:pickerViewDoneNotification
                                                object:nil];
     
-    // Listen for notification to dismiss the picker view controller and do nothing
-    // Notification from PickerViewController
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(pickerViewCancel:)
                                                  name:pickerViewCancelNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateUIForCurrentQueue:)
+                                             selector:@selector(animateOnQueueSwitchCompletion:)
                                                  name:queueSwitchingDoneNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(facebookLogin:)
+                                                 name:registeredForNotifications
                                                object:nil];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    // Save the original centers after main view has loaded -- method is screen width dependent
-    [contactCard setImageCentersAndMasks];
-    [contactQueueView setImageCenter];
-    
-    [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        [contactQueueView setAlpha:1];
-        [self updateUIForCurrentQueue:nil];
-    } completion:^(BOOL finished) {
-        // Automatically sync contact info on first run only
-        GlobalData *globalData = [self getGlobalDataEntity];
-        bool firstRun = [[globalData firstRun] boolValue];
-        if (firstRun) {
-            [globalData setLastUpdatedInfo:[NSDate date]];
-            [globalData setFirstRun:[NSNumber numberWithBool:NO]];
-            
-            // TutorialViewController will sync contacts on dismissal
-            [self performSegueWithIdentifier:@"tutorial" sender:self];            
-        }
-    }];
-}
 
-- (void)viewWillAppear:(BOOL)animated {
-    // Remove contacts that are marked as "not interested"
+
+#pragma mark - Contact updating
+
+- (void)removeAllNotInterestedContactsFromQueues {
     int i;
     for (i = 0; i < [contactAppearedQueue count]; i++) {
         ContactMetadata *metadata = (ContactMetadata *)[(Contact *)[contactAppearedQueue objectAtIndex:i] metadata];
@@ -179,24 +220,28 @@
             [contactNeverAppearedQueue removeObjectAtIndex:i];
         }
     }
-    [self getNextContactFromQueue];
-    [self updateQueue];
-    [self updatePhotosDisplayedInQueue];
-    [self printQueue];
 }
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
-#pragma mark - Contact updating
 
 - (void)getNextContactFromQueue {
     if ([currentQueue count]) {
         currentContact = [currentQueue objectAtIndex:0];
+        [UIView animateWithDuration:0.3
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+                             [self showContactActionButtonsView];
+                             [contactCard setUserInteractionEnabled:YES];
+                         } completion:nil];
     } else {
         [DebugLogger log:@"No contacts left in queue" withPriority:mainViewControllerPriority];
         currentContact = nil;
+        [UIView animateWithDuration:0.3
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+                             [self hideContactActionButtonsView];
+                             [contactCard setUserInteractionEnabled:NO];
+                         } completion:nil];
     }
 }
 
@@ -213,7 +258,7 @@
         
         // Set the sort descriptor to sort by descending urgency and execute
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"remindOnDate" ascending:false];
-        NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+        NSArray *sortDescriptors = @[sortDescriptor];
         [request setSortDescriptors:sortDescriptors];
     }
     else {
@@ -367,10 +412,17 @@
     return NO;
 }
 
+- (BOOL)queueEmpty {
+    if ([currentQueue count] == 0) {
+        return YES;
+    }
+    return NO;
+}
+
 #pragma mark - Facebook methods
 
 // Request facebook login
-- (void)facebookLogin {
+- (void)facebookLogin:(NSNotification *)notification {
     UIAlertController *notNow = [UIAlertController alertControllerWithTitle:@""
                                                                     message:@"Facebook preferences can be changed in the settings menu"
                                                              preferredStyle:UIAlertControllerStyleAlert];
@@ -452,7 +504,7 @@
                 [someContact setFacebookPhoto:imageData];
                 [DebugLogger log:[NSString stringWithFormat:@"Got photo for %@", fullName]
                     withPriority:mainViewControllerPriority];
-
+                
                 NSError *error;
                 if ([moc hasChanges]) {
                     @synchronized(fbDownloadStatus) {
@@ -474,7 +526,7 @@
                         withPriority:mainViewControllerPriority];
                     abort();
                 }
-
+                
                 // Remove the observer we just added -- we no longer need it
                 [[NSNotificationCenter defaultCenter] removeObserver:thisController
                                                                 name:NSManagedObjectContextDidSaveNotification
@@ -488,6 +540,15 @@
     });
 }
 
+#pragma mark - Registering for Notifications
+
+- (void)registerForNotifications {
+    UIUserNotificationType types = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types
+                                                                             categories:nil];
+    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+}
+
 #pragma mark - Tap Gestures
 
 - (IBAction)deleteContactButton:(id)sender {
@@ -495,7 +556,33 @@
 }
 
 - (IBAction)checkContactButton:(id)sender {
-    [self performSegueWithIdentifier:@"contact" sender:sender];
+    [UIView animateWithDuration:0.30
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         [switchQueueButton setAlpha:0];
+                         [contactActionButtonsView setAlpha:0];
+                     }
+                     completion:^(BOOL finished) {
+                         [self performSegueWithIdentifier:@"contact" sender:sender];
+                     }];
+
+    [contactPhotoAnchor setAlpha:0];
+    [UIView animateWithDuration:0.15
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         [contactPhotoBottom setAlpha:0];
+                     }
+                     completion:^(BOOL finished) {
+                         [UIView animateWithDuration:0.15
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseOut
+                                          animations:^{
+                                              [contactPhotoMiddle setAlpha:0];
+                                          }
+                                          completion:nil];
+                     }];
 }
 
 - (IBAction)postponeContactButton:(id)sender {
@@ -536,7 +623,6 @@
     
     // Disable sliding cards while we change queues
     [self disableInteraction];
-    [contactCard setUserInteractionEnabled:NO];
     
     // Switch queue
     if (currentQueue == contactAppearedQueue) {
@@ -551,34 +637,18 @@
 #pragma mark - UI upating
 
 // Show/hide the appropriate UI graphics depending on the current queue
-- (void)updateUIForCurrentQueue:(NSNotification *)notification {
+- (void)updateQueueButtonImage {
     if (currentQueue == contactAppearedQueue) {
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_open.png"] forState:UIControlStateNormal];
+        [switchQueueButton setImage:[UIImage imageNamed:seenQueueIconImageName] forState:UIControlStateNormal];
     } else {
-        [switchQueueButton setImage:[UIImage imageNamed:@"eye_queue_closed.png"] forState:UIControlStateNormal];
-    }
-    if (!currentContact) {
-        [UIView animateWithDuration:0.3
-                         animations:^{
-                             [contactActionButtonsView setAlpha:0];
-                         }];
-
-    } else {
-        [UIView animateWithDuration:0.3
-                         animations:^{
-                             [contactActionButtonsView setAlpha:1];
-                         }];
-    }
-    if ([[UIApplication sharedApplication] isIgnoringInteractionEvents]) {
-        [self enableInteraction];
+        [switchQueueButton setImage:[UIImage imageNamed:notSeenQueueIconImageName] forState:UIControlStateNormal];
     }
 }
 
 - (void)updateQueueWhileOffscreen {
     // Redraw the UI with information from the current queue
-    [DebugLogger log:@"updating while offscreen" withPriority:mainViewControllerPriority];
+    [DebugLogger log:@"Updating while offscreen" withPriority:mainViewControllerPriority];
     [self updateQueue];
-    [contactCard showAndEnableInteraction];
     [self getNextContactFromQueue];
     [self updatePhotosDisplayedInQueue];
     [self printQueue];
@@ -643,6 +713,43 @@
 
 #pragma mark - Custom Animation
 
+- (void)animateOnQueueSwitchCompletion:(NSNotification*)notification {
+    // Fade out the queue button
+    [UIView animateWithDuration:0.15
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         [switchQueueButton setAlpha:0];
+                     }
+                     completion:^(BOOL finished) {
+                         // Update the queue button image while hidden
+                         [self updateQueueButtonImage];
+                         
+                         // Fade in the queue button and enable user interactions
+                         [UIView animateWithDuration:0.15
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseIn
+                                          animations:^{
+                                              [switchQueueButton setAlpha:1];
+                                          }
+                                          completion:^(BOOL finished) {
+                                              [self enableInteraction];
+                                          }];
+                     }];
+    
+    // Show or hide the contact action buttons depending on whether the current queue is empty
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         if ([self queueEmpty]) {
+                             [self hideContactActionButtonsView];
+                         } else {
+                             [self showContactActionButtonsView];
+                         }
+                     } completion:nil];
+}
+
 - (void)displayContactedView {
     [self disableInteraction];
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
@@ -677,27 +784,75 @@
             currentQueue = contactAppearedQueue;
             [self updateQueue];
             [self printQueue];
-
+            
             // Switch to the unseen queue
             [self switchQueue:nil];
-
+            
             // Request facebook access
             [self enableInteraction];
-            [self facebookLogin];
+            [self registerForNotifications];
         }];
     }];
 }
 
-// Enable swiping/taping after animation ends
-- (void)enableInteraction {
-    [DebugLogger log:@"Enabling interaction" withPriority:mainViewControllerPriority];
-    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+- (void)hideAllButtons {
+    [contactQueueView setAlpha:0];
+    [contactActionButtonsView setAlpha:0];
+    [switchQueueButton setAlpha:0];
+    [settingsButton setAlpha:0];
 }
 
-// Disable swiping/taping during animation
-- (void)disableInteraction {
-    [DebugLogger log:@"Disabling interaction" withPriority:mainViewControllerPriority];
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+- (void)showAllButtons {
+    [contactQueueView setAlpha:1];
+    [contactActionButtonsView setAlpha:1];
+    [switchQueueButton setAlpha:1];
+    [settingsButton setAlpha:1];
+}
+
+// Show the queue switch button and contact action buttons. The queue photos alpha values are reset in the viewDidAppear
+// function
+- (void)showElementsOnReturnFromContactViewSegue {
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         [switchQueueButton setAlpha:1];
+                         if (![self queueEmpty]) {
+                             [contactActionButtonsView setAlpha:1];
+                         }
+                     }
+                     completion:nil];
+    [UIView animateWithDuration:0.15
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         if ([currentQueue count] > 1) {
+                             [contactPhotoMiddle setAlpha:1];
+                         }
+                     }
+                     completion:^(BOOL finished) {
+                         [UIView animateWithDuration:0.15
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseOut
+                                          animations:^{
+                                              if ([currentQueue count] > 2) {
+                                                  [contactPhotoBottom setAlpha:1];
+                                              }
+                                          }
+                                          completion:^(BOOL finished) {
+                                              if ([currentQueue count] > 3) {
+                                                  [contactPhotoAnchor setAlpha:1];
+                                              }
+                                          }];
+                     }];
+}
+
+- (void)hideContactActionButtonsView {
+    [contactActionButtonsView setAlpha:0];
+}
+
+- (void)showContactActionButtonsView {
+    [contactActionButtonsView setAlpha:1];
 }
 
 #pragma mark - Navigation
@@ -709,6 +864,7 @@
         [DebugLogger log:@"Preparing for segue to ContactViewController" withPriority:mainViewControllerPriority];
         ContactViewController *destViewController = [segue destinationViewController];
         [destViewController setContact:currentContact];
+        [destViewController setContactPhotoCornerRadius:contactPhotoCornerRadius];
     }
     if ([[segue identifier] isEqualToString:@"tutorial"]) {
         [DebugLogger log:@"Preparing for segue to TutorialViewController" withPriority:mainViewControllerPriority];
@@ -779,6 +935,20 @@
 - (void)save {
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     [appDelegate saveContext];
+}
+
+#pragma mark - Other
+
+// Enable swiping/taping after animation ends
+- (void)enableInteraction {
+    [DebugLogger log:@"Enabling interaction -- MainViewController" withPriority:mainViewControllerPriority];
+    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+}
+
+// Disable swiping/taping during animation
+- (void)disableInteraction {
+    [DebugLogger log:@"Disabling interaction -- MainViewController" withPriority:mainViewControllerPriority];
+    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 }
 
 - (void)printQueue {
