@@ -53,4 +53,18 @@
  */
 - (void)updateQueueWhileOffscreen;
 
+/*!
+ @brief Manually call the checkContactButton method.
+ 
+ @discussion Allows classes that use the MainViewDelegate to mimic the check button being tapped.
+ */
+- (IBAction)checkContactButton:(id)sender;
+
+/*!
+ @brief Check if the current queue is empty. 
+ 
+ @return Returns YES if queue is empty. Returns NO otherwise.
+ */
+- (BOOL)queueEmpty;
+
 @end

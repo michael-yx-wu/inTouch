@@ -3,6 +3,7 @@
 #import "Contact.h"
 #import "ContactManager.h"
 #import "ContactMetadata.h"
+#import "ImageStrings.h"
 
 @implementation Contact
 
@@ -30,7 +31,7 @@
         if (ABPersonHasImageData(addressBookContact)) {
             photoData = (__bridge_transfer NSData *)ABPersonCopyImageData(addressBookContact);
         } else {
-            UIImage *img = [UIImage imageNamed:@"default_profile_fade0.png"];
+            UIImage *img = [UIImage imageNamed:defaultTopPhotoImageName];
             photoData = UIImagePNGRepresentation(img);
         }
         CFRelease(addressBookRef);

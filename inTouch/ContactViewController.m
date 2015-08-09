@@ -8,9 +8,13 @@
 #import "ContactManager.h"
 #import "ContactMetadata.h"
 #import "ContactViewController.h"
+#import "ImageStrings.h"
 #import "NotificationStrings.h"
 
-@interface ContactViewController ()
+@interface ContactViewController () {
+    __weak IBOutlet UIView *contactButtonsView;
+    __weak IBOutlet UIView *manualButtonsView;
+}
 @end
 
 // Titles and identifier strings specific to this view controller -- not global constants
@@ -30,7 +34,7 @@ static NSString *contactedGeneric = @"generic";
 @synthesize callButton;
 @synthesize messageButton;
 @synthesize emailButton;
-
+@synthesize contactPhotoCornerRadius;
 @synthesize contact;
 @synthesize allEmailAddresses;
 @synthesize allPhoneNumbers;
@@ -57,6 +61,10 @@ static NSString *contactedGeneric = @"generic";
     allPhoneNumbers = [contact getPhoneNumbers];
     allEmailAddresses = [contact getEmails];
     
+    // Set photo mask
+    [[contactPhoto layer] setCornerRadius:contactPhotoCornerRadius];
+    [[contactPhoto layer] setMasksToBounds:YES];
+    
     // Disable buttons if needed
     if ([allPhoneNumbers count] == 0 || ![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tel://"]]) {
         [callButton setEnabled:NO];
@@ -68,7 +76,7 @@ static NSString *contactedGeneric = @"generic";
         [emailButton setEnabled:NO];
     }
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg.png"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:backgroundImageName]];
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]
                                                     initWithTarget:self action:@selector(wasTapped:)];
@@ -81,21 +89,20 @@ static NSString *contactedGeneric = @"generic";
                                                object:nil];
 }
 
-// Set mask only after view appears because it is screen width dependent
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    // Make contact photo round
-    [[contactPhoto layer] setCornerRadius:contactPhoto.frame.size.width/2];
-    [[contactPhoto layer] setMasksToBounds:YES];
-    [contactPhoto setAlpha:1];
+- (void)viewWillAppear:(BOOL)animated {
+    // Hide UI elements
+    [self hideButtons];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    // Hide photo until we round it
-    [contactPhoto setAlpha:0];
+- (void)viewDidAppear:(BOOL)animated {
+    // Fade in UI elements
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         [self showButtons];
+                     }
+                     completion:nil];
 }
 
 #pragma mark - Button Actions
@@ -273,12 +280,33 @@ static NSString *contactedGeneric = @"generic";
 }
 
 - (void)dismissViewController:(BOOL)contacted {
-    [self dismissViewControllerAnimated:NO completion:^{
-        if (contacted) {
-            // Alert the MainViewController that the contact was contacted
-            [[NSNotificationCenter defaultCenter] postNotificationName:contactedNotification object:self];
-        }
-    }];
+    // Fade out buttons before dismissing
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         [self hideButtons];
+                     }
+                     completion:^(BOOL finished) {
+                         [self dismissViewControllerAnimated:NO completion:^{
+                             if (contacted) {
+                                 // Alert the MainViewController that the contact was contacted
+                                 [[NSNotificationCenter defaultCenter] postNotificationName:contactedNotification object:self];
+                             }
+                         }];
+                     }];
+}
+
+#pragma mark - UI
+
+- (void)hideButtons {
+    [contactButtonsView setAlpha:0];
+    [manualButtonsView setAlpha:0];
+}
+
+- (void)showButtons {
+    [contactButtonsView setAlpha:1];
+    [manualButtonsView setAlpha:1];
 }
 
 #pragma mark - Core Data Accessor Methods

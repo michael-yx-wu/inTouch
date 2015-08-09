@@ -30,6 +30,9 @@
 // Gesture recognizers
 @property (weak, nonatomic) IBOutlet UITapGestureRecognizer *tapRecognizer;
 
+// Settings
+@property (weak, nonatomic) IBOutlet UIButton *settingsButton;
+
 - (void)requestContactsAccessAndSync;
 
 @end

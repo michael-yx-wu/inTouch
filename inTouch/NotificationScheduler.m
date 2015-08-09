@@ -62,6 +62,7 @@
     dates = [dates sortedArrayUsingSelector:@selector(compare:)];
     NSDate *date;
     NSNumber *contactsForDate;
+    UILocalNotification *notification;
     for (int i = 0; i < [dates count]; i++) {
         // Skip notification scheduling for today's scheduled contacts if it is past 10AM
         date = [dates objectAtIndex:i];
@@ -72,7 +73,7 @@
         contactsForDate = [notificationDates objectForKey:date];
 
         // Create the notification
-        UILocalNotification *notification = [[UILocalNotification alloc] init];
+        notification = [[UILocalNotification alloc] init];
         [notification setFireDate:date];
         if (notification == nil) {
             continue;
@@ -92,6 +93,23 @@
         [notification setApplicationIconBadgeNumber:1];
         
         // Schedule notification
+        [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+    }
+    
+    // Create a recurring notification to remind people to come back to the app after notifications regarding new
+    // contacts in the queue have stopped for 3 days
+    if (date) {
+        NSDateComponents *recurringNotificationOffset = [[NSDateComponents alloc] init];
+        [recurringNotificationOffset setDay:3];
+        NSDate *recurringReminder = [calendar dateByAddingComponents:recurringNotificationOffset toDate:date options:0];
+        notification = [[UILocalNotification alloc] init];
+        [notification setFireDate:recurringReminder];
+        [notification setRepeatInterval:NSCalendarUnitWeekOfMonth];
+        [notification setAlertAction:@"View Queue"];
+        [notification setAlertBody:@"You have contacts in your queue"];
+        [notification setAlertTitle:@"inTouch"];
+        [notification setSoundName:UILocalNotificationDefaultSoundName];
+        [notification setApplicationIconBadgeNumber:1];
         [[UIApplication sharedApplication] scheduleLocalNotification:notification];
     }
 }
