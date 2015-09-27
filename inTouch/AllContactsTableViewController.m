@@ -146,7 +146,7 @@
     if ([[contactMetadata interest] boolValue]) {
         [interestButton setImage:[UIImage imageNamed:interestIconImageName] forState:UIControlStateNormal];
     } else {
-        [interestButton setImage:[UIImage imageWithData:nil] forState:UIControlStateNormal];
+        [interestButton setImage:[[UIImage alloc] init] forState:UIControlStateNormal];
     }
     [interestButton addTarget:self
                        action:@selector(interestButtonTapped:withEvent:)
@@ -180,7 +180,7 @@
     UIButton *interestButton = sender;
     NSIndexPath *indexPath = [[self tableView] indexPathForRowAtPoint:[[[event touchesForView:interestButton] anyObject] locationInView:[self tableView]]];
     if (indexPath == nil) {
-        [DebugLogger log:@"nil index path" withPriority:allContactsTableViewControllerPriority];
+        [DebugLogger log:@"nil index pa th" withPriority:allContactsTableViewControllerPriority];
         return;
     }
     

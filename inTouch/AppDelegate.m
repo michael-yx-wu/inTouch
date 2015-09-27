@@ -35,7 +35,9 @@
     // Check if global data entity exists
     NSManagedObjectContext *moc = [self managedObjectContext];
     NSManagedObjectModel *model = [self managedObjectModel];
-    NSFetchRequest *request = [model fetchRequestFromTemplateWithName:@"GlobalData" substitutionVariables:NULL];
+    
+    NSFetchRequest *request = [model fetchRequestTemplateForName:@"GlobalData"];
+                               
     
     NSError *error;
     NSArray *results = [moc executeFetchRequest:request error:&error];
