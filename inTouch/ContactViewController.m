@@ -66,7 +66,7 @@ static NSString *contactedGeneric = @"generic";
     [[contactPhoto layer] setMasksToBounds:YES];
     
     // Disable buttons if needed
-    if ([allPhoneNumbers count] == 0 || ![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"tel://"]]) {
+    if ([allPhoneNumbers count] == 0 || ![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"telprompt://"]]) {
         [callButton setEnabled:NO];
     }
     if ([allPhoneNumbers count] == 0) {
@@ -90,11 +90,15 @@ static NSString *contactedGeneric = @"generic";
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
     // Hide UI elements
     [self hideButtons];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
     // Fade in UI elements
     [UIView animateWithDuration:0.3
                           delay:0

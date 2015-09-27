@@ -62,6 +62,7 @@
 		4C0A59C51B2B39A600D33B43 /* ContactQueueView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactQueueView.m; sourceTree = "<group>"; };
 		4C0A59C71B2B3FCA00D33B43 /* MainViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewDelegate.h; sourceTree = "<group>"; };
 		4C1C34C1192943C20003DB81 /* DebugConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DebugConstants.h; sourceTree = "<group>"; };
+		4C2334E11B9A87410022E787 /* Model 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 2.xcdatamodel"; sourceTree = "<group>"; };
 		4C2826891A48FCC600DA6692 /* NotificationStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationStrings.h; sourceTree = "<group>"; };
 		4C28268A1A48FCC600DA6692 /* NotificationStrings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationStrings.m; sourceTree = "<group>"; };
 		4C2F32251ABC84C0004DF832 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
@@ -374,7 +375,7 @@
 		4C340D5618C16FF7009A96D8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = inTouch;
 				TargetAttributes = {
 					4C340D5D18C16FF7009A96D8 = {
@@ -532,6 +533,7 @@
 				"CODE_SIGN_ENTITLEMENTS[sdk=*]" = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Michael Wu (98YW2GG2M7)";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -605,6 +607,7 @@
 				GCC_PREFIX_HEADER = "inTouch/inTouch-Prefix.pch";
 				INFOPLIST_FILE = "inTouch/inTouch-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "intactu.$(PRODUCT_NAME)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "45252fc7-e14e-4459-843e-46fcfb792361";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -628,6 +631,7 @@
 				GCC_PREFIX_HEADER = "inTouch/inTouch-Prefix.pch";
 				INFOPLIST_FILE = "inTouch/inTouch-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "intactu.$(PRODUCT_NAME)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "93805a84-6804-4fc8-9add-1960da3f0880";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -642,10 +646,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -656,6 +656,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "intactu.inTouch.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/inTouch.app/inTouch";
 			};
@@ -669,16 +670,13 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = "inTouch Tests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "intactu.inTouch.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/inTouch.app/inTouch";
 			};
@@ -720,6 +718,7 @@
 		4C340DA418C18DBD009A96D8 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				4C2334E11B9A87410022E787 /* Model 2.xcdatamodel */,
 				4C340DA518C18DBD009A96D8 /* Model.xcdatamodel */,
 			);
 			currentVersion = 4C340DA518C18DBD009A96D8 /* Model.xcdatamodel */;

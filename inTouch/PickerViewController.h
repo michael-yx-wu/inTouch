@@ -8,11 +8,9 @@
 @property (weak, nonatomic) IBOutlet UIImageView *contactPhotoView;
 @property (weak, nonatomic) IBOutlet UILabel *contactNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *remindDateHelpText;
-@property (weak, nonatomic) IBOutlet UILabel *remindDate;
 @property (weak, nonatomic) IBOutlet UIPickerView *remindDatePickerView;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
-//@p
 
 @property BOOL shouldHideCancelButton;
 @property BOOL postponingContact;
