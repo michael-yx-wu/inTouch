@@ -269,17 +269,25 @@
     NSArray *results = [self executeFetchRequest:request];
     
     // Get contacts to add to currentQueue while length < 5 or until we exhuast the list of urgent contacts
+    NSLog(@"Current queue length: %d", [currentQueue count]);
     ContactMetadata *metadata;
     NSUInteger index = 0;
     while ([currentQueue count] < 5 && index < [results count]) {
         metadata = [results objectAtIndex:index++];
         Contact *contact = (Contact *)[metadata contact];
-        
-        // Add contact to queue if not already in queue
-        if (![self queue:currentQueue ContainsContact:contact]) {
-            [self downloadFbPhotoForContact:contact];
-            // Add contact to queue
-            [currentQueue addObject:contact];
+        int abrecordid = [ContactManager verifyABRecordIDForContact:contact];
+        if (abrecordid == -1) {
+            NSLog(@"Deleting contact");
+            [[self managedObjectContext] deleteObject:contact];
+            [[self managedObjectContext] deleteObject:metadata];
+            [self save];
+        } else {
+            // Add contact to queue if not already in queue
+            if (![self queue:currentQueue ContainsContact:contact]) {
+                [self downloadFbPhotoForContact:contact];
+                // Add contact to queue
+                [currentQueue addObject:contact];
+            }
         }
     }
 }

@@ -128,28 +128,13 @@ NSInteger kFacebookRequestFinish = 0;
     NSString *lastName = (__bridge_transfer NSString*)ABRecordCopyValue(currentContact, kABPersonLastNameProperty);
     if (firstName == nil) firstName = @"";
     if (lastName == nil) lastName = @"";
-    
     NSString *fname = [contact nameFirst];
     NSString *lname = [contact nameLast];
-    
+
     // Verify name match
-    if (![firstName isEqualToString:fname] || ![lastName isEqualToString:lname]) {
-        CFStringRef name = (__bridge CFStringRef)lname;
-        NSNumber *newID;
-        NSArray *matches = (__bridge_transfer NSArray*)ABAddressBookCopyPeopleWithName(addressBookRef, name);
-        for (int i = 0; i < [matches count]; i++) {
-            ABRecordRef potentialMatch = (__bridge ABRecordRef)[matches objectAtIndex:i];
-            NSString *someFirstName = (__bridge_transfer NSString*)ABRecordCopyValue(potentialMatch, kABPersonFirstNameProperty);
-            NSString *someLastName = (__bridge_transfer NSString*)ABRecordCopyValue(potentialMatch, kABPersonLastNameProperty);
-            if ([someFirstName isEqualToString:fname] && [someLastName isEqualToString:lname]) {
-                newID = [NSNumber numberWithInt:ABRecordGetRecordID(potentialMatch)];
-                [contact setAbrecordid:newID];
-            }            
-            CFRelease(addressBookRef);
-            return [newID intValue];
-        }
-        [DebugLogger log:@"Error finding ID for contact" withPriority:contactManagerPriority];
-        abort();
+    if (!([firstName isEqualToString:fname] && [lastName isEqualToString:lname])) {
+        [DebugLogger log:@"Could not find ID for contact" withPriority:contactManagerPriority];
+        return -1;
     } else {
         CFRelease(addressBookRef);
         return [[contact abrecordid] intValue];
