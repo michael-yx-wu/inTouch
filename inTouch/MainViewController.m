@@ -108,6 +108,7 @@
     fbDownloadStatus = [[NSMutableDictionary alloc] init];
     
     [self addNSNotificationOberservers];
+    [FacebookManager getFriendsList];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -269,7 +270,6 @@
     NSArray *results = [self executeFetchRequest:request];
     
     // Get contacts to add to currentQueue while length < 5 or until we exhuast the list of urgent contacts
-    NSLog(@"Current queue length: %d", [currentQueue count]);
     ContactMetadata *metadata;
     NSUInteger index = 0;
     while ([currentQueue count] < 5 && index < [results count]) {

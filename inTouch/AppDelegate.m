@@ -29,8 +29,6 @@
     [self setAlertWindow:alertContainer];
     [alertContainer setRootViewController:[[UIViewController alloc] init]];
 
-    // Attempt to start facebook session on launch
-    [FacebookManager loginSilently];
     
     // Check if global data entity exists
     NSManagedObjectContext *moc = [self managedObjectContext];
@@ -49,7 +47,8 @@
     
     // Create global data entity if does not exist
     if ([results count] == 0) {
-        GlobalData *globalData = [NSEntityDescription insertNewObjectForEntityForName:@"GlobalData" inManagedObjectContext:moc];
+        GlobalData *globalData = [NSEntityDescription insertNewObjectForEntityForName:@"GlobalData"
+                                                               inManagedObjectContext:moc];
         [globalData setAccessToken:nil];
         [globalData setLastUpdatedInfo:nil];
         [globalData setFirstContactTap:[NSNumber numberWithBool:YES]];
@@ -62,7 +61,8 @@
         [globalData setNumNotInterested:0];
     }
     
-    return YES;
+    return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                    didFinishLaunchingWithOptions:launchOptions];
 }
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
@@ -72,10 +72,13 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Handles user leaving app while FB login dialog is being shown. Unresolved sessions are cleared on relaunch
-    [FBAppCall handleDidBecomeActive];
-    
+//    [FBAppCall handleDidBecomeActive];
+
     // Dismiss all notifications (reschedule when resigning active)
     [NotificationScheduler dismissNotifications];
+
+    // Log app activations
+    [FBSDKAppEvents activateApp];
 }
 
 // Schedule notifications and save changes
@@ -87,16 +90,11 @@
 #pragma mark - Facebook
 
 // Handle session information 
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation {
-    // Handler block may be lost when app terminated due to low memory -- must explicitly set block
-    // This will produce a log message saying that the handler is being overwritten. 
-    [[FBSession activeSession] setStateChangeHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-        [FacebookManager sessionStateChanged:session state:status error:error];
-    }];
-    return [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                          openURL:url
+                                                sourceApplication:sourceApplication
+                                                       annotation:annotation];
 }
 
 #pragma mark - Core Data

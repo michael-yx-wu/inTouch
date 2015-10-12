@@ -148,7 +148,7 @@ enum {
             [label setText:@"Remind me in"];
         }
     } else if (component == daysWeeksComponent) {
-        [label setText:[NSString stringWithFormat:@"%ld", row + 1]];
+        [label setText:[NSString stringWithFormat:@"%ld", (long)(row + 1)]];
     } else {
         if (row == 0) {
             [label setText:@"days"];

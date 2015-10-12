@@ -134,7 +134,7 @@
     UIAlertAction *okay;
     
     // Prompt user with brief message before connecting/disconnecting facebook account
-    if ([FacebookManager sessionOpen]) {
+    if ([FacebookManager loggedIn]) {
         alertController = [UIAlertController alertControllerWithTitle:@"Disconnect account?"
                                                               message:@"If you disconnect your Facebook account, we will no longer be able to use the latest contact profile pictures from Facebook."
                                                        preferredStyle:UIAlertControllerStyleAlert];
@@ -171,8 +171,7 @@
 // This is called when the session state changes and every time the view is about to be shown
 - (void)updateFacebookNameLabel {
     // If we are logged in, set the user name
-    if ([[FBSession activeSession] state] == FBSessionStateOpen ||
-        [[FBSession activeSession] state] == FBSessionStateOpenTokenExtended) {
+    if ([FacebookManager loggedIn]) {
         [facebookCell setAccessoryType:UITableViewCellAccessoryCheckmark];
         [facebookCellDetailLabel setText:@"Connected"];
     } else {

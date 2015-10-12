@@ -25,6 +25,11 @@
 @interface FacebookManager : NSObject
 
 /*!
+ @brief Method to check Facebook login status.
+ */
++ (BOOL)loggedIn;
+
+/*!
  @brief Use the taggable_friends Graph API endpoint to get a list of the user's friends. 
  
  @discussion Depending on a user's friends' privacy settings, this list may not be comprehensive.
@@ -37,36 +42,8 @@
 + (void)login;
 
 /*!
- @brief Attempt to log in to Facebook using a cached token.
- 
- @discussion Does not open Safari on failure.
- */
-+ (void)loginSilently;
-
-/*!
  @brief Clear token information and logout.
  */
 + (void)logout;
-
-/*!
- @brief Check if the current session is in one of two states: FBSessionStateOpen or FBSessionStateTokenExtended
- 
- @return Return true if the current session is in the FBSessionStateOpen or FBSessionStateTokenExtended states.
- */
-+ (BOOL)sessionOpen;
-
-/*!
- @brief Handle Facebook session state changes.
- 
- @discussion On nominal session state changes, posts a notification to let the SettingsViewController update the label
-             appropriately. When unexpected errors occur, display an alert to the users. These alerts can be shown
-             regardless of the current state of the application because they are displayed on the AppDelegate's 
-             UIWindow that is normally hidden.
- 
- @param session The current Facebook session.
- @param status The current Facebook session status.
- @param error Errors are written to this variable.
- */
-+ (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)status error:(NSError *)error;
 
 @end

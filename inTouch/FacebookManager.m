@@ -1,116 +1,79 @@
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+
 #import "AppDelegate.h"
 #import "FacebookManager.h"
 #import "NotificationStrings.h"
 
 @implementation FacebookManager
 
-+ (BOOL)sessionOpen {
-    // Return true if state is one of two possible session open states
-    return ([[FBSession activeSession] state] == FBSessionStateOpen ||
-            [[FBSession activeSession] state] == FBSessionStateOpenTokenExtended);
++ (BOOL)loggedIn {
+    if ([FBSDKAccessToken currentAccessToken]) {
+        return YES;
+    }
+    return NO;
 }
+
 
 + (void)getFriendsList {
     // Fail gracefully if no open session
-    if (![self sessionOpen]) {
+    if (![self loggedIn]) {
         return;
     }
-    [FBRequestConnection startWithGraphPath:@"/me/taggable_friends?fields=name,picture.width(400).height(400)"
-                          completionHandler:^(FBRequestConnection *connection,
-                                              id result, NSError
-                                              *error) {
-                              NSMutableDictionary *fbFriends = [[NSMutableDictionary alloc] init];
-                              if (error) {
-                                  [DebugLogger log:[NSString stringWithFormat:@"Facebook friends request error: %@", [error userInfo]]
-                                      withPriority:contactManagerPriority];
-                                  return;
-                              }
-                              // Process facebook json object
-                              NSArray *taggableFriends = [result objectForKey:@"data"];
-                              for (NSDictionary *friend in taggableFriends) {
-                                  NSString *name = [friend valueForKey:@"name"];
-                                  NSArray *url = [[[friend valueForKey:@"picture"] valueForKey:@"data"]
-                                                  valueForKey:@"url"];
-                                  [fbFriends setValue:url forKey:name];
-                              }
-                              
-                              // Post notification for MainViewController
-                              NSDictionary *notificationData = @{@"data": fbFriends};
-                              [[NSNotificationCenter defaultCenter] postNotificationName:gotFacebookFriendsNotification
-                                                                                  object:self
-                                                                                userInfo:notificationData];
-                          }];
+    
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/taggable_friends?fields=name,picture.width(400).height(400)"
+                                                                   parameters:nil
+                                                                   HTTPMethod:@"GET"];
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        NSMutableDictionary *fbFriends = [[NSMutableDictionary alloc] init];
+        if (error) {
+            [DebugLogger log:[NSString stringWithFormat:@"Facebook friends request error: %@", [error userInfo]]
+                withPriority:contactManagerPriority];
+            return;
+        }
+        // Process facebook json object
+        NSArray *taggableFriends = [result objectForKey:@"data"];
+        for (NSDictionary *friend in taggableFriends) {
+            NSString *name = [friend valueForKey:@"name"];
+            NSArray *url = [[[friend valueForKey:@"picture"] valueForKey:@"data"]
+                            valueForKey:@"url"];
+            [fbFriends setValue:url forKey:name];
+        }
+
+        // Post notification for MainViewController
+        NSDictionary *notificationData = @{@"data": fbFriends};
+        [[NSNotificationCenter defaultCenter] postNotificationName:gotFacebookFriendsNotification
+                                                            object:self
+                                                          userInfo:notificationData];
+    }];
 }
 
 + (void)login {
-    [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
-                                       allowLoginUI:YES
-                                  completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                      [self sessionStateChanged:session state:status error:error];
-                                  }];
-}
-
-+ (void)loginSilently {
-    if ([[FBSession activeSession] state] == FBSessionStateCreatedTokenLoaded) {
-        // Do not show login UI on fail
-        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile"]
-                                           allowLoginUI:NO
-                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                          // Handler for state changes
-                                          [self sessionStateChanged:session state:status error:error];
-                                      }];
-    }
+    FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+    [loginManager logInWithReadPermissions:@[@"public_profile", @"user_friends"]
+                        fromViewController:nil
+                                   handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+                                       [self handleLoginResult:result error:error];
+                                   }];
 }
 
 + (void)logout {
-    [[FBSession activeSession] closeAndClearTokenInformation];
+    FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+    [loginManager logOut];
+    [[NSNotificationCenter defaultCenter] postNotificationName:facebookSessionStateChanged object:nil];
 }
 
-+ (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)status error:(NSError *)error {
-    // Session opened success
-    if (!error && (status == FBSessionStateOpen || status == FBSessionStateOpenTokenExtended)) {
-        [DebugLogger log:@"FB session opened" withPriority:facebookManagerPriority];
-        [[NSNotificationCenter defaultCenter] postNotificationName:facebookSessionStateChanged object:nil];
-        [self getFriendsList];
++ (void)handleLoginResult:(FBSDKLoginManagerLoginResult *)result error:(NSError *)error {
+    if (error) {
+        [self showAlertViewWithTitle:[error localizedDescription] message:[error localizedRecoverySuggestion]];
         return;
     }
-    
-    // Session closed
-    if (status == FBSessionStateClosed || status == FBSessionStateClosedLoginFailed) {
-        [DebugLogger log:@"FB session closed or closed with login fail" withPriority:facebookManagerPriority];
+
+    if ([result token]) {
+        [FBSDKAccessToken setCurrentAccessToken:[result token]];
         [[NSNotificationCenter defaultCenter] postNotificationName:facebookSessionStateChanged object:nil];
-    }
-    
-    // Handle any errors
-    if (error) {
-        [DebugLogger log:@"FB session error" withPriority:facebookManagerPriority];
-        
-        // If error requires users to do something outside of the app
-        if ([FBErrorUtility shouldNotifyUserForError:error]) {
-            [self showAlertViewWithTitle:@"Something went wrong"
-                                 message:[FBErrorUtility userMessageForError:error]];
-        } else {
-            // Do nothing if user cancelled login
-            if ([FBErrorUtility errorCategoryForError:error] ==  FBErrorCategoryUserCancelled) {
-                [DebugLogger log:@"User cancelled FB login -- no action" withPriority:facebookManagerPriority];
-            }
-            
-            // Handle session closures that occured outside of app
-            else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryAuthenticationReopenSession) {
-                [self showAlertViewWithTitle:@"Facebook session error"
-                                     message:@"Your current session is no longer valid. Please login again"];
-            }
-            
-            // Handle generic errors
-            else {
-                // Get more information on error
-                NSDictionary *errorInformation = [[[[error userInfo]
-                                                    objectForKey:@"com.facebook.sdk:ParsedJSONResponseKey"]
-                                                   objectForKey:@"body"] objectForKey:@"error"];
-                [self showAlertViewWithTitle:@"Oops something went wrong!"
-                                     message:[NSString stringWithFormat:@"Please retry. \n\n If the problem persists contact us and mention this error code: %@", [errorInformation objectForKey:@"message"]]];
-            }
-        }
+        [self getFriendsList];
+    } else if ([result isCancelled]) {
+        [self showAlertViewWithTitle:@"Login Cancelled" message:@"Login was cancelled by the user"];
     }
 }
 
