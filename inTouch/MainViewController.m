@@ -153,6 +153,7 @@
     [self removeAllNotInterestedContactsFromQueues];
     [self getNextContactFromQueue];
     [self updateQueue];
+    [self getNextContactFromQueue];
     [self printQueue];
     
     if (firstViewLoad) {
@@ -278,6 +279,7 @@
         int abrecordid = [ContactManager verifyABRecordIDForContact:contact];
         if (abrecordid == -1) {
             NSLog(@"Deleting contact");
+            [self removeContactFromQueues:contact];
             [[self managedObjectContext] deleteObject:contact];
             [[self managedObjectContext] deleteObject:metadata];
             [self save];
@@ -288,6 +290,18 @@
                 // Add contact to queue
                 [currentQueue addObject:contact];
             }
+        }
+    }
+}
+
+- (void)removeContactFromQueues:(Contact *)contact {
+    for (int i = 0; i < [currentQueue count]; i++) {
+        if ([contact objectID] == [[currentQueue objectAtIndex:i] objectID]) {
+            [DebugLogger log:@"Removing contact from queue" withPriority:mainViewControllerPriority];
+            [currentQueue removeObjectAtIndex:i];
+            [photoQueue removeObjectAtIndex:i];
+            [self updatePhotosDisplayedInQueue];
+            break;
         }
     }
 }

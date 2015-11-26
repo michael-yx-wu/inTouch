@@ -134,6 +134,7 @@ NSInteger kFacebookRequestFinish = 0;
     // Verify name match
     if (!([firstName isEqualToString:fname] && [lastName isEqualToString:lname])) {
         [DebugLogger log:@"Could not find ID for contact" withPriority:contactManagerPriority];
+        CFRelease(addressBookRef);
         return -1;
     } else {
         CFRelease(addressBookRef);

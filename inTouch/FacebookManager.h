@@ -25,16 +25,16 @@
 @interface FacebookManager : NSObject
 
 /*!
- @brief Method to check Facebook login status.
- */
-+ (BOOL)loggedIn;
+ @brief Use the taggable_friends Graph API endpoint to get a list of the user's friends.
 
-/*!
- @brief Use the taggable_friends Graph API endpoint to get a list of the user's friends. 
- 
  @discussion Depending on a user's friends' privacy settings, this list may not be comprehensive.
  */
 + (void)getFriendsList;
+
+/*!
+ @brief Method to check Facebook login status.
+ */
++ (BOOL)loggedIn;
 
 /*!
  @brief Log in to Facebook by briefly opening a Safari window.

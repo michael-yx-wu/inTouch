@@ -4,47 +4,59 @@
 #import "FacebookManager.h"
 #import "NotificationStrings.h"
 
+static NSString *baseFriendsPath = @"me/taggable_friends?fields=name,picture.width(400).height(400)&limit=1000";
+
 @implementation FacebookManager
 
-+ (BOOL)loggedIn {
-    if ([FBSDKAccessToken currentAccessToken]) {
-        return YES;
++ (void)makeRequestWithPage:(NSString *)after dict:(NSMutableDictionary *)fbFriends {
+    NSString *graphPath = baseFriendsPath;
+    if (after) {
+        graphPath = [NSString stringWithFormat:@"%@&after=%@", baseFriendsPath, after];
     }
-    return NO;
-}
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
+                                                                   parameters:nil
+                                                                   HTTPMethod:@"GET"];
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        if (error) {
+            [DebugLogger log:[NSString stringWithFormat:@"Facebook friends request error: %@", [error userInfo]]
+                withPriority:contactManagerPriority];
+            return;
+        }
+        NSArray *taggableFriends = [result objectForKey:@"data"];
+        for (NSDictionary *friend in taggableFriends) {
+            NSString *name = [friend valueForKey:@"name"];
+            NSArray *url = [[[friend valueForKey:@"picture"] valueForKey:@"data"] valueForKey:@"url"];
+            [fbFriends setValue:url forKey:name];
+        }
 
+        NSDictionary *paging = [result objectForKey:@"paging"];
+        if (![paging objectForKey:@"next"]) {
+            NSDictionary *notificationData = @{@"data": fbFriends};
+            [[NSNotificationCenter defaultCenter] postNotificationName:gotFacebookFriendsNotification
+                                                                object:self
+                                                              userInfo:notificationData];
+        } else {
+            NSDictionary *cursors = [paging objectForKey:@"cursors"];
+            [self makeRequestWithPage:[cursors objectForKey:@"after"] dict:fbFriends];
+        }
+    }];
+}
 
 + (void)getFriendsList {
     // Fail gracefully if no open session
     if (![self loggedIn]) {
         return;
     }
-    
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/taggable_friends?fields=name,picture.width(400).height(400)"
-                                                                   parameters:nil
-                                                                   HTTPMethod:@"GET"];
-    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-        NSMutableDictionary *fbFriends = [[NSMutableDictionary alloc] init];
-        if (error) {
-            [DebugLogger log:[NSString stringWithFormat:@"Facebook friends request error: %@", [error userInfo]]
-                withPriority:contactManagerPriority];
-            return;
-        }
-        // Process facebook json object
-        NSArray *taggableFriends = [result objectForKey:@"data"];
-        for (NSDictionary *friend in taggableFriends) {
-            NSString *name = [friend valueForKey:@"name"];
-            NSArray *url = [[[friend valueForKey:@"picture"] valueForKey:@"data"]
-                            valueForKey:@"url"];
-            [fbFriends setValue:url forKey:name];
-        }
 
-        // Post notification for MainViewController
-        NSDictionary *notificationData = @{@"data": fbFriends};
-        [[NSNotificationCenter defaultCenter] postNotificationName:gotFacebookFriendsNotification
-                                                            object:self
-                                                          userInfo:notificationData];
-    }];
+    __block NSMutableDictionary *fbFriends = [[NSMutableDictionary alloc] init];
+    [self makeRequestWithPage:nil dict:fbFriends];
+}
+
++ (BOOL)loggedIn {
+    if ([FBSDKAccessToken currentAccessToken]) {
+        return YES;
+    }
+    return NO;
 }
 
 + (void)login {
