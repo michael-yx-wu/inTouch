@@ -38,7 +38,7 @@ enum {
     if (shouldHideCancelButton) {
         [self hideCancelButton];
     }
-    daysSelected = false;
+    daysSelected = true;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
