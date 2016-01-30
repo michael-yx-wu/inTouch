@@ -12,7 +12,7 @@
  @class AppDelegate
  
  @brief Responsible for scheduling various tasks on application state changes.
- 
+ /Volumes/DivX
  @discussion When the application is launched, 'window' is told the run the main application while 'alertWindow' is
              reserved for Facebook login alerts only. This allows FacebookManager to show alerts regardless of the
              current application state. 'alertWindow' has a clear background color and is normally hidden from view. It
@@ -36,7 +36,7 @@
 /*!
  @brief The UIWindow for FacebookManager alerts.
  
- @discussion This is hidden by default. FacebookManager will temporarily make this UIWindow visible while it is 
+ @discussion This is hidden by default. FacebookManager will temporarily make this UIWindow visible while it is
              presenting an alert.
  */
 @property (strong, nonatomic) UIWindow *alertWindow;
