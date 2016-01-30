@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="fOB-fb-GfK">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F1507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="fOB-fb-GfK">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -88,7 +87,8 @@
                                                 <exclude reference="kB6-UC-bMM"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular-widthClass=compact">
+                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="0.0" y="11" width="82" height="82"/>
                                             <mask key="constraints">
                                                 <exclude reference="271-Zm-1FL"/>
                                                 <exclude reference="OSV-y9-AB7"/>
@@ -114,7 +114,8 @@
                                                 <exclude reference="ClJ-r3-UXI"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular-widthClass=compact">
+                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="108" y="11" width="82" height="82"/>
                                             <mask key="constraints">
                                                 <include reference="2h1-S3-bGD"/>
                                                 <exclude reference="6oW-xg-2zp"/>
@@ -143,7 +144,8 @@
                                                 <exclude reference="35t-u4-JeO"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular-widthClass=compact">
+                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="216" y="11" width="82" height="82"/>
                                             <mask key="constraints">
                                                 <include reference="0bL-Fp-e5x"/>
                                                 <exclude reference="35t-u4-JeO"/>
@@ -350,7 +352,8 @@
                                                                 <exclude reference="Pmf-QM-aMU"/>
                                                             </mask>
                                                         </variation>
-                                                        <variation key="heightClass=regular-widthClass=compact">
+                                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                            <rect key="frame" x="10" y="10" width="86" height="86"/>
                                                             <mask key="constraints">
                                                                 <include reference="Pmf-QM-aMU"/>
                                                             </mask>
@@ -394,7 +397,8 @@
                                                                 <exclude reference="aA9-4C-EVD"/>
                                                             </mask>
                                                         </variation>
-                                                        <variation key="heightClass=regular-widthClass=compact">
+                                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                            <rect key="frame" x="10" y="10" width="86" height="86"/>
                                                             <mask key="constraints">
                                                                 <include reference="aA9-4C-EVD"/>
                                                             </mask>
@@ -438,7 +442,8 @@
                                                                 <exclude reference="6aw-Lk-9FQ"/>
                                                             </mask>
                                                         </variation>
-                                                        <variation key="heightClass=regular-widthClass=compact">
+                                                        <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                                            <rect key="frame" x="33" y="17" width="40" height="39"/>
                                                             <mask key="constraints">
                                                                 <include reference="6aw-Lk-9FQ"/>
                                                             </mask>

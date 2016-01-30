@@ -250,6 +250,8 @@
     [DebugLogger log:@"Updating queue" withPriority:mainViewControllerPriority];
     // Execute fetch request for contactAppearedQueue or contactNeverAppearedQueue depending on the currentQueue
     NSManagedObjectModel *model = [self managedObjectModel];
+    // So is "model" just a data structure that you've allocated to hold whatever the request is for (seen vs. unseen)?
+    
     NSFetchRequest *request;
     if (currentQueue == contactAppearedQueue) {
         NSDictionary *substitionVariables = [NSDictionary dictionaryWithObjectsAndKeys:[NSDate date], @"DATE", nil];
@@ -265,6 +267,8 @@
         // Get all contacts that have never appeared
         request = [model fetchRequestFromTemplateWithName:@"ContactMetadataNeverAppeared"
                                     substitutionVariables:[[NSDictionary alloc] init]];
+        // Where is this "ContactMetadataNeverAppeared" getting pulled from?
+        
     }
     NSArray *results = [self executeFetchRequest:request];
     
@@ -290,6 +294,8 @@
     // Execute request
     NSError *error;
     NSArray *results = [moc executeFetchRequest:request error:&error];
+    // I don't understand how executeFetechRequest knows where to go to look for the contacts
+    
     if (results == nil) {
         NSString *errorString = [NSString stringWithFormat:@"Error getting next contact: %@, %@", error,
                                  [error userInfo]];
@@ -897,6 +903,9 @@
 - (NSManagedObjectModel *)managedObjectModel {
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     return [appDelegate managedObjectModel];
+    
+    // Don't understand what's going on here. You declare a managed object model, but how does it interact with AppDelegate?
+    // How does the actual schema get defined?
 }
 
 // Request contacts access and sync if authorized
