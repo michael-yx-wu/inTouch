@@ -31,6 +31,8 @@ NSInteger kFacebookRequestFinish = 0;
         [DebugLogger log:[NSString stringWithFormat:@"First Name: %@", firstName] withPriority:contactManagerPriority];
         [DebugLogger log:[NSString stringWithFormat:@"Last Name: %@", lastName] withPriority:contactManagerPriority];
         
+        // What does skdfjalsdf mean?
+        
         // Get contact identifier
         NSNumber *abrecordid = [NSNumber numberWithInt:ABRecordGetRecordID(currentContact)];
         
