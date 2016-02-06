@@ -97,6 +97,7 @@
     }
     
     // Switch back to reminders queue if no new contacts
+    // QUESTION: Why does this condition of "!currentContact" need to be written twice? Why not combine with previous function?
     if (!currentContact) {
         currentQueue = contactAppearedQueue;
         [switchQueueButton setImage:[UIImage imageNamed:seenQueueIconImageName] forState:UIControlStateNormal];
@@ -250,7 +251,7 @@
     [DebugLogger log:@"Updating queue" withPriority:mainViewControllerPriority];
     // Execute fetch request for contactAppearedQueue or contactNeverAppearedQueue depending on the currentQueue
     NSManagedObjectModel *model = [self managedObjectModel];
-    // So is "model" just a data structure that you've allocated to hold whatever the request is for (seen vs. unseen)?
+    // QUESTION: So is "model" just a data structure that you've allocated to hold whatever the request is for (seen vs. unseen)?
     
     NSFetchRequest *request;
     if (currentQueue == contactAppearedQueue) {
@@ -267,12 +268,13 @@
         // Get all contacts that have never appeared
         request = [model fetchRequestFromTemplateWithName:@"ContactMetadataNeverAppeared"
                                     substitutionVariables:[[NSDictionary alloc] init]];
-        // Where is this "ContactMetadataNeverAppeared" getting pulled from?
+        // QUESTION: Where is this "ContactMetadataNeverAppeared" getting pulled from?
+        // QUESTION: What does substituationVariables do?
         
     }
     NSArray *results = [self executeFetchRequest:request];
     
-    // Get contacts to add to currentQueue while length < 5 or until we exhuast the list of urgent contacts
+    // Get contacts to add to currentQueue while length < 5 or until we exhaust the list of urgent contacts
     ContactMetadata *metadata;
     NSUInteger index = 0;
     while ([currentQueue count] < 5 && index < [results count]) {
@@ -290,16 +292,19 @@
 
 // Helper method that executes the given fetch request and returns the results
 - (NSArray *)executeFetchRequest:(NSFetchRequest *)request {
+    // QUESTION: Can you help me understand the "semantics" of how this works?
+    
     NSManagedObjectContext *moc = [self managedObjectContext];
     // Execute request
     NSError *error;
     NSArray *results = [moc executeFetchRequest:request error:&error];
-    // I don't understand how executeFetechRequest knows where to go to look for the contacts
+    // QUESTION: I don't understand how executeFetechRequest knows where to go to look for the contacts
     
     if (results == nil) {
         NSString *errorString = [NSString stringWithFormat:@"Error getting next contact: %@, %@", error,
                                  [error userInfo]];
         [DebugLogger log:errorString withPriority:mainViewControllerPriority];
+        // QUESTION: So even when results == nil because it is simply empty, we record as error?
         abort();
     }
     return results;
@@ -335,8 +340,11 @@
     [self dismissViewControllerAnimated:YES completion:^{
         NSDictionary *dict = [notification userInfo];
         NSNumber *daysToPostpone = [dict valueForKey:@"days"];
+        // Question: Does the "Key" just refer to a column within core data?
+        
         BOOL postponingContact = [[dict valueForKey:@"postponingContact"] boolValue];
         BOOL postponingContactFromButton = [[dict valueForKey:@"postponingContactFromButton"] boolValue];
+        // Where do these two things get triggered from 0 to 1?
         
         // Remember days to postpone as user preference
         ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
@@ -411,6 +419,7 @@
 // Helper method that returns true if the specified queue contains a copy of the contact
 - (BOOL)queue:(NSMutableArray *)queue ContainsContact:(Contact *)contact {
     for (Contact *queuedContact in queue) {
+        // QUESTION: Does this for loop just look through every item in the array to see if it matches the "queued contact"?
         if([[[queuedContact objectID] URIRepresentation] isEqual:[[contact objectID] URIRepresentation]]) {
             return YES;
         }
@@ -904,8 +913,8 @@
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     return [appDelegate managedObjectModel];
     
-    // Don't understand what's going on here. You declare a managed object model, but how does it interact with AppDelegate?
-    // How does the actual schema get defined?
+    // QUESTION: Don't understand what's going on here. You declare a managed object model, but how does it interact with AppDelegate?
+    // QUESTION: How does the actual schema get defined?
 }
 
 // Request contacts access and sync if authorized
