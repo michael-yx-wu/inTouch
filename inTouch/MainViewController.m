@@ -608,6 +608,8 @@
     [pvc setPostponingContactFromButton:YES];
     [pvc setDisplayedInMainView:YES];
     [pvc setContact:currentContact];
+    // QUESTION: So are each of the variables above booleans? If yes, then where's the code that intakes these boolean values?
+    
     [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
     [self presentViewController:pvc animated:YES completion:nil];
 }
@@ -638,6 +640,7 @@
     
     // Disable sliding cards while we change queues
     [self disableInteraction];
+    // This is cool
     
     // Switch queue
     if (currentQueue == contactAppearedQueue) {
@@ -676,6 +679,7 @@
         if (currentQueue == contactAppearedQueue) {
             [DebugLogger log:@"No reminders" withPriority:mainViewControllerPriority];
             [contactName setText:@"No Reminders"];
+            // Question: Did we want to change this to "You're all caught up!"?
         } else {
             [DebugLogger log:@"No new contacts" withPriority:mainViewControllerPriority];
             [contactName setText:@"No New Contacts"];
@@ -706,6 +710,7 @@
             img = [[UIImage alloc] initWithData:photoData];
             NSInteger resolution = [img size].width * [img scale] + [img size].height * [img scale];
             if (resolution < RESOLUTION_THRESHOLD) {
+                // Question: Did we just remove all resolution thresholds?
                 shouldUseDefaultPhoto = YES;
             }
         }
