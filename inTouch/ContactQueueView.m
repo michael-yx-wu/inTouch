@@ -12,6 +12,7 @@
 @synthesize contactCard;
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     centers = [[NSMutableArray alloc] initWithCapacity:4];
 }
 

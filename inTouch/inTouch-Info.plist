@@ -83,5 +83,7 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSContactsUsageDescription</key>
+	<string>The app requires access to contacts to remind you to keep in touch with them.</string>
 </dict>
 </plist>
