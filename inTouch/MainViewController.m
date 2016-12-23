@@ -490,7 +490,7 @@
         @try {
             // Use a reference to app delegate's moc
             NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] init];
-            AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             [moc setPersistentStoreCoordinator:[appDelegate persistentStoreCoordinator]];
             Contact *someContact = (Contact *)[moc objectWithID:contactID];
             
@@ -911,13 +911,11 @@
 }
 
 - (NSManagedObjectContext *)managedObjectContext {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    return [appDelegate managedObjectContext];
+    return [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
 }
 
 - (NSManagedObjectModel *)managedObjectModel {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    return [appDelegate managedObjectModel];
+    return [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectModel];    
 }
 
 // Request contacts access and sync if authorized
@@ -952,10 +950,8 @@
     [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
 }
 
-// Save current context
 - (void)save {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    [appDelegate saveContext];
+    [(AppDelegate *)[[UIApplication sharedApplication] delegate] saveContext];
 }
 
 #pragma mark - Other

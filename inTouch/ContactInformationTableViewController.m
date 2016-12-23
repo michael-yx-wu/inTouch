@@ -418,10 +418,8 @@
 }
 */
 
-// Save current context
 - (void)save {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    [appDelegate saveContext];
+    [(AppDelegate *)[[UIApplication sharedApplication] delegate] saveContext];
 }
 
 @end

@@ -16,16 +16,4 @@
     [self performSegueWithIdentifier:@"mainView" sender:self];
 }
 
-#pragma mark - Core Data accessor methods
-
-- (NSManagedObjectContext *)managedObjectContext {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    return [appDelegate managedObjectContext];
-}
-
-- (NSManagedObjectModel *)managedObjectModel {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    return [appDelegate managedObjectModel];
-}
-
 @end

@@ -36,6 +36,7 @@
 
 // Add gesture recognizers on load. These are screen size independent.
 - (void)awakeFromNib {
+    [super awakeFromNib];
     panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(beingDragged:)];
     tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(wasTapped:)];
     [self addGestureRecognizer:panGestureRecognizer];
