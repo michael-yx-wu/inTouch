@@ -246,9 +246,10 @@
     }
 }
 
-// Fill up the current queue with at most 5 contacts, sorted by descending urgency
+// Fill up the current queue with at most 5 contacts
 - (void)updateQueue {
     [DebugLogger log:@"Updating queue" withPriority:mainViewControllerPriority];
+    
     // Execute fetch request for contactAppearedQueue or contactNeverAppearedQueue depending on the currentQueue
     NSManagedObjectModel *model = [self managedObjectModel];
     NSFetchRequest *request;
@@ -256,14 +257,7 @@
         NSDictionary *substitionVariables = [NSDictionary dictionaryWithObjectsAndKeys:[NSDate date], @"DATE", nil];
         request = [model fetchRequestFromTemplateWithName:@"ContactMetadataUrgent"
                                     substitutionVariables:substitionVariables];
-        
-        // Set the sort descriptor to sort by descending urgency and execute
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"remindOnDate" ascending:false];
-        NSArray *sortDescriptors = @[sortDescriptor];
-        [request setSortDescriptors:sortDescriptors];
-    }
-    else {
-        // Get all contacts that have never appeared
+    } else {
         request = [model fetchRequestFromTemplateWithName:@"ContactMetadataNeverAppeared"
                                     substitutionVariables:[[NSDictionary alloc] init]];
     }
@@ -277,18 +271,22 @@
         Contact *contact = (Contact *)[metadata contact];
         int abrecordid = [ContactManager verifyABRecordIDForContact:contact];
         if (abrecordid == -1) {
-            NSLog(@"Deleting contact");
+            NSLog(@"Deleting contact: bad abrecordid");
             [self removeContactFromQueues:contact];
             [[self managedObjectContext] deleteObject:contact];
             [[self managedObjectContext] deleteObject:metadata];
             [self save];
-        } else {
-            // Add contact to queue if not already in queue
-            if (![self queue:currentQueue ContainsContact:contact]) {
-                [self downloadFbPhotoForContact:contact];
-                // Add contact to queue
-                [currentQueue addObject:contact];
-            }
+            continue;
+        }
+
+        // The random double comparison to the weight of unseen contacts will always be true because the default
+        // weight is 1
+        if (![self queue:currentQueue containsContact:contact]
+            && (rand() / RAND_MAX) <= [[metadata weight] doubleValue]) {
+
+            [self downloadFbPhotoForContact:contact];
+            // Add contact to queue
+            [currentQueue addObject:contact];
         }
     }
 }
@@ -418,13 +416,12 @@
     NSDate *remindDate = [calendar dateByAddingComponents:futureComponents toDate:today options:0];
     ContactMetadata *contactMetadata = (ContactMetadata *)[currentContact metadata];
     [contactMetadata setNumTimesAppeared:[NSNumber numberWithInt:([[contactMetadata numTimesAppeared] intValue] + 1)]];
-    [contactMetadata setRemindOnDate:remindDate];
     [self save];
     [self dismissContact];
 }
 
 // Helper method that returns true if the specified queue contains a copy of the contact
-- (BOOL)queue:(NSMutableArray *)queue ContainsContact:(Contact *)contact {
+- (BOOL)queue:(NSMutableArray *)queue containsContact:(Contact *)contact {
     for (Contact *queuedContact in queue) {
         if([[[queuedContact objectID] URIRepresentation] isEqual:[[contact objectID] URIRepresentation]]) {
             return YES;
@@ -535,8 +532,8 @@
                         [fbDownloadStatus setObject:[NSNumber numberWithBool:NO] forKey:[contact objectID]];
                         
                         // Remove the key-value pair if contact has been dismissed
-                        if (![self queue:contactAppearedQueue ContainsContact:contact] &&
-                            ![self queue:contactNeverAppearedQueue ContainsContact:contact]) {
+                        if (![self queue:contactAppearedQueue containsContact:contact] &&
+                            ![self queue:contactNeverAppearedQueue containsContact:contact]) {
                             [fbDownloadStatus removeObjectForKey:[contact objectID]];
                         }
                     }
