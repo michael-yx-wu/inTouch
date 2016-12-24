@@ -95,16 +95,20 @@
 @property (nonatomic, retain) NSNumber *numTimesPostponed;
 
 /*!
- @brief The date on which this contact will begin to appear in the 'seen queue'. 
- */
-@property (nonatomic, retain) NSDate *remindOnDate;
-
-/*!
  @brief The timezone this contact belongs to.
  
  @warning Not currently being used in any feature of the application.
  */
 @property (nonatomic, retain) NSString *timezone;
+
+/*!
+ @brief A number that represents that relative likelihood of this contact appearing.
+ 
+ @discussion The maximum value is 1 and represents a contact being equally as likely to appear as other contacts.
+             0.01 is the minimum instead of 0 because we don't want to effective prevent a contact from appearing
+             because it's been postponed too many times.
+ */
+@property (nonatomic, retain) NSNumber *weight;
 
 /*!
  @brief A pointer to the Contact entity associated with this ContactMetadata.

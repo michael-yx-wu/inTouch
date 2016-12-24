@@ -14,8 +14,8 @@
 @dynamic numTimesEmailed;
 @dynamic numTimesMessaged;
 @dynamic numTimesPostponed;
-@dynamic remindOnDate;
 @dynamic timezone;
+@dynamic weight;
 @dynamic contact;
 
 - (void)incrementTimesContacted:(ContactMethod)contactMethod {
