@@ -24,6 +24,7 @@
         <attribute name="numTimesPostponed" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="remindOnDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="timezone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="weight" optional="YES" attributeType="Double" minValueString="0.01" maxValueString="1" defaultValueString="1" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="metadata" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <entity name="GlobalData" representedClassName="GlobalData" syncable="YES">
@@ -62,7 +63,7 @@
     <fetchRequest name="GlobalData" entity="GlobalData"/>
     <elements>
         <element name="Contact" positionX="117" positionY="-115" width="128" height="148"/>
-        <element name="ContactMetadata" positionX="-45" positionY="-117" width="128" height="268"/>
+        <element name="ContactMetadata" positionX="-45" positionY="-117" width="128" height="285"/>
         <element name="GlobalData" positionX="-198" positionY="192" width="128" height="195"/>
         <element name="Postpones" positionX="-198" positionY="90" width="128" height="75"/>
         <element name="Session" positionX="-198" positionY="-117" width="128" height="178"/>

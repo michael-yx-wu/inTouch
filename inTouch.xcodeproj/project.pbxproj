@@ -34,6 +34,7 @@
 		4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C47934C18E0EB2900A408AB /* ContactViewController.m */; };
 		4C7327231BC1AE40001A5C57 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7327221BC1AE40001A5C57 /* FBSDKCoreKit.framework */; };
 		4C87A4801B5495C0008BE5D0 /* NotificationScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C87A47F1B5495C0008BE5D0 /* NotificationScheduler.m */; };
+		4C927C871E0F12AF00DF5C3E /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C185A691E0F0442003935AA /* Model.xcdatamodeld */; };
 		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
 		4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107E51934362E00BB853C /* SettingsTableViewController.m */; };
 		4CB4AA221A47E8400017EF9E /* FacebookManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB4AA211A47E8400017EF9E /* FacebookManager.m */; };
@@ -104,6 +105,7 @@
 		4C7327221BC1AE40001A5C57 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		4C87A47E1B5495C0008BE5D0 /* NotificationScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationScheduler.h; sourceTree = "<group>"; };
 		4C87A47F1B5495C0008BE5D0 /* NotificationScheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationScheduler.m; sourceTree = "<group>"; };
+		4C927C861E0F11FF00DF5C3E /* Model-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model-2.xcdatamodel"; sourceTree = "<group>"; };
 		4C96311418CB71CB002D05A6 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
 		4C96311518CB71CB002D05A6 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
 		4CB107E41934362E00BB853C /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
@@ -207,7 +209,7 @@
 				4C340D7118C16FF7009A96D8 /* AppDelegate.m */,
 				4C87A4811B5495D6008BE5D0 /* Utility */,
 				4C42688A1915B4500014744F /* View Controllers */,
-				4C42688619158C8B0014744F /* Core Data Entities */,
+				4C42688619158C8B0014744F /* Core Data */,
 				4C340D6818C16FF7009A96D8 /* Supporting Files */,
 			);
 			path = inTouch;
@@ -249,7 +251,7 @@
 			name = "Main View";
 			sourceTree = "<group>";
 		};
-		4C42688619158C8B0014744F /* Core Data Entities */ = {
+		4C42688619158C8B0014744F /* Core Data */ = {
 			isa = PBXGroup;
 			children = (
 				4C185A691E0F0442003935AA /* Model.xcdatamodeld */,
@@ -260,7 +262,7 @@
 				4C42688B1915B6B80014744F /* GlobalData.h */,
 				4C42688C1915B6B80014744F /* GlobalData.m */,
 			);
-			name = "Core Data Entities";
+			name = "Core Data";
 			sourceTree = "<group>";
 		};
 		4C42688A1915B4500014744F /* View Controllers */ = {
@@ -470,6 +472,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C027AFC1B5EEC300024B8B4 /* ContactTests.m in Sources */,
+				4C927C871E0F12AF00DF5C3E /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -726,11 +729,13 @@
 		4C185A691E0F0442003935AA /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				4C927C861E0F11FF00DF5C3E /* Model-2.xcdatamodel */,
 				4C185A6A1E0F0442003935AA /* Model.xcdatamodel */,
 			);
-			currentVersion = 4C185A6A1E0F0442003935AA /* Model.xcdatamodel */;
+			currentVersion = 4C927C861E0F11FF00DF5C3E /* Model-2.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
+			usesTabs = 0;
 			versionGroupType = wrapper.xcdatamodel;
 		};
 /* End XCVersionGroup section */
