@@ -43,7 +43,6 @@
 		4CC73FD21906330900B932A7 /* ContactManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC73FD11906330900B932A7 /* ContactManager.m */; };
 		4CD64A701B75AB0D00EA73CD /* ImageStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD64A6F1B75AB0D00EA73CD /* ImageStrings.m */; };
 		4CE2435019080BCE00028430 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE2434F19080BCE00028430 /* CoreTelephony.framework */; };
-		4CF6E18D1A243BC90056B1B9 /* PickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF6E18C1A243BC90056B1B9 /* PickerViewController.m */; };
 		4CF7B3041984BB4A00F10889 /* ContactInformationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF7B3031984BB4A00F10889 /* ContactInformationTableViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -121,8 +120,6 @@
 		4CD64A6E1B75AB0400EA73CD /* ImageStrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageStrings.h; sourceTree = "<group>"; };
 		4CD64A6F1B75AB0D00EA73CD /* ImageStrings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageStrings.m; sourceTree = "<group>"; };
 		4CE2434F19080BCE00028430 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
-		4CF6E18B1A243BC90056B1B9 /* PickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickerViewController.h; sourceTree = "<group>"; };
-		4CF6E18C1A243BC90056B1B9 /* PickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickerViewController.m; sourceTree = "<group>"; };
 		4CF7B3021984BB4A00F10889 /* ContactInformationTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactInformationTableViewController.h; sourceTree = "<group>"; };
 		4CF7B3031984BB4A00F10889 /* ContactInformationTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactInformationTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -157,8 +154,6 @@
 		4C2FB7731ABB8C0700613D9A /* Miscellaneous */ = {
 			isa = PBXGroup;
 			children = (
-				4CF6E18B1A243BC90056B1B9 /* PickerViewController.h */,
-				4CF6E18C1A243BC90056B1B9 /* PickerViewController.m */,
 				4C4305E61AB3FF9000F1B6B8 /* TutorialViewController.h */,
 				4C4305E71AB3FF9000F1B6B8 /* TutorialViewController.m */,
 			);
@@ -461,7 +456,6 @@
 				4C42688919158D530014744F /* ContactMetadata.m in Sources */,
 				4C4305E81AB3FF9000F1B6B8 /* TutorialViewController.m in Sources */,
 				4C42688D1915B6B80014744F /* GlobalData.m in Sources */,
-				4CF6E18D1A243BC90056B1B9 /* PickerViewController.m in Sources */,
 				4CD64A701B75AB0D00EA73CD /* ImageStrings.m in Sources */,
 				4C340D6E18C16FF7009A96D8 /* main.m in Sources */,
 			);

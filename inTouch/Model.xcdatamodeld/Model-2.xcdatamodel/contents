@@ -10,7 +10,6 @@
         <relationship name="metadata" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ContactMetadata" inverseName="contact" inverseEntity="ContactMetadata" syncable="YES"/>
     </entity>
     <entity name="ContactMetadata" representedClassName="ContactMetadata" syncable="YES">
-        <attribute name="daysBetweenReminder" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="interest" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="lastContactedDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="lastPostponedDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -61,7 +60,7 @@
     <fetchRequest name="GlobalData" entity="GlobalData"/>
     <elements>
         <element name="Contact" positionX="117" positionY="-115" width="128" height="148"/>
-        <element name="ContactMetadata" positionX="-45" positionY="-117" width="128" height="255"/>
+        <element name="ContactMetadata" positionX="-45" positionY="-117" width="128" height="240"/>
         <element name="GlobalData" positionX="-198" positionY="192" width="128" height="195"/>
         <element name="Postpones" positionX="-198" positionY="90" width="128" height="75"/>
         <element name="Session" positionX="-198" positionY="-117" width="128" height="178"/>

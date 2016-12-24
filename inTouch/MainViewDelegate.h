@@ -34,19 +34,16 @@
 - (void)performSegueWithIdentifier:(NSString *)string sender:(id)sender;
 
 /*!
- @brief Dismiss the current @link Contact @/link and set a reminder.
- 
- @discussion This method will also cause the queue to be updated and redrawn, so there is no need to manually do it.
- 
- @param days 
-    Set a reminder this many days from now.
+ @brief Return current @link Contact @/link weight.
  */
-- (void)dismissContactAndSetReminder:(NSUInteger)days;
+- (NSNumber *)getContactWeight;
 
 /*!
- @brief Show the @link PickerViewController @/link.
+ @brief Dismiss the current @link Contact @/link set the weight.
+
+ @discussion This method will also cause the queue to be updated and redrawn.
  */
-- (void)showPickerView;
+- (void)dismissContactAndSetWeight:(double)weight;
 
 /*!
  @brief Redraw the contact queue while it is animating offscreen. 

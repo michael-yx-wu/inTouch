@@ -64,7 +64,7 @@ NSInteger kFacebookRequestFinish = 0;
             [metaData setLastPostponedDate:nil];
             [metaData setNoInterestDate:nil];
             [metaData setNotes:nil];
-            [metaData setRemindOnDate:nil];
+            [metaData setWeight:[NSNumber numberWithInteger:1]];
             [metaData setTimezone:[[NSTimeZone localTimeZone] name]];
             
             [DebugLogger log:[NSString stringWithFormat:@"Created Contact: %@ %@", firstName, lastName] withPriority:1];

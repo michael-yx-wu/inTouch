@@ -6,7 +6,6 @@
 #import "ContactInformationTableViewController.h"
 #import "ContactManager.h"
 #import "NotificationStrings.h"
-#import "PickerViewController.h"
 
 #define NAME_SECTION 0
 #define REMINDERS_SECTION 1
@@ -54,12 +53,6 @@
         [reminderSwitch setOn:NO];
     }
     
-    // Listen for reminder switch changess
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateRemindDateCell)
-                                                 name:pickerViewDoneFromSettingsNotification
-                                               object:nil];
-    
     // Listen for call end events
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(callEnded)
@@ -97,18 +90,7 @@
 }
 
 - (void)showReminderDatePicker {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
-    [pvc setShouldHideCancelButton:NO];
-    [pvc setPostponingContact:NO];
-    [pvc setPostponingContactFromButton:NO];
-    [pvc setDisplayedInMainView:NO];
-    [pvc setContact:contact];
-    
-    [[self navigationController] setProvidesPresentationContextTransitionStyle:YES];
-    [[self navigationController] setDefinesPresentationContext:YES];
-    [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-    [[self navigationController] presentViewController:pvc animated:YES completion:nil];
+
 }
 
 // Refresh the remind date cell's detail text
@@ -314,32 +296,11 @@
         cell = [tableView dequeueReusableCellWithIdentifier:nameCellIdentifier forIndexPath:indexPath];
         [[cell detailTextLabel] setText:[NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]]];
     } else if ([indexPath section] == REMINDERS_SECTION) {
-        ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
         if ([indexPath row] == REMINDERS_ON_OFF) {
             cell = [tableView dequeueReusableCellWithIdentifier:remindSwitchCellIdentifier forIndexPath:indexPath];
             [cell setAccessoryView:reminderSwitch];
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        }
-        if ([indexPath row] == REMINDERS_DATE) {
-            cell = [tableView dequeueReusableCellWithIdentifier:remindDateCellIdentifier forIndexPath:indexPath];
-            // Set enabled status
-            if ([[contactMetadata interest] boolValue]) {
-                cell.userInteractionEnabled = cell.textLabel.enabled = cell.detailTextLabel.enabled = YES;
-            } else {
-                cell.userInteractionEnabled = cell.textLabel.enabled = cell.detailTextLabel.enabled = NO;
-            }
-            
-            // Set the text
-            NSDate *remindDate = [contactMetadata remindOnDate];
-            if (remindDate) {
-                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-                [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-                [[cell detailTextLabel] setText:[dateFormatter stringFromDate:remindDate]];
-            } else {
-                [[cell detailTextLabel] setText:@"Not set"];
-            }
-        }
+        }        
     } else if (hasPhoneSection) {
         if ([indexPath section] == PHONES_SECTION) {
             cell = [tableView dequeueReusableCellWithIdentifier:phoneCellIdentifier forIndexPath:indexPath];

@@ -11,7 +11,6 @@
 
 #import "MainViewController.h"
 #import "ContactViewController.h"
-#import "PickerViewController.h"
 #import "TutorialViewController.h"
 
 #define RESOLUTION_THRESHOLD 0
@@ -176,22 +175,12 @@
                                              selector:@selector(updatePhotosDisplayedInQueue)
                                                  name:photoDownloadedNotification
                                                object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(contactWasContacted:)
+                                             selector:@selector(contacted:)
                                                  name:contactedNotification
                                                object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(pickerViewDone:)
-                                                 name:pickerViewDoneNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(pickerViewCancel:)
-                                                 name:pickerViewCancelNotification
-                                               object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(animateOnQueueSwitchCompletion:)
                                                  name:queueSwitchingDoneNotification
@@ -318,70 +307,10 @@
     return results;
 }
 
-// Show the PickerViewController. Hide the cancel button
-- (void)contactWasContacted:(NSNotification *)notification {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
-    [pvc setShouldHideCancelButton:YES];
-    [pvc setPostponingContact:NO];
-    [pvc setDisplayedInMainView:YES];
-    [pvc setContact:currentContact];
-    [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-    [self presentViewController:pvc animated:YES completion:nil];
-}
-
-// This method is only called when swiping to postpone a contact
-- (void)showPickerView {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
-    [pvc setShouldHideCancelButton:NO];
-    [pvc setPostponingContact:YES];
-    [pvc setPostponingContactFromButton:NO];
-    [pvc setDisplayedInMainView:YES];
-    [pvc setContact:currentContact];
-    [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-    [self presentViewController:pvc animated:YES completion:nil];
-}
-
 // Save relevant metadata and slide the contact up
-- (void)pickerViewDone:(NSNotification *)notification {
-    [self dismissViewControllerAnimated:YES completion:^{
-        NSDictionary *dict = [notification userInfo];
-        NSNumber *daysToPostpone = [dict valueForKey:@"days"];
-        BOOL postponingContact = [[dict valueForKey:@"postponingContact"] boolValue];
-        BOOL postponingContactFromButton = [[dict valueForKey:@"postponingContactFromButton"] boolValue];
-        
-        // Remember days to postpone as user preference
-        ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
-        [metadata setDaysBetweenReminder:daysToPostpone];
-        
-        // We finished contacting a contact
-        if (!postponingContact) {
-            [contactCard slideContactCardUp:[daysToPostpone integerValue]];
-        }
-        // We are postponing from a button
-        else if (postponingContactFromButton) {
-            [contactCard rightActionFromButton:[daysToPostpone integerValue]];
-        }
-        // We are postponing from a swipe -- this is a little hairy
-        else {
-            // Contact is already off the screen. We just need to update photos and return to original positions
-            [self dismissContactAndSetReminder:[daysToPostpone unsignedIntegerValue]];
-            [contactCard returnToOriginalPositions];
-            [contactCard showNameLabel];
-        }
-    }];
-}
-
-// Dismiss the picker view and move cards back to original positions if necessary
-- (void)pickerViewCancel:(NSNotification *)notification {
-    [self dismissViewControllerAnimated:YES completion:^{
-        [UIView animateWithDuration:0.3 animations:^{
-            [contactCard returnToOriginalPositions];
-        } completion:^(BOOL finished) {
-            [contactCard showNameLabel];
-        }];
-    }];
+- (void)contacted:(NSNotification *)notification {
+    // We finished contacting a contact
+    [contactCard slideContactCardUp];
 }
 
 // 1. Remove the contact from the current queue and the download status dictionary
@@ -399,23 +328,15 @@
     [self printQueue];
 }
 
-// 1. Set the remindOnDate metadata property and remind in some number of days
-// 2. Dismiss contact called when done
-- (void)dismissContactAndSetReminder:(NSUInteger)days {
-    [self printQueue];
-    NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
-    NSDateComponents *todaysComponents = [calendar components:(NSCalendarUnitYear|
-                                                               NSCalendarUnitMonth|
-                                                               NSCalendarUnitDay|
-                                                               NSCalendarUnitTimeZone|
-                                                               NSCalendarUnitCalendar)
-                                                     fromDate:[NSDate date]];
-    NSDate *today = [todaysComponents date];
-    NSDateComponents *futureComponents = [[NSDateComponents alloc] init];
-    [futureComponents setDay:days];
-    NSDate *remindDate = [calendar dateByAddingComponents:futureComponents toDate:today options:0];
+- (NSNumber *)getContactWeight {
+    ContactMetadata *contactMetadata = (ContactMetadata *)[currentContact metadata];
+    return [contactMetadata weight];
+}
+
+- (void)dismissContactAndSetWeight:(double)weight {
     ContactMetadata *contactMetadata = (ContactMetadata *)[currentContact metadata];
     [contactMetadata setNumTimesAppeared:[NSNumber numberWithInt:([[contactMetadata numTimesAppeared] intValue] + 1)]];
+    [contactMetadata setWeight:[NSNumber numberWithDouble:weight]];
     [self save];
     [self dismissContact];
 }
@@ -603,16 +524,7 @@
                      }];
 }
 
-- (IBAction)postponeContactButton:(id)sender {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
-    [pvc setShouldHideCancelButton:NO];
-    [pvc setPostponingContact:YES];
-    [pvc setPostponingContactFromButton:YES];
-    [pvc setDisplayedInMainView:YES];
-    [pvc setContact:currentContact];
-    [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-    [self presentViewController:pvc animated:YES completion:nil];
+- (IBAction)postponeContactButton:(id)sender {    
 }
 
 // Delete the current contact and refresh the queue
