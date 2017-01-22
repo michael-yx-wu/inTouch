@@ -256,8 +256,7 @@
                              [postponedView setAlpha:1];
                          } completion:^(BOOL finished) {
                              [self setAlpha:1.0];
-                             double weight = [[delegate getContactWeight] doubleValue];
-                             [delegate dismissContactAndSetWeight:MAX(weight - 0.05, 0.01)];
+                             [delegate dismissContactAndDecrementWeight];
                              [self returnToOriginalPositions];
                              [self resetTranslation];
                              [self showNameLabel];
@@ -280,7 +279,7 @@
             [self slideUp];
         } completion:^(BOOL finished) {
             [self setAlpha:1.0];
-            [delegate dismissContactAndSetWeight:1];
+            [delegate dismissContactAndDecrementWeight];
             [self returnToOriginalPositions];
             [self resetTranslation];
             [self showNameLabel];

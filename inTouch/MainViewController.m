@@ -328,15 +328,11 @@
     [self printQueue];
 }
 
-- (NSNumber *)getContactWeight {
+- (void)dismissContactAndDecrementWeight {
     ContactMetadata *contactMetadata = (ContactMetadata *)[currentContact metadata];
-    return [contactMetadata weight];
-}
-
-- (void)dismissContactAndSetWeight:(double)weight {
-    ContactMetadata *contactMetadata = (ContactMetadata *)[currentContact metadata];
+    NSNumber *weight = [contactMetadata weight];
     [contactMetadata setNumTimesAppeared:[NSNumber numberWithInt:([[contactMetadata numTimesAppeared] intValue] + 1)]];
-    [contactMetadata setWeight:[NSNumber numberWithDouble:weight]];
+    [contactMetadata setWeight:[NSNumber numberWithDouble:MAX([weight doubleValue] - 0.05, 0.01)]];
     [self save];
     [self dismissContact];
 }
@@ -524,7 +520,8 @@
                      }];
 }
 
-- (IBAction)postponeContactButton:(id)sender {    
+- (IBAction)postponeContactButton:(id)sender {
+    [self dismissContactAndDecrementWeight];
 }
 
 // Delete the current contact and refresh the queue

@@ -34,16 +34,9 @@
 - (void)performSegueWithIdentifier:(NSString *)string sender:(id)sender;
 
 /*!
- @brief Return current @link Contact @/link weight.
+ @brief Dismiss contact from queue and decrement weight.
  */
-- (NSNumber *)getContactWeight;
-
-/*!
- @brief Dismiss the current @link Contact @/link set the weight.
-
- @discussion This method will also cause the queue to be updated and redrawn.
- */
-- (void)dismissContactAndSetWeight:(double)weight;
+- (void)dismissContactAndDecrementWeight;
 
 /*!
  @brief Redraw the contact queue while it is animating offscreen. 
