@@ -35,7 +35,6 @@
 		4C7327231BC1AE40001A5C57 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7327221BC1AE40001A5C57 /* FBSDKCoreKit.framework */; };
 		4C87A4801B5495C0008BE5D0 /* NotificationScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C87A47F1B5495C0008BE5D0 /* NotificationScheduler.m */; };
 		4C927C871E0F12AF00DF5C3E /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C185A691E0F0442003935AA /* Model.xcdatamodeld */; };
-		4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C96311518CB71CB002D05A6 /* HelpViewController.m */; };
 		4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107E51934362E00BB853C /* SettingsTableViewController.m */; };
 		4CB4AA221A47E8400017EF9E /* FacebookManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB4AA211A47E8400017EF9E /* FacebookManager.m */; };
 		4CBA95AD1B5C2C4600E1C39D /* FetchRequestStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA95AC1B5C2C4600E1C39D /* FetchRequestStrings.m */; };
@@ -105,8 +104,6 @@
 		4C87A47E1B5495C0008BE5D0 /* NotificationScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationScheduler.h; sourceTree = "<group>"; };
 		4C87A47F1B5495C0008BE5D0 /* NotificationScheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationScheduler.m; sourceTree = "<group>"; };
 		4C927C861E0F11FF00DF5C3E /* Model-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model-2.xcdatamodel"; sourceTree = "<group>"; };
-		4C96311418CB71CB002D05A6 /* HelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelpViewController.h; sourceTree = "<group>"; };
-		4C96311518CB71CB002D05A6 /* HelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HelpViewController.m; sourceTree = "<group>"; };
 		4CB107E41934362E00BB853C /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
 		4CB107E51934362E00BB853C /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		4CB4AA201A47E8400017EF9E /* FacebookManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacebookManager.h; sourceTree = "<group>"; };
@@ -309,8 +306,6 @@
 				4CB107E51934362E00BB853C /* SettingsTableViewController.m */,
 				4C357F8A19839ECF00A64C44 /* AllContactsTableViewController.h */,
 				4C357F8B19839ECF00A64C44 /* AllContactsTableViewController.m */,
-				4C96311418CB71CB002D05A6 /* HelpViewController.h */,
-				4C96311518CB71CB002D05A6 /* HelpViewController.m */,
 				4CF7B3021984BB4A00F10889 /* ContactInformationTableViewController.h */,
 				4CF7B3031984BB4A00F10889 /* ContactInformationTableViewController.m */,
 			);
@@ -451,7 +446,6 @@
 				4CBA95AD1B5C2C4600E1C39D /* FetchRequestStrings.m in Sources */,
 				4C357F8C19839ECF00A64C44 /* AllContactsTableViewController.m in Sources */,
 				4CC61A9D19AA74EC00FF7118 /* ContactCardView.m in Sources */,
-				4C96311618CB71CB002D05A6 /* HelpViewController.m in Sources */,
 				4C426885191580B90014744F /* Contact.m in Sources */,
 				4C42688919158D530014744F /* ContactMetadata.m in Sources */,
 				4C4305E81AB3FF9000F1B6B8 /* TutorialViewController.m in Sources */,

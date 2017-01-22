@@ -58,7 +58,7 @@
     firstViewLoad = YES;
     
     // Load in background image
-    [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:backgroundImageName]]];
+    [[self view] setBackgroundColor:[UIColor whiteColor]];
     
     // Add the references to the contact queue
     photoQueue = [[NSMutableArray alloc] initWithCapacity:4];

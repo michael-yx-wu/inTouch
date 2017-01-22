@@ -26,13 +26,6 @@
 @interface ContactMetadata : NSManagedObject
 
 /*!
- @brief Default number of days till next reminder.
- 
- @discussion This is the value that the PickerViewController will display when it is brought up.
- */
-@property (nonatomic, retain) NSNumber *daysBetweenReminder;
-
-/*!
  @brief Boolean value representing whether or not we wish to see this contact in the future.
  */
 @property (nonatomic, retain) NSNumber *interest;
@@ -93,13 +86,6 @@
  @brief Total number of times this contact has been postponed.
  */
 @property (nonatomic, retain) NSNumber *numTimesPostponed;
-
-/*!
- @brief The timezone this contact belongs to.
- 
- @warning Not currently being used in any feature of the application.
- */
-@property (nonatomic, retain) NSString *timezone;
 
 /*!
  @brief A number that represents that relative likelihood of this contact appearing.

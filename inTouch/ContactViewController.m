@@ -76,8 +76,6 @@ static NSString *contactedGeneric = @"generic";
         [emailButton setEnabled:NO];
     }
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:backgroundImageName]];
-    
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]
                                                     initWithTarget:self action:@selector(wasTapped:)];
     [contactCard addGestureRecognizer:tapGestureRecognizer];

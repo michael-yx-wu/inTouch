@@ -2,8 +2,8 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "x_icon_v2.png"
+      "filename" : "error.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",

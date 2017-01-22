@@ -2,7 +2,6 @@
 
 @implementation ContactMetadata
 
-@dynamic daysBetweenReminder;
 @dynamic interest;
 @dynamic lastContactedDate;
 @dynamic lastPostponedDate;
@@ -14,7 +13,6 @@
 @dynamic numTimesEmailed;
 @dynamic numTimesMessaged;
 @dynamic numTimesPostponed;
-@dynamic timezone;
 @dynamic weight;
 @dynamic contact;
 

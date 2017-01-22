@@ -2,8 +2,8 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "later_icon_overlay.png"
+      "filename" : "postpone_white_bg.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
