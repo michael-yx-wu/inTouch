@@ -170,7 +170,7 @@
     contacts = [[NSMutableDictionary alloc] init];
     contactIDs = [[NSMutableDictionary alloc] init];
     contactCounts = [[NSMutableDictionary alloc] init];
-    
+
     // Save change to database and refresh table
     [self save];
     [tableView reloadData];
