@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4C027AFC1B5EEC300024B8B4 /* ContactTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C027AFB1B5EEC300024B8B4 /* ContactTests.m */; };
 		4C03B9531906C70D003221EC /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C340D9918C175D3009A96D8 /* AddressBookUI.framework */; };
 		4C0A59C61B2B39A600D33B43 /* ContactQueueView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0A59C51B2B39A600D33B43 /* ContactQueueView.m */; };
 		4C0D9F801BC1B2E600FA2E6A /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C0D9F7F1BC1B2E600FA2E6A /* FBSDKLoginKit.framework */; };
@@ -34,7 +33,6 @@
 		4C47934D18E0EB2900A408AB /* ContactViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C47934C18E0EB2900A408AB /* ContactViewController.m */; };
 		4C7327231BC1AE40001A5C57 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7327221BC1AE40001A5C57 /* FBSDKCoreKit.framework */; };
 		4C87A4801B5495C0008BE5D0 /* NotificationScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C87A47F1B5495C0008BE5D0 /* NotificationScheduler.m */; };
-		4C927C871E0F12AF00DF5C3E /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C185A691E0F0442003935AA /* Model.xcdatamodeld */; };
 		4CB107E61934362E00BB853C /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB107E51934362E00BB853C /* SettingsTableViewController.m */; };
 		4CB4AA221A47E8400017EF9E /* FacebookManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB4AA211A47E8400017EF9E /* FacebookManager.m */; };
 		4CBA95AD1B5C2C4600E1C39D /* FetchRequestStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA95AC1B5C2C4600E1C39D /* FetchRequestStrings.m */; };
@@ -44,16 +42,6 @@
 		4CE2435019080BCE00028430 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE2434F19080BCE00028430 /* CoreTelephony.framework */; };
 		4CF7B3041984BB4A00F10889 /* ContactInformationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF7B3031984BB4A00F10889 /* ContactInformationTableViewController.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		4C4D2E2A1B5EA3A600FE6B5E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C340D5618C16FF7009A96D8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4C340D5D18C16FF7009A96D8;
-			remoteInfo = inTouch;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		4C027AFB1B5EEC300024B8B4 /* ContactTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactTests.m; sourceTree = "<group>"; };
@@ -98,7 +86,6 @@
 		4C4305E71AB3FF9000F1B6B8 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		4C47934B18E0EB2900A408AB /* ContactViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactViewController.h; sourceTree = "<group>"; };
 		4C47934C18E0EB2900A408AB /* ContactViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactViewController.m; sourceTree = "<group>"; };
-		4C4D2E241B5EA3A600FE6B5E /* inTouch Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "inTouch Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C4D2E271B5EA3A600FE6B5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C7327221BC1AE40001A5C57 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		4C87A47E1B5495C0008BE5D0 /* NotificationScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationScheduler.h; sourceTree = "<group>"; };
@@ -138,13 +125,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C4D2E211B5EA3A600FE6B5E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -172,7 +152,6 @@
 			isa = PBXGroup;
 			children = (
 				4C340D5E18C16FF7009A96D8 /* inTouch.app */,
-				4C4D2E241B5EA3A600FE6B5E /* inTouch Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -319,10 +298,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4C340D9018C16FF8009A96D8 /* Build configuration list for PBXNativeTarget "inTouch" */;
 			buildPhases = (
+				4C8FA1731935B0FF00FC76A1 /* ShellScript */,
 				4C340D5A18C16FF7009A96D8 /* Sources */,
 				4C340D5B18C16FF7009A96D8 /* Frameworks */,
 				4C340D5C18C16FF7009A96D8 /* Resources */,
-				4C8FA1731935B0FF00FC76A1 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -332,24 +311,6 @@
 			productName = inTouch;
 			productReference = 4C340D5E18C16FF7009A96D8 /* inTouch.app */;
 			productType = "com.apple.product-type.application";
-		};
-		4C4D2E231B5EA3A600FE6B5E /* inTouch Tests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4C4D2E2C1B5EA3A600FE6B5E /* Build configuration list for PBXNativeTarget "inTouch Tests" */;
-			buildPhases = (
-				4C4D2E201B5EA3A600FE6B5E /* Sources */,
-				4C4D2E211B5EA3A600FE6B5E /* Frameworks */,
-				4C4D2E221B5EA3A600FE6B5E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4C4D2E2B1B5EA3A600FE6B5E /* PBXTargetDependency */,
-			);
-			name = "inTouch Tests";
-			productName = "inTouch Tests";
-			productReference = 4C4D2E241B5EA3A600FE6B5E /* inTouch Tests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -363,10 +324,6 @@
 					4C340D5D18C16FF7009A96D8 = {
 						DevelopmentTeam = QUF4M7QXQP;
 						ProvisioningStyle = Automatic;
-					};
-					4C4D2E231B5EA3A600FE6B5E = {
-						CreatedOnToolsVersion = 6.4;
-						TestTargetID = 4C340D5D18C16FF7009A96D8;
 					};
 				};
 			};
@@ -384,7 +341,6 @@
 			projectRoot = "";
 			targets = (
 				4C340D5D18C16FF7009A96D8 /* inTouch */,
-				4C4D2E231B5EA3A600FE6B5E /* inTouch Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -397,13 +353,6 @@
 				4C0ED67D1A2D8A3700718BE7 /* Main.storyboard in Resources */,
 				4C340D7A18C16FF7009A96D8 /* Images.xcassets in Resources */,
 				4C340D6C18C16FF7009A96D8 /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4C4D2E221B5EA3A600FE6B5E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,24 +404,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4C4D2E201B5EA3A600FE6B5E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4C027AFC1B5EEC300024B8B4 /* ContactTests.m in Sources */,
-				4C927C871E0F12AF00DF5C3E /* Model.xcdatamodeld in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		4C4D2E2B1B5EA3A600FE6B5E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4C340D5D18C16FF7009A96D8 /* inTouch */;
-			targetProxy = 4C4D2E2A1B5EA3A600FE6B5E /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		4C340D6A18C16FF7009A96D8 /* InfoPlist.strings */ = {
@@ -638,49 +570,6 @@
 			};
 			name = Release;
 		};
-		4C4D2E2D1B5EA3A600FE6B5E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = "inTouch Tests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "intactu.inTouch.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/inTouch.app/inTouch";
-			};
-			name = Debug;
-		};
-		4C4D2E2E1B5EA3A600FE6B5E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = "inTouch Tests/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = "intactu.inTouch.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/inTouch.app/inTouch";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -698,15 +587,6 @@
 			buildConfigurations = (
 				4C340D9118C16FF8009A96D8 /* Debug */,
 				4C340D9218C16FF8009A96D8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4C4D2E2C1B5EA3A600FE6B5E /* Build configuration list for PBXNativeTarget "inTouch Tests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4C4D2E2D1B5EA3A600FE6B5E /* Debug */,
-				4C4D2E2E1B5EA3A600FE6B5E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
