@@ -7,20 +7,15 @@
 #import "ContactManager.h"
 #import "NotificationStrings.h"
 
-#define NAME_SECTION 0
-#define REMINDERS_SECTION 1
-#define PHONES_SECTION 2
-#define EMAILS_SECTION 3
-
 @interface ContactInformationTableViewController () {
     NSString *nameCellIdentifier,
         *remindSwitchCellIdentifier,
         *phoneCellIdentifier,
         *emailCellIdentifier;
+    UISwitch *reminderSwitch;
     NSDictionary *allPhoneNumbers, *allEmailAddresses;
     NSArray *phoneLabels, *emailLabels;
-    BOOL hasPhoneSection, hasEmailSection;
-    UISwitch *reminderSwitch;
+    int nameSection, phoneSection, emailSection;
 }
 
 @end
@@ -31,11 +26,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // Get numbers and emails and determine whether we need to have phone/email sections
+
     [self loadContactData];
-    
-    // Set the cell identifiers
+    nameSection = 0;
+    phoneSection = [phoneLabels count] > 0 ? 1 : -1;
+    emailSection = [emailLabels count] > 0
+        ? phoneSection == 1
+            ? 2
+            : 1
+        : -1;
+
     nameCellIdentifier = @"name";
     remindSwitchCellIdentifier = @"remindSwitch";
     phoneCellIdentifier = @"phone";
@@ -48,8 +48,7 @@
     } else {
         [reminderSwitch setOn:NO];
     }
-    
-    // Listen for call end events
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(callEnded)
                                                  name:CTCallStateDisconnected
@@ -57,13 +56,10 @@
 }
 
 - (void)loadContactData {
-    // Get phones and emails from contact and sort the labels into nsarrays
     allPhoneNumbers = [contact getPhoneNumbers];
     allEmailAddresses = [contact getEmails];
     phoneLabels = [[allPhoneNumbers allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
     emailLabels = [[allEmailAddresses allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-    hasPhoneSection = [phoneLabels count] != 0 ? YES : NO;
-    hasEmailSection = [emailLabels count] != 0 ? YES : NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -113,7 +109,6 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-// Executed upon receiving a call ended notification
 - (void)callEnded {
     [(ContactMetadata *)[contact metadata] incrementTimesContacted:contactedByCall];
 }
@@ -125,9 +120,9 @@
     [self presentViewController:messageViewController animated:YES completion:nil];
 }
 
-// Handle message controller being dismissed
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller
                  didFinishWithResult:(MessageComposeResult)result {
+
     [self dismissViewControllerAnimated:YES completion:^{
         switch (result) {
             case MessageComposeResultCancelled: {
@@ -157,10 +152,10 @@
 }
 
 
-// Handle email controller being dismissed
 - (void)mailComposeController:(MFMailComposeViewController *)controller
           didFinishWithResult:(MFMailComposeResult)result
                         error:(NSError *)error {
+
     [self dismissViewControllerAnimated:YES completion:^{
         switch (result) {
             case MFMailComposeResultCancelled: {
@@ -202,99 +197,66 @@
 
     NSInteger section = [indexPath section];
     NSInteger row = [indexPath row];    
-    if (section == NAME_SECTION) {
+    if (section == nameSection) {
         // no op
-    } else if (section == PHONES_SECTION) {
+    } else if (section == phoneSection) {
         [self showCallTextActionSheet:row];
-    } else if (section == EMAILS_SECTION) {
+    } else if (section == emailSection) {
         [self displayMailViewController:row];
     }
 }
 
-// Dynamically set the number of sections to be displayed
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    NSInteger numberOfSections = 2;
-    if (hasPhoneSection) {
-        numberOfSections += 1;
-    }
-    if (hasEmailSection) {
-        numberOfSections += 1;
-    }
-    return numberOfSections;
+    return 1 + ([phoneLabels count] > 0 ? 1 : 0) + ([emailLabels count] > 0 ? 1 : 0);
 }
 
-// Name and Reminders section have constant row counts. Phone and Email sections may or may not exist and have variable
-// row counts.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == NAME_SECTION) {
-        return 1;
-    } else if (section == REMINDERS_SECTION) {
-        return 1;
-    } else {
-        if (hasPhoneSection) {
-            if (section == PHONES_SECTION) {
-                return [phoneLabels count];
-            } else if (section == EMAILS_SECTION) {
-                return [emailLabels count];
-            }
-        } else {
-            return [emailLabels count];
-        }
+    if (section == nameSection) {
+        return 2;
+    } else if (section == phoneSection) {
+        return [phoneLabels count];
+    } else if (section == emailSection) {
+        return [emailLabels count];
     }
+
     return 0;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (section == NAME_SECTION) {
+    if (section == nameSection) {
         return @"";
+    } else if (section == phoneSection) {
+        return @"Numbers";
+    } else if (section == emailSection){
+        return @"Emails";
     }
-    else if (section == REMINDERS_SECTION) {
-        return @"Reminders";
-    }
-    else if (hasPhoneSection) {
-        if (section == PHONES_SECTION) {
-            return @"Numbers";
-        } else if (section == EMAILS_SECTION) {
-            return @"Emails";
-        }
-    } else {
-        return @"";
-    }
+
     return @"";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell;
-    // Determine which section we are looking at
-    if ([indexPath section] == NAME_SECTION) {
-        cell = [tableView dequeueReusableCellWithIdentifier:nameCellIdentifier forIndexPath:indexPath];
-        [[cell detailTextLabel] setText:[NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]]];
-    } else if ([indexPath section] == REMINDERS_SECTION) {
-        cell = [tableView dequeueReusableCellWithIdentifier:remindSwitchCellIdentifier forIndexPath:indexPath];
-        [cell setAccessoryView:reminderSwitch];
-        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];                
-    } else if (hasPhoneSection) {
-        if ([indexPath section] == PHONES_SECTION) {
-            cell = [tableView dequeueReusableCellWithIdentifier:phoneCellIdentifier forIndexPath:indexPath];
-            NSString *phoneLabel = [phoneLabels objectAtIndex:[indexPath row]];
-            [[cell textLabel] setText:phoneLabel];
-            NSLog(@"%@", phoneLabel);
-            [[cell detailTextLabel] setText:[allPhoneNumbers objectForKey:phoneLabel]];
+    if ([indexPath section] == nameSection) {
+        if ([indexPath row] == 0) {
+            cell = [tableView dequeueReusableCellWithIdentifier:nameCellIdentifier forIndexPath:indexPath];
+            [[cell detailTextLabel] setText:[NSString stringWithFormat:@"%@ %@", [contact nameFirst], [contact nameLast]]];
+        } else {
+            cell = [tableView dequeueReusableCellWithIdentifier:remindSwitchCellIdentifier forIndexPath:indexPath];
+            [cell setAccessoryView:reminderSwitch];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         }
-        if ([indexPath section] == EMAILS_SECTION) {
-            cell = [tableView dequeueReusableCellWithIdentifier:emailCellIdentifier forIndexPath:indexPath];
-            NSString *emailLabel = [emailLabels objectAtIndex:[indexPath row]];
-            [[cell textLabel] setText:emailLabel];
-            [[cell detailTextLabel] setText:[allEmailAddresses objectForKey:emailLabel]];
-        }
-    } else if (hasEmailSection) {
+    } else if ([indexPath section] == phoneSection) {
+        cell = [tableView dequeueReusableCellWithIdentifier:phoneCellIdentifier forIndexPath:indexPath];
+        NSString *phoneLabel = [phoneLabels objectAtIndex:[indexPath row]];
+        [[cell textLabel] setText:phoneLabel];
+        [[cell detailTextLabel] setText:[allPhoneNumbers objectForKey:phoneLabel]];
+    } else if ([indexPath section] == emailSection) {
         cell = [tableView dequeueReusableCellWithIdentifier:emailCellIdentifier forIndexPath:indexPath];
         NSString *emailLabel = [emailLabels objectAtIndex:[indexPath row]];
         [[cell textLabel] setText:emailLabel];
         [[cell detailTextLabel] setText:[allEmailAddresses objectForKey:emailLabel]];
     }
-    
-    // Configure the cell...
+
     [cell layoutSubviews];
     return cell;
 }
