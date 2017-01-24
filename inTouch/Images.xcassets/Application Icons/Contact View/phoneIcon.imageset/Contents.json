@@ -2,8 +2,8 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "phone_icon_OK_v3.png"
+      "filename" : "phone.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",

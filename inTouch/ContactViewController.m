@@ -76,8 +76,6 @@ static NSString *contactedGeneric = @"generic";
         [emailButton setEnabled:NO];
     }
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:backgroundImageName]];
-    
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc]
                                                     initWithTarget:self action:@selector(wasTapped:)];
     [contactCard addGestureRecognizer:tapGestureRecognizer];
@@ -316,13 +314,11 @@ static NSString *contactedGeneric = @"generic";
 #pragma mark - Core Data Accessor Methods
 
 - (NSManagedObjectContext *)managedObjectContext {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    return [appDelegate managedObjectContext];
+    return [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
 }
 
 - (NSManagedObjectModel *)managedObjectModel {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    return [appDelegate managedObjectModel];
+    return [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectModel];
 }
 
 @end

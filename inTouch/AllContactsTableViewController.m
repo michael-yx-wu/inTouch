@@ -170,7 +170,7 @@
     contacts = [[NSMutableDictionary alloc] init];
     contactIDs = [[NSMutableDictionary alloc] init];
     contactCounts = [[NSMutableDictionary alloc] init];
-    
+
     // Save change to database and refresh table
     [self save];
     [tableView reloadData];
@@ -226,19 +226,15 @@
 #pragma mark - Core Data Methods
 
 - (NSManagedObjectContext *)managedObjectContext {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    return [appDelegate managedObjectContext];
+    return [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
 }
 
 - (NSManagedObjectModel *)managedObjectModel {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    return [appDelegate managedObjectModel];
+    return [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectModel];    
 }
 
-// Save current context
 - (void)save {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    [appDelegate saveContext];
+    [(AppDelegate *)[[UIApplication sharedApplication] delegate] saveContext];
 }
 
 @end

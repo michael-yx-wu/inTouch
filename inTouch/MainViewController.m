@@ -11,8 +11,6 @@
 
 #import "MainViewController.h"
 #import "ContactViewController.h"
-#import "LoginViewController.h"
-#import "PickerViewController.h"
 #import "TutorialViewController.h"
 
 #define RESOLUTION_THRESHOLD 0
@@ -60,7 +58,7 @@
     firstViewLoad = YES;
     
     // Load in background image
-    [[self view] setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:backgroundImageName]]];
+    [[self view] setBackgroundColor:[UIColor whiteColor]];
     
     // Add the references to the contact queue
     photoQueue = [[NSMutableArray alloc] initWithCapacity:4];
@@ -177,22 +175,12 @@
                                              selector:@selector(updatePhotosDisplayedInQueue)
                                                  name:photoDownloadedNotification
                                                object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(contactWasContacted:)
+                                             selector:@selector(contacted:)
                                                  name:contactedNotification
                                                object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(pickerViewDone:)
-                                                 name:pickerViewDoneNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(pickerViewCancel:)
-                                                 name:pickerViewCancelNotification
-                                               object:nil];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(animateOnQueueSwitchCompletion:)
                                                  name:queueSwitchingDoneNotification
@@ -247,9 +235,10 @@
     }
 }
 
-// Fill up the current queue with at most 5 contacts, sorted by descending urgency
+// Fill up the current queue with at most 5 contacts
 - (void)updateQueue {
     [DebugLogger log:@"Updating queue" withPriority:mainViewControllerPriority];
+    
     // Execute fetch request for contactAppearedQueue or contactNeverAppearedQueue depending on the currentQueue
     NSManagedObjectModel *model = [self managedObjectModel];
     NSFetchRequest *request;
@@ -257,14 +246,7 @@
         NSDictionary *substitionVariables = [NSDictionary dictionaryWithObjectsAndKeys:[NSDate date], @"DATE", nil];
         request = [model fetchRequestFromTemplateWithName:@"ContactMetadataUrgent"
                                     substitutionVariables:substitionVariables];
-        
-        // Set the sort descriptor to sort by descending urgency and execute
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"remindOnDate" ascending:false];
-        NSArray *sortDescriptors = @[sortDescriptor];
-        [request setSortDescriptors:sortDescriptors];
-    }
-    else {
-        // Get all contacts that have never appeared
+    } else {
         request = [model fetchRequestFromTemplateWithName:@"ContactMetadataNeverAppeared"
                                     substitutionVariables:[[NSDictionary alloc] init]];
     }
@@ -278,18 +260,22 @@
         Contact *contact = (Contact *)[metadata contact];
         int abrecordid = [ContactManager verifyABRecordIDForContact:contact];
         if (abrecordid == -1) {
-            NSLog(@"Deleting contact");
+            NSLog(@"Deleting contact: bad abrecordid");
             [self removeContactFromQueues:contact];
             [[self managedObjectContext] deleteObject:contact];
             [[self managedObjectContext] deleteObject:metadata];
             [self save];
-        } else {
-            // Add contact to queue if not already in queue
-            if (![self queue:currentQueue ContainsContact:contact]) {
-                [self downloadFbPhotoForContact:contact];
-                // Add contact to queue
-                [currentQueue addObject:contact];
-            }
+            continue;
+        }
+
+        // The random double comparison to the weight of unseen contacts will always be true because the default
+        // weight is 1
+        if (![self queue:currentQueue containsContact:contact]
+            && (rand() / RAND_MAX) <= [[metadata weight] doubleValue]) {
+
+            [self downloadFbPhotoForContact:contact];
+            // Add contact to queue
+            [currentQueue addObject:contact];
         }
     }
 }
@@ -321,70 +307,10 @@
     return results;
 }
 
-// Show the PickerViewController. Hide the cancel button
-- (void)contactWasContacted:(NSNotification *)notification {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
-    [pvc setShouldHideCancelButton:YES];
-    [pvc setPostponingContact:NO];
-    [pvc setDisplayedInMainView:YES];
-    [pvc setContact:currentContact];
-    [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-    [self presentViewController:pvc animated:YES completion:nil];
-}
-
-// This method is only called when swiping to postpone a contact
-- (void)showPickerView {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
-    [pvc setShouldHideCancelButton:NO];
-    [pvc setPostponingContact:YES];
-    [pvc setPostponingContactFromButton:NO];
-    [pvc setDisplayedInMainView:YES];
-    [pvc setContact:currentContact];
-    [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-    [self presentViewController:pvc animated:YES completion:nil];
-}
-
 // Save relevant metadata and slide the contact up
-- (void)pickerViewDone:(NSNotification *)notification {
-    [self dismissViewControllerAnimated:YES completion:^{
-        NSDictionary *dict = [notification userInfo];
-        NSNumber *daysToPostpone = [dict valueForKey:@"days"];
-        BOOL postponingContact = [[dict valueForKey:@"postponingContact"] boolValue];
-        BOOL postponingContactFromButton = [[dict valueForKey:@"postponingContactFromButton"] boolValue];
-        
-        // Remember days to postpone as user preference
-        ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
-        [metadata setDaysBetweenReminder:daysToPostpone];
-        
-        // We finished contacting a contact
-        if (!postponingContact) {
-            [contactCard slideContactCardUp:[daysToPostpone integerValue]];
-        }
-        // We are postponing from a button
-        else if (postponingContactFromButton) {
-            [contactCard rightActionFromButton:[daysToPostpone integerValue]];
-        }
-        // We are postponing from a swipe -- this is a little hairy
-        else {
-            // Contact is already off the screen. We just need to update photos and return to original positions
-            [self dismissContactAndSetReminder:[daysToPostpone unsignedIntegerValue]];
-            [contactCard returnToOriginalPositions];
-            [contactCard showNameLabel];
-        }
-    }];
-}
-
-// Dismiss the picker view and move cards back to original positions if necessary
-- (void)pickerViewCancel:(NSNotification *)notification {
-    [self dismissViewControllerAnimated:YES completion:^{
-        [UIView animateWithDuration:0.3 animations:^{
-            [contactCard returnToOriginalPositions];
-        } completion:^(BOOL finished) {
-            [contactCard showNameLabel];
-        }];
-    }];
+- (void)contacted:(NSNotification *)notification {
+    // We finished contacting a contact
+    [contactCard slideContactCardUp];
 }
 
 // 1. Remove the contact from the current queue and the download status dictionary
@@ -402,30 +328,17 @@
     [self printQueue];
 }
 
-// 1. Set the remindOnDate metadata property and remind in some number of days
-// 2. Dismiss contact called when done
-- (void)dismissContactAndSetReminder:(NSUInteger)days {
-    [self printQueue];
-    NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
-    NSDateComponents *todaysComponents = [calendar components:(NSCalendarUnitYear|
-                                                               NSCalendarUnitMonth|
-                                                               NSCalendarUnitDay|
-                                                               NSCalendarUnitTimeZone|
-                                                               NSCalendarUnitCalendar)
-                                                     fromDate:[NSDate date]];
-    NSDate *today = [todaysComponents date];
-    NSDateComponents *futureComponents = [[NSDateComponents alloc] init];
-    [futureComponents setDay:days];
-    NSDate *remindDate = [calendar dateByAddingComponents:futureComponents toDate:today options:0];
+- (void)dismissContactAndDecrementWeight {
     ContactMetadata *contactMetadata = (ContactMetadata *)[currentContact metadata];
+    NSNumber *weight = [contactMetadata weight];
     [contactMetadata setNumTimesAppeared:[NSNumber numberWithInt:([[contactMetadata numTimesAppeared] intValue] + 1)]];
-    [contactMetadata setRemindOnDate:remindDate];
+    [contactMetadata setWeight:[NSNumber numberWithDouble:MAX([weight doubleValue] - 0.05, 0.01)]];
     [self save];
     [self dismissContact];
 }
 
 // Helper method that returns true if the specified queue contains a copy of the contact
-- (BOOL)queue:(NSMutableArray *)queue ContainsContact:(Contact *)contact {
+- (BOOL)queue:(NSMutableArray *)queue containsContact:(Contact *)contact {
     for (Contact *queuedContact in queue) {
         if([[[queuedContact objectID] URIRepresentation] isEqual:[[contact objectID] URIRepresentation]]) {
             return YES;
@@ -491,7 +404,7 @@
         @try {
             // Use a reference to app delegate's moc
             NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] init];
-            AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+            AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             [moc setPersistentStoreCoordinator:[appDelegate persistentStoreCoordinator]];
             Contact *someContact = (Contact *)[moc objectWithID:contactID];
             
@@ -536,8 +449,8 @@
                         [fbDownloadStatus setObject:[NSNumber numberWithBool:NO] forKey:[contact objectID]];
                         
                         // Remove the key-value pair if contact has been dismissed
-                        if (![self queue:contactAppearedQueue ContainsContact:contact] &&
-                            ![self queue:contactNeverAppearedQueue ContainsContact:contact]) {
+                        if (![self queue:contactAppearedQueue containsContact:contact] &&
+                            ![self queue:contactNeverAppearedQueue containsContact:contact]) {
                             [fbDownloadStatus removeObjectForKey:[contact objectID]];
                         }
                     }
@@ -608,15 +521,7 @@
 }
 
 - (IBAction)postponeContactButton:(id)sender {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    PickerViewController *pvc = [storyboard instantiateViewControllerWithIdentifier:@"picker"];
-    [pvc setShouldHideCancelButton:NO];
-    [pvc setPostponingContact:YES];
-    [pvc setPostponingContactFromButton:YES];
-    [pvc setDisplayedInMainView:YES];
-    [pvc setContact:currentContact];
-    [pvc setModalPresentationStyle:UIModalPresentationOverCurrentContext];
-    [self presentViewController:pvc animated:YES completion:nil];
+    [self dismissContactAndDecrementWeight];
 }
 
 // Delete the current contact and refresh the queue
@@ -912,13 +817,11 @@
 }
 
 - (NSManagedObjectContext *)managedObjectContext {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    return [appDelegate managedObjectContext];
+    return [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
 }
 
 - (NSManagedObjectModel *)managedObjectModel {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    return [appDelegate managedObjectModel];
+    return [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectModel];    
 }
 
 // Request contacts access and sync if authorized
@@ -953,10 +856,8 @@
     [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:notification];
 }
 
-// Save current context
 - (void)save {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    [appDelegate saveContext];
+    [(AppDelegate *)[[UIApplication sharedApplication] delegate] saveContext];
 }
 
 #pragma mark - Other

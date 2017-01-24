@@ -1,7 +1,5 @@
 #import "ImageStrings.h"
 
-NSString *const backgroundImageName = @"background.png";
-
 #pragma mark - Contact View
 
 NSString *const backIconImageName = @"backIcon.png";

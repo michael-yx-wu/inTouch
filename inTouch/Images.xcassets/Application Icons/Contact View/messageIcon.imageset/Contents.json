@@ -2,8 +2,8 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "message_icon_OK_v3.png"
+      "filename" : "message.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",

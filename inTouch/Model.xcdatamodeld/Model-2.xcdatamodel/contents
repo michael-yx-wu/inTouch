@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Contact" representedClassName="Contact" syncable="YES">
         <attribute name="abrecordid" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -10,7 +10,6 @@
         <relationship name="metadata" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ContactMetadata" inverseName="contact" inverseEntity="ContactMetadata" syncable="YES"/>
     </entity>
     <entity name="ContactMetadata" representedClassName="ContactMetadata" syncable="YES">
-        <attribute name="daysBetweenReminder" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="interest" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="lastContactedDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="lastPostponedDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -22,8 +21,7 @@
         <attribute name="numTimesEmailed" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="numTimesMessaged" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="numTimesPostponed" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="remindOnDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="timezone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="weight" attributeType="Double" minValueString="0.01" maxValueString="1" defaultValueString="1" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="metadata" inverseEntity="Contact" syncable="YES"/>
     </entity>
     <entity name="GlobalData" representedClassName="GlobalData" syncable="YES">
@@ -56,13 +54,13 @@
     <fetchRequest name="ContactAll" entity="Contact"/>
     <fetchRequest name="ContactMetadataAllNonDeleted" entity="ContactMetadata" predicateString="interest == 1"/>
     <fetchRequest name="ContactMetadataNeverAppeared" entity="ContactMetadata" predicateString="numTimesAppeared == 0"/>
-    <fetchRequest name="ContactMetadataUrgent" entity="ContactMetadata" predicateString="numTimesAppeared != 0 AND remindOnDate &lt;= $DATE AND interest == 1"/>
+    <fetchRequest name="ContactMetadataUrgent" entity="ContactMetadata" predicateString="lastPostponedDate != $DATE AND lastContactedDate != $DATE AND numTimesAppeared != 0 AND interest == 1"/>
     <fetchRequest name="ContactNameMatch" entity="Contact" predicateString="nameFirst == $NAMEFIRST AND nameLast == $NAMELAST"/>
     <fetchRequest name="ContactWithID" entity="Contact" predicateString="abrecordid == $ABRECORDID"/>
     <fetchRequest name="GlobalData" entity="GlobalData"/>
     <elements>
         <element name="Contact" positionX="117" positionY="-115" width="128" height="148"/>
-        <element name="ContactMetadata" positionX="-45" positionY="-117" width="128" height="268"/>
+        <element name="ContactMetadata" positionX="-45" positionY="-117" width="128" height="240"/>
         <element name="GlobalData" positionX="-198" positionY="192" width="128" height="195"/>
         <element name="Postpones" positionX="-198" positionY="90" width="128" height="75"/>
         <element name="Session" positionX="-198" positionY="-117" width="128" height="178"/>

@@ -1,6 +1,6 @@
 #import "TutorialViewController.h"
 
-#define NUM_TUTORIAL_PAGES 5
+#define NUM_TUTORIAL_PAGES 4
 
 @implementation TutorialViewController
 
@@ -47,6 +47,7 @@
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
       viewControllerBeforeViewController:(UIViewController *)viewController {
+
     NSUInteger index = [viewControllers indexOfObject:viewController];
     if (index == 0) {
         return nil;
@@ -57,6 +58,7 @@
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
        viewControllerAfterViewController:(UIViewController *)viewController {
+    
     NSUInteger index = [viewControllers indexOfObject:viewController];
     if (index == NUM_TUTORIAL_PAGES - 1) {
         return nil;

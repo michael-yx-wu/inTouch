@@ -51,8 +51,7 @@ NSInteger kFacebookRequestFinish = 0;
             [contact setNameFirst:firstName];
             [contact setNameLast:lastName];
             [contact setCategory:nil];
-            
-            [metaData setDaysBetweenReminder:[NSNumber numberWithInt:0]];
+                        
             [metaData setInterest:[NSNumber numberWithBool:YES]];
             [metaData setNumTimesAppeared:[NSNumber numberWithInt:0]];
             [metaData setNumTimesCalled:[NSNumber numberWithInt:0]];
@@ -64,8 +63,7 @@ NSInteger kFacebookRequestFinish = 0;
             [metaData setLastPostponedDate:nil];
             [metaData setNoInterestDate:nil];
             [metaData setNotes:nil];
-            [metaData setRemindOnDate:nil];
-            [metaData setTimezone:[[NSTimeZone localTimeZone] name]];
+            [metaData setWeight:[NSNumber numberWithInteger:1]];            
             
             [DebugLogger log:[NSString stringWithFormat:@"Created Contact: %@ %@", firstName, lastName] withPriority:1];
         }
@@ -145,18 +143,15 @@ NSInteger kFacebookRequestFinish = 0;
 #pragma mark - Core Data Accessor Methods
 
 + (NSManagedObjectContext *)managedObjectContext {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    return [appDelegate managedObjectContext];
+    return [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
 }
 
 + (NSManagedObjectModel *)managedObjectModel {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    return [appDelegate managedObjectModel];
+    return [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectModel];
 }
 
 + (void)save {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    [appDelegate saveContext];
+    [(AppDelegate *)[[UIApplication sharedApplication] delegate] saveContext];    
 }
 
 @end

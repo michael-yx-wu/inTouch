@@ -36,6 +36,7 @@
 
 // Add gesture recognizers on load. These are screen size independent.
 - (void)awakeFromNib {
+    [super awakeFromNib];
     panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(beingDragged:)];
     tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(wasTapped:)];
     [self addGestureRecognizer:panGestureRecognizer];
@@ -204,7 +205,7 @@
     if (xFromCenter < -ACTION_MARGIN) {
         [self leftAction];
     } else if (xFromCenter > ACTION_MARGIN) {
-        [self rightActionFromButton:-1];
+        [self rightAction];
     } else {
         // Reset the card and overlays
         [UIView animateWithDuration:0.3 animations:^{
@@ -241,7 +242,7 @@
 }
 
 // Move card to top and alert MainViewController to show next contact
-- (void)rightActionFromButton:(NSInteger)days {
+- (void)rightAction {
     [UIView animateWithDuration:0.15 animations:^{
         [contactName setAlpha:0.0];
     } completion:^(BOOL finished) {
@@ -254,24 +255,18 @@
                              [self slideUp];
                              [postponedView setAlpha:1];
                          } completion:^(BOOL finished) {
-                             if (days >= 0) {
-                                 [self setAlpha:1.0];
-                                 [delegate dismissContactAndSetReminder:days];
-                                 [self returnToOriginalPositions];
-                                 [self resetTranslation];
-                                 [self showNameLabel];
-                             } else {
-                                 // Postponing via swipe -- need to show picker view
-                                 // Main view controller will handle picker view done notifications
-                                 [delegate showPickerView];
-                             }
+                             [self setAlpha:1.0];
+                             [delegate dismissContactAndDecrementWeight];
+                             [self returnToOriginalPositions];
+                             [self resetTranslation];
+                             [self showNameLabel];
                          }];
     }];
 }
 
 // When the contact has been contacted, slide card upwards and off the screen
 // The main view controller will handle getting the next contact
-- (void)slideContactCardUp:(NSInteger)days {
+- (void)slideContactCardUp {
     [UIView animateWithDuration:0.15 animations:^{
         [contactName setAlpha:0];
     } completion:^(BOOL finished) {
@@ -284,7 +279,7 @@
             [self slideUp];
         } completion:^(BOOL finished) {
             [self setAlpha:1.0];
-            [delegate dismissContactAndSetReminder:days];
+            [delegate dismissContactAndDecrementWeight];
             [self returnToOriginalPositions];
             [self resetTranslation];
             [self showNameLabel];

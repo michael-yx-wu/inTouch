@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1</string>
+	<string>2.0</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -28,7 +28,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>11</string>
+	<string>1</string>
 	<key>FacebookAppID</key>
 	<string>863523550341327</string>
 	<key>FacebookDisplayName</key>
@@ -71,6 +71,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSContactsUsageDescription</key>
+	<string>The app requires access to contacts to remind you to keep in touch with them.</string>
 	<key>UIApplicationExitsOnSuspend</key>
 	<false/>
 	<key>UIMainStoryboardFile</key>

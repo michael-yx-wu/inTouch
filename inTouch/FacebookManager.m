@@ -97,12 +97,12 @@ static NSString *baseFriendsPath = @"me/taggable_friends?fields=name,picture.wid
                                                         style:UIAlertActionStyleDefault
                                                       handler:^(UIAlertAction *action) {
                                                           // Hide app delegate's alert window
-                                                          AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+                                                          AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                                                           [[delegate alertWindow] setHidden:YES];;
                                                       }]];
     
     // Make the app delegate's alert window active and present the alert controller
-    AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [[delegate alertWindow] makeKeyAndVisible];
     [[[delegate alertWindow] rootViewController] presentViewController:alertController animated:YES completion:nil];
 }

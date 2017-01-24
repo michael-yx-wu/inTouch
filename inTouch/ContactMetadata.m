@@ -2,7 +2,6 @@
 
 @implementation ContactMetadata
 
-@dynamic daysBetweenReminder;
 @dynamic interest;
 @dynamic lastContactedDate;
 @dynamic lastPostponedDate;
@@ -14,8 +13,7 @@
 @dynamic numTimesEmailed;
 @dynamic numTimesMessaged;
 @dynamic numTimesPostponed;
-@dynamic remindOnDate;
-@dynamic timezone;
+@dynamic weight;
 @dynamic contact;
 
 - (void)incrementTimesContacted:(ContactMethod)contactMethod {

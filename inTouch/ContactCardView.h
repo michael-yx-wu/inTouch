@@ -66,8 +66,8 @@
 
 - (void)setImageCentersAndMasks;
 - (void)leftAction;
-- (void)rightActionFromButton:(NSInteger)days;
-- (void)slideContactCardUp:(NSInteger)days;
+- (void)rightAction;
+- (void)slideContactCardUp;
 - (void)showNameLabel;
 - (void)returnToOriginalPositions;
 - (void)hideAndDisableInteraction;

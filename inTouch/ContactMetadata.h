@@ -26,13 +26,6 @@
 @interface ContactMetadata : NSManagedObject
 
 /*!
- @brief Default number of days till next reminder.
- 
- @discussion This is the value that the PickerViewController will display when it is brought up.
- */
-@property (nonatomic, retain) NSNumber *daysBetweenReminder;
-
-/*!
  @brief Boolean value representing whether or not we wish to see this contact in the future.
  */
 @property (nonatomic, retain) NSNumber *interest;
@@ -95,16 +88,13 @@
 @property (nonatomic, retain) NSNumber *numTimesPostponed;
 
 /*!
- @brief The date on which this contact will begin to appear in the 'seen queue'. 
- */
-@property (nonatomic, retain) NSDate *remindOnDate;
-
-/*!
- @brief The timezone this contact belongs to.
+ @brief A number that represents that relative likelihood of this contact appearing.
  
- @warning Not currently being used in any feature of the application.
+ @discussion The maximum value is 1 and represents a contact being equally as likely to appear as other contacts.
+             0.01 is the minimum instead of 0 because we don't want to effective prevent a contact from appearing
+             because it's been postponed too many times.
  */
-@property (nonatomic, retain) NSString *timezone;
+@property (nonatomic, retain) NSNumber *weight;
 
 /*!
  @brief A pointer to the Contact entity associated with this ContactMetadata.
