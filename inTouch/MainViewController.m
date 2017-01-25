@@ -238,7 +238,6 @@
 // Fill up the current queue with at most 5 contacts
 - (void)updateQueue {
     [DebugLogger log:@"Updating queue" withPriority:mainViewControllerPriority];
-    NSLog(@"%@",[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory  inDomains:NSUserDomainMask] lastObject]);
     
     // Execute fetch request for contactAppearedQueue or contactNeverAppearedQueue depending on the currentQueue
     NSManagedObjectModel *model = [self managedObjectModel];
