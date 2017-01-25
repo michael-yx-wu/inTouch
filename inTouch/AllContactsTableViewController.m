@@ -190,7 +190,7 @@
     ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
     
     // Toggle contact interest
-    [contactMetadata setInterestAndNoInterestDate:[[contactMetadata interest] boolValue]];
+    [contactMetadata setInterestAndNoInterestDate:![[contactMetadata interest] boolValue]];
     
     // Save change to database and refresh table
     [self save];
