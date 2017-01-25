@@ -24,15 +24,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qZM-ub-5jt" userLabel="Settings Button">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qZM-ub-5jt" userLabel="Settings Button">
                                 <rect key="frame" x="16" y="28" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="6dL-yp-zVb"/>
                                     <constraint firstAttribute="width" constant="30" id="Vcs-x2-6Wc"/>
                                 </constraints>
-                                <state key="normal" image="settingsIcon">
-                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
+                                <state key="normal" image="settingsIcon"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="6dL-yp-zVb"/>
@@ -49,15 +47,13 @@
                                     <segue destination="5WZ-iW-IZ3" kind="presentation" identifier="settings" id="wpb-Am-hZc"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q08-uQ-aoQ" userLabel="Change Queues Button">
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q08-uQ-aoQ" userLabel="Change Queues Button">
                                 <rect key="frame" x="329" y="33" width="30" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="HLt-At-FQF"/>
                                     <constraint firstAttribute="height" constant="20" id="ltj-X3-bJR"/>
                                 </constraints>
-                                <state key="normal" image="seenQueueIcon">
-                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
+                                <state key="normal" image="seenQueueIcon"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="HLt-At-FQF"/>
@@ -77,16 +73,14 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fX2-aQ-ian" userLabel="Contact Action Buttons View">
                                 <rect key="frame" x="51" y="431" width="273" height="93.5"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jyx-J0-zs9" userLabel="Delete Button">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jyx-J0-zs9" userLabel="Delete Button">
                                         <rect key="frame" x="0.0" y="9.5" width="74" height="74"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="271-Zm-1FL"/>
                                             <constraint firstAttribute="width" constant="60" id="OSV-y9-AB7"/>
                                             <constraint firstAttribute="width" secondItem="jyx-J0-zs9" secondAttribute="height" multiplier="1:1" id="kB6-UC-bMM"/>
                                         </constraints>
-                                        <state key="normal" image="deleteIcon">
-                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
+                                        <state key="normal" image="deleteIcon"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="kB6-UC-bMM"/>
@@ -103,7 +97,7 @@
                                             <action selector="deleteContactButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="wJS-dU-sM0"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="285-Im-Tzn" userLabel="Check Button">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="285-Im-Tzn" userLabel="Check Button">
                                         <rect key="frame" x="100" y="9.5" width="73.5" height="74"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="285-Im-Tzn" secondAttribute="height" multiplier="1:1" id="2h1-S3-bGD"/>
@@ -130,7 +124,7 @@
                                             <action selector="checkContactButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Zzb-g6-82l"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2rb-EC-qdd" userLabel="Postpone Button">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2rb-EC-qdd" userLabel="Postpone Button">
                                         <rect key="frame" x="199.5" y="9.5" width="73.5" height="74"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="2rb-EC-qdd" secondAttribute="height" multiplier="1:1" id="0bL-Fp-e5x"/>
@@ -138,9 +132,7 @@
                                             <constraint firstAttribute="height" constant="60" id="Dxe-fE-GhS"/>
                                             <constraint firstAttribute="width" constant="60" id="KkN-5g-5U0"/>
                                         </constraints>
-                                        <state key="normal" image="postponeIcon">
-                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
+                                        <state key="normal" image="postponeIcon"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="0bL-Fp-e5x"/>
@@ -1181,15 +1173,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5i6-QT-oq8" userLabel="Settings Button">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5i6-QT-oq8" userLabel="Settings Button">
                                 <rect key="frame" x="16" y="28" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="QJx-Nv-DrE"/>
                                     <constraint firstAttribute="height" constant="30" id="ZPT-7z-4BO"/>
                                 </constraints>
-                                <state key="normal" image="settingsIcon">
-                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
+                                <state key="normal" image="settingsIcon"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="QJx-Nv-DrE"/>
@@ -1290,14 +1280,12 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZzW-lq-ByH" userLabel="Contact Buttons View">
                                 <rect key="frame" x="51" y="431" width="273" height="93.5"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2kq-BB-3yx" userLabel="Message Button">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2kq-BB-3yx" userLabel="Message Button">
                                         <rect key="frame" x="99.5" y="10" width="74" height="74"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="2kq-BB-3yx" secondAttribute="height" multiplier="1:1" id="o1S-BQ-6fN"/>
                                         </constraints>
-                                        <state key="normal" image="messageIcon">
-                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
+                                        <state key="normal" image="messageIcon"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="o1S-BQ-6fN"/>
@@ -1312,14 +1300,12 @@
                                             <action selector="showNumbers:" destination="ost-IX-nwv" eventType="touchUpInside" id="vGz-dn-vUC"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o" userLabel="Email Button">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8L-OF-d3o" userLabel="Email Button">
                                         <rect key="frame" x="199.5" y="10" width="73.5" height="74"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="I8L-OF-d3o" secondAttribute="height" multiplier="1:1" id="81O-k1-6dY"/>
                                         </constraints>
-                                        <state key="normal" image="mailIcon">
-                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
+                                        <state key="normal" image="mailIcon"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="81O-k1-6dY"/>
@@ -1334,14 +1320,12 @@
                                             <action selector="showEmails:" destination="ost-IX-nwv" eventType="touchUpInside" id="kNg-2C-LcR"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lqK-Eh-GiI" userLabel="Call Button">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lqK-Eh-GiI" userLabel="Call Button">
                                         <rect key="frame" x="0.0" y="10" width="73.5" height="74"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="lqK-Eh-GiI" secondAttribute="height" multiplier="1:1" id="Aqi-ic-jTU"/>
                                         </constraints>
-                                        <state key="normal" image="phoneIcon">
-                                            <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
+                                        <state key="normal" image="phoneIcon"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="Aqi-ic-jTU"/>
@@ -1415,7 +1399,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7LZ-Fr-NBn" userLabel="Two Buttons View">
                                         <rect key="frame" x="56.5" y="0.0" width="160" height="80"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cPN-Kg-Njz" userLabel="Check Button">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cPN-Kg-Njz" userLabel="Check Button">
                                                 <rect key="frame" x="112" y="20" width="40" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="50" id="LCp-Y8-myf">
@@ -1447,7 +1431,7 @@
                                                     <action selector="dismissContacted:" destination="ost-IX-nwv" eventType="touchUpInside" id="3fa-Mc-LUx"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hay-uN-S6J" userLabel="Back Button">
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hay-uN-S6J" userLabel="Back Button">
                                                 <rect key="frame" x="8" y="20" width="40" height="40"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="7Bg-O6-vwh">
@@ -1659,11 +1643,11 @@
                                         <rect key="frame" x="0.0" y="35" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uI3-W6-1AD" id="Wen-VT-fGy">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Help" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="JTJ-BD-hHr">
-                                                    <rect key="frame" x="15" y="0.0" width="345" height="43"/>
+                                                    <rect key="frame" x="15" y="0.0" width="345" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1679,11 +1663,11 @@
                                         <rect key="frame" x="0.0" y="79" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dvr-Mp-MCO" id="6VS-SG-uWS">
-                                            <rect key="frame" x="0.0" y="0.0" width="342" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="All Contacts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Dao-Ub-5AM">
-                                                    <rect key="frame" x="15" y="0.0" width="325" height="43"/>
+                                                    <rect key="frame" x="15" y="0.0" width="325" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1699,7 +1683,7 @@
                                         <rect key="frame" x="0.0" y="123" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3RL-oj-QLY" id="abE-n6-6B1">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Sync Contacts" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aso-ni-3jn">
@@ -1796,11 +1780,11 @@
                                         <rect key="frame" x="0.0" y="167" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Xwz-fT-XZF" id="i3h-J8-l8K">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Feedback" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2iN-Bq-Pgd">
-                                                    <rect key="frame" x="15" y="0.0" width="345" height="43"/>
+                                                    <rect key="frame" x="15" y="0.0" width="345" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1814,21 +1798,21 @@
                             <tableViewSection headerTitle="Social Networks" id="yww-wN-bfr">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="7fi-Ye-MrY" detailTextLabel="dRv-rB-rNQ" style="IBUITableViewCellStyleValue1" id="mms-mv-eXV">
-                                        <rect key="frame" x="0.0" y="260" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="259" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mms-mv-eXV" id="djx-yJ-tMm">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Facebook" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7fi-Ye-MrY">
-                                                    <rect key="frame" x="15" y="11" width="75" height="21"/>
+                                                    <rect key="frame" x="15" y="12" width="74.5" height="20.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Not Connected" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dRv-rB-rNQ">
-                                                    <rect key="frame" x="256" y="13" width="104" height="18"/>
+                                                    <rect key="frame" x="256" y="14" width="104" height="18"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1882,11 +1866,11 @@
                                 <rect key="frame" x="0.0" y="22" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="GPx-fd-FGA" id="C3J-ZR-t5z">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Reu-um-uTQ">
-                                            <rect key="frame" x="15" y="0.0" width="345" height="43"/>
+                                            <rect key="frame" x="15" y="0.0" width="345" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1922,21 +1906,21 @@
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="name" textLabel="Iyo-2e-8Mv" detailTextLabel="1go-ne-nLe" style="IBUITableViewCellStyleValue1" id="ZFA-EG-8IW">
-                                <rect key="frame" x="0.0" y="56" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZFA-EG-8IW" id="r2L-sx-aRa">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Iyo-2e-8Mv">
-                                            <rect key="frame" x="15" y="11" width="45" height="21"/>
+                                            <rect key="frame" x="15" y="12" width="45" height="20.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1go-ne-nLe">
-                                            <rect key="frame" x="316" y="11" width="44" height="21"/>
+                                            <rect key="frame" x="316" y="12" width="44" height="20.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1946,14 +1930,14 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="remindSwitch" textLabel="vZZ-E6-qPm" style="IBUITableViewCellStyleDefault" id="O4B-XH-cIc">
-                                <rect key="frame" x="0.0" y="100" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="99.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="O4B-XH-cIc" id="V92-f3-0pb">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Reminders" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vZZ-E6-qPm">
-                                            <rect key="frame" x="15" y="0.0" width="345" height="43"/>
+                                            <rect key="frame" x="15" y="0.0" width="345" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1963,14 +1947,14 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="phone" textLabel="fbQ-SS-DS8" detailTextLabel="hIG-YV-NOl" style="IBUITableViewCellStyleValue1" id="7hX-Ya-oAD">
-                                <rect key="frame" x="0.0" y="144" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="143.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7hX-Ya-oAD" id="cIt-lL-Pmp">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Phone Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fbQ-SS-DS8">
-                                            <rect key="frame" x="15" y="12" width="90" height="20"/>
+                                            <rect key="frame" x="15" y="12" width="90" height="19.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1980,7 +1964,7 @@
                                             </variation>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hIG-YV-NOl">
-                                            <rect key="frame" x="318" y="12" width="42" height="20"/>
+                                            <rect key="frame" x="318.5" y="12" width="41.5" height="19.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1993,14 +1977,14 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="email" textLabel="j77-cg-H6J" detailTextLabel="lSR-oc-hWA" style="IBUITableViewCellStyleValue1" id="qdM-rP-5qt">
-                                <rect key="frame" x="0.0" y="188" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="187.5" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qdM-rP-5qt" id="AHO-7A-Vzx">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Email Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="j77-cg-H6J">
-                                            <rect key="frame" x="15" y="12" width="83" height="20"/>
+                                            <rect key="frame" x="15" y="12" width="82.5" height="19.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2010,7 +1994,7 @@
                                             </variation>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lSR-oc-hWA">
-                                            <rect key="frame" x="318" y="12" width="42" height="20"/>
+                                            <rect key="frame" x="318.5" y="12" width="41.5" height="19.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2362,6 +2346,6 @@
         <image name="settingsIcon" width="200" height="200"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="wpb-Am-hZc"/>
+        <segue reference="hHk-8N-856"/>
     </inferredMetricsTieBreakers>
 </document>
