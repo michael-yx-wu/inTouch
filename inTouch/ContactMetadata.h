@@ -131,4 +131,12 @@ typedef enum : NSInteger {
  */
 - (void)incrementTimesContacted:(ContactMethod)contactMethod;
 
+/*!
+ @brief Set the interest and interestDate fields to appropriate values
+ 
+ @param interest If true, set interest to true and interestDate to today. If false, set interest to false and
+                 interestDate to NULL.
+ */
+- (void)setInterestAndNoInterestDate:(bool)interest;
+
 @end

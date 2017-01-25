@@ -243,7 +243,9 @@
     NSManagedObjectModel *model = [self managedObjectModel];
     NSFetchRequest *request;
     if (currentQueue == contactAppearedQueue) {
-        NSDictionary *substitionVariables = [NSDictionary dictionaryWithObjectsAndKeys:[NSDate date], @"DATE", nil];
+        NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
+        NSDate *midnightToday = [calendar dateBySettingHour:0 minute:0 second:0 ofDate:[NSDate date] options:0];
+        NSDictionary *substitionVariables = [NSDictionary dictionaryWithObjectsAndKeys:midnightToday, @"DATE", nil];
         request = [model fetchRequestFromTemplateWithName:@"ContactMetadataUrgent"
                                     substitutionVariables:substitionVariables];
     } else {
@@ -332,6 +334,8 @@
     ContactMetadata *contactMetadata = (ContactMetadata *)[currentContact metadata];
     NSNumber *weight = [contactMetadata weight];
     [contactMetadata setNumTimesAppeared:[NSNumber numberWithInt:([[contactMetadata numTimesAppeared] intValue] + 1)]];
+    [contactMetadata setNumTimesPostponed:[NSNumber numberWithInt:([[contactMetadata numTimesPostponed] intValue] + 1)]];
+    [contactMetadata setLastPostponedDate:[NSDate date]];
     [contactMetadata setWeight:[NSNumber numberWithDouble:MAX([weight doubleValue] - 0.05, 0.01)]];
     [self save];
     [self dismissContact];
@@ -531,9 +535,7 @@
     ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
     
     // Update metadata for contact
-    NSDate *today = [NSDate date];
-    [metadata setNoInterestDate:today];
-    [metadata setInterest:[NSNumber numberWithBool:NO]];
+    [metadata setInterestAndNoInterestDate:true];
     [metadata setNumTimesAppeared:[NSNumber numberWithInt:([[metadata numTimesAppeared] intValue] + 1)]];
     [self save];
     

@@ -190,14 +190,7 @@
     ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
     
     // Toggle contact interest
-    if ([[contactMetadata interest] boolValue]) {
-        NSDate *today = [NSDate date];
-        [contactMetadata setInterest:[NSNumber numberWithBool:NO]];
-        [contactMetadata setNoInterestDate:today];
-    } else {
-        [contactMetadata setInterest:[NSNumber numberWithBool:YES]];
-        [contactMetadata setNoInterestDate:NULL];
-    }
+    [contactMetadata setInterestAndNoInterestDate:![[contactMetadata interest] boolValue]];
     
     // Save change to database and refresh table
     [self save];

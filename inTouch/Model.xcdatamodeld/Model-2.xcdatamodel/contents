@@ -53,8 +53,8 @@
     </entity>
     <fetchRequest name="ContactAll" entity="Contact"/>
     <fetchRequest name="ContactMetadataAllNonDeleted" entity="ContactMetadata" predicateString="interest == 1"/>
-    <fetchRequest name="ContactMetadataNeverAppeared" entity="ContactMetadata" predicateString="numTimesAppeared == 0"/>
-    <fetchRequest name="ContactMetadataUrgent" entity="ContactMetadata" predicateString="lastPostponedDate != $DATE AND lastContactedDate != $DATE AND numTimesAppeared != 0 AND interest == 1"/>
+    <fetchRequest name="ContactMetadataNeverAppeared" entity="ContactMetadata" predicateString="numTimesAppeared == 0 AND interest == 1"/>
+    <fetchRequest name="ContactMetadataUrgent" entity="ContactMetadata" predicateString="(lastPostponedDate = nil OR $DATE &gt;= lastPostponedDate) AND (lastContactedDate = nil OR $DATE &gt;= lastContactedDate) AND numTimesAppeared != 0 AND interest == 1"/>
     <fetchRequest name="ContactNameMatch" entity="Contact" predicateString="nameFirst == $NAMEFIRST AND nameLast == $NAMELAST"/>
     <fetchRequest name="ContactWithID" entity="Contact" predicateString="abrecordid == $ABRECORDID"/>
     <fetchRequest name="GlobalData" entity="GlobalData"/>

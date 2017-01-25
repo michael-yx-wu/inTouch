@@ -71,12 +71,7 @@
 
 - (void)reminderSwitchFlipped {
     ContactMetadata *contactMetadata = (ContactMetadata *)[contact metadata];
-    if ([reminderSwitch isOn]) {
-        [contactMetadata setInterest:[NSNumber numberWithBool:YES
-                                      ]];
-    } else {
-        [contactMetadata setInterest:[NSNumber numberWithBool:NO]];
-    }
+    [contactMetadata setInterestAndNoInterestDate:[reminderSwitch isOn]];
     [self save];
 }
 
