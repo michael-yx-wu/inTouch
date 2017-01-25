@@ -535,7 +535,7 @@
     ContactMetadata *metadata = (ContactMetadata *)[currentContact metadata];
     
     // Update metadata for contact
-    [metadata setInterestAndNoInterestDate:true];
+    [metadata setInterestAndNoInterestDate:false];
     [metadata setNumTimesAppeared:[NSNumber numberWithInt:([[metadata numTimesAppeared] intValue] + 1)]];
     [self save];
     
