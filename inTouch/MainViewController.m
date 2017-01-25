@@ -244,7 +244,9 @@
     NSManagedObjectModel *model = [self managedObjectModel];
     NSFetchRequest *request;
     if (currentQueue == contactAppearedQueue) {
-        NSDictionary *substitionVariables = [NSDictionary dictionaryWithObjectsAndKeys:[NSDate date], @"DATE", nil];
+        NSCalendar *calendar = [NSCalendar autoupdatingCurrentCalendar];
+        NSDate *midnightToday = [calendar dateBySettingHour:0 minute:0 second:0 ofDate:[NSDate date] options:0];
+        NSDictionary *substitionVariables = [NSDictionary dictionaryWithObjectsAndKeys:midnightToday, @"DATE", nil];
         request = [model fetchRequestFromTemplateWithName:@"ContactMetadataUrgent"
                                     substitutionVariables:substitionVariables];
     } else {
