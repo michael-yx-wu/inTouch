@@ -25,6 +25,16 @@
         [self setNumTimesEmailed:[NSNumber numberWithInt:[[self numTimesEmailed] intValue]+1]];
     }
     [self setNumTimesContacted:[NSNumber numberWithInt:[[self numTimesContacted] intValue]+1]];
+    [self setLastContactedDate:[NSDate date]];
+}
+
+- (void)setInterestAndNoInterestDate:(bool)interest {
+    [self setInterest:[NSNumber numberWithBool:interest]];
+    if (interest) {
+        [self setNoInterestDate:NULL];
+    } else {
+        [self setNoInterestDate:[NSDate date]];
+    }
 }
 
 @end
